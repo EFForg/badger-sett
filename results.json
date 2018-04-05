@@ -1,0 +1,572 @@
+{
+  "action_map": {
+    "a3698060313.cdn.optimizely.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 1523203894635, 
+      "userAction": ""
+    }, 
+    "accounts.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "adnxs.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "adsrvr.org": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "advertising.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "apis.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "atdmt.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "bing.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "books.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "c.bing.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 1523417577686, 
+      "userAction": ""
+    }, 
+    "calendar.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "checkout.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "clients1.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "clients6.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "cm.g.doubleclick.net": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 1523291116260, 
+      "userAction": ""
+    }, 
+    "consent.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "cse.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "cx.atdmt.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 1523439002287, 
+      "userAction": ""
+    }, 
+    "demdex.net": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "developers.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "docs.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "doubleclick.net": {
+      "dnt": false, 
+      "heuristicAction": "block", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "dpm.demdex.net": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 1523278167778, 
+      "userAction": ""
+    }, 
+    "drive.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "everesttech.net": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "facebook.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "feedburner.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "fusiontables.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "google.com": {
+      "dnt": false, 
+      "heuristicAction": "block", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "googleads.g.doubleclick.net": {
+      "dnt": false, 
+      "heuristicAction": "block", 
+      "nextUpdateTime": 1523135015203, 
+      "userAction": ""
+    }, 
+    "groups.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "gwallet.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "ib.adnxs.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 1523442835294, 
+      "userAction": ""
+    }, 
+    "idsync.rlcdn.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 1523047954559, 
+      "userAction": ""
+    }, 
+    "kh.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "khms0.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "khms1.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "khms2.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "khms3.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "khms4.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "labs.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "licdn.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "live.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "login.live.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 1523017451974, 
+      "userAction": ""
+    }, 
+    "maps-api-ssl.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "maps.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "mapsengine.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "match.adsrvr.org": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 1523153112239, 
+      "userAction": ""
+    }, 
+    "mathtag.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "microsoft.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "mt0.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "mt1.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "mts0.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "mts1.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "mw1.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "mw2.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "optimizely.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "picasaweb.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "pixel.advertising.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 1523370167998, 
+      "userAction": ""
+    }, 
+    "pixel.tapad.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 1523027835830, 
+      "userAction": ""
+    }, 
+    "play.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "plus.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "rlcdn.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "rp.gwallet.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 1523354183403, 
+      "userAction": ""
+    }, 
+    "rtd-tm.everesttech.net": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 1523260517487, 
+      "userAction": ""
+    }, 
+    "sb.scorecardresearch.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 1522958376834, 
+      "userAction": ""
+    }, 
+    "scorecardresearch.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "sites.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "spreadsheets.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "static.licdn.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 1523368732482, 
+      "userAction": ""
+    }, 
+    "stats.g.doubleclick.net": {
+      "dnt": false, 
+      "heuristicAction": "", 
+      "nextUpdateTime": 1523390759606, 
+      "userAction": ""
+    }, 
+    "sync.mathtag.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 1523404568796, 
+      "userAction": ""
+    }, 
+    "talkgadget.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "tapad.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "translate.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "trends.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "twitter.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 1523345126504, 
+      "userAction": ""
+    }, 
+    "video.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }, 
+    "web.vortex.data.microsoft.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 1523283289215, 
+      "userAction": ""
+    }, 
+    "www.facebook.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 1523437851901, 
+      "userAction": ""
+    }, 
+    "www.google.com": {
+      "dnt": false, 
+      "heuristicAction": "cookieblock", 
+      "nextUpdateTime": 1523149601106, 
+      "userAction": ""
+    }, 
+    "www.youtube.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 1523033300881, 
+      "userAction": ""
+    }, 
+    "youtube.com": {
+      "dnt": false, 
+      "heuristicAction": "allow", 
+      "nextUpdateTime": 0, 
+      "userAction": ""
+    }
+  }, 
+  "snitch_map": {
+    "adnxs.com": [
+      "microsoft.com"
+    ], 
+    "adsrvr.org": [
+      "microsoft.com"
+    ], 
+    "advertising.com": [
+      "linkedin.com"
+    ], 
+    "atdmt.com": [
+      "facebook.com"
+    ], 
+    "bing.com": [
+      "linkedin.com"
+    ], 
+    "demdex.net": [
+      "microsoft.com", 
+      "linkedin.com"
+    ], 
+    "doubleclick.net": [
+      "youtube.com", 
+      "twitter.com", 
+      "microsoft.com"
+    ], 
+    "everesttech.net": [
+      "microsoft.com"
+    ], 
+    "facebook.com": [
+      "instagram.com"
+    ], 
+    "google.com": [
+      "facebook.com", 
+      "youtube.com", 
+      "microsoft.com"
+    ], 
+    "gwallet.com": [
+      "microsoft.com"
+    ], 
+    "licdn.com": [
+      "linkedin.com"
+    ], 
+    "live.com": [
+      "microsoft.com"
+    ], 
+    "mathtag.com": [
+      "microsoft.com"
+    ], 
+    "microsoft.com": [
+      "linkedin.com"
+    ], 
+    "optimizely.com": [
+      "microsoft.com"
+    ], 
+    "rlcdn.com": [
+      "microsoft.com"
+    ], 
+    "scorecardresearch.com": [
+      "linkedin.com"
+    ], 
+    "tapad.com": [
+      "microsoft.com"
+    ], 
+    "twitter.com": [
+      "microsoft.com"
+    ], 
+    "youtube.com": [
+      "twitter.com"
+    ]
+  }
+}
