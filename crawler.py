@@ -1,12 +1,13 @@
-#/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-# adapted from
+# adapted from https://github.com/cowlicks/badger-claw
 import argparse
 from glob import glob
 import json
 import logging
 import os
 from time import sleep
+from urllib.request import urlopen
 
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException, WebDriverException
