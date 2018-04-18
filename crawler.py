@@ -147,7 +147,7 @@ def crawl(ext_path, chromedriver_path, n_sites, timeout, wait_time, **kwargs):
 if __name__ == '__main__':
     # log to a file, not to stdout/stderr
     logging.basicConfig(
-            filename='crawler.log',
+            filename='log.txt',
             format='%(asctime)s %(module)s %(message)s',
             level=logging.INFO)
     logger = logging.getLogger()
