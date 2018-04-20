@@ -1,7 +1,10 @@
 #!/bin/bash
 
-BASEDIR=/home/bennett/badger-sett/
+BASEDIR=$HOME/badger-sett/
 cd $BASEDIR
+
+# update the repository to avoid merge conflicts later
+git pull
 
 # Run main python scanner
 source venv/bin/activate
