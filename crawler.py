@@ -6,7 +6,7 @@ from glob import glob
 import json
 import logging
 import os
-from time import sleep
+from time import sleep, time
 from urllib.request import urlopen
 
 from selenium import webdriver
@@ -21,6 +21,7 @@ BACKGROUND_URL = ('chrome-extension://mcgekeccgjgcmhnhbabplanchdogjcnh/'
 OBJECTS = ['action_map', 'snitch_map']
 CHROMEDRIVER_PATH='/usr/local/bin/chromedriver'
 MAJESTIC_URL = "http://downloads.majesticseo.com/majestic_million.csv"
+WEEK_IN_SECONDS = 604800
 
 ap = argparse.ArgumentParser()
 ap.add_argument('--out-file', default='results.json',
@@ -45,7 +46,7 @@ def get_domain_list(n_sites):
 
     # download the file if it doesn't exist or if it's more than a week stale
     if (not os.path.exists(top_1m_file) or
-        time.time() - os.path.getmtime(top_1m_file) > WEEK_IN_SECONDS):
+        time() - os.path.getmtime(top_1m_file) > WEEK_IN_SECONDS):
         response = urlopen(MAJESTIC_URL)
         with open(top_1m_file, 'w') as f:
             f.write(response.read().decode())
