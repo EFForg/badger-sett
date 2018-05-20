@@ -23,7 +23,7 @@ $ git clone https://github.com/efforg/badger-sett
 2. Initialize the virtual environment
 
 ```
-$ virtualenv venv
+$ virtualenv venv --python=python3
 $ . venv/bin/activate
 $ pip install -r requirements.txt
 ```
