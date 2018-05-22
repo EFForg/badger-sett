@@ -26,16 +26,16 @@ sudo docker build -t badger-sett .
 # back up old results
 cp results.json results-prev.json
 
-# clear/create output folder if necessary
+# create the output folder if necessary
 DOCKER_OUT=$(pwd)/docker-out
 mkdir -p $DOCKER_OUT
-rm -rf $DOCKER_OUT/*
 
 # Run main python scanner
 echo "Running scan in Docker..."
 sudo docker run -v $DOCKER_OUT:/code/badger-sett/out:z badger-sett
 
-if [ -e $DOCKER_OUT/results.json ]; then
+# if the new results.json is different from the old
+if [ -e $DOCKER_OUT/results.json ] && [ "$(diff results.json $DOCKER_OUT/results.json)" != "" ]; then
   echo "Scan successful. Updating public repository."
   # copy the updated results and log file out of the docker volume
   mv $DOCKER_OUT/results.json $DOCKER_OUT/log.txt ./

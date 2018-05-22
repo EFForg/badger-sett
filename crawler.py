@@ -45,7 +45,7 @@ def get_domain_list(n_sites):
     """Load the top million domains from disk or the web"""
     domains = []
 
-    top_1m_file = MAJESTIC_URL.split('/')[-1]
+    top_1m_file = os.path.join(args.out_path, MAJESTIC_URL.split('/')[-1])
 
     # download the file if it doesn't exist or if it's more than a week stale
     if (not os.path.exists(top_1m_file) or
