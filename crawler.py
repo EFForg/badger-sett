@@ -6,6 +6,7 @@ from glob import glob
 import json
 import logging
 import os
+import sys
 from time import sleep, time
 from urllib.request import urlopen
 
@@ -19,13 +20,13 @@ from xvfbwrapper import Xvfb
 BACKGROUND_URL = ('chrome-extension://mcgekeccgjgcmhnhbabplanchdogjcnh/'
                   '_generated_background_page.html')
 OBJECTS = ['action_map', 'snitch_map']
-CHROMEDRIVER_PATH='/usr/local/bin/chromedriver'
+CHROMEDRIVER_PATH='/usr/bin/chromedriver'
 MAJESTIC_URL = "http://downloads.majesticseo.com/majestic_million.csv"
 WEEK_IN_SECONDS = 604800
 
 ap = argparse.ArgumentParser()
-ap.add_argument('--out-file', default='results.json',
-                help='Path at which to save what Privacy Badger learns')
+ap.add_argument('--out-path', default='./',
+                help='Path at which to save output')
 ap.add_argument('--ext-path', default='privacy-badger.crx',
                 help='Path to the Privacy Badger extension binary')
 ap.add_argument('--chromedriver-path', default=CHROMEDRIVER_PATH,
@@ -36,6 +37,8 @@ ap.add_argument('--timeout', type=float, default=10,
                 help='Amount of time to allow each site to load, in seconds')
 ap.add_argument('--wait-time', type=float, default=5,
                 help='Amount of time to wait on each site after it loads, in seconds')
+ap.add_argument('--log-stdout', action='store_true', default=False,
+                help='If set, log to stdout as well as log.txt')
 
 
 def get_domain_list(n_sites):
@@ -146,18 +149,28 @@ def crawl(ext_path, chromedriver_path, n_sites, timeout, wait_time, **kwargs):
 
 
 if __name__ == '__main__':
-    # log to a file, not to stdout/stderr
-    logging.basicConfig(
-            filename='log.txt',
-            format='%(asctime)s %(module)s %(message)s',
-            level=logging.INFO)
+    args = ap.parse_args()
+
+    # set up logging
     logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    log_fmt = logging.Formatter('%(asctime)s %(message)s')
+
+    # by default, just log to file
+    fh = logging.FileHandler(os.path.join(args.out_path, 'log.txt'))
+    fh.setFormatter(log_fmt)
+    logger.addHandler(fh)
+
+    # log to stdout if configured
+    if args.log_stdout:
+        sh = logging.StreamHandler(sys.stdout)
+        sh.setFormatter(log_fmt)
+        logger.addHandler(sh)
 
     # the names of the argparse arguments must match the function signature of
     # crawl()
-    args = ap.parse_args()
     results = crawl(**vars(args))
 
     # save the action_map and snitch_map in a human-readable Json file
-    with open(args.out_file, 'w') as f:
+    with open(os.path.join(args.out_path, 'results.json'), 'w') as f:
         json.dump(results, f, indent=2, sort_keys=True)

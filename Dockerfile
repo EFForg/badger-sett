@@ -6,10 +6,13 @@ USER root
 RUN mkdir /code
 WORKDIR /code
 
-COPY requirements.txt . 
-RUN apt-get update; apt-get install -y python-pip git
-RUN pip install -r requirements.txt
+RUN apt-get update; apt-get install -y python3-pip
 
-COPY ./* /code/
-ENV BADGER_BASEDIR=/code
-ENTRYPOINT ["/code/runscan.sh"]
+COPY requirements.txt . 
+RUN pip3 install -r requirements.txt
+
+COPY . /code/badger-sett
+ENV OUTPATH=/code/badger-sett/out
+RUN mkdir -p $OUTPATH
+
+ENTRYPOINT ["/code/badger-sett/docker-entry.sh"]

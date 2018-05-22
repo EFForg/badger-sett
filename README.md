@@ -20,19 +20,17 @@ $ cd ~
 $ git clone https://github.com/efforg/badger-sett
 ```
 
-2. Initialize the virtual environment
+2. Build the docker image
 
 ```
-$ virtualenv venv --python=python3
-$ . venv/bin/activate
-$ pip install -r requirements.txt
+$ sudo docker build -t badger-sett .
 ```
 
 3. Create a new ssh key with `ssh-keygen`, add it as a deploy key with R/W
    access to the github repository, and configure git to connect to the remote
    over SSH.
 
-4. Set up a cron job to call `runscan.sh` periodically, e.g. once per day.
+4. Set up a cron job to call `runscan.sh` periodically, e.g. once a week.
    `runscan.sh` is written assuming the repository has been cloned into the
    calling user's home directory and that the script hasn't been moved or copied
    anywhere else.
