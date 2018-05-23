@@ -21,7 +21,10 @@ fi
 
 # build the new docker image
 echo "Building Docker container..."
-sudo docker build -t badger-sett .
+
+# pass in the current user's uid and gid so that the scan can be run with the
+# same bits in the container (this prevents permissions issues in the out/ folder)
+sudo docker build --build-arg UID=$(id -u "$USER") --build-arg GID=$(id -g "$USER") --build-arg UNAME=$USER -t badger-sett .
 
 # back up old results
 cp results.json results-prev.json
@@ -32,7 +35,7 @@ mkdir -p $DOCKER_OUT
 
 # Run main python scanner
 echo "Running scan in Docker..."
-sudo docker run -v $DOCKER_OUT:/code/badger-sett/out:z badger-sett
+sudo docker run -v $DOCKER_OUT:/home/$USER/out:z badger-sett
 
 # if the new results.json is different from the old
 if [ -e $DOCKER_OUT/results.json ] && [ "$(diff results.json $DOCKER_OUT/results.json)" != "" ]; then

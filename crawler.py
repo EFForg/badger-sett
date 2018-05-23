@@ -3,9 +3,12 @@
 # adapted from https://github.com/cowlicks/badger-claw
 import argparse
 from glob import glob
+import hashlib
 import json
 import logging
 import os
+import struct
+import string
 import sys
 from time import sleep, time
 from urllib.request import urlopen
@@ -17,8 +20,7 @@ from xvfbwrapper import Xvfb
 
 
 # we'll do the test with chrome
-BACKGROUND_URL = ('chrome-extension://mcgekeccgjgcmhnhbabplanchdogjcnh/'
-                  '_generated_background_page.html')
+BG_URL_FMT = 'chrome-extension://%s/_generated_background_page.html'
 OBJECTS = ['action_map', 'snitch_map']
 CHROMEDRIVER_PATH='/usr/bin/chromedriver'
 MAJESTIC_URL = "http://downloads.majesticseo.com/majestic_million.csv"
@@ -39,6 +41,22 @@ ap.add_argument('--wait-time', type=float, default=5,
                 help='Amount of time to wait on each site after it loads, in seconds')
 ap.add_argument('--log-stdout', action='store_true', default=False,
                 help='If set, log to stdout as well as log.txt')
+
+
+def get_pub_key_from_crx(crx_file):
+    with open(crx_file, 'rb') as f:
+        data = f.read()
+    header = struct.unpack('<4sIII', data[:16])
+    pubkey = struct.unpack('<%ds' % header[2], data[16:16+header[2]])[0]
+    return pubkey
+
+
+def get_extension_id(crx_file):
+    pubkey = get_pub_key_from_crx(crx_file)
+    digest = hashlib.sha256(pubkey).hexdigest()
+
+    trans = str.maketrans('0123456789abcdef', string.ascii_lowercase[:16])
+    return str.translate(digest[:32], trans)
 
 
 def get_domain_list(n_sites):
@@ -78,7 +96,7 @@ def start_driver(ext_path, chromedriver_path):
 
 def dump_data(driver):
     """Extract the objects Privacy Badger learned during its training run."""
-    driver.get(BACKGROUND_URL)
+    driver.get(BG_URL_FMT % get_extension_id(args.ext_path))
     data = {}
     for obj in OBJECTS:
         script = 'return badger.storage.%s.getItemClones()' % obj
