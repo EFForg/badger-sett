@@ -1,5 +1,6 @@
-FROM python:3.6-stretch
-FROM selenium/standalone-chrome
+FROM python:3.6-jessie
+#FROM selenium/standalone-chrome
+FROM selenium/standalone-firefox
 ARG UID
 ARG GID
 ARG UNAME
@@ -18,7 +19,7 @@ WORKDIR /home/$USER
 COPY requirements.txt . 
 RUN pip3 install --user -r requirements.txt
 
-COPY crawler.py docker-entry.sh privacy-badger.crx /home/$USER/
+COPY crawler.py docker-entry.sh privacy-badger.xpi /home/$USER/
 ENV OUTPATH=/home/$USER/out
 RUN mkdir -p $OUTPATH
 

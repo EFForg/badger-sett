@@ -20,19 +20,31 @@ from xvfbwrapper import Xvfb
 
 
 # we'll do the test with chrome
-BG_URL_FMT = 'chrome-extension://%s/_generated_background_page.html'
-OBJECTS = ['action_map', 'snitch_map']
+CHROME_URL_FMT = 'chrome-extension://%s/_generated_background_page.html'
 CHROMEDRIVER_PATH='/usr/bin/chromedriver'
+FF_URL_FMT = 'moz-extension://%s/_generated_background_page.html'
+FF_EXT_ID = 'jid1-MnnxcxisBPnSXQ-eff@jetpack'
+FF_UUID = 'd56a5b99-51b6-4e83-ab23-796216679614'
+FF_BIN_PATH = '/usr/bin/firefox'
+
+CHROME = 'chrome'
+FIREFOX = 'firefox'
+
+OBJECTS = ['action_map', 'snitch_map']
 MAJESTIC_URL = "http://downloads.majesticseo.com/majestic_million.csv"
 WEEK_IN_SECONDS = 604800
 
 ap = argparse.ArgumentParser()
+ap.add_argument('--browser', choices=[FIREFOX, CHROME], default=FIREFOX,
+                help='Browser to use for the scan')
 ap.add_argument('--out-path', default='./',
                 help='Path at which to save output')
-ap.add_argument('--ext-path', default='privacy-badger.crx',
+ap.add_argument('--ext-path', default='privacy-badger.xpi',
                 help='Path to the Privacy Badger extension binary')
 ap.add_argument('--chromedriver-path', default=CHROMEDRIVER_PATH,
-                help='Path to the Privacy Badger extension binary')
+                help='Path to the chromedriver binary')
+ap.add_argument('--firefox-path', default=FF_BIN_PATH,
+                help='Path to the firefox browser binary')
 ap.add_argument('--n-sites', type=int, default=10000,
                 help='Number of websites to visit on the crawl')
 ap.add_argument('--timeout', type=float, default=10,
@@ -43,16 +55,12 @@ ap.add_argument('--log-stdout', action='store_true', default=False,
                 help='If set, log to stdout as well as log.txt')
 
 
-def get_pub_key_from_crx(crx_file):
+def get_chrome_extension_id(crx_file):
     with open(crx_file, 'rb') as f:
         data = f.read()
     header = struct.unpack('<4sIII', data[:16])
     pubkey = struct.unpack('<%ds' % header[2], data[16:16+header[2]])[0]
-    return pubkey
 
-
-def get_extension_id(crx_file):
-    pubkey = get_pub_key_from_crx(crx_file)
     digest = hashlib.sha256(pubkey).hexdigest()
 
     trans = str.maketrans('0123456789abcdef', string.ascii_lowercase[:16])
@@ -85,18 +93,41 @@ def get_domain_list(n_sites):
     return domains
 
 
-def start_driver(ext_path, chromedriver_path):
-    """Start a new Selenium web driver and install the bundled extension."""
+def start_driver_chrome(ext_path, chromedriver_path):
+    """Start a new Selenium web driver for Chrome and install the bundled extension."""
     opts = Options()
+    opts.add_argument('--no-sandbox')
     opts.add_extension(ext_path)
     opts.add_experimental_option("prefs", {"profile.block_third_party_cookies": False})
     opts.add_argument('--dns-prefetch-disable')
     return webdriver.Chrome(chromedriver_path, chrome_options=opts)
 
 
+def start_driver_firefox(ext_path, browser_path):
+    """Start a new Selenium web driver and install the bundled extension."""
+    profile = webdriver.FirefoxProfile()
+    profile.set_preference('extensions.webextensions.uuids',
+                           '{"%s": "%s"}' % (FF_EXT_ID, FF_UUID))
+
+    # this is kind of a hack; eventually the functionality to install an
+    # extension should be part of Selenium. See
+    # https://github.com/SeleniumHQ/selenium/issues/4215
+    driver = webdriver.Firefox(firefox_profile=profile, firefox_binary=browser_path)
+    command = 'addonInstall'
+    driver.command_executor._commands[command] = ('POST', '/session/$sessionId/moz/addon/install')
+    driver.execute(command, params={'path': ext_path, 'temporary': True})
+    sleep(2)
+    return driver
+
+
 def dump_data(driver):
     """Extract the objects Privacy Badger learned during its training run."""
-    driver.get(BG_URL_FMT % get_extension_id(args.ext_path))
+    if args.browser == CHROME:
+        ext_url = CHROME_URL_FMT % get_chrome_extension_id(args.ext_path)
+    else:
+        ext_url = FF_URL_FMT % FF_UUID
+
+    driver.get(ext_url)
     data = {}
     for obj in OBJECTS:
         script = 'return badger.storage.%s.getItemClones()' % obj
@@ -126,13 +157,16 @@ def get_domain(driver, domain, wait_time):
     try:
         url = "https://%s/" % domain
         driver.get(url)
-    except WebDriverException:
+    except WebDriverException as e:
+        logger.error(url + ' ' + e.msg)
         url = "http://%s/" % domain
+        logger.info('trying ' + url)
         driver.get(url)
     sleep(wait_time)
 
 
-def crawl(ext_path, chromedriver_path, n_sites, timeout, wait_time, **kwargs):
+def crawl(browser, ext_path, chromedriver_path, firefox_path, n_sites, timeout,
+          wait_time, **kwargs):
     """
     Visit the top `n_sites` websites in the Majestic Million, in order, in a
     virtual browser with Privacy Badger installed. Afterwards, save the
@@ -146,7 +180,11 @@ def crawl(ext_path, chromedriver_path, n_sites, timeout, wait_time, **kwargs):
     vdisplay = Xvfb(width=1280, height=720)
     vdisplay.start()
 
-    driver = start_driver(ext_path, chromedriver_path)
+    if browser == CHROME:
+        driver = start_driver_chrome(ext_path, chromedriver_path)
+    else:
+        driver = start_driver_firefox(ext_path, firefox_path)
+
     driver.set_page_load_timeout(timeout)
     driver.set_script_timeout(timeout)
 
@@ -158,7 +196,11 @@ def crawl(ext_path, chromedriver_path, n_sites, timeout, wait_time, **kwargs):
             logger.info('timeout on %s ' % domain)
             driver = timeout_workaround(driver)
             continue
+        except WebDriverException as e:
+            logger.error(domain + ' ' + e.msg)
+            continue
 
+    logger.info('Scan complete. Saving data...')
     data = dump_data(driver)
     driver.quit()
     vdisplay.stop()
