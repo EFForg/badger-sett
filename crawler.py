@@ -10,7 +10,7 @@ import os
 import struct
 import string
 import sys
-from time import sleep, time
+import time
 from urllib.request import urlopen
 
 from selenium import webdriver
@@ -75,7 +75,7 @@ def get_domain_list(n_sites):
 
     # download the file if it doesn't exist or if it's more than a week stale
     if (not os.path.exists(top_1m_file) or
-        time() - os.path.getmtime(top_1m_file) > WEEK_IN_SECONDS):
+        time.time() - os.path.getmtime(top_1m_file) > WEEK_IN_SECONDS):
         response = urlopen(MAJESTIC_URL)
         with open(top_1m_file, 'w') as f:
             f.write(response.read().decode())
@@ -116,7 +116,7 @@ def start_driver_firefox(ext_path, browser_path):
     command = 'addonInstall'
     driver.command_executor._commands[command] = ('POST', '/session/$sessionId/moz/addon/install')
     driver.execute(command, params={'path': ext_path, 'temporary': True})
-    sleep(2)
+    time.sleep(2)
     return driver
 
 
@@ -162,7 +162,7 @@ def get_domain(driver, domain, wait_time):
         url = "http://%s/" % domain
         logger.info('trying ' + url)
         driver.get(url)
-    sleep(wait_time)
+    time.sleep(wait_time)
 
 
 def crawl(browser, ext_path, chromedriver_path, firefox_path, n_sites, timeout,
@@ -227,9 +227,10 @@ if __name__ == '__main__':
         sh.setFormatter(log_fmt)
         logger.addHandler(sh)
 
-    # the names of the argparse arguments must match the function signature of
-    # crawl()
+    version = time.strftime('%Y.%-m.%-d', time.localtime())
+    # the argparse arguments must match the function signature of crawl()
     results = crawl(**vars(args))
+    results['version'] = version
 
     # save the action_map and snitch_map in a human-readable Json file
     with open(os.path.join(args.out_path, 'results.json'), 'w') as f:
