@@ -9,8 +9,20 @@ USER root
 
 RUN apt-get update; apt-get install -y python3-pip
 
-RUN groupadd -g $GID $UNAME
-RUN useradd -ms /bin/bash -u $UID -g $GID $UNAME
+RUN if [ $(getent group $GID) ]; then \
+  old_group=$(getent group $GID | cut -d: -f1); \
+  groupmod -n $UNAME $old_group; \
+else \
+  groupadd -g $GID $UNAME; \
+fi
+
+RUN if [ $(getent passwd $UID) ]; then \
+  old_uname=$(getent passwd $UID | cut -d: -f1); \
+  usermod -l $UNAME -m -d /home/$UNAME -s /bin/bash $old_uname; \
+else \
+  useradd -ms /bin/bash -u $UID $UNAME; \
+fi
+
 USER $UNAME
 ENV USER=$UNAME
 
