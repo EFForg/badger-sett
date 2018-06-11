@@ -45,7 +45,7 @@ ap.add_argument('--chromedriver-path', default=CHROMEDRIVER_PATH,
                 help='Path to the chromedriver binary')
 ap.add_argument('--firefox-path', default=FF_BIN_PATH,
                 help='Path to the firefox browser binary')
-ap.add_argument('--n-sites', type=int, default=10000,
+ap.add_argument('--n-sites', type=int, default=2000,
                 help='Number of websites to visit on the crawl')
 ap.add_argument('--timeout', type=float, default=10,
                 help='Amount of time to allow each site to load, in seconds')
