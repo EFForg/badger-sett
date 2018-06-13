@@ -74,7 +74,7 @@ if ! python validate.py ; then
   exit 1
 fi
 
-if [ $GIT_PUSH != 1 ] ; then
+if [ "$GIT_PUSH" != "1" ] ; then
   echo "Scan successful."
   exit 0
 fi
