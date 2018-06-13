@@ -34,6 +34,15 @@ To run the script with a different branch, set the `PB_BRANCH` variable. e.g.
 $ PB_BRANCH=my-feature-branch ./runscan.sh
 ```
 
+3. Monitor the scan
+
+After the script outputs "Running scan in Docker...", you can monitor the
+scan's progress with:
+
+```
+$ tail -f docker-out/log.txt
+```
+
 ### Automatic crawling
 
 To set up the script to run periodically and automatically update the
