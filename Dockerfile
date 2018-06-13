@@ -38,3 +38,4 @@ ENV EXTPATH=/home/$USER/privacybadger/src
 RUN mkdir -p $OUTPATH
 
 ENTRYPOINT ["./docker-entry.sh"]
+CMD []

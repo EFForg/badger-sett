@@ -54,19 +54,23 @@ mkdir -p $DOCKER_OUT
 # Run main python scanner
 echo "Running scan in Docker..."
 
-# Firefox scan
-if ! sudo docker run -v $DOCKER_OUT:/home/$USER/out:z \
-    -v /dev/shm:/dev/shm badger-sett ; then
+# Run the scan, passing any extra command line arguments to crawler.py
+# Firefox command
+if ! sudo docker run \
+    -v $DOCKER_OUT:/home/$USER/out:z \
+    -v /dev/shm:/dev/shm \
+    badger-sett "$@" ; then
   echo "Scan failed."
   exit 1;
 fi
 
 # Chrome scan (seccomp doesn't work in jessie)
-#sudo docker run -v $DOCKER_OUT:/home/$USER/out:z \
+#sudo docker run \
+  #-v $DOCKER_OUT:/home/$USER/out:z \
   #-v /dev/shm:/dev/shm \
   #--device /dev/dri \
   #--security-opt seccomp=./chrome-seccomp.json \
-  #badger-sett
+  #badger-sett "$@"
 
 # Validate the output
 if ! python validate.py ; then 
