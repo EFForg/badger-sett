@@ -68,6 +68,12 @@ fi
   #--security-opt seccomp=./chrome-seccomp.json \
   #badger-sett
 
+# Validate the output
+if ! python validate.py ; then 
+  echo "results.json is invalid."
+  exit 1
+fi
+
 if [ $GIT_PUSH != 1 ] ; then
   echo "Scan successful."
   exit 0
