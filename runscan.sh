@@ -37,9 +37,12 @@ echo "Building Docker container..."
 
 # pass in the current user's uid and gid so that the scan can be run with the
 # same bits in the container (this prevents permissions issues in the out/ folder)
-sudo docker build --build-arg UID=$(id -u "$USER") \
-  --build-arg GID=$(id -g "$USER") \
-  --build-arg UNAME=$USER -t badger-sett .
+if ! sudo docker build --build-arg UID=$(id -u "$USER") \
+    --build-arg GID=$(id -g "$USER") \
+    --build-arg UNAME=$USER -t badger-sett . ; then
+  echo "Docker build failed."
+  exit 1;
+fi
 
 # back up old results
 cp results.json results-prev.json
@@ -52,8 +55,11 @@ mkdir -p $DOCKER_OUT
 echo "Running scan in Docker..."
 
 # Firefox scan
-sudo docker run -v $DOCKER_OUT:/home/$USER/out:z \
-  -v /dev/shm:/dev/shm badger-sett
+if ! sudo docker run -v $DOCKER_OUT:/home/$USER/out:z \
+    -v /dev/shm:/dev/shm badger-sett ; then
+  echo "Scan failed."
+  exit 1;
+fi
 
 # Chrome scan (seccomp doesn't work in jessie)
 #sudo docker run -v $DOCKER_OUT:/home/$USER/out:z \
@@ -62,10 +68,16 @@ sudo docker run -v $DOCKER_OUT:/home/$USER/out:z \
   #--security-opt seccomp=./chrome-seccomp.json \
   #badger-sett
 
+if [ $GIT_PUSH != 1 ] ; then
+  echo "Scan successful."
+  exit 0
+fi
+
 # if the new results.json is different from the old, commit it
-if [ $GIT_PUSH != 1 ] && [ -e $DOCKER_OUT/results.json ] && \
+if [ -e $DOCKER_OUT/results.json ] && \
     [ "$(diff results.json $DOCKER_OUT/results.json)" != "" ]; then
   echo "Scan successful. Updating public repository."
+
   # copy the updated results and log file out of the docker volume
   mv $DOCKER_OUT/results.json $DOCKER_OUT/log.txt ./
 
