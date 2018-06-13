@@ -1,13 +1,21 @@
 #!/bin/bash
 
-# change to the right working dir
-cd $HOME/badger-sett
+BASE_DIR=${BASE_DIR:-$HOME/badger-sett}
+PB_DIR=$BASE_DIR/privacybadger
+PB_BRANCH=${PB_BRANCH:-master}
 
-# download the latest version of privacy badger for Chrome
-#wget -O privacy-badger.crx https://www.eff.org/files/privacy_badger-chrome.crx
+# fetch and build the latest version of Privacy Badger
+if [ -e $PB_DIR ]; then
+  cd $PB_DIR
+  git checkout $PB_BRANCH
+  git pull
+else
+  git clone https://github.com/efforg/privacybadger $PB_DIR
+  git checkout $PB_BRANCH
+fi
 
-# download the latest version of privacy badger for Firefox
-wget -O privacy-badger.xpi https://www.eff.org/files/privacy-badger-latest.xpi
+# change to the badger-sett repository
+cd $BASE_DIR
 
 # figure out whether we need to pull
 UPSTREAM=${1:-'@{u}'}

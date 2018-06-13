@@ -23,7 +23,7 @@ from xvfbwrapper import Xvfb
 CHROME_URL_FMT = 'chrome-extension://%s/_generated_background_page.html'
 CHROMEDRIVER_PATH='/usr/bin/chromedriver'
 FF_URL_FMT = 'moz-extension://%s/_generated_background_page.html'
-FF_EXT_ID = 'jid1-MnnxcxisBPnSXQ-eff@jetpack'
+FF_EXT_ID = 'jid1-MnnxcxisBPnSXQ@jetpack'
 FF_UUID = 'd56a5b99-51b6-4e83-ab23-796216679614'
 FF_BIN_PATH = '/usr/bin/firefox'
 
@@ -39,8 +39,8 @@ ap.add_argument('--browser', choices=[FIREFOX, CHROME], default=FIREFOX,
                 help='Browser to use for the scan')
 ap.add_argument('--out-path', default='./',
                 help='Path at which to save output')
-ap.add_argument('--ext-path', default='privacy-badger.xpi',
-                help='Path to the Privacy Badger extension binary')
+ap.add_argument('--ext-path', default='./privacybadger/src',
+                help='Path to the Privacy Badger binary or source directory')
 ap.add_argument('--chromedriver-path', default=CHROMEDRIVER_PATH,
                 help='Path to the chromedriver binary')
 ap.add_argument('--firefox-path', default=FF_BIN_PATH,
