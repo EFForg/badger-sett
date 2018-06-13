@@ -1,7 +1,9 @@
 #!/bin/bash
 
-BASE_DIR=${BASE_DIR:-$HOME/badger-sett}
-PB_DIR=$BASE_DIR/privacybadger
+# this line from
+# https://stackoverflow.com/questions/59895/getting-the-source-directory-of-a-bash-script-from-within
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PB_DIR=$DIR/privacybadger
 PB_BRANCH=${PB_BRANCH:-master}
 
 # fetch and build the latest version of Privacy Badger
@@ -15,7 +17,7 @@ else
 fi
 
 # change to the badger-sett repository
-cd $BASE_DIR
+cd $DIR
 
 # figure out whether we need to pull
 UPSTREAM=${1:-'@{u}'}
@@ -61,7 +63,8 @@ sudo docker run -v $DOCKER_OUT:/home/$USER/out:z \
   #badger-sett
 
 # if the new results.json is different from the old, commit it
-if [ -e $DOCKER_OUT/results.json ] && [ "$(diff results.json $DOCKER_OUT/results.json)" != "" ]; then
+if [ $GIT_PUSH != 1 ] && [ -e $DOCKER_OUT/results.json ] && \
+    [ "$(diff results.json $DOCKER_OUT/results.json)" != "" ]; then
   echo "Scan successful. Updating public repository."
   # copy the updated results and log file out of the docker volume
   mv $DOCKER_OUT/results.json $DOCKER_OUT/log.txt ./
