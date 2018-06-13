@@ -58,7 +58,7 @@ sudo docker run -v $DOCKER_OUT:/home/$USER/out:z \
   #-v /dev/shm:/dev/shm \
   #--device /dev/dri \
   #--security-opt seccomp=./chrome-seccomp.json \
-  #badger-sett 
+  #badger-sett
 
 # if the new results.json is different from the old, commit it
 if [ -e $DOCKER_OUT/results.json ] && [ "$(diff results.json $DOCKER_OUT/results.json)" != "" ]; then

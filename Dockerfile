@@ -28,7 +28,7 @@ ENV USER=$UNAME
 
 WORKDIR /home/$USER
 
-COPY requirements.txt . 
+COPY requirements.txt .
 RUN pip3 install --user -r requirements.txt
 
 COPY crawler.py docker-entry.sh /home/$USER/

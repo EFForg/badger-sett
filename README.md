@@ -8,7 +8,7 @@ This script is designed to raise young Privacy Badgers by teaching them a little
 about the trackers on popular sites, thus preparing them to fight trackers out
 in the wild. `crawler.py` visits the top 10,000 sites of the Majestic Million
 with a fresh version of Privacy Badger installed and saves the `action_map` and
-`snitch_map` it learns in `results.json`. 
+`snitch_map` it learns in `results.json`.
 
 To set up:
 
