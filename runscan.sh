@@ -37,7 +37,7 @@ echo "Building Docker container..."
 
 # pass in the current user's uid and gid so that the scan can be run with the
 # same bits in the container (this prevents permissions issues in the out/ folder)
-if ! sudo docker build --build-arg UID=$(id -u "$USER") \
+if ! docker build --build-arg UID=$(id -u "$USER") \
     --build-arg GID=$(id -g "$USER") \
     --build-arg UNAME=$USER -t badger-sett . ; then
   echo "Docker build failed."
@@ -56,7 +56,7 @@ echo "Running scan in Docker..."
 
 # Run the scan, passing any extra command line arguments to crawler.py
 # Firefox command
-if ! sudo docker run \
+if ! docker run \
     -v $DOCKER_OUT:/home/$USER/out:z \
     -v /dev/shm:/dev/shm \
     badger-sett "$@" ; then
@@ -65,7 +65,7 @@ if ! sudo docker run \
 fi
 
 # Chrome scan (seccomp doesn't work in jessie)
-#sudo docker run \
+#docker run \
   #-v $DOCKER_OUT:/home/$USER/out:z \
   #-v /dev/shm:/dev/shm \
   #--device /dev/dri \
