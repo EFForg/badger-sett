@@ -19,7 +19,6 @@ from selenium.webdriver.chrome.options import Options
 from xvfbwrapper import Xvfb
 
 
-# we'll do the test with chrome
 CHROME_URL_FMT = 'chrome-extension://%s/_generated_background_page.html'
 CHROMEDRIVER_PATH='/usr/bin/chromedriver'
 FF_URL_FMT = 'moz-extension://%s/_generated_background_page.html'
@@ -56,6 +55,7 @@ ap.add_argument('--log-stdout', action='store_true', default=False,
 
 
 def get_chrome_extension_id(crx_file):
+    """Interpret a .crx file's extension ID"""
     with open(crx_file, 'rb') as f:
         data = f.read()
     header = struct.unpack('<4sIII', data[:16])
@@ -219,8 +219,11 @@ def cleanup(domains, data):
 
     # handle blank domain bug
     if '' in action_map:
+        logging.info('Deleting blank domain from action map')
         del action_map['']
+
     if '' in snitch_map:
+        logging.info('Deleting blank domain from snitch map')
         del snitch_map['']
 
     # handle the domain-attribution bug (Privacy Badger issue #1997).
@@ -230,15 +233,20 @@ def cleanup(domains, data):
         # If a domain we visited was recorded as a tracker on the domain we
         # visited immediately after it, it's probably a bug
         if d1 in snitch_map and d2 in snitch_map[d1]:
+            logging.info('Reported domain %s tracking on %s' % (d1, d2))
             snitch_map[d1].remove(d2)
 
             # if the bug caused d1 to be added to the action map, remove it
             if not len(snitch_map[d1]):
+                logging.info('Deleting domain %s from action and snitch maps'
+                             % d1)
                 del action_map[d1]
                 del snitch_map[d1]
 
             # if the bug caused d1 to be blocked, unblock it
             elif len(snitch_map[d1]) == 2:
+                logging.info('Downgrading domain %s from "block" to "allow"'
+                             % d1)
                 action_map[d1]['heuristicAction'] = 'allow'
 
 if __name__ == '__main__':
@@ -270,3 +278,6 @@ if __name__ == '__main__':
     # save the action_map and snitch_map in a human-readable JSON file
     with open(os.path.join(args.out_path, 'results.json'), 'w') as f:
         json.dump(results, f, indent=2, sort_keys=True, separators=(',', ': '))
+
+else:
+    logger = logging.getLogger()
