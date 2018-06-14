@@ -204,8 +204,42 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
     data = dump_data(driver, browser, ext_path)
     driver.quit()
     vdisplay.stop()
+
+    cleanup(domains, data)
     return data
 
+
+def cleanup(domains, data):
+    """
+    Remove from snitch map any domains that appear to have been added as a
+    result of bugs.
+    """
+    snitch_map = data['snitch_map']
+    action_map = data['action_map']
+
+    # handle blank domain bug
+    if '' in action_map:
+        del action_map['']
+    if '' in snitch_map:
+        del snitch_map['']
+
+    # handle the domain-attribution bug (Privacy Badger issue #1997).
+    for i in range(len(domains) - 1):
+        d1, d2 = domains[i:i+2]
+
+        # If a domain we visited was recorded as a tracker on the domain we
+        # visited immediately after it, it's probably a bug
+        if d1 in snitch_map and d2 in snitch_map[d1]:
+            snitch_map[d1].remove(d2)
+
+            # if the bug caused d1 to be added to the action map, remove it
+            if not len(snitch_map[d1]):
+                del action_map[d1]
+                del snitch_map[d1]
+
+            # if the bug caused d1 to be blocked, unblock it
+            elif len(snitch_map[d1]) == 2:
+                action_map[d1]['heuristicAction'] = 'allow'
 
 if __name__ == '__main__':
     args = ap.parse_args()
