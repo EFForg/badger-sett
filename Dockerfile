@@ -18,9 +18,9 @@ fi
 
 RUN if [ $(getent passwd $UID) ]; then \
   old_uname=$(getent passwd $UID | cut -d: -f1); \
-  usermod -l $UNAME -m -d /home/$UNAME -s /bin/bash $old_uname; \
+  usermod -l $UNAME -g $GID -m -d /home/$UNAME -s /bin/bash $old_uname; \
 else \
-  useradd -ms /bin/bash -u $UID $UNAME; \
+  useradd -ms /bin/bash -u $UID -g $GID $UNAME; \
 fi
 
 USER $UNAME
