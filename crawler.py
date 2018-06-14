@@ -234,4 +234,4 @@ if __name__ == '__main__':
 
     # save the action_map and snitch_map in a human-readable Json file
     with open(os.path.join(args.out_path, 'results.json'), 'w') as f:
-        json.dump(results, f, indent=2, sort_keys=True)
+        json.dump(results, f, indent=2, sort_keys=True, separators=(',', ': '))
