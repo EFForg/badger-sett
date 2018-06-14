@@ -67,11 +67,11 @@ def get_chrome_extension_id(crx_file):
     return str.translate(digest[:32], trans)
 
 
-def get_domain_list(n_sites):
+def get_domain_list(n_sites, out_path):
     """Load the top million domains from disk or the web"""
     domains = []
 
-    top_1m_file = os.path.join(args.out_path, MAJESTIC_URL.split('/')[-1])
+    top_1m_file = os.path.join(out_path, MAJESTIC_URL.split('/')[-1])
 
     # download the file if it doesn't exist or if it's more than a week stale
     if (not os.path.exists(top_1m_file) or
@@ -120,10 +120,10 @@ def start_driver_firefox(ext_path, browser_path):
     return driver
 
 
-def dump_data(driver):
+def dump_data(driver, browser, ext_path):
     """Extract the objects Privacy Badger learned during its training run."""
-    if args.browser == CHROME:
-        ext_url = CHROME_URL_FMT % get_chrome_extension_id(args.ext_path)
+    if browser == CHROME:
+        ext_url = CHROME_URL_FMT % get_chrome_extension_id(ext_path)
     else:
         ext_url = FF_URL_FMT % FF_UUID
 
@@ -165,14 +165,14 @@ def get_domain(driver, domain, wait_time):
     time.sleep(wait_time)
 
 
-def crawl(browser, ext_path, chromedriver_path, firefox_path, n_sites, timeout,
-          wait_time, **kwargs):
+def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
+          timeout, wait_time, **kwargs):
     """
     Visit the top `n_sites` websites in the Majestic Million, in order, in a
     virtual browser with Privacy Badger installed. Afterwards, save the
     action_map and snitch_map that the Badger learned.
     """
-    domains = get_domain_list(n_sites)
+    domains = get_domain_list(n_sites, out_path)
     logger.info('starting new crawl with timeout %s n_sites %s' %
                 (timeout, n_sites))
 
@@ -201,10 +201,9 @@ def crawl(browser, ext_path, chromedriver_path, firefox_path, n_sites, timeout,
             continue
 
     logger.info('Scan complete. Saving data...')
-    data = dump_data(driver)
+    data = dump_data(driver, browser, ext_path)
     driver.quit()
     vdisplay.stop()
-
     return data
 
 
@@ -227,11 +226,13 @@ if __name__ == '__main__':
         sh.setFormatter(log_fmt)
         logger.addHandler(sh)
 
+    # version is based on when the crawl started
     version = time.strftime('%Y.%-m.%-d', time.localtime())
+
     # the argparse arguments must match the function signature of crawl()
     results = crawl(**vars(args))
     results['version'] = version
 
-    # save the action_map and snitch_map in a human-readable Json file
+    # save the action_map and snitch_map in a human-readable JSON file
     with open(os.path.join(args.out_path, 'results.json'), 'w') as f:
         json.dump(results, f, indent=2, sort_keys=True, separators=(',', ': '))
