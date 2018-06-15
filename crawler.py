@@ -127,7 +127,13 @@ def dump_data(driver, browser, ext_path):
     else:
         ext_url = FF_URL_FMT % FF_UUID
 
-    driver.get(ext_url)
+    try:
+        driver.get(ext_url)
+    except WebDriverException as e:
+        logger.error('Error loading background page: ' + e.msg)
+        logger.error('Could not get badger storage. Scan failed.')
+        sys.exit(1)
+
     data = {}
     for obj in OBJECTS:
         script = 'return badger.storage.%s.getItemClones()' % obj
@@ -188,8 +194,8 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
     driver.set_page_load_timeout(timeout)
     driver.set_script_timeout(timeout)
 
-    for domain in domains:
-        logger.info('visiting %s' % domain)
+    for i, domain in enumerate(domains):
+        logger.info('visiting %d. %s' % (i + 1, domain))
         try:
             get_domain(driver, domain, wait_time)
         except TimeoutException:
@@ -200,11 +206,12 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
             logger.error(domain + ' ' + e.msg)
             continue
 
-    logger.info('Scan complete. Saving data...')
+    logger.info('Finished scan. Getting data from browser storage...')
     data = dump_data(driver, browser, ext_path)
     driver.quit()
     vdisplay.stop()
 
+    logger.info('Cleaning data...')
     cleanup(domains, data)
     return data
 
@@ -275,9 +282,11 @@ if __name__ == '__main__':
     results = crawl(**vars(args))
     results['version'] = version
 
+    logger.info('Saving seed data version %s...' % version)
     # save the action_map and snitch_map in a human-readable JSON file
     with open(os.path.join(args.out_path, 'results.json'), 'w') as f:
         json.dump(results, f, indent=2, sort_keys=True, separators=(',', ': '))
+    logger.info('Scan success.')
 
 else:
     logger = logging.getLogger()
