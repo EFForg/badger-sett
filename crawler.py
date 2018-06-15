@@ -157,17 +157,19 @@ def timeout_workaround(driver):
 def get_domain(driver, domain, wait_time):
     """
     Try to load a domain over https, and fall back to http if the initial load
-    fails. Then sleep `wait_time` seconds on the site to wait for AJAX calls to
-    complete.
+    times out. Then sleep `wait_time` seconds on the site to wait for AJAX calls
+    to complete.
     """
     try:
         url = "https://%s/" % domain
         driver.get(url)
-    except WebDriverException as e:
-        logger.error(url + ' ' + e.msg)
+    except TimeoutException:
+        logger.info('timeout on %s ' % url)
+        driver = timeout_workaround(driver)
         url = "http://%s/" % domain
         logger.info('trying ' + url)
         driver.get(url)
+
     time.sleep(wait_time)
 
 
@@ -195,15 +197,12 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
     driver.set_script_timeout(timeout)
 
     for i, domain in enumerate(domains):
-        logger.info('visiting %d. %s' % (i + 1, domain))
+        logger.info('visiting %d: %s' % (i + 1, domain))
         try:
             get_domain(driver, domain, wait_time)
-        except TimeoutException:
-            logger.info('timeout on %s ' % domain)
-            driver = timeout_workaround(driver)
-            continue
         except WebDriverException as e:
-            logger.error(domain + ' ' + e.msg)
+            logger.error('%s %s: %s' % (domain, type(e).__name__, e.msg))
+            driver = timeout_workaround(driver)
             continue
 
     logger.info('Finished scan. Getting data from browser storage...')
