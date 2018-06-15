@@ -9,8 +9,8 @@ PB_BRANCH=${PB_BRANCH:-master}
 # fetch and build the latest version of Privacy Badger
 if [ -e $PB_DIR ]; then
   cd $PB_DIR
-  git checkout $PB_BRANCH
   git pull
+  git checkout $PB_BRANCH
 else
   git clone https://github.com/efforg/privacybadger $PB_DIR
   git checkout $PB_BRANCH
