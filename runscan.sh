@@ -44,9 +44,6 @@ if ! docker build --build-arg UID=$(id -u "$USER") \
   exit 1;
 fi
 
-# back up old results
-cp results.json results-prev.json
-
 # create the output folder if necessary
 DOCKER_OUT=$(pwd)/docker-out
 mkdir -p $DOCKER_OUT
@@ -78,6 +75,12 @@ if ! python validate.py ; then
   exit 1
 fi
 
+# back up old results
+cp results.json results-prev.json
+
+# copy the updated results and log file out of the docker volume
+mv $DOCKER_OUT/results.json $DOCKER_OUT/log.txt ./
+
 if [ "$GIT_PUSH" != "1" ] ; then
   echo "Scan successful."
   exit 0
@@ -87,9 +90,6 @@ fi
 if [ -e $DOCKER_OUT/results.json ] && \
     [ "$(diff results.json $DOCKER_OUT/results.json)" != "" ]; then
   echo "Scan successful. Updating public repository."
-
-  # copy the updated results and log file out of the docker volume
-  mv $DOCKER_OUT/results.json $DOCKER_OUT/log.txt ./
 
   # Commit updated list to github
   git add results.json results-prev.json
