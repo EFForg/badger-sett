@@ -48,12 +48,11 @@ fi
 DOCKER_OUT=$(pwd)/docker-out
 mkdir -p $DOCKER_OUT
 
-# Run main python scanner
-echo "Running scan in Docker..."
+echo "Running scan in Docker. Ctrl-C to break."
 
 # Run the scan, passing any extra command line arguments to crawler.py
-# Firefox command
-if ! docker run \
+# Run in Firefox:
+if ! docker run -t -i \
     -v $DOCKER_OUT:/home/$USER/out:z \
     -v /dev/shm:/dev/shm \
     badger-sett "$@" ; then
@@ -61,8 +60,8 @@ if ! docker run \
   exit 1;
 fi
 
-# Chrome scan (seccomp doesn't work in jessie)
-#docker run \
+# Run in Chrome (seccomp doesn't work in jessie):
+#docker run -t -i \
   #-v $DOCKER_OUT:/home/$USER/out:z \
   #-v /dev/shm:/dev/shm \
   #--device /dev/dri \
