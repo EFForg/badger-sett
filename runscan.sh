@@ -5,6 +5,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PB_DIR=$DIR/privacybadger
 PB_BRANCH=${PB_BRANCH:-master}
+USER=$(whoami)
 
 # fetch and build the latest version of Privacy Badger
 if [ -e $PB_DIR ]; then
@@ -48,15 +49,25 @@ fi
 DOCKER_OUT=$(pwd)/docker-out
 mkdir -p $DOCKER_OUT
 
-echo "Running scan in Docker. Ctrl-C to break."
+FLAGS=""
+echo "Running scan in Docker..."
+
+# If this script is invoked from the command line, use the docker flags "-i -t"
+# to allow breaking with Ctrl-C. If it was run by cron, the input device is not
+# a TTY, so these flags will cause docker to fail.
+if [ "$RUN_BY_CRON" != "1" ] ; then
+  echo "Ctrl-C to break."
+  FLAGS="-it"
+fi
 
 # Run the scan, passing any extra command line arguments to crawler.py
 # Run in Firefox:
-if ! docker run -t -i \
+if ! docker run $FLAGS \
     -v $DOCKER_OUT:/home/$USER/out:z \
     -v /dev/shm:/dev/shm \
     badger-sett "$@" ; then
-  echo "Scan failed."
+  mv $DOCKER_OUT/log.txt ./
+  echo "Scan failed. See log.txt for details."
   exit 1;
 fi
 
@@ -70,7 +81,7 @@ fi
 
 # Validate the output
 if ! python validate.py results.json $DOCKER_OUT/results.json ; then 
-  echo "results.json is invalid."
+  echo "Scan failed: results.json is invalid."
   exit 1
 fi
 
