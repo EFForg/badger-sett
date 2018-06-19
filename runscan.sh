@@ -88,22 +88,25 @@ fi
 # back up old results
 cp results.json results-prev.json
 
+# Get the version string from the results file
+VERSION=$(python -c "import json; print json.load(open('results.json'))['version']")
+echo "Scan successful. Seed data version: $VERSION"
+
 # copy the updated results and log file out of the docker volume
 mv $DOCKER_OUT/results.json $DOCKER_OUT/log.txt ./
 
 if [ "$GIT_PUSH" != "1" ] ; then
-  echo "Scan successful."
   exit 0
 fi
 
 # if the new results.json is different from the old, commit it
 if [ -e $DOCKER_OUT/results.json ] && \
     [ "$(diff results.json $DOCKER_OUT/results.json)" != "" ]; then
-  echo "Scan successful. Updating public repository."
+  echo "Updating public repository."
 
   # Commit updated list to github
   git add results.json results-prev.json
-  git commit -m "Update seed data: `date`"
+  git commit -m "Update seed data: $VERSION"
   git push
   exit 0
 else
