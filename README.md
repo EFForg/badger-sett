@@ -86,11 +86,13 @@ Host github-badger-sett
 This will have `git` connect to the remote using the new SSH keys by default.
 
 5. Create a cron job to call `runscan.sh` once a day. Set the environment
-   variable `GIT_PUSH=1` to have the script automatically commit and push
-   `results.json` when a scan finishes. Here's an example `crontab` entry:
+   variable `RUN_BY_CRON=1` to turn off TTY forwarding to `docker run` (which
+   would break the script in cron), and set `GIT_PUSH=1` to have the script
+   automatically commit and push `results.json` when the scan finishes. Here's an
+   example `crontab` entry:
 
 ```
-0 0 * * *  GIT_PUSH=1 /home/user/badger-sett/runscan.sh
+0 0 * * *  RUN_BY_CRON=1 GIT_PUSH=1 /home/USER/badger-sett/runscan.sh
 ```
 
 6. If everything has been set up correctly, the script should push a new version
