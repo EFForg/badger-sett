@@ -2,11 +2,13 @@ import json
 import sys
 
 KEYS = ['action_map', 'snitch_map', 'version']
+old_path = sys.argv[1]
+new_path = sys.argv[2]
 
-with open('results.json') as f:
+with open(old_path) as f:
     old_js = json.load(f)
 
-with open('docker-out/results.json') as f:
+with open(new_path) as f:
     new_js = json.load(f)
 
 for k in KEYS:

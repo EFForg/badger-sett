@@ -69,7 +69,7 @@ fi
   #badger-sett "$@"
 
 # Validate the output
-if ! python validate.py ; then 
+if ! python validate.py results.json $DOCKER_OUT/results.json ; then 
   echo "results.json is invalid."
   exit 1
 fi
