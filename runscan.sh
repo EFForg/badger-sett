@@ -80,7 +80,8 @@ fi
   #badger-sett "$@"
 
 # Validate the output
-if ! python validate.py results.json $DOCKER_OUT/results.json ; then 
+if ! ./validate.py results.json $DOCKER_OUT/results.json ; then 
+  mv $DOCKER_OUT/log.txt ./
   echo "Scan failed: results.json is invalid."
   exit 1
 fi
@@ -88,28 +89,20 @@ fi
 # back up old results
 cp results.json results-prev.json
 
+# copy the updated results and log file out of the docker volume
+mv $DOCKER_OUT/results.json $DOCKER_OUT/log.txt ./
+
 # Get the version string from the results file
 VERSION=$(python -c "import json; print json.load(open('results.json'))['version']")
 echo "Scan successful. Seed data version: $VERSION"
 
-# copy the updated results and log file out of the docker volume
-mv $DOCKER_OUT/results.json $DOCKER_OUT/log.txt ./
-
-if [ "$GIT_PUSH" != "1" ] ; then
-  exit 0
-fi
-
-# if the new results.json is different from the old, commit it
-if [ -e $DOCKER_OUT/results.json ] && \
-    [ "$(diff results.json $DOCKER_OUT/results.json)" != "" ]; then
+if [ "$GIT_PUSH" = "1" ] ; then
   echo "Updating public repository."
 
   # Commit updated list to github
   git add results.json results-prev.json
   git commit -m "Update seed data: $VERSION"
   git push
-  exit 0
-else
-  echo "Scan failed."
-  exit 1
 fi
+
+exit 0

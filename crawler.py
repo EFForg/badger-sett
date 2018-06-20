@@ -36,14 +36,6 @@ WEEK_IN_SECONDS = 604800
 ap = argparse.ArgumentParser()
 ap.add_argument('--browser', choices=[FIREFOX, CHROME], default=FIREFOX,
                 help='Browser to use for the scan')
-ap.add_argument('--out-path', default='./',
-                help='Path at which to save output')
-ap.add_argument('--ext-path', default='./privacybadger/src',
-                help='Path to the Privacy Badger binary or source directory')
-ap.add_argument('--chromedriver-path', default=CHROMEDRIVER_PATH,
-                help='Path to the chromedriver binary')
-ap.add_argument('--firefox-path', default=FF_BIN_PATH,
-                help='Path to the firefox browser binary')
 ap.add_argument('--n-sites', type=int, default=2000,
                 help='Number of websites to visit on the crawl')
 ap.add_argument('--timeout', type=float, default=10,
@@ -52,6 +44,16 @@ ap.add_argument('--wait-time', type=float, default=5,
                 help='Amount of time to wait on each site after it loads, in seconds')
 ap.add_argument('--log-stdout', action='store_true', default=False,
                 help='If set, log to stdout as well as log.txt')
+
+# Arguments below here should never have to be used within the docker container.
+ap.add_argument('--out-path', default='./',
+                help='Path at which to save output')
+ap.add_argument('--ext-path', default='./privacybadger/src',
+                help='Path to the Privacy Badger binary or source directory')
+ap.add_argument('--chromedriver-path', default=CHROMEDRIVER_PATH,
+                help='Path to the chromedriver binary')
+ap.add_argument('--firefox-path', default=FF_BIN_PATH,
+                help='Path to the firefox browser binary')
 
 
 def get_chrome_extension_id(crx_file):
@@ -195,7 +197,7 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
     driver.set_script_timeout(timeout)
 
     for i, domain in enumerate(domains):
-        logger.info('visiting %d. %s' % (i + 1, domain))
+        logger.info('visiting %d: %s' % (i + 1, domain))
         try:
             get_domain(driver, domain, wait_time)
         except TimeoutException:
