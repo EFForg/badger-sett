@@ -164,7 +164,7 @@ def get_domain(driver, domain, wait_time):
         url = "https://%s/" % domain
         driver.get(url)
     except TimeoutException:
-        logger.info('timeout on %s ' % domain)
+        logger.info('timeout on %s ' % url)
         driver = timeout_workaround(driver)
         url = "http://%s/" % domain
         logger.info('trying ' + url)
@@ -201,7 +201,7 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
         try:
             get_domain(driver, domain, wait_time)
         except WebDriverException as e:
-            logger.error('%s %s: %s' % (domain, type(e), e.msg))
+            logger.error('%s %s: %s' % (domain, type(e).__name__, e.msg))
             driver = timeout_workaround(driver)
             continue
 
