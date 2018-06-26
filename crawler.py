@@ -71,7 +71,7 @@ def test_crash(driver):
       var badptr = ctypes.cast(zero, ctypes.PointerType(ctypes.int32_t));
       var crash = badptr.contents;
     """)
-    
+
 
 def get_chrome_extension_id(crx_file):
     """Interpret a .crx file's extension ID"""
@@ -254,9 +254,12 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
             driver = timeout_workaround(driver)
         except WebDriverException as e:
             logger.error('%s %s: %s' % (domain, type(e).__name__, e.msg))
-            logger.info('restarting browser...')
-            driver = start_driver_firefox(ext_path, firefox_path)
-            load_user_data(driver, browser, ext_path, last_data)
+            # if the browser has crashed, start a new one
+            # TODO: better detection than this?
+            if 'response from marionette' in e.msg:
+                logger.info('restarting browser...')
+                driver = start_driver_firefox(ext_path, firefox_path)
+                load_user_data(driver, browser, ext_path, last_data)
 
     logger.info('Finished scan. Getting data from browser storage...')
     data = dump_data(driver, browser, ext_path)
