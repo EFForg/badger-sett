@@ -3,6 +3,8 @@ import json
 import sys
 import os
 
+from collections import defaultdict
+
 import colorama
 import tldextract
 
@@ -53,26 +55,20 @@ extract = tldextract.TLDExtract(cache_file=False)
 
 BLOCKED = ("block", "cookieblock")
 
-blocked_old = {}
+blocked_old = defaultdict(list)
 for domain in old_js['action_map'].keys():
     if old_js['action_map'][domain]['heuristicAction'] not in BLOCKED:
         continue
 
     base = extract(domain).registered_domain
-
-    if base not in blocked_old:
-        blocked_old[base] = []
     blocked_old[base].append(domain)
 
-blocked_new = {}
+blocked_new = defaultdict(list)
 for domain in new_js['action_map'].keys():
     if new_js['action_map'][domain]['heuristicAction'] not in BLOCKED:
         continue
 
     base = extract(domain).registered_domain
-
-    if base not in blocked_new:
-        blocked_new[base] = []
     blocked_new[base].append(domain)
 
 blocked_bases_old = set(blocked_old.keys())
