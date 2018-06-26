@@ -5,6 +5,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PB_DIR=$DIR/privacybadger
 PB_BRANCH=${PB_BRANCH:-master}
+USER=$(whoami)
 
 # fetch and build the latest version of Privacy Badger
 if [ -e $PB_DIR ]; then
@@ -44,28 +45,34 @@ if ! docker build --build-arg UID=$(id -u "$USER") \
   exit 1;
 fi
 
-# back up old results
-cp results.json results-prev.json
-
 # create the output folder if necessary
 DOCKER_OUT=$(pwd)/docker-out
 mkdir -p $DOCKER_OUT
 
-# Run main python scanner
+FLAGS=""
 echo "Running scan in Docker..."
 
+# If this script is invoked from the command line, use the docker flags "-i -t"
+# to allow breaking with Ctrl-C. If it was run by cron, the input device is not
+# a TTY, so these flags will cause docker to fail.
+if [ "$RUN_BY_CRON" != "1" ] ; then
+  echo "Ctrl-C to break."
+  FLAGS="-it"
+fi
+
 # Run the scan, passing any extra command line arguments to crawler.py
-# Firefox command
-if ! docker run \
+# Run in Firefox:
+if ! docker run $FLAGS \
     -v $DOCKER_OUT:/home/$USER/out:z \
     -v /dev/shm:/dev/shm \
     badger-sett "$@" ; then
-  echo "Scan failed."
+  mv $DOCKER_OUT/log.txt ./
+  echo "Scan failed. See log.txt for details."
   exit 1;
 fi
 
-# Chrome scan (seccomp doesn't work in jessie)
-#docker run \
+# Run in Chrome (seccomp doesn't work in jessie):
+#docker run -t -i \
   #-v $DOCKER_OUT:/home/$USER/out:z \
   #-v /dev/shm:/dev/shm \
   #--device /dev/dri \
@@ -73,30 +80,29 @@ fi
   #badger-sett "$@"
 
 # Validate the output
-if ! python validate.py ; then 
-  echo "results.json is invalid."
+if ! ./validate.py results.json $DOCKER_OUT/results.json ; then 
+  mv $DOCKER_OUT/log.txt ./
+  echo "Scan failed: results.json is invalid."
   exit 1
 fi
 
-if [ "$GIT_PUSH" != "1" ] ; then
-  echo "Scan successful."
-  exit 0
-fi
+# back up old results
+cp results.json results-prev.json
 
-# if the new results.json is different from the old, commit it
-if [ -e $DOCKER_OUT/results.json ] && \
-    [ "$(diff results.json $DOCKER_OUT/results.json)" != "" ]; then
-  echo "Scan successful. Updating public repository."
+# copy the updated results and log file out of the docker volume
+mv $DOCKER_OUT/results.json $DOCKER_OUT/log.txt ./
 
-  # copy the updated results and log file out of the docker volume
-  mv $DOCKER_OUT/results.json $DOCKER_OUT/log.txt ./
+# Get the version string from the results file
+VERSION=$(python -c "import json; print json.load(open('results.json'))['version']")
+echo "Scan successful. Seed data version: $VERSION"
+
+if [ "$GIT_PUSH" = "1" ] ; then
+  echo "Updating public repository."
 
   # Commit updated list to github
   git add results.json results-prev.json
-  git commit -m "Update seed data: `date`"
+  git commit -m "Update seed data: $VERSION"
   git push
-  exit 0
-else
-  echo "Scan failed."
-  exit 1
 fi
+
+exit 0
