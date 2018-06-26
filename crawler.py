@@ -19,12 +19,14 @@ from selenium.webdriver.chrome.options import Options
 from xvfbwrapper import Xvfb
 
 
-CHROME_URL_FMT = 'chrome-extension://%s/_generated_background_page.html'
+CHROME_URL_FMT = 'chrome-extension://%s/'
 CHROMEDRIVER_PATH='/usr/bin/chromedriver'
-FF_URL_FMT = 'moz-extension://%s/_generated_background_page.html'
+FF_URL_FMT = 'moz-extension://%s/'
 FF_EXT_ID = 'jid1-MnnxcxisBPnSXQ@jetpack'
 FF_UUID = 'd56a5b99-51b6-4e83-ab23-796216679614'
 FF_BIN_PATH = '/usr/bin/firefox'
+BACKGROUND = '_generated_background_page.html'
+OPTIONS = 'skin/options.html'
 
 CHROME = 'chrome'
 FIREFOX = 'firefox'
@@ -52,6 +54,20 @@ ap.add_argument('--wait-time', type=float, default=5,
                 help='Amount of time to wait on each site after it loads, in seconds')
 ap.add_argument('--log-stdout', action='store_true', default=False,
                 help='If set, log to stdout as well as log.txt')
+
+# Force a 'Failed to decode response from marionette' crash.
+# Example from this ticket: https://bugzilla.mozilla.org/show_bug.cgi?id=1401131
+def test_crash(driver):
+    driver.set_context("chrome")
+    driver.execute_script("""
+      // Copied from crash me simple
+      Components.utils.import("resource://gre/modules/ctypes.jsm");
+
+      // ctypes checks for NULL pointer derefs, so just go near-NULL.
+      var zero = new ctypes.intptr_t(8);
+      var badptr = ctypes.cast(zero, ctypes.PointerType(ctypes.int32_t));
+      var crash = badptr.contents;
+    """)
 
 
 def get_chrome_extension_id(crx_file):
@@ -120,19 +136,47 @@ def start_driver_firefox(ext_path, browser_path):
     return driver
 
 
-def dump_data(driver, browser, ext_path):
-    """Extract the objects Privacy Badger learned during its training run."""
+def load_background_page(driver, browser, ext_path):
     if browser == CHROME:
-        ext_url = CHROME_URL_FMT % get_chrome_extension_id(ext_path)
+        ext_url = (CHROME_URL_FMT + BACKGROUND) % get_chrome_extension_id(ext_path)
     else:
-        ext_url = FF_URL_FMT % FF_UUID
+        ext_url = (FF_URL_FMT + BACKGROUND) % FF_UUID
 
     try:
         driver.get(ext_url)
     except WebDriverException as e:
         logger.error('Error loading background page: ' + e.msg)
-        logger.error('Could not get badger storage. Scan failed.')
+        logger.error('Could not get badger storage.')
         sys.exit(1)
+
+
+def load_options_page(driver, browser, ext_path):
+    if browser == CHROME:
+        ext_url = (CHROME_URL_FMT + OPTIONS) % get_chrome_extension_id(ext_path)
+    else:
+        ext_url = (FF_URL_FMT + OPTIONS) % FF_UUID
+
+    try:
+        driver.get(ext_url)
+    except WebDriverException as e:
+        logger.error('Error loading options page: ' + e.msg)
+        sys.exit(1)
+
+
+def load_user_data(driver, browser, ext_path, data):
+    load_options_page(driver, browser, ext_path)
+    script = '''
+data = JSON.parse(arguments[0]);
+chrome.runtime.sendMessage({
+    type: "mergeUserData",
+    data: data
+});'''
+    driver.execute_script(script, json.dumps(data))
+
+
+def dump_data(driver, browser, ext_path):
+    """Extract the objects Privacy Badger learned during its training run."""
+    load_background_page(driver, browser, ext_path)
 
     data = {}
     for obj in OBJECTS:
@@ -145,6 +189,7 @@ def timeout_workaround(driver):
     """
     Selenium has a bug where a tab that raises a timeout exception can't
     recover gracefully. So we kill the tab and make a new one.
+    TODO: find actual bug ticket
     """
     driver.close()  # kill the broken site
     driver.switch_to_window(driver.window_handles.pop())
@@ -198,12 +243,17 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
 
     for i, domain in enumerate(domains):
         logger.info('visiting %d: %s' % (i + 1, domain))
+        last_data = dump_data(driver, browser, ext_path)
         try:
             get_domain(driver, domain, wait_time)
+        except TimeoutException:
+            logger.info('timeout on %s ' % domain)
+            driver = timeout_workaround(driver)
         except WebDriverException as e:
             logger.error('%s %s: %s' % (domain, type(e).__name__, e.msg))
-            driver = timeout_workaround(driver)
-            continue
+            logger.info('restarting browser...')
+            driver = start_driver_firefox(ext_path, firefox_path)
+            load_user_data(driver, browser, ext_path, last_data)
 
     logger.info('Finished scan. Getting data from browser storage...')
     data = dump_data(driver, browser, ext_path)
