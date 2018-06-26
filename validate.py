@@ -29,11 +29,11 @@ for k in KEYS:
     assert k in new_js
 
 # make sure there is data in the maps
-if not len(new_js['snitch_map'].keys()):
+if not new_js['snitch_map'].keys():
     print("Error: Snitch map empty.")
     sys.exit(1)
 
-if not len(new_js['action_map'].keys()):
+if not new_js['action_map'].keys():
     print("Error: Action map empty.")
     sys.exit(1)
 
