@@ -10,10 +10,12 @@ USER=$(whoami)
 # fetch and build the latest version of Privacy Badger
 if [ -e $PB_DIR ]; then
   cd $PB_DIR
-  git pull
+  git fetch
   git checkout $PB_BRANCH
+  git pull
 else
   git clone https://github.com/efforg/privacybadger $PB_DIR
+  cd $PB_DIR
   git checkout $PB_BRANCH
 fi
 
