@@ -81,13 +81,6 @@ fi
   #--security-opt seccomp=./chrome-seccomp.json \
   #badger-sett "$@"
 
-# Validate the output
-if ! ./validate.py results.json $DOCKER_OUT/results.json ; then 
-  mv $DOCKER_OUT/log.txt ./
-  echo "Scan failed: results.json is invalid."
-  exit 1
-fi
-
 # back up old results
 cp results.json results-prev.json
 

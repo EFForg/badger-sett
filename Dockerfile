@@ -31,7 +31,8 @@ WORKDIR /home/$USER
 COPY requirements.txt .
 RUN pip3 install --user -r requirements.txt
 
-COPY crawler.py docker-entry.sh /home/$USER/
+COPY crawler.py validate.py docker-entry.sh /home/$USER/
+COPY results.json /home/$USER/old-results.json
 COPY privacybadger /home/$USER/privacybadger
 ENV OUTPATH=/home/$USER/out
 ENV EXTPATH=/home/$USER/privacybadger/src
