@@ -139,35 +139,29 @@ def start_driver_firefox(ext_path, browser_path):
     return driver
 
 
-def load_background_page(driver, browser, ext_path):
+def load_extension_page(driver, browser, ext_path, page, retries=3):
+    """
+    Load a page in the Privacy Badger extension. `page` should either be
+    BACKGROUND or OPTIONS.
+    """
     if browser == CHROME:
-        ext_url = (CHROME_URL_FMT + BACKGROUND) % get_chrome_extension_id(ext_path)
+        ext_url = (CHROME_URL_FMT + page) % get_chrome_extension_id(ext_path)
     else:
-        ext_url = (FF_URL_FMT + BACKGROUND) % FF_UUID
+        ext_url = (FF_URL_FMT + page) % FF_UUID
 
-    try:
-        driver.get(ext_url)
-    except WebDriverException as e:
-        logger.error('Error loading background page: ' + e.msg)
-        logger.error('Could not get badger storage.')
-        sys.exit(1)
-
-
-def load_options_page(driver, browser, ext_path):
-    if browser == CHROME:
-        ext_url = (CHROME_URL_FMT + OPTIONS) % get_chrome_extension_id(ext_path)
+    for i in range(retries):
+        try:
+            driver.get(ext_url)
+            break
+        except WebDriverException as e:
+            continue
     else:
-        ext_url = (FF_URL_FMT + OPTIONS) % FF_UUID
-
-    try:
-        driver.get(ext_url)
-    except WebDriverException as e:
-        logger.error('Error loading options page: ' + e.msg)
-        sys.exit(1)
+        logger.error('Error loading extension page: ' + e.msg)
+        raise e
 
 
 def load_user_data(driver, browser, ext_path, data):
-    load_options_page(driver, browser, ext_path)
+    load_extension_page(driver, browser, ext_path, OPTIONS)
     script = '''
 data = JSON.parse(arguments[0]);
 chrome.runtime.sendMessage({
@@ -179,7 +173,7 @@ chrome.runtime.sendMessage({
 
 def dump_data(driver, browser, ext_path):
     """Extract the objects Privacy Badger learned during its training run."""
-    load_background_page(driver, browser, ext_path)
+    load_extension_page(driver, browser, ext_path, BACKGROUND)
 
     data = {}
     for obj in OBJECTS:
@@ -246,8 +240,11 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
 
     for i, domain in enumerate(domains):
         logger.info('visiting %d: %s' % (i + 1, domain))
-        last_data = dump_data(driver, browser, ext_path)
+
         try:
+            # If we can't load the options page for some reason, treat it like
+            # any other failure.
+            last_data = dump_data(driver, browser, ext_path)
             get_domain(driver, domain, wait_time)
         except TimeoutException:
             logger.info('timeout on %s ' % domain)
@@ -262,7 +259,12 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
                 load_user_data(driver, browser, ext_path, last_data)
 
     logger.info('Finished scan. Getting data from browser storage...')
-    data = dump_data(driver, browser, ext_path)
+    # If we can't load the background page here, there's a serious problem
+    try:
+        data = dump_data(driver, browser, ext_path)
+    except:
+        logger.error('Could not get badger storage.')
+        sys.exit(1)
     driver.quit()
     vdisplay.stop()
 
