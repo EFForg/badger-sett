@@ -2,7 +2,6 @@
 # -*- coding: UTF-8 -*-
 # adapted from https://github.com/cowlicks/badger-claw
 import argparse
-from glob import glob
 import hashlib
 import json
 import logging
@@ -94,7 +93,7 @@ def get_domain_list(n_sites, out_path):
 
     # download the file if it doesn't exist or if it's more than a week stale
     if (not os.path.exists(top_1m_file) or
-        time.time() - os.path.getmtime(top_1m_file) > WEEK_IN_SECONDS):
+            time.time() - os.path.getmtime(top_1m_file) > WEEK_IN_SECONDS):
         response = urlopen(MAJESTIC_URL)
         with open(top_1m_file, 'w') as f:
             f.write(response.read().decode())
@@ -149,14 +148,14 @@ def load_extension_page(driver, browser, ext_path, page, retries=3):
     else:
         ext_url = (FF_URL_FMT + page) % FF_UUID
 
-    for i in range(retries):
+    for _ in range(retries):
         try:
             driver.get(ext_url)
             break
         except WebDriverException as e:
             err = e
     else:
-        logger.error('Error loading extension page: ' + err.msg)
+        logger.error('Error loading extension page: %s', err.msg)
         raise err
 
 
@@ -206,10 +205,10 @@ def get_domain(driver, domain, wait_time):
         url = "https://%s/" % domain
         driver.get(url)
     except TimeoutException:
-        logger.info('timeout on %s ' % url)
+        logger.info('timeout on %s ', url)
         driver = timeout_workaround(driver)
         url = "http://%s/" % domain
-        logger.info('trying ' + url)
+        logger.info('trying %s', url)
         driver.get(url)
 
     time.sleep(wait_time)
@@ -223,8 +222,8 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
     action_map and snitch_map that the Badger learned.
     """
     domains = get_domain_list(n_sites, out_path)
-    logger.info('starting new crawl with timeout %s n_sites %s' %
-                (timeout, n_sites))
+    logger.info('starting new crawl with timeout %s n_sites %s',
+                timeout, n_sites)
 
     # create an XVFB virtual display (to avoid opening an actual browser)
     vdisplay = Xvfb(width=1280, height=720)
@@ -239,7 +238,7 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
     driver.set_script_timeout(timeout)
 
     for i, domain in enumerate(domains):
-        logger.info('visiting %d: %s' % (i + 1, domain))
+        logger.info('visiting %d: %s', i + 1, domain)
 
         try:
             # If we can't load the options page for some reason, treat it like
@@ -247,10 +246,10 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
             last_data = dump_data(driver, browser, ext_path)
             get_domain(driver, domain, wait_time)
         except TimeoutException:
-            logger.info('timeout on %s ' % domain)
+            logger.info('timeout on %s ', domain)
             driver = timeout_workaround(driver)
         except WebDriverException as e:
-            logger.error('%s %s: %s' % (domain, type(e).__name__, e.msg))
+            logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
             # if the browser has crashed, start a new one
             # TODO: better detection than this?
             if 'response from marionette' in e.msg:
@@ -262,7 +261,7 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
     # If we can't load the background page here, there's a serious problem
     try:
         data = dump_data(driver, browser, ext_path)
-    except:
+    except WebDriverException:
         logger.error('Could not get badger storage.')
         sys.exit(1)
     driver.quit()
@@ -283,11 +282,11 @@ def cleanup(domains, data):
 
     # handle blank domain bug
     if '' in action_map:
-        logging.info('Deleting blank domain from action map')
+        logger.info('Deleting blank domain from action map')
         del action_map['']
 
     if '' in snitch_map:
-        logging.info('Deleting blank domain from snitch map')
+        logger.info('Deleting blank domain from snitch map')
         del snitch_map['']
 
     # handle the domain-attribution bug (Privacy Badger issue #1997).
@@ -297,21 +296,22 @@ def cleanup(domains, data):
         # If a domain we visited was recorded as a tracker on the domain we
         # visited immediately after it, it's probably a bug
         if d1 in snitch_map and d2 in snitch_map[d1]:
-            logging.info('Reported domain %s tracking on %s' % (d1, d2))
+            logger.info('Reported domain %s tracking on %s', d1, d2)
             snitch_map[d1].remove(d2)
 
             # if the bug caused d1 to be added to the action map, remove it
-            if not len(snitch_map[d1]):
-                logging.info('Deleting domain %s from action and snitch maps'
-                             % d1)
+            if not snitch_map[d1]:
+                logger.info('Deleting domain %s from action and snitch maps',
+                            d1)
                 del action_map[d1]
                 del snitch_map[d1]
 
             # if the bug caused d1 to be blocked, unblock it
             elif len(snitch_map[d1]) == 2:
-                logging.info('Downgrading domain %s from "block" to "allow"'
-                             % d1)
+                logger.info('Downgrading domain %s from "block" to "allow"',
+                            d1)
                 action_map[d1]['heuristicAction'] = 'allow'
+
 
 if __name__ == '__main__':
     args = ap.parse_args()
@@ -339,7 +339,7 @@ if __name__ == '__main__':
     results = crawl(**vars(args))
     results['version'] = version
 
-    logger.info('Saving seed data version %s...' % version)
+    logger.info('Saving seed data version %s...', version)
     # save the action_map and snitch_map in a human-readable JSON file
     with open(os.path.join(args.out_path, 'results.json'), 'w') as f:
         json.dump(results, f, indent=2, sort_keys=True, separators=(',', ': '))
