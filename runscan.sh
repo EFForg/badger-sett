@@ -7,32 +7,38 @@ PB_DIR=$DIR/privacybadger
 PB_BRANCH=${PB_BRANCH:-master}
 USER=$(whoami)
 
-# fetch and build the latest version of Privacy Badger
-if [ -e $PB_DIR ]; then
-  cd $PB_DIR
+# fetch the latest version of the chosen branch of Privacy Badger
+if [ -e "$PB_DIR" ] ; then
+  echo "Updating Privacy Badger..."
+  cd "$PB_DIR"
   git fetch
   git checkout $PB_BRANCH
   git pull
 else
-  git clone https://github.com/efforg/privacybadger $PB_DIR
+  echo "Cloning Privacy Badger..."
+  git clone https://github.com/efforg/privacybadger "$PB_DIR"
   cd $PB_DIR
   git checkout $PB_BRANCH
 fi
 
 # change to the badger-sett repository
-cd $DIR
+cd "$DIR"
 
-# figure out whether we need to pull
-UPSTREAM=${1:-'@{u}'}
-LOCAL=$(git rev-parse @)
-REMOTE=$(git rev-parse "$UPSTREAM")
+# If we are planning to push the new results, update the repository now to avoid
+# merge conflicts later
+if [ "$GIT_PUSH" = "1" ] ; then
+  echo "Updating Badger Sett..."
+  # figure out whether we need to pull
+  UPSTREAM=${1:-'@{u}'}
+  LOCAL=$(git rev-parse @)
+  REMOTE=$(git rev-parse "$UPSTREAM")
 
-if [ $LOCAL = $REMOTE ]; then
-  echo "Local repository up-to-date."
-else
-  # update the repository to avoid merge conflicts later
-  echo "Pulling latest version of repository..."
-  git pull
+  if [ "$LOCAL" != "$REMOTE" ]; then
+    echo "Pulling latest version of badger-sett..."
+    git pull
+  else
+    echo "Local badger-sett repository is up-to-date."
+  fi
 fi
 
 # build the new docker image
@@ -48,8 +54,8 @@ if ! docker build --build-arg UID=$(id -u "$USER") \
 fi
 
 # create the output folder if necessary
-DOCKER_OUT=$(pwd)/docker-out
-mkdir -p $DOCKER_OUT
+DOCKER_OUT="$(pwd)/docker-out"
+mkdir -p "$DOCKER_OUT"
 
 FLAGS=""
 echo "Running scan in Docker..."
@@ -65,10 +71,10 @@ fi
 # Run the scan, passing any extra command line arguments to crawler.py
 # Run in Firefox:
 if ! docker run $FLAGS \
-    -v $DOCKER_OUT:/home/$USER/out:z \
+    -v "$DOCKER_OUT":/home/$USER/out:z \
     -v /dev/shm:/dev/shm \
     badger-sett "$@" ; then
-  mv $DOCKER_OUT/log.txt ./
+  mv "$DOCKER_OUT"/log.txt ./
   echo "Scan failed. See log.txt for details."
   exit 1;
 fi
@@ -85,10 +91,10 @@ fi
 cp results.json results-prev.json
 
 # copy the updated results and log file out of the docker volume
-mv $DOCKER_OUT/results.json $DOCKER_OUT/log.txt ./
+mv "$DOCKER_OUT"/results.json "$DOCKER_OUT"/log.txt ./
 
 # Get the version string from the results file
-VERSION=$(python -c "import json; print json.load(open('results.json'))['version']")
+VERSION=$(python3 -c "import json; print(json.load(open('results.json'))['version'])")
 echo "Scan successful. Seed data version: $VERSION"
 
 if [ "$GIT_PUSH" = "1" ] ; then

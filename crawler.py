@@ -288,7 +288,7 @@ if __name__ == '__main__':
     # save the action_map and snitch_map in a human-readable JSON file
     with open(os.path.join(args.out_path, 'results.json'), 'w') as f:
         json.dump(results, f, indent=2, sort_keys=True, separators=(',', ': '))
-    logger.info('Scan success.')
+    logger.info('Saved data to results.json.')
 
 else:
     logger = logging.getLogger()
