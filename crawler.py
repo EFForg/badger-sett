@@ -154,10 +154,10 @@ def load_extension_page(driver, browser, ext_path, page, retries=3):
             driver.get(ext_url)
             break
         except WebDriverException as e:
-            continue
+            err = e
     else:
-        logger.error('Error loading extension page: ' + e.msg)
-        raise e
+        logger.error('Error loading extension page: ' + err.msg)
+        raise err
 
 
 def load_user_data(driver, browser, ext_path, data):
