@@ -13,7 +13,9 @@ import time
 from urllib.request import urlopen
 
 from selenium import webdriver
-from selenium.common.exceptions import TimeoutException, WebDriverException
+from selenium.common.exceptions import TimeoutException, WebDriverException,\
+                                       NoSuchWindowException,\
+                                       SessionNotCreatedException
 from selenium.webdriver.chrome.options import Options
 from xvfbwrapper import Xvfb
 
@@ -237,6 +239,12 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
     driver.set_page_load_timeout(timeout)
     driver.set_script_timeout(timeout)
 
+    def restart_browser(data):
+        logger.info('restarting browser...')
+        driver = start_driver_firefox(ext_path, firefox_path)
+        load_user_data(driver, browser, ext_path, data)
+        return driver
+
     for i, domain in enumerate(domains):
         logger.info('visiting %d: %s', i + 1, domain)
 
@@ -248,14 +256,18 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
         except TimeoutException:
             logger.info('timeout on %s ', domain)
             driver = timeout_workaround(driver)
+        except SessionNotCreatedException as e:
+            logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
+            driver = restart_browser(last_data)
+        except NoSuchWindowException as e:
+            logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
+            driver = restart_browser(last_data)
         except WebDriverException as e:
             logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
             # if the browser has crashed, start a new one
             # TODO: better detection than this?
             if 'response from marionette' in e.msg:
-                logger.info('restarting browser...')
-                driver = start_driver_firefox(ext_path, firefox_path)
-                load_user_data(driver, browser, ext_path, last_data)
+                driver = restart_browser(last_data)
 
     logger.info('Finished scan. Getting data from browser storage...')
     # If we can't load the background page here, there's a serious problem
