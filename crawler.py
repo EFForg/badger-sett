@@ -120,7 +120,10 @@ def start_driver_chrome(ext_path, chromedriver_path):
     opts.add_extension(ext_path)
     opts.add_experimental_option("prefs", {"profile.block_third_party_cookies": False})
     opts.add_argument('--dns-prefetch-disable')
-    return webdriver.Chrome(chromedriver_path, chrome_options=opts)
+    driver = webdriver.Chrome(chromedriver_path, chrome_options=opts)
+
+    set_passive_mode(driver, CHROME, ext_path)
+    return driver
 
 
 def start_driver_firefox(ext_path, browser_path):
@@ -137,6 +140,8 @@ def start_driver_firefox(ext_path, browser_path):
     driver.command_executor._commands[command] = ('POST', '/session/$sessionId/moz/addon/install')
     driver.execute(command, params={'path': ext_path, 'temporary': True})
     time.sleep(2)
+
+    set_passive_mode(driver, FIREFOX, ext_path)
     return driver
 
 
@@ -159,6 +164,16 @@ def load_extension_page(driver, browser, ext_path, page, retries=3):
     else:
         logger.error('Error loading extension page: %s', err.msg)
         raise err
+
+
+def set_passive_mode(driver, browser, ext_path):
+    load_extension_page(driver, browser, ext_path, OPTIONS)
+    script = '''
+chrome.runtime.sendMessage({
+    type: "updateSettings",
+    data: { passiveMode: true }
+});'''
+    driver.execute_script(script)
 
 
 def load_user_data(driver, browser, ext_path, data):
@@ -317,7 +332,7 @@ def cleanup(domains, data):
         # visited immediately after it, it's probably a bug
         if d1 in snitch_map and d2 in snitch_map[d1]:
             logger.info('Reported domain %s tracking on %s', d1, d2)
-            snitch_map[d1].remove(d2)
+            del snitch_map[d1][d2]
 
             # if the bug caused d1 to be added to the action map, remove it
             if not snitch_map[d1]:
