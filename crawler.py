@@ -165,11 +165,12 @@ def load_user_data(driver, browser, ext_path, data):
     load_extension_page(driver, browser, ext_path, OPTIONS)
     script = '''
 data = JSON.parse(arguments[0]);
-chrome.runtime.sendMessage({
-    type: "mergeUserData",
-    data: data
-});'''
+badger.storage.action_map.merge(data.action_map);
+for (let tracker in data.snitch_map) {
+    badger.storage.snitch_map._store[tracker] = data.snitch_map[tracker];
+}'''
     driver.execute_script(script, json.dumps(data))
+    time.sleep(2)   # wait for localstorage to sync
 
 
 def dump_data(driver, browser, ext_path):
@@ -214,6 +215,7 @@ def get_domain(driver, domain, wait_time):
         driver.get(url)
 
     time.sleep(wait_time)
+    return url
 
 
 def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
@@ -245,6 +247,9 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
         load_user_data(driver, browser, ext_path, data)
         return driver
 
+    # list of domains we actually visited
+    visited = []
+
     for i, domain in enumerate(domains):
         logger.info('visiting %d: %s', i + 1, domain)
 
@@ -252,7 +257,8 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
             # If we can't load the options page for some reason, treat it like
             # any other failure.
             last_data = dump_data(driver, browser, ext_path)
-            get_domain(driver, domain, wait_time)
+            url = get_domain(driver, domain, wait_time)
+            visited.append(url)
         except TimeoutException:
             logger.info('timeout on %s ', domain)
             driver = timeout_workaround(driver)
@@ -269,7 +275,9 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
             if 'response from marionette' in e.msg:
                 driver = restart_browser(last_data)
 
-    logger.info('Finished scan. Getting data from browser storage...')
+    logger.info('Finished scan. Visited %d sites and errored on %d.',
+                len(visited), len(domains) - len(visited))
+    logger.info('Getting data from browser storage...')
     # If we can't load the background page here, there's a serious problem
     try:
         data = dump_data(driver, browser, ext_path)
