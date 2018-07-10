@@ -210,7 +210,6 @@ def timeout_workaround(driver):
     before = set(driver.window_handles)
     driver.execute_script('window.open()')
     driver.switch_to_window((set(driver.window_handles) ^ before).pop())
-    return driver
 
 
 def get_domain(driver, domain, wait_time):
@@ -224,7 +223,7 @@ def get_domain(driver, domain, wait_time):
         driver.get(url)
     except TimeoutException:
         logger.info('timeout on %s ', url)
-        driver = timeout_workaround(driver)
+        timeout_workaround(driver)
         url = "http://%s/" % domain
         logger.info('trying %s', url)
         driver.get(url)
@@ -262,6 +261,12 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
         load_user_data(driver, browser, ext_path, data)
         return driver
 
+    # determine whether we need to restart the webdriver after an error
+    def should_restart(e):
+        return (type(e) == NoSuchWindowException or
+            type(e) == SessionNotCreatedException or
+            'response from marionette' in e.msg)
+
     # list of domains we actually visited
     visited = []
 
@@ -276,18 +281,15 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
             visited.append(url)
         except TimeoutException:
             logger.info('timeout on %s ', domain)
-            driver = timeout_workaround(driver)
-        except SessionNotCreatedException as e:
-            logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
-            driver = restart_browser(last_data)
-        except NoSuchWindowException as e:
-            logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
-            driver = restart_browser(last_data)
+            # TODO: how to get rid of this nested try?
+            try:
+                timeout_workaround(driver)
+            except WebDriverException as e:
+                if should_restart(e):
+                    driver = restart_browser(last_data)
         except WebDriverException as e:
             logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
-            # if the browser has crashed, start a new one
-            # TODO: better detection than this?
-            if 'response from marionette' in e.msg:
+            if should_restart(e):
                 driver = restart_browser(last_data)
 
     logger.info('Finished scan. Visited %d sites and errored on %d.',
