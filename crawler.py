@@ -17,6 +17,7 @@ from selenium.common.exceptions import TimeoutException, WebDriverException,\
                                        NoSuchWindowException,\
                                        SessionNotCreatedException
 from selenium.webdriver.chrome.options import Options
+from tldextract import TLDExtract
 from xvfbwrapper import Xvfb
 
 
@@ -161,6 +162,12 @@ def load_extension_page(driver, browser, ext_path, page, retries=3):
         raise err
 
 
+def clear_user_data(driver, browser, ext_path):
+    load_extension_page(driver, browser, ext_path, OPTIONS)
+    script = 'chrome.runtime.sendMessage({type: "removeAllData"});'
+    driver.execute_script(script)
+
+
 def load_user_data(driver, browser, ext_path, data):
     load_extension_page(driver, browser, ext_path, OPTIONS)
     script = '''
@@ -259,9 +266,14 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
         logger.info('visiting %d: %s', i + 1, domain)
 
         try:
-            # If we can't load the options page for some reason, treat it like
-            # any other failure.
+            # This script could fail during the data dump (trying to get the
+            # options page), the data cleaning, or while trying to load the next
+            # domain.
             last_data = dump_data(driver, browser, ext_path)
+            clean_data = cleanup(last_data)
+            if last_data != clean_data:
+                clear_data(driver, browser, ext_path)
+                load_user_data(clean_data)
             url = get_domain(driver, domain, wait_time)
             visited.append(url)
         except TimeoutException:
@@ -290,17 +302,17 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
     vdisplay.stop()
 
     logger.info('Cleaning data...')
-    cleanup(domains, data)
     return data
 
 
-def cleanup(domains, data):
+def cleanup(d1, d2, data):
     """
     Remove from snitch map any domains that appear to have been added as a
     result of bugs.
     """
-    snitch_map = data['snitch_map']
-    action_map = data['action_map']
+    new_data = data.deepcopy()
+    snitch_map = new_data['snitch_map']
+    action_map = new_data['action_map']
 
     # handle blank domain bug
     if '' in action_map:
@@ -311,28 +323,34 @@ def cleanup(domains, data):
         logger.info('Deleting blank domain from snitch map')
         del snitch_map['']
 
+    extract = TLDExtract()
+    d1_base = extract(d1).registered_domain
+
     # handle the domain-attribution bug (Privacy Badger issue #1997).
-    for i in range(len(domains) - 1):
-        d1, d2 = domains[i:i+2]
+    # If a domain we visited was recorded as a tracker on the domain we
+    # visited immediately after it, it's probably a bug
+    if d1_base in snitch_map and d2 in snitch_map[d1_base]:
+        logger.info('Reported domain %s tracking on %s', d1_base, d2)
+        del snitch_map[d1_base][d2]
 
-        # If a domain we visited was recorded as a tracker on the domain we
-        # visited immediately after it, it's probably a bug
-        if d1 in snitch_map and d2 in snitch_map[d1]:
-            logger.info('Reported domain %s tracking on %s', d1, d2)
-            snitch_map[d1].remove(d2)
-
-            # if the bug caused d1 to be added to the action map, remove it
-            if not snitch_map[d1]:
-                logger.info('Deleting domain %s from action and snitch maps',
-                            d1)
+        # if the bug caused d1 to be added to the action map, remove it
+        if not snitch_map[d1_base]:
+            logger.info('Deleting domain %s from action & snitch maps', d1_base)
+            if d1 in action_map:
                 del action_map[d1]
-                del snitch_map[d1]
+            if d1_base in action_map:
+                del action_map[d1_base]
+            del snitch_map[d1_base]
 
-            # if the bug caused d1 to be blocked, unblock it
-            elif len(snitch_map[d1]) == 2:
-                logger.info('Downgrading domain %s from "block" to "allow"',
-                            d1)
+        # if the bug caused d1 to be blocked, unblock it
+        elif len(snitch_map[d1_base]) == 2:
+            logger.info('Downgrading domain %s from "block" to "allow"', d1_base)
+            if d1 in action_map:
                 action_map[d1]['heuristicAction'] = 'allow'
+            if d1_base in action_map:
+                action_map[d1_base]['heuristicAction'] = 'allow'
+
+    return new_data
 
 
 if __name__ == '__main__':
