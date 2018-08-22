@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 # adapted from https://github.com/cowlicks/badger-claw
 import argparse
+import copy
 import hashlib
 import json
 import logging
@@ -306,10 +307,14 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
             # options page), the data cleaning, or while trying to load the next
             # domain.
             last_data = dump_data(driver, browser, ext_path)
-            clean_data = cleanup(last_data)
-            if last_data != clean_data:
-                clear_data(driver, browser, ext_path)
-                load_user_data(clean_data)
+
+            # try to fix misattribution errors
+            if i >= 2:
+                clean_data = cleanup(domains[i-2], domains[i-1], last_data)
+                if last_data != clean_data:
+                    clear_user_data(driver, browser, ext_path)
+                    load_user_data(driver, browser, ext_path, clean_data)
+
             url = get_domain(driver, domain, wait_time)
             visited.append(url)
         except TimeoutException:
@@ -346,7 +351,7 @@ def cleanup(d1, d2, data):
     Remove from snitch map any domains that appear to have been added as a
     result of bugs.
     """
-    new_data = data.deepcopy()
+    new_data = copy.deepcopy(data)
     snitch_map = new_data['snitch_map']
     action_map = new_data['action_map']
 
@@ -367,7 +372,7 @@ def cleanup(d1, d2, data):
     # visited immediately after it, it's probably a bug
     if d1_base in snitch_map and d2 in snitch_map[d1_base]:
         logger.info('Reported domain %s tracking on %s', d1_base, d2)
-        del snitch_map[d1_base][d2]
+        snitch_map[d1_base].remove(d2)
 
         # if the bug caused d1 to be added to the action map, remove it
         if not snitch_map[d1_base]:
@@ -380,10 +385,12 @@ def cleanup(d1, d2, data):
 
         # if the bug caused d1 to be blocked, unblock it
         elif len(snitch_map[d1_base]) == 2:
-            logger.info('Downgrading domain %s from "block" to "allow"', d1_base)
             if d1 in action_map:
+                logger.info('Downgrading domain %s from "block" to "allow"', d1)
                 action_map[d1]['heuristicAction'] = 'allow'
             if d1_base in action_map:
+                logger.info('Downgrading domain %s from "block" to "allow"',
+                            d1_base)
                 action_map[d1_base]['heuristicAction'] = 'allow'
 
     return new_data
