@@ -2,6 +2,7 @@
 # -*- coding: UTF-8 -*-
 # adapted from https://github.com/cowlicks/badger-claw
 import argparse
+import glob
 import hashlib
 import json
 import logging
@@ -32,7 +33,7 @@ OPTIONS = 'skin/options.html'
 CHROME = 'chrome'
 FIREFOX = 'firefox'
 
-OBJECTS = ['action_map', 'snitch_map']
+OBJECTS = ['snitch_map']
 MAJESTIC_URL = "http://downloads.majesticseo.com/majestic_million.csv"
 WEEK_IN_SECONDS = 604800
 
@@ -41,12 +42,14 @@ ap.add_argument('--browser', choices=[FIREFOX, CHROME], default=FIREFOX,
                 help='Browser to use for the scan')
 ap.add_argument('--n-sites', type=int, default=2000,
                 help='Number of websites to visit on the crawl')
-ap.add_argument('--timeout', type=float, default=10,
+ap.add_argument('--timeout', type=float, default=30,
                 help='Amount of time to allow each site to load, in seconds')
 ap.add_argument('--wait-time', type=float, default=5,
                 help='Amount of time to wait on each site after it loads, in seconds')
 ap.add_argument('--log-stdout', action='store_true', default=False,
                 help='If set, log to stdout as well as log.txt')
+ap.add_argument('--max-data-size', type=int, default=5e5,
+                help='Maximum size of serialized localstorage data')
 
 # Arguments below here should never have to be used within the docker container.
 ap.add_argument('--out-path', default='./',
@@ -180,12 +183,15 @@ def load_user_data(driver, browser, ext_path, data):
     load_extension_page(driver, browser, ext_path, OPTIONS)
     script = '''
 data = JSON.parse(arguments[0]);
-badger.storage.action_map.merge(data.action_map);
-for (let tracker in data.snitch_map) {
-    badger.storage.snitch_map._store[tracker] = data.snitch_map[tracker];
-}'''
+badger.storage.snitch_map.merge(data.snitch_map);
+'''
     driver.execute_script(script, json.dumps(data))
     time.sleep(2)   # wait for localstorage to sync
+
+
+def clear_data(driver, browser, ext_path):
+    """Clear Privacy Badger's local storage"""
+    load_extension_page(driver, browser, ext_path, BACKGROUND)
 
 
 def dump_data(driver, browser, ext_path):
@@ -197,6 +203,11 @@ def dump_data(driver, browser, ext_path):
         script = 'return badger.storage.%s.getItemClones()' % obj
         data[obj] = driver.execute_script(script)
     return data
+
+
+def size_of(data):
+    """Get the size (in bytes) of the serialized data structure"""
+    return len(json.dumps(data))
 
 
 def timeout_workaround(driver):
@@ -233,11 +244,11 @@ def get_domain(driver, domain, wait_time):
 
 
 def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
-          timeout, wait_time, **kwargs):
+          timeout, wait_time, max_data_size, **kwargs):
     """
     Visit the top `n_sites` websites in the Majestic Million, in order, in a
     virtual browser with Privacy Badger installed. Afterwards, save the
-    action_map and snitch_map that the Badger learned.
+    and snitch_map that the Badger learned.
     """
     domains = get_domain_list(n_sites, out_path)
     logger.info('starting new crawl with timeout %s n_sites %s',
@@ -269,14 +280,24 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
 
     # list of domains we actually visited
     visited = []
+    last_data = None
+    first_i = 0
 
     for i, domain in enumerate(domains):
-        logger.info('visiting %d: %s', i + 1, domain)
-
+        # If we can't load the options page for some reason, treat it like
+        # any other error
         try:
-            # If we can't load the options page for some reason, treat it like
-            # any other failure.
+            # save the state of privacy badger before we do anything else
             last_data = dump_data(driver, browser, ext_path)
+
+            # If the localstorage data is getting too big, dump it and restart
+            if size_of(last_data) > max_data_size:
+                save(last_data, 'results-%d-%d.json' % (first_i, i))
+                first_i = i + 1
+                last_data = {}
+                driver = restart_browser(last_data)
+
+            logger.info('visiting %d: %s', i + 1, domain)
             url = get_domain(driver, domain, wait_time)
             visited.append(url)
         except TimeoutException:
@@ -291,63 +312,61 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
             logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
             if should_restart(e):
                 driver = restart_browser(last_data)
+        except KeyboardInterrupt:
+            logger.warn('Keyboard interrupt. Ending scan after %d sites.', i+1)
+            break
 
     logger.info('Finished scan. Visited %d sites and errored on %d.',
-                len(visited), len(domains) - len(visited))
+                len(visited), i + 1 - len(visited))
     logger.info('Getting data from browser storage...')
+
     # If we can't load the background page here, there's a serious problem
     try:
         data = dump_data(driver, browser, ext_path)
-    except WebDriverException:
-        logger.error('Could not get badger storage.')
-        sys.exit(1)
+    except Exception:
+        if last_data:
+            logger.error('Could not get badger storage. Using cached data...')
+            data = last_data
+        else:
+            logger.error('Could not export data. Exiting.')
+            sys.exit(1)
+
     driver.quit()
     vdisplay.stop()
 
-    logger.info('Cleaning data...')
-    cleanup(domains, data)
-    return data
+    save(data, out_path, 'results-%d-%d.json' % (first_i, i))
+    save(merge_saved_data(out_path))
 
 
-def cleanup(domains, data):
-    """
-    Remove from snitch map any domains that appear to have been added as a
-    result of bugs.
-    """
-    snitch_map = data['snitch_map']
-    action_map = data['action_map']
+def save(data, out_path, name='results.json'):
+    data['version'] = version
 
-    # handle blank domain bug
-    if '' in action_map:
-        logger.info('Deleting blank domain from action map')
-        del action_map['']
+    logger.info('Saving seed data version %s...', version)
+    # save the snitch_map in a human-readable JSON file
+    with open(os.path.join(out_path, name), 'w') as f:
+        json.dump(data, f, indent=2, sort_keys=True, separators=(',', ': '))
+    logger.info('Saved data to %s.', name)
 
-    if '' in snitch_map:
-        logger.info('Deleting blank domain from snitch map')
-        del snitch_map['']
 
-    # handle the domain-attribution bug (Privacy Badger issue #1997).
-    for i in range(len(domains) - 1):
-        d1, d2 = domains[i:i+2]
+def merge_saved_data(out_path):
+    paths = glob.glob(os.path.join(out_path, 'results-*.json'))
+    snitch_map = {}
+    for p in paths:
+        with open(p) as f:
+            sm = json.load(f)['snitch_map']
+        for tracker, snitches in sm.items():
+            if tracker not in snitch_map:
+                snitch_map[tracker] = snitches
+                continue
 
-        # If a domain we visited was recorded as a tracker on the domain we
-        # visited immediately after it, it's probably a bug
-        if d1 in snitch_map and d2 in snitch_map[d1]:
-            logger.info('Reported domain %s tracking on %s', d1, d2)
-            del snitch_map[d1][d2]
+            for snitch, data in snitches.items():
+                if snitch == 'length':
+                    snitch_map[tracker]['length'] = \
+                        int(snitch_map[tracker]['length']) + int(data)
+                    continue
+                snitch_map[tracker][snitch] = data
 
-            # if the bug caused d1 to be added to the action map, remove it
-            if not snitch_map[d1]:
-                logger.info('Deleting domain %s from action and snitch maps',
-                            d1)
-                del action_map[d1]
-                del snitch_map[d1]
-
-            # if the bug caused d1 to be blocked, unblock it
-            elif len(snitch_map[d1]) == 2:
-                logger.info('Downgrading domain %s from "block" to "allow"',
-                            d1)
-                action_map[d1]['heuristicAction'] = 'allow'
+    return {'version': version, 'snitch_map': snitch_map}
 
 
 if __name__ == '__main__':
@@ -372,15 +391,10 @@ if __name__ == '__main__':
     # version is based on when the crawl started
     version = time.strftime('%Y.%-m.%-d', time.localtime())
 
-    # the argparse arguments must match the function signature of crawl()
-    results = crawl(**vars(args))
-    results['version'] = version
+    logger.info('Starting scan...')
 
-    logger.info('Saving seed data version %s...', version)
-    # save the action_map and snitch_map in a human-readable JSON file
-    with open(os.path.join(args.out_path, 'results.json'), 'w') as f:
-        json.dump(results, f, indent=2, sort_keys=True, separators=(',', ': '))
-    logger.info('Saved data to results.json.')
+    # the argparse arguments must match the function signature of crawl()
+    crawl(**vars(args))
 
 else:
     logger = logging.getLogger()

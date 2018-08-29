@@ -6,7 +6,7 @@ if ! ./crawler.py --out-path $OUTPATH --ext-path $EXTPATH "$@" ; then
 fi
 
 # validate the output and print a summary of the changes
-if ! ./validate.py old-results.json $OUTPATH/results.json ; then 
-  echo "results.json is invalid."
-  exit 1
-fi
+#if ! ./validate.py old-results.json $OUTPATH/results.json ; then 
+  #echo "results.json is invalid."
+  #exit 1
+#fi
