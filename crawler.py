@@ -17,7 +17,8 @@ from PyFunceble import test as PyFunceble
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException, WebDriverException,\
                                        NoSuchWindowException,\
-                                       SessionNotCreatedException
+                                       SessionNotCreatedException,\
+                                       JavascriptException
 from selenium.webdriver.chrome.options import Options
 from tldextract import TLDExtract
 from xvfbwrapper import Xvfb
@@ -38,6 +39,7 @@ FIREFOX = 'firefox'
 OBJECTS = ['action_map', 'snitch_map']
 MAJESTIC_URL = "http://downloads.majesticseo.com/majestic_million.csv"
 WEEK_IN_SECONDS = 604800
+RESTART_RETRIES = 5
 
 ap = argparse.ArgumentParser()
 ap.add_argument('--browser', choices=[FIREFOX, CHROME], default=FIREFOX,
@@ -283,11 +285,16 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
 
     def restart_browser(data):
         logger.info('restarting browser...')
-        driver = start_driver_firefox(ext_path, firefox_path)
-        driver.set_page_load_timeout(timeout)
-        driver.set_script_timeout(timeout)
-        clear_data(driver, browser, ext_path)
-        load_user_data(driver, browser, ext_path, data)
+        for _ in range(RESTART_RETRIES):
+            try:
+                driver = start_driver_firefox(ext_path, firefox_path)
+                load_user_data(driver, browser, ext_path, data)
+            except Exception as e:
+                logger.error('Error restarting browser. Trying again...')
+                logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
+        else:
+            logger.error('Could not restart browser.')
+
         return driver
 
     # determine whether we need to restart the webdriver after an error
