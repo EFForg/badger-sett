@@ -16,7 +16,8 @@ from urllib.request import urlopen
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException, WebDriverException,\
                                        NoSuchWindowException,\
-                                       SessionNotCreatedException
+                                       SessionNotCreatedException,\
+                                       JavascriptException
 from selenium.webdriver.chrome.options import Options
 from xvfbwrapper import Xvfb
 
@@ -36,6 +37,7 @@ FIREFOX = 'firefox'
 OBJECTS = ['snitch_map']
 MAJESTIC_URL = "http://downloads.majesticseo.com/majestic_million.csv"
 WEEK_IN_SECONDS = 604800
+RETRIES = 5
 
 ap = argparse.ArgumentParser()
 ap.add_argument('--browser', choices=[FIREFOX, CHROME], default=FIREFOX,
@@ -268,8 +270,17 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
 
     def restart_browser(data):
         logger.info('restarting browser...')
-        driver = start_driver_firefox(ext_path, firefox_path)
-        load_user_data(driver, browser, ext_path, data)
+        for _ in range(RETRIES):
+            try:
+                driver = start_driver_firefox(ext_path, firefox_path)
+                load_user_data(driver, browser, ext_path, data)
+                break
+            except Exception as e:
+                logger.error('Error restarting browser. Trying again...')
+                logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
+        else:
+            logger.error('Could not restart browser.')
+
         return driver
 
     # determine whether we need to restart the webdriver after an error
@@ -292,7 +303,7 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
 
             # If the localstorage data is getting too big, dump it and restart
             if size_of(last_data) > max_data_size:
-                save(last_data, 'results-%d-%d.json' % (first_i, i))
+                save(last_data, out_path, 'results-%d-%d.json' % (first_i, i))
                 first_i = i + 1
                 last_data = {}
                 driver = restart_browser(last_data)
@@ -335,7 +346,7 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
     vdisplay.stop()
 
     save(data, out_path, 'results-%d-%d.json' % (first_i, i))
-    save(merge_saved_data(out_path))
+    save(merge_saved_data(out_path), out_path)
 
 
 def save(data, out_path, name='results.json'):
