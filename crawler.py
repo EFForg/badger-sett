@@ -41,7 +41,7 @@ ap.add_argument('--browser', choices=[FIREFOX, CHROME], default=FIREFOX,
                 help='Browser to use for the scan')
 ap.add_argument('--n-sites', type=int, default=2000,
                 help='Number of websites to visit on the crawl')
-ap.add_argument('--timeout', type=float, default=10,
+ap.add_argument('--timeout', type=float, default=30,
                 help='Amount of time to allow each site to load, in seconds')
 ap.add_argument('--wait-time', type=float, default=5,
                 help='Amount of time to wait on each site after it loads, in seconds')
