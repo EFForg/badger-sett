@@ -36,7 +36,6 @@ OPTIONS = 'skin/options.html'
 CHROME = 'chrome'
 FIREFOX = 'firefox'
 
-OBJECTS = ['action_map', 'snitch_map']
 MAJESTIC_URL = "http://downloads.majesticseo.com/majestic_million.csv"
 WEEK_IN_SECONDS = 604800
 RESTART_RETRIES = 5
@@ -52,6 +51,10 @@ ap.add_argument('--wait-time', type=float, default=5,
                 help='Amount of time to wait on each site after it loads, in seconds')
 ap.add_argument('--log-stdout', action='store_true', default=False,
                 help='If set, log to stdout as well as log.txt')
+ap.add_argument('--survey', action='store_true', default=False,
+                help="If set, don't block anything or store action_map data")
+ap.add_argument('--max-data-size', type=int, default=5e5,
+                help='Maximum size of serialized localstorage data')
 
 # Arguments below here should never have to be used within the docker container.
 ap.add_argument('--out-path', default='./',
@@ -143,6 +146,11 @@ def get_domain_list(n_sites, out_path):
 
     return domains
 
+def size_of(data):
+    """Get the size (in bytes) of the serialized data structure"""
+    return len(json.dumps(data))
+
+
 class Crawler(object):
     def __init__(self, browser, out_path, ext_path, chromedriver_path,
                  firefox_path, n_sites, timeout, wait_time, **kwargs):
@@ -154,6 +162,27 @@ class Crawler(object):
         self.n_sites = n_sites
         self.timeout = timeout
         self.wait_time = wait_time
+
+        # version is based on when the crawl started
+        self.version = time.strftime('%Y.%-m.%-d', time.localtime())
+
+        # set up logging
+        self.logger = logging.getLogger()
+        self.logger.setLevel(logging.INFO)
+        log_fmt = logging.Formatter('%(asctime)s %(message)s')
+
+        # by default, just log to file
+        fh = logging.FileHandler(os.path.join(args.out_path, 'log.txt'))
+        fh.setFormatter(log_fmt)
+        self.logger.addHandler(fh)
+
+        # log to stdout if configured
+        if args.log_stdout:
+            sh = logging.StreamHandler(sys.stdout)
+            sh.setFormatter(log_fmt)
+            self.logger.addHandler(sh)
+
+        self.storage_objects = ['action_map', 'snitch_map']
 
     def start_driver(self):
         """Start a new Selenium web driver and install the bundled extension."""
@@ -208,19 +237,18 @@ class Crawler(object):
             except WebDriverException as e:
                 err = e
         else:
-            logger.error('Error loading extension page: %s', err.msg)
+            self.logger.error('Error loading extension page: %s', err.msg)
             raise err
 
     def load_user_data(self, data):
         """Load saved user data into Privacy Badger after a restart"""
         self.load_extension_page(OPTIONS)
-        script = '''
+        for obj in OBJECTS:
+            script = '''
 data = JSON.parse(arguments[0]);
-badger.storage.action_map.merge(data.action_map);
-for (let tracker in data.snitch_map) {
-    badger.storage.snitch_map._store[tracker] = data.snitch_map[tracker];
-}'''
-        self.driver.execute_script(script, json.dumps(data))
+badger.storage.%s.merge(data.%s);''' % (obj, obj)
+            self.driver.execute_script(script, json.dumps(data))
+
         time.sleep(2)   # wait for localstorage to sync
 
     def dump_data(self):
@@ -232,6 +260,11 @@ for (let tracker in data.snitch_map) {
             script = 'return badger.storage.%s.getItemClones()' % obj
             data[obj] = self.driver.execute_script(script)
         return data
+
+    def clear_data(self):
+        """Clear the training data Privacy Badger starts with."""
+        self.load_extension_page(OPTIONS)
+        self.js("badger.storage.clearTrackerData();")
 
     def timeout_workaround(self):
         """
@@ -257,17 +290,17 @@ for (let tracker in data.snitch_map) {
             url = "https://%s/" % domain
             self.driver.get(url)
         except TimeoutException:
-            logger.info('timeout on %s ', url)
+            self.logger.info('timeout on %s ', url)
             self.timeout_workaround()
             url = "http://%s/" % domain
-            logger.info('trying %s', url)
+            self.logger.info('trying %s', url)
             self.driver.get(url)
 
         time.sleep(self.wait_time)
         return url
 
     def restart_browser(self, data):
-        logger.info('restarting browser...')
+        self.logger.info('restarting browser...')
 
         for _ in range(RESTART_RETRIES):
             try:
@@ -275,10 +308,10 @@ for (let tracker in data.snitch_map) {
                 self.start_driver()
                 self.load_user_data(data)
             except Exception as e:
-                logger.error('Error restarting browser. Trying again...')
-                logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
+                self.logger.error('Error restarting browser. Trying again...')
+                self.logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
         else:
-            logger.error('Could not restart browser.')
+            self.logger.error('Could not restart browser.')
 
     # determine whether we need to restart the webdriver after an error
     def should_restart(self, e):
@@ -293,8 +326,8 @@ for (let tracker in data.snitch_map) {
         action_map and snitch_map that the Badger learned.
         """
         domains = get_domain_list(self.n_sites, self.out_path)
-        logger.info('starting new crawl with timeout %s n_sites %s',
-                    self.timeout, self.n_sites)
+        self.logger.info('starting new crawl with timeout %s n_sites %s',
+                         self.timeout, self.n_sites)
 
         # create an XVFB virtual display (to avoid opening an actual browser)
         self.vdisplay = Xvfb(width=1280, height=720)
@@ -305,16 +338,13 @@ for (let tracker in data.snitch_map) {
         visited = []
 
         for i, domain in enumerate(domains):
-            logger.info('visiting %d: %s', i + 1, domain)
-
             try:
-                # If we can't load the options page for some reason, treat it like
-                # any other failure.
                 last_data = self.dump_data()
+                self.logger.info('visiting %d: %s', i + 1, domain)
                 url = self.get_domain(domain)
                 visited.append(url)
             except TimeoutException:
-                logger.info('timeout on %s ', domain)
+                self.logger.info('timeout on %s ', domain)
                 # TODO: how to get rid of this nested try?
                 try:
                     self.timeout_workaround()
@@ -322,43 +352,44 @@ for (let tracker in data.snitch_map) {
                     if self.should_restart(e):
                         self.restart_browser(last_data)
             except WebDriverException as e:
-                logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
+                self.logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
                 if self.should_restart(e):
                     self.restart_browser(last_data)
 
-        logger.info('Finished scan. Visited %d sites and errored on %d.',
+        self.logger.info('Finished scan. Visited %d sites and errored on %d.',
                     len(visited), len(domains) - len(visited))
 
         try:
-            logger.info('Getting data from browser storage...')
+            self.logger.info('Getting data from browser storage...')
             data = self.dump_data()
         except WebDriverException:
             # If we can't load the background page here, just quit :(
-            logger.error('Could not get badger storage.')
+            self.logger.error('Could not get badger storage.')
             sys.exit(1)
 
         self.driver.quit()
         self.vdisplay.stop()
 
-        logger.info('Cleaning data...')
         self.cleanup(domains, data)
-        return data
+        self.save(self.merge_saved_data())
 
     def cleanup(self, domains, data):
         """
         Remove from snitch map any domains that appear to have been added as a
         result of bugs.
         """
+        self.logger.info('Cleaning data...')
+
         snitch_map = data['snitch_map']
         action_map = data['action_map']
 
         # handle blank domain bug
         if '' in action_map:
-            logger.info('Deleting blank domain from action map')
+            self.logger.info('Deleting blank domain from action map')
             del action_map['']
 
         if '' in snitch_map:
-            logger.info('Deleting blank domain from snitch map')
+            self.logger.info('Deleting blank domain from snitch map')
             del snitch_map['']
 
         # handle the domain-attribution bug (Privacy Badger issue #1997).
@@ -368,55 +399,153 @@ for (let tracker in data.snitch_map) {
             # If a domain we visited was recorded as a tracker on the domain we
             # visited immediately after it, it's probably a bug
             if d1 in snitch_map and d2 in snitch_map[d1]:
-                logger.info('Reported domain %s tracking on %s', d1, d2)
+                self.logger.info('Reported domain %s tracking on %s', d1, d2)
                 snitch_map[d1].remove(d2)
 
                 # if the bug caused d1 to be added to the action map, remove it
                 if not snitch_map[d1]:
-                    logger.info('Deleting domain %s from action and snitch maps',
+                    self.logger.info('Deleting domain %s from action and snitch maps',
                                 d1)
                     del action_map[d1]
                     del snitch_map[d1]
 
                 # if the bug caused d1 to be blocked, unblock it
                 elif len(snitch_map[d1]) == 2:
-                    logger.info('Downgrading domain %s from "block" to "allow"',
+                    self.logger.info('Downgrading domain %s from "block" to "allow"',
                                 d1)
                     action_map[d1]['heuristicAction'] = 'allow'
 
+    def save(self, data, name='results.json'):
+        data['version'] = self.version
+
+        self.logger.info('Saving seed data version %s...', self.version)
+        # save the snitch_map in a human-readable JSON file
+        with open(os.path.join(self.out_path, name), 'w') as f:
+            json.dump(data, f, indent=2, sort_keys=True, separators=(',', ': '))
+        self.logger.info('Saved data to %s.', name)
+
+
+class SurveyCrawler(Crawler):
+    def __init__(self, **kwargs):
+        super(SurveyCrawler, self).__init__(**kwargs)
+
+        self.max_data_size = kwargs.get('max_data_size')
+        self.storage_objects = ['snitch_map']
+
+    def set_passive_mode(self):
+        self.load_extension_page(OPTIONS)
+        script = '''
+chrome.runtime.sendMessage({
+    type: "updateSettings",
+    data: { passiveMode: true }
+});'''
+        self.driver.execute_script(script)
+
+    def merge_saved_data(self):
+        paths = glob.glob(os.path.join(self.out_path, 'results-*.json'))
+        snitch_map = {}
+        for p in paths:
+            with open(p) as f:
+                sm = json.load(f)['snitch_map']
+            for tracker, snitches in sm.items():
+                if tracker not in snitch_map:
+                    snitch_map[tracker] = snitches
+                    continue
+
+                for snitch, data in snitches.items():
+                    if snitch == 'length':
+                        snitch_map[tracker]['length'] = \
+                            int(snitch_map[tracker]['length']) + int(data)
+                        continue
+                    snitch_map[tracker][snitch] = data
+
+        return {'version': self.version, 'snitch_map': snitch_map}
+
+    def crawl():
+        """
+        Visit the top `n_sites` websites in the Majestic Million, in order, in a
+        virtual browser with Privacy Badger installed. Afterwards, save the
+        and snitch_map that the Badger learned.
+        """
+        domains = get_domain_list(n_sites, self.out_path)
+        self.logger.info('starting new crawl with timeout %s n_sites %s',
+                         timeout, n_sites)
+
+        # create an XVFB virtual display (to avoid opening an actual browser)
+        self.vdisplay = Xvfb(width=1280, height=720)
+        self.vdisplay.start()
+        self.start_driver()
+
+        # don't block anything, just listen and log
+        self.set_passive_mode()
+
+        # list of domains we actually visited
+        visited = []
+        last_data = None
+        first_i = 0
+
+        for i, domain in enumerate(domains):
+            # If we can't load the options page for some reason, treat it like
+            # any other error
+            try:
+                # save the state of privacy badger before we do anything else
+                last_data = self.dump_data()
+
+                # If the localstorage data is getting too big, dump it and restart
+                if size_of(last_data) > self.max_data_size:
+                    self.save(last_data, 'results-%d-%d.json' % (first_i, i))
+                    first_i = i + 1
+                    last_data = {}
+                    driver = self.restart_browser(last_data)
+
+                self.logger.info('visiting %d: %s', i + 1, domain)
+                url = self.get_domain(domain)
+                visited.append(url)
+            except TimeoutException:
+                self.logger.info('timeout on %s ', domain)
+                # TODO: how to get rid of this nested try?
+                try:
+                    self.timeout_workaround()
+                except WebDriverException as e:
+                    if self.should_restart(e):
+                        self.restart_browser(last_data)
+            except WebDriverException as e:
+                self.logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
+                if self.should_restart(e):
+                    self.restart_browser(last_data)
+            except KeyboardInterrupt:
+                self.logger.warn('Keyboard interrupt. Ending scan after %d sites.', i+1)
+                break
+
+        self.logger.info('Finished scan. Visited %d sites and errored on %d.',
+                    len(visited), i + 1 - len(visited))
+        self.logger.info('Getting data from browser storage...')
+
+        try:
+            self.logger.info('Getting data from browser storage...')
+            data = self.dump_data()
+        except WebDriverException:
+            if last_data:
+                self.logger.error('Could not get badger storage. Using cached data...')
+                data = last_data
+            else:
+                self.logger.error('Could not export data. Exiting.')
+                sys.exit(1)
+
+        self.driver.quit()
+        self.vdisplay.stop()
+
+        self.save(data, 'results-%d-%d.json' % (first_i, i))
+        self.save(self.merge_saved_data())
+
 
 if __name__ == '__main__':
+    # the argparse arguments must match the function signature of crawl()
     args = ap.parse_args()
 
-    # set up logging
-    logger = logging.getLogger()
-    logger.setLevel(logging.INFO)
-    log_fmt = logging.Formatter('%(asctime)s %(message)s')
+    if args.survey:
+        crawler = SurveyCrawler(**vars(ap.parse_args()))
+    else:
+        crawler = Crawler(**vars(ap.parse_args()))
 
-    # by default, just log to file
-    fh = logging.FileHandler(os.path.join(args.out_path, 'log.txt'))
-    fh.setFormatter(log_fmt)
-    logger.addHandler(fh)
-
-    # log to stdout if configured
-    if args.log_stdout:
-        sh = logging.StreamHandler(sys.stdout)
-        sh.setFormatter(log_fmt)
-        logger.addHandler(sh)
-
-    # version is based on when the crawl started
-    version = time.strftime('%Y.%-m.%-d', time.localtime())
-
-    # the argparse arguments must match the function signature of crawl()
-    crawler = Crawler(**vars(args))
-    results = crawler.crawl()
-    results['version'] = version
-
-    logger.info('Saving seed data version %s...', version)
-    # save the action_map and snitch_map in a human-readable JSON file
-    with open(os.path.join(args.out_path, 'results.json'), 'w') as f:
-        json.dump(results, f, indent=2, sort_keys=True, separators=(',', ': '))
-    logger.info('Saved data to results.json.')
-
-else:
-    logger = logging.getLogger()
+    crawler.crawl()
