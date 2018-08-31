@@ -12,6 +12,7 @@ import sys
 import time
 from urllib.request import urlopen
 
+from PyFunceble import test as PyFunceble
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException, WebDriverException,\
                                        NoSuchWindowException,\
@@ -89,26 +90,53 @@ def get_chrome_extension_id(crx_file):
 
 def get_domain_list(n_sites, out_path):
     """Load the top million domains from disk or the web"""
-    domains = []
-
     top_1m_file = os.path.join(out_path, MAJESTIC_URL.split('/')[-1])
+    pyfunc_cache_file = os.path.join(out_path, 'pyfunceable_cache.txt')
 
     # download the file if it doesn't exist or if it's more than a week stale
     if (not os.path.exists(top_1m_file) or
             time.time() - os.path.getmtime(top_1m_file) > WEEK_IN_SECONDS):
+        logger.info('Loading new Majestic data and refreshing PyFunceble cache')
         response = urlopen(MAJESTIC_URL)
         with open(top_1m_file, 'w') as f:
             f.write(response.read().decode())
 
+        # if the majestic file is expired, let's refresh the pyfunceable cache
+        with open(pyfunc_cache_file, 'w') as f:
+            pass
+
+    # load cache
+    if os.path.exists(pyfunc_cache_file):
+        with open(pyfunc_cache_file) as f:
+            pyfunc_cache = json.load(f)
+    else:
+        pyfunc_cache = {}
+
+    domains = []
     with open(top_1m_file) as f:
         # first line is CSV header
         next(f)
 
         # only read the first n_sites lines
-        for i, l in enumerate(f):
-            if i >= n_sites:
+        for l in f:
+            domain = l.split(',')[2]
+
+            if domain in pyfunc_cache:
+                if pyfunc_cache[domain] == 'ACTIVE':
+                    domains.append(domain)
+            else:
+                status = PyFunceble(domain)
+                logger.info('PyFunceble: %s is %s', domain, status)
+                if status == 'ACTIVE':
+                    domains.append(domain)
+                pyfunc_cache[domain] = status
+
+            if len(domains) >= n_sites:
                 break
-            domains.append(l.split(',')[2])
+
+    # save pyfunceble cache again
+    with open(pyfunc_cache_file, 'w') as f:
+        json.dump(pyfunc_cache, f)
 
     return domains
 
