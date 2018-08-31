@@ -234,19 +234,22 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
     vdisplay = Xvfb(width=1280, height=720)
     vdisplay.start()
 
-    if browser == CHROME:
-        driver = start_driver_chrome(ext_path, chromedriver_path)
-    else:
-        driver = start_driver_firefox(ext_path, firefox_path)
+    def start_driver():
+        if browser == CHROME:
+            driver = start_driver_chrome(ext_path, chromedriver_path)
+        else:
+            driver = start_driver_firefox(ext_path, firefox_path)
 
-    driver.set_page_load_timeout(timeout)
-    driver.set_script_timeout(timeout)
+        driver.set_page_load_timeout(timeout)
+        driver.set_script_timeout(timeout)
+        return driver
 
     def restart_browser(data):
         logger.info('restarting browser...')
         for _ in range(RESTART_RETRIES):
             try:
-                driver = start_driver_firefox(ext_path, firefox_path)
+                driver.quit()
+                driver = start_driver()
                 load_user_data(driver, browser, ext_path, data)
             except Exception as e:
                 logger.error('Error restarting browser. Trying again...')
@@ -264,6 +267,7 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
 
     # list of domains we actually visited
     visited = []
+    driver = start_driver()
 
     for i, domain in enumerate(domains):
         logger.info('visiting %d: %s', i + 1, domain)
