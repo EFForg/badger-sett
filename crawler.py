@@ -260,19 +260,22 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
     vdisplay = Xvfb(width=1280, height=720)
     vdisplay.start()
 
-    if browser == CHROME:
-        driver = start_driver_chrome(ext_path, chromedriver_path)
-    else:
-        driver = start_driver_firefox(ext_path, firefox_path)
+    def start_driver():
+        if browser == CHROME:
+            driver = start_driver_chrome(ext_path, chromedriver_path)
+        else:
+            driver = start_driver_firefox(ext_path, firefox_path)
 
-    driver.set_page_load_timeout(timeout)
-    driver.set_script_timeout(timeout)
+        driver.set_page_load_timeout(timeout)
+        driver.set_script_timeout(timeout)
+        return driver
 
     def restart_browser(data):
         logger.info('restarting browser...')
         for _ in range(RETRIES):
             try:
-                driver = start_driver_firefox(ext_path, firefox_path)
+                driver.quit()
+                driver = start_driver()
                 load_user_data(driver, browser, ext_path, data)
                 break
             except Exception as e:
@@ -293,6 +296,8 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
     visited = []
     last_data = None
     first_i = 0
+
+    driver = start_driver()
 
     for i, domain in enumerate(domains):
         # If we can't load the options page for some reason, treat it like
