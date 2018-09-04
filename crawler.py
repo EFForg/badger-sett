@@ -3,6 +3,7 @@
 # adapted from https://github.com/cowlicks/badger-claw
 import argparse
 import copy
+import glob
 import hashlib
 import json
 import logging
@@ -152,16 +153,17 @@ def size_of(data):
 
 
 class Crawler(object):
-    def __init__(self, browser, out_path, ext_path, chromedriver_path,
-                 firefox_path, n_sites, timeout, wait_time, **kwargs):
+    def __init__(self, browser, n_sites, timeout, wait_time, log_stdout,
+                 out_path, ext_path, chromedriver_path, firefox_path,
+                 **kwargs):
         self.browser = browser
+        self.n_sites = n_sites
+        self.timeout = timeout
+        self.wait_time = wait_time
         self.out_path = out_path
         self.ext_path = ext_path
         self.chromedriver_path = chromedriver_path
         self.firefox_path = firefox_path
-        self.n_sites = n_sites
-        self.timeout = timeout
-        self.wait_time = wait_time
 
         # version is based on when the crawl started
         self.version = time.strftime('%Y.%-m.%-d', time.localtime())
@@ -172,12 +174,12 @@ class Crawler(object):
         log_fmt = logging.Formatter('%(asctime)s %(message)s')
 
         # by default, just log to file
-        fh = logging.FileHandler(os.path.join(args.out_path, 'log.txt'))
+        fh = logging.FileHandler(os.path.join(out_path, 'log.txt'))
         fh.setFormatter(log_fmt)
         self.logger.addHandler(fh)
 
         # log to stdout if configured
-        if args.log_stdout:
+        if log_stdout:
             sh = logging.StreamHandler(sys.stdout)
             sh.setFormatter(log_fmt)
             self.logger.addHandler(sh)
@@ -243,7 +245,7 @@ class Crawler(object):
     def load_user_data(self, data):
         """Load saved user data into Privacy Badger after a restart"""
         self.load_extension_page(OPTIONS)
-        for obj in OBJECTS:
+        for obj in self.storage_objects:
             script = '''
 data = JSON.parse(arguments[0]);
 badger.storage.%s.merge(data.%s);''' % (obj, obj)
@@ -256,7 +258,7 @@ badger.storage.%s.merge(data.%s);''' % (obj, obj)
         self.load_extension_page(BACKGROUND)
 
         data = {}
-        for obj in OBJECTS:
+        for obj in self.storage_objects:
             script = 'return badger.storage.%s.getItemClones()' % obj
             data[obj] = self.driver.execute_script(script)
         return data
@@ -273,7 +275,7 @@ badger.storage.%s.merge(data.%s);''' % (obj, obj)
         TODO: find actual bug ticket
         """
         self.driver.close()  # kill the broken site
-        self.driver.switch_to_window(driver.window_handles.pop())
+        self.driver.switch_to_window(self.driver.window_handles.pop())
         before = set(self.driver.window_handles)
         self.driver.execute_script('window.open()')
 
@@ -302,16 +304,33 @@ badger.storage.%s.merge(data.%s);''' % (obj, obj)
     def restart_browser(self, data):
         self.logger.info('restarting browser...')
 
+        # It's ugly, but this section needs to be ABSOLUTELY crash-proof.
         for _ in range(RESTART_RETRIES):
             try:
                 self.driver.quit()
+            except:
+                pass
+
+            try:
+                del self.driver
+            except:
+                pass
+
+            try:
                 self.start_driver()
                 self.load_user_data(data)
+                self.logger.error('Success')
+                break
             except Exception as e:
                 self.logger.error('Error restarting browser. Trying again...')
-                self.logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
+                if type(e) == WebDriverException:
+                    self.logger.error('%s: %s', type(e).__name__, e.msg)
+                else:
+                    self.logger.error('%s: %s', type(e).__name__, e)
         else:
+            # If we couldn't restart the browser after all that, just quit.
             self.logger.error('Could not restart browser.')
+            sys.exit(1)
 
     # determine whether we need to restart the webdriver after an error
     def should_restart(self, e):
@@ -461,15 +480,15 @@ chrome.runtime.sendMessage({
 
         return {'version': self.version, 'snitch_map': snitch_map}
 
-    def crawl():
+    def crawl(self):
         """
         Visit the top `n_sites` websites in the Majestic Million, in order, in a
         virtual browser with Privacy Badger installed. Afterwards, save the
         and snitch_map that the Badger learned.
         """
-        domains = get_domain_list(n_sites, self.out_path)
+        domains = get_domain_list(self.n_sites, self.out_path)
         self.logger.info('starting new crawl with timeout %s n_sites %s',
-                         timeout, n_sites)
+                         self.timeout, self.n_sites)
 
         # create an XVFB virtual display (to avoid opening an actual browser)
         self.vdisplay = Xvfb(width=1280, height=720)
@@ -496,7 +515,7 @@ chrome.runtime.sendMessage({
                     self.save(last_data, 'results-%d-%d.json' % (first_i, i))
                     first_i = i + 1
                     last_data = {}
-                    driver = self.restart_browser(last_data)
+                    self.restart_browser(last_data)
 
                 self.logger.info('visiting %d: %s', i + 1, domain)
                 url = self.get_domain(domain)
@@ -518,7 +537,7 @@ chrome.runtime.sendMessage({
                 break
 
         self.logger.info('Finished scan. Visited %d sites and errored on %d.',
-                    len(visited), i + 1 - len(visited))
+                         len(visited), i + 1 - len(visited))
         self.logger.info('Getting data from browser storage...')
 
         try:
