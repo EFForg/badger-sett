@@ -15,7 +15,8 @@ from urllib.request import urlopen
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException, WebDriverException,\
                                        NoSuchWindowException,\
-                                       SessionNotCreatedException
+                                       SessionNotCreatedException,\
+                                       JavascriptException
 from selenium.webdriver.chrome.options import Options
 from xvfbwrapper import Xvfb
 
@@ -35,13 +36,14 @@ FIREFOX = 'firefox'
 OBJECTS = ['action_map', 'snitch_map']
 MAJESTIC_URL = "http://downloads.majesticseo.com/majestic_million.csv"
 WEEK_IN_SECONDS = 604800
+RESTART_RETRIES = 5
 
 ap = argparse.ArgumentParser()
 ap.add_argument('--browser', choices=[FIREFOX, CHROME], default=FIREFOX,
                 help='Browser to use for the scan')
 ap.add_argument('--n-sites', type=int, default=2000,
                 help='Number of websites to visit on the crawl')
-ap.add_argument('--timeout', type=float, default=10,
+ap.add_argument('--timeout', type=float, default=30,
                 help='Amount of time to allow each site to load, in seconds')
 ap.add_argument('--wait-time', type=float, default=5,
                 help='Amount of time to wait on each site after it loads, in seconds')
@@ -232,18 +234,29 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
     vdisplay = Xvfb(width=1280, height=720)
     vdisplay.start()
 
-    if browser == CHROME:
-        driver = start_driver_chrome(ext_path, chromedriver_path)
-    else:
-        driver = start_driver_firefox(ext_path, firefox_path)
+    def start_driver():
+        if browser == CHROME:
+            driver = start_driver_chrome(ext_path, chromedriver_path)
+        else:
+            driver = start_driver_firefox(ext_path, firefox_path)
 
-    driver.set_page_load_timeout(timeout)
-    driver.set_script_timeout(timeout)
+        driver.set_page_load_timeout(timeout)
+        driver.set_script_timeout(timeout)
+        return driver
 
     def restart_browser(data):
         logger.info('restarting browser...')
-        driver = start_driver_firefox(ext_path, firefox_path)
-        load_user_data(driver, browser, ext_path, data)
+        for _ in range(RESTART_RETRIES):
+            try:
+                driver.quit()
+                driver = start_driver()
+                load_user_data(driver, browser, ext_path, data)
+            except Exception as e:
+                logger.error('Error restarting browser. Trying again...')
+                logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
+        else:
+            logger.error('Could not restart browser.')
+
         return driver
 
     # determine whether we need to restart the webdriver after an error
@@ -254,6 +267,7 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
 
     # list of domains we actually visited
     visited = []
+    driver = start_driver()
 
     for i, domain in enumerate(domains):
         logger.info('visiting %d: %s', i + 1, domain)
