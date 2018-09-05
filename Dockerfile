@@ -36,6 +36,7 @@ COPY results.json /home/$USER/old-results.json
 COPY privacybadger /home/$USER/privacybadger
 ENV OUTPATH=/home/$USER/out
 ENV EXTPATH=/home/$USER/privacybadger/src
+ENV PYFUNCEBLE_AUTO_CONFIGURATION=True
 RUN mkdir -p $OUTPATH
 
 ENTRYPOINT ["./docker-entry.sh"]
