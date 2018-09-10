@@ -91,7 +91,7 @@ def get_chrome_extension_id(crx_file):
 def get_domain_list(n_sites, out_path):
     """Load the top million domains from disk or the web"""
     top_1m_file = os.path.join(out_path, MAJESTIC_URL.split('/')[-1])
-    pyfunc_cache_file = os.path.join(out_path, 'pyfunceable_cache.txt')
+    pyfunc_cache_file = os.path.join(out_path, 'pyfunceable_cache.json')
 
     # download the file if it doesn't exist or if it's more than a week stale
     if (not os.path.exists(top_1m_file) or
@@ -102,8 +102,8 @@ def get_domain_list(n_sites, out_path):
             f.write(response.read().decode())
 
         # if the majestic file is expired, let's refresh the pyfunceable cache
-        with open(pyfunc_cache_file, 'w') as f:
-            pass
+        if os.path.exists(pyfunc_cache_file):
+            os.remove(pyfunc_cache_file)
 
     # load cache
     if os.path.exists(pyfunc_cache_file):
