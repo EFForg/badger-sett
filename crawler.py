@@ -54,7 +54,7 @@ ap.add_argument('--log-stdout', action='store_true', default=False,
                 help='If set, log to stdout as well as log.txt')
 ap.add_argument('--survey', action='store_true', default=False,
                 help="If set, don't block anything or store action_map data")
-ap.add_argument('--max-data-size', type=int, default=5e5,
+ap.add_argument('--max-data-size', type=int, default=2e6,
                 help='Maximum size of serialized localstorage data')
 
 # Arguments below here should never have to be used within the docker container.
@@ -460,6 +460,12 @@ chrome.runtime.sendMessage({
 });'''
         self.driver.execute_script(script)
 
+    def start_driver(self):
+        super(SurveyCrawler, self).start_driver()
+
+        # don't block anything, just listen and log
+        self.set_passive_mode()
+
     def merge_saved_data(self):
         paths = glob.glob(os.path.join(self.out_path, 'results-*.json'))
         snitch_map = {}
@@ -494,9 +500,6 @@ chrome.runtime.sendMessage({
         self.vdisplay = Xvfb(width=1280, height=720)
         self.vdisplay.start()
         self.start_driver()
-
-        # don't block anything, just listen and log
-        self.set_passive_mode()
 
         # list of domains we actually visited
         visited = []
@@ -541,7 +544,6 @@ chrome.runtime.sendMessage({
         self.logger.info('Getting data from browser storage...')
 
         try:
-            self.logger.info('Getting data from browser storage...')
             data = self.dump_data()
         except WebDriverException:
             if last_data:
