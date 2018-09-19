@@ -301,7 +301,7 @@ badger.storage.%s.merge(data.%s);''' % (obj, obj)
         time.sleep(self.wait_time)
         return url
 
-    def start_browser(self, data):
+    def start_browser(self):
         self.start_driver()
         self.clear_data()
 
@@ -394,7 +394,7 @@ badger.storage.%s.merge(data.%s);''' % (obj, obj)
         self.vdisplay.stop()
 
         self.cleanup(domains, data)
-        self.save(self.merge_saved_data())
+        self.save(data)
 
     def cleanup(self, domains, data):
         """
