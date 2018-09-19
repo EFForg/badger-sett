@@ -266,7 +266,7 @@ badger.storage.%s.merge(data.%s);''' % (obj, obj)
     def clear_data(self):
         """Clear the training data Privacy Badger starts with."""
         self.load_extension_page(OPTIONS)
-        self.js("badger.storage.clearTrackerData();")
+        self.driver.execute_script("badger.storage.clearTrackerData();")
 
     def timeout_workaround(self):
         """
@@ -301,6 +301,10 @@ badger.storage.%s.merge(data.%s);''' % (obj, obj)
         time.sleep(self.wait_time)
         return url
 
+    def start_browser(self, data):
+        self.start_driver()
+        self.clear_data()
+
     def restart_browser(self, data):
         self.logger.info('restarting browser...')
 
@@ -317,7 +321,7 @@ badger.storage.%s.merge(data.%s);''' % (obj, obj)
                 pass
 
             try:
-                self.start_driver()
+                self.start_browser()
                 self.load_user_data(data)
                 self.logger.error('Success')
                 break
@@ -351,7 +355,7 @@ badger.storage.%s.merge(data.%s);''' % (obj, obj)
         # create an XVFB virtual display (to avoid opening an actual browser)
         self.vdisplay = Xvfb(width=1280, height=720)
         self.vdisplay.start()
-        self.start_driver()
+        self.start_browser()
 
         # list of domains we actually visited
         visited = []
@@ -460,9 +464,8 @@ chrome.runtime.sendMessage({
 });'''
         self.driver.execute_script(script)
 
-    def start_driver(self):
-        super(SurveyCrawler, self).start_driver()
-
+    def start_browser(self):
+        self.start_driver()
         # don't block anything, just listen and log
         self.set_passive_mode()
 
@@ -499,7 +502,7 @@ chrome.runtime.sendMessage({
         # create an XVFB virtual display (to avoid opening an actual browser)
         self.vdisplay = Xvfb(width=1280, height=720)
         self.vdisplay.start()
-        self.start_driver()
+        self.start_browser()
 
         # list of domains we actually visited
         visited = []
