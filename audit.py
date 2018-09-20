@@ -25,3 +25,10 @@ def count_domain_blocks():
                 ctr[domain] += 1
 
     return ctr
+
+# Find domains that are blocked now but have never been blocked before
+def count_new_blocks(data):
+    blocked = [d for d, v in data if len(v) >= 3]
+    ctr = count_domain_blocks()
+    new = [d for d in blocked if d not in ctr]
+    return new
