@@ -20,15 +20,15 @@ def count_domain_blocks():
     ctr = Counter()
     for m in old_maps.values():
         for domain, data in m['action_map'].items():
-            if data['heuristicAction'] == 'block' or \
-                data['heuristicAction'] == 'cookieblock':
+            if data['heuristicAction'] in ['block', 'cookieblock']:
                 ctr[domain] += 1
 
     return ctr
 
 # Find domains that are blocked now but have never been blocked before
 def count_new_blocks(data):
-    blocked = [d for d, v in data if len(v) >= 3]
+    blocked = [d for d, v in data['action_map'].items()
+               if v['heuristicAction'] in ['block', 'cookieblock']]
     ctr = count_domain_blocks()
     new = [d for d in blocked if d not in ctr]
     return new
