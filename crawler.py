@@ -211,6 +211,10 @@ def dump_data(driver, browser, ext_path):
         data[obj] = driver.execute_script(script)
     return data
 
+def clear_data(driver, browser, ext_path):
+    """Clear the training data Privacy Badger starts with."""
+    load_extension_page(driver, browser, ext_path, OPTIONS)
+    driver.execute_script("badger.storage.clearTrackerData();")
 
 def timeout_workaround(driver):
     """
@@ -267,10 +271,14 @@ def crawl(browser, out_path, ext_path, chromedriver_path, firefox_path, n_sites,
 
     driver.set_page_load_timeout(timeout)
     driver.set_script_timeout(timeout)
+    clear_data(driver, browser, ext_path)
 
     def restart_browser(data):
         logger.info('restarting browser...')
         driver = start_driver_firefox(ext_path, firefox_path)
+        driver.set_page_load_timeout(timeout)
+        driver.set_script_timeout(timeout)
+        clear_data(driver, browser, ext_path)
         load_user_data(driver, browser, ext_path, data)
         return driver
 
