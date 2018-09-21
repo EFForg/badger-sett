@@ -73,19 +73,31 @@ for domain in new_js['action_map'].keys():
 blocked_bases_old = set(blocked_old.keys())
 blocked_bases_new = set(blocked_new.keys())
 
-print("\n{}++{} Newly blocked domains:\n".format(C_GREEN, C_RESET))
-for x in sorted(blocked_bases_new - blocked_bases_old):
-    print("  {}{}{} ({})".format(
-        C_GREEN, x, C_RESET, len(blocked_new[x])))
-    for y in sorted(blocked_new[x]):
-        print("    • {}".format(y))
+newly_blocked = blocked_bases_new - blocked_bases_old
+print("\n{}++{} Newly blocked domains ({}):\n".format(
+    C_GREEN, C_RESET, len(newly_blocked)))
+for base in sorted(newly_blocked):
+    subdomains = blocked_new[base]
+    out = "  {}{}{}".format(C_GREEN, base, C_RESET)
+    if len(subdomains) > 1:
+        out = out + " ({})".format(len(subdomains))
+    print(out)
+    if len(subdomains) > 1 or subdomains[0] != base:
+        for y in sorted(subdomains):
+            print("    • {}".format(y))
 
-print("\n{}--{} No longer blocked domains:\n".format(C_RED, C_RESET))
-for x in sorted(blocked_bases_old - blocked_bases_new):
-    print("  {}{}{} ({})".format(
-        C_RED, x, C_RESET, len(blocked_old[x])))
-    for y in sorted(blocked_old[x]):
-        print("    • {}".format(y))
+no_longer_blocked = blocked_bases_old - blocked_bases_new
+print("\n{}--{} No longer blocked domains ({}):\n".format(
+    C_RED, C_RESET, len(no_longer_blocked)))
+for base in sorted(no_longer_blocked):
+    subdomains = blocked_old[base]
+    out = "  {}{}{}".format(C_RED, base, C_RESET)
+    if len(subdomains) > 1:
+        out = out + " ({})".format(len(subdomains))
+    print(out)
+    if len(subdomains) > 1 or subdomains[0] != base:
+        for y in sorted(subdomains):
+            print("    • {}".format(y))
 
 print("")
 
