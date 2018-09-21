@@ -9,7 +9,6 @@ import colorama
 import tldextract
 
 # Use: ./validate.py old.json new.json
-KEYS = ['action_map', 'snitch_map', 'version']
 old_path = sys.argv[1]
 new_path = sys.argv[2]
 
@@ -27,7 +26,7 @@ with open(new_path) as f:
 assert old_js != new_js
 
 # make sure the JSON is structured correctly
-for k in KEYS:
+for k in ['action_map', 'snitch_map']:
     assert k in new_js
 
 # make sure there is data in the maps
