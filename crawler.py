@@ -416,21 +416,29 @@ badger.storage.%s.merge(data.%s);''' % (obj, obj)
             del snitch_map['']
 
         # handle the domain-attribution bug (Privacy Badger issue #1997).
-        for i in range(len(domains) - 1):
-            d1, d2 = domains[i:i+2]
+        # visited immediately after it, it's probably a bug
+        if d1_base in snitch_map and d2 in snitch_map[d1_base]:
+            self.logger.info('Likely bug: domain %s tracking on %s', d1_base, d2)
+            snitch_map[d1_base].remove(d2)
 
-            # If a domain we visited was recorded as a tracker on the domain we
-            # visited immediately after it, it's probably a bug
-            if d1 in snitch_map and d2 in snitch_map[d1]:
-                self.logger.info('Reported domain %s tracking on %s', d1, d2)
-                snitch_map[d1].remove(d2)
-
-                # if the bug caused d1 to be added to the action map, remove it
-                if not snitch_map[d1]:
-                    self.logger.info('Deleting domain %s from action and snitch maps',
-                                d1)
+            # if the bug caused d1 to be added to the action map, remove it
+            if not snitch_map[d1_base]:
+                self.logger.info('Deleting domain %s from action & snitch maps', d1_base)
+                if d1 in action_map:
                     del action_map[d1]
-                    del snitch_map[d1]
+                if d1_base in action_map:
+                    del action_map[d1_base]
+                del snitch_map[d1_base]
+
+            # if the bug caused d1 to be blocked, unblock it
+            elif len(snitch_map[d1_base]) == 2:
+                if d1 in action_map:
+                    self.logger.info('Downgrading domain %s from "block" to "allow"', d1)
+                    action_map[d1]['heuristicAction'] = 'allow'
+                if d1_base in action_map:
+                    self.logger.info('Downgrading domain %s from "block" to "allow"',
+                                d1_base)
+                    action_map[d1_base]['heuristicAction'] = 'allow'
 
                 # if the bug caused d1 to be blocked, unblock it
                 elif len(snitch_map[d1]) == 2:
