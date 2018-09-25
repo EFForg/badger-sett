@@ -363,6 +363,14 @@ badger.storage.%s.merge(data.%s);''' % (obj, obj)
         for i, domain in enumerate(domains):
             try:
                 last_data = self.dump_data()
+
+                # try to fix misattribution errors
+                if i >= 2:
+                    clean_data = self.cleanup(domains[i-2], domains[i-1], last_data)
+                    if last_data != clean_data:
+                        self.clear_data()
+                        self.load_user_data(clean_data)
+
                 self.logger.info('visiting %d: %s', i + 1, domain)
                 url = self.get_domain(domain)
                 visited.append(url)
@@ -393,7 +401,6 @@ badger.storage.%s.merge(data.%s);''' % (obj, obj)
         self.driver.quit()
         self.vdisplay.stop()
 
-        self.cleanup(domains, data)
         self.save(data)
 
     def cleanup(self, domains, data):
@@ -401,10 +408,9 @@ badger.storage.%s.merge(data.%s);''' % (obj, obj)
         Remove from snitch map any domains that appear to have been added as a
         result of bugs.
         """
-        self.logger.info('Cleaning data...')
-
-        snitch_map = data['snitch_map']
-        action_map = data['action_map']
+        new_data = copy.deepcopy(data)
+        snitch_map = new_data['snitch_map']
+        action_map = new_data['action_map']
 
         # handle blank domain bug
         if '' in action_map:
