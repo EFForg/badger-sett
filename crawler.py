@@ -83,7 +83,10 @@ var crash = badptr.contents;""")
 
 
 def get_chrome_extension_id(crx_file):
-    """Interpret a .crx file's extension ID"""
+    """
+    Interpret a .crx file's extension ID
+    TODO: update for CRX3
+    """
     with open(crx_file, 'rb') as f:
         data = f.read()
     header = struct.unpack('<4sIII', data[:16])
@@ -157,6 +160,7 @@ class Crawler(object):
                  out_path, ext_path, chromedriver_path, firefox_path,
                  **kwargs):
         self.browser = browser
+        assert self.browser in (CHROME, FIREFOX)
         self.n_sites = n_sites
         self.timeout = timeout
         self.wait_time = wait_time
@@ -215,9 +219,6 @@ class Crawler(object):
                                                  'temporary': True})
             time.sleep(2)
 
-        else:
-            raise ValueError("%s is not a valid browser" % self.browser)
-
         # apply timeout settings
         self.driver.set_page_load_timeout(self.timeout)
         self.driver.set_script_timeout(self.timeout)
@@ -229,7 +230,7 @@ class Crawler(object):
         """
         if self.browser == CHROME:
             ext_url = (CHROME_URL_FMT + page) % get_chrome_extension_id(ext_path)
-        else:
+        elif self.browser == FIREFOX:
             ext_url = (FF_URL_FMT + page) % FF_UUID
 
         for _ in range(retries):
