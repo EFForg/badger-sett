@@ -2,8 +2,8 @@
 # -*- coding: UTF-8 -*-
 # adapted from https://github.com/cowlicks/badger-claw
 import argparse
-import copy
 import glob
+import copy
 import hashlib
 import json
 import logging
@@ -149,6 +149,7 @@ def get_domain_list(logger, n_sites, out_path):
         json.dump(pyfunc_cache, f)
 
     return domains
+
 
 def size_of(data):
     """Get the size (in bytes) of the serialized data structure"""
@@ -363,6 +364,9 @@ badger.storage.%s.merge(data.%s);''' % (obj, obj)
 
         for i, domain in enumerate(domains):
             try:
+                # This script could fail during the data dump (trying to get the
+                # options page), the data cleaning, or while trying to load the next
+                # domain.
                 last_data = self.dump_data()
 
                 # try to fix misattribution errors
@@ -391,6 +395,7 @@ badger.storage.%s.merge(data.%s);''' % (obj, obj)
         self.logger.info('Finished scan. Visited %d sites and errored on %d.',
                     len(visited), len(domains) - len(visited))
 
+
         try:
             self.logger.info('Getting data from browser storage...')
             data = self.dump_data()
@@ -404,7 +409,7 @@ badger.storage.%s.merge(data.%s);''' % (obj, obj)
 
         self.save(data)
 
-    def cleanup(self, domains, data):
+    def cleanup(self, d1, d2, data):
         """
         Remove from snitch map any domains that appear to have been added as a
         result of bugs.
@@ -422,7 +427,11 @@ badger.storage.%s.merge(data.%s);''' % (obj, obj)
             self.logger.info('Deleting blank domain from snitch map')
             del snitch_map['']
 
+        extract = TLDExtract()
+        d1_base = extract(d1).registered_domain
+
         # handle the domain-attribution bug (Privacy Badger issue #1997).
+        # If a domain we visited was recorded as a tracker on the domain we
         # visited immediately after it, it's probably a bug
         if d1_base in snitch_map and d2 in snitch_map[d1_base]:
             self.logger.info('Likely bug: domain %s tracking on %s', d1_base, d2)
@@ -447,11 +456,7 @@ badger.storage.%s.merge(data.%s);''' % (obj, obj)
                                 d1_base)
                     action_map[d1_base]['heuristicAction'] = 'allow'
 
-                # if the bug caused d1 to be blocked, unblock it
-                elif len(snitch_map[d1]) == 2:
-                    self.logger.info('Downgrading domain %s from "block" to "allow"',
-                                d1)
-                    action_map[d1]['heuristicAction'] = 'allow'
+        return new_data
 
     def save(self, data, name='results.json'):
         data['version'] = self.version
