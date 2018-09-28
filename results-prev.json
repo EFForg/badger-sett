@@ -1,17 +1,5 @@
 {
   "action_map": {
-    "107-coj-713.mktoresp.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538180650544,
-      "userAction": ""
-    },
-    "112-tzm-766.mktoresp.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538394933849,
-      "userAction": ""
-    },
     "112.2o7.net": {
       "dnt": false,
       "heuristicAction": "cookieblock",
@@ -42,34 +30,16 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "194-vvc-221.mktoresp.com": {
+    "247-inc.net": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538483514256,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "247realmedia.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "254a.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "2771890.fls.doubleclick.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538368660302,
-      "userAction": ""
-    },
-    "2912a.v.fwmrm.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538256664930,
       "userAction": ""
     },
     "2o7.net": {
@@ -92,7 +62,7 @@
     },
     "360yield.com": {
       "dnt": false,
-      "heuristicAction": "allow",
+      "heuristicAction": "block",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -108,58 +78,16 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "4139589.fls.doubleclick.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538385347766,
-      "userAction": ""
-    },
-    "4272175.fls.doubleclick.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538095276395,
-      "userAction": ""
-    },
-    "4292932.fls.doubleclick.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538443166948,
-      "userAction": ""
-    },
-    "4635217.fls.doubleclick.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538206007436,
-      "userAction": ""
-    },
-    "4645712.fls.doubleclick.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538083902504,
-      "userAction": ""
-    },
-    "4d.condenastdigital.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538456849026,
-      "userAction": ""
-    },
     "50bang.org": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "5420914.fls.doubleclick.net": {
+    "540-wem-854.mktoresp.com": {
       "dnt": false,
       "heuristicAction": "",
-      "nextUpdateTime": 1538323409082,
-      "userAction": ""
-    },
-    "5496506.fls.doubleclick.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538531334136,
+      "nextUpdateTime": 1538343204573,
       "userAction": ""
     },
     "58.com": {
@@ -174,130 +102,22 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "5p4rk13.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "6126321.fls.doubleclick.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538145560460,
-      "userAction": ""
-    },
-    "6901690.fls.doubleclick.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538338401506,
-      "userAction": ""
-    },
     "6sc.co": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "8117415.fls.doubleclick.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538334719410,
-      "userAction": ""
-    },
-    "8136595.fls.doubleclick.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538150124402,
-      "userAction": ""
-    },
-    "8242400.fls.doubleclick.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538132491651,
-      "userAction": ""
-    },
-    "8329645.fls.doubleclick.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538200870446,
-      "userAction": ""
-    },
-    "899-ihp-202.mktoresp.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538500225994,
-      "userAction": ""
-    },
-    "a.postrelease.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538059890436,
-      "userAction": ""
-    },
-    "a.quora.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538122796132,
-      "userAction": ""
-    },
-    "a.rfihub.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538294298158,
-      "userAction": ""
-    },
-    "a.wishabi.com": {
+    "a8270235338.cdn.optimizely.com": {
       "dnt": false,
       "heuristicAction": "cookieblock",
-      "nextUpdateTime": 1538194589363,
-      "userAction": ""
-    },
-    "a2364010203.cdn.optimizely.com": {
-      "dnt": false,
-      "heuristicAction": "cookieblock",
-      "nextUpdateTime": 1538427938823,
-      "userAction": ""
-    },
-    "a6250770393.cdn.optimizely.com": {
-      "dnt": false,
-      "heuristicAction": "cookieblock",
-      "nextUpdateTime": 1538404954879,
-      "userAction": ""
-    },
-    "a6264210458.cdn.optimizely.com": {
-      "dnt": false,
-      "heuristicAction": "cookieblock",
-      "nextUpdateTime": 1538338901088,
-      "userAction": ""
-    },
-    "a7718922374.cdn.optimizely.com": {
-      "dnt": false,
-      "heuristicAction": "cookieblock",
-      "nextUpdateTime": 1538508807697,
-      "userAction": ""
-    },
-    "a8298190319.cdn.optimizely.com": {
-      "dnt": false,
-      "heuristicAction": "cookieblock",
-      "nextUpdateTime": 1538384086156,
-      "userAction": ""
-    },
-    "aa.agkn.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538142584062,
+      "nextUpdateTime": 1538228855491,
       "userAction": ""
     },
     "aamsitecertifier.com": {
       "dnt": false,
       "heuristicAction": "block",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "aax-eu.amazon-adsystem.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538049200350,
       "userAction": ""
     },
     "aaxads.com": {
@@ -308,7 +128,7 @@
     },
     "abmr.net": {
       "dnt": false,
-      "heuristicAction": "allow",
+      "heuristicAction": "block",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -330,18 +150,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "accounts.pinterest.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538249417948,
-      "userAction": ""
-    },
-    "acdn.adnxs.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538062628696,
-      "userAction": ""
-    },
     "acpm.fr": {
       "dnt": false,
       "heuristicAction": "block",
@@ -354,16 +162,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "activenetwork-d.openx.net": {
+    "actionnetwork.org": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538535925079,
-      "userAction": ""
-    },
-    "activenetworks-d.openx.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538355264350,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "acuityplatform.com": {
@@ -372,13 +174,13 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "acxiomapac.com": {
+    "ad-hatena.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "ad-hatena.com": {
+    "ad-plus.cn": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
@@ -396,22 +198,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "ad.adriver.ru": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538277008771,
-      "userAction": ""
-    },
     "ad.doubleclick.net": {
       "dnt": false,
       "heuristicAction": "",
-      "nextUpdateTime": 1538242542788,
-      "userAction": ""
-    },
-    "ad.wsod.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538425057023,
+      "nextUpdateTime": 1538275124714,
       "userAction": ""
     },
     "adapf.com": {
@@ -421,12 +211,6 @@
       "userAction": ""
     },
     "adc-srv.net": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "adclear.net": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
@@ -450,6 +234,12 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
+    "adfarm.mediaplex.com": {
+      "dnt": false,
+      "heuristicAction": "",
+      "nextUpdateTime": 1538220421317,
+      "userAction": ""
+    },
     "adform.net": {
       "dnt": false,
       "heuristicAction": "block",
@@ -459,12 +249,6 @@
     "adfox.ru": {
       "dnt": false,
       "heuristicAction": "block",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "adhigh.net": {
-      "dnt": false,
-      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -498,10 +282,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "admiral.mgr.consensu.org": {
+    "admaster.com.cn": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538420953790,
+      "heuristicAction": "block",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "admission.net": {
@@ -522,6 +306,12 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
+    "adobecqms.net": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
     "adobedtm.com": {
       "dnt": false,
       "heuristicAction": "block",
@@ -530,7 +320,7 @@
     },
     "adotmob.com": {
       "dnt": false,
-      "heuristicAction": "allow",
+      "heuristicAction": "block",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -552,64 +342,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "ads.investingchannel.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538447339353,
-      "userAction": ""
-    },
-    "ads.pubmatic.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538496601089,
-      "userAction": ""
-    },
-    "ads.rubiconproject.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538445794602,
-      "userAction": ""
-    },
-    "ads.servebom.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538373205501,
-      "userAction": ""
-    },
-    "ads.yap.yahoo.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538418132951,
-      "userAction": ""
-    },
-    "adsafety.net": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
     "adscale.de": {
       "dnt": false,
       "heuristicAction": "block",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "adserver-us.adtech.advertising.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538488159302,
-      "userAction": ""
-    },
-    "adserver.intentiq.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538557381542,
-      "userAction": ""
-    },
-    "adservice.google.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538153556785,
       "userAction": ""
     },
     "adsnative.com": {
@@ -636,21 +372,9 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "adtng.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
     "advertising.com": {
       "dnt": false,
       "heuristicAction": "block",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "adx.com.ru": {
-      "dnt": false,
-      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -722,7 +446,13 @@
     },
     "allure.com": {
       "dnt": false,
-      "heuristicAction": "block",
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "amap.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -750,46 +480,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "amazonwebservices.d2.sc.omtrdc.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538516307010,
-      "userAction": ""
-    },
-    "amazonwebservicesinc.tt.omtrdc.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538414598582,
-      "userAction": ""
-    },
     "ameba.jp": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "ampcid.google.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538212864175,
-      "userAction": ""
-    },
-    "amplify.outbrain.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538500466583,
-      "userAction": ""
-    },
-    "amplifypixel.outbrain.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538293517643,
-      "userAction": ""
-    },
-    "an.facebook.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538328395538,
       "userAction": ""
     },
     "ancestry.ca": {
@@ -864,64 +558,16 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "ap.lijit.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538225149247,
-      "userAction": ""
-    },
-    "apester.com": {
+    "aol.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "apex.go.sonobi.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538364760079,
-      "userAction": ""
-    },
-    "api.adsnative.com": {
+    "apester.com": {
       "dnt": false,
       "heuristicAction": "block",
-      "nextUpdateTime": 1538168277917,
-      "userAction": ""
-    },
-    "api.adsymptotic.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538545671107,
-      "userAction": ""
-    },
-    "api.circularhub.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538545915720,
-      "userAction": ""
-    },
-    "api.company-target.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538204919804,
-      "userAction": ""
-    },
-    "api.flyertown.ca": {
-      "dnt": false,
-      "heuristicAction": "cookieblock",
-      "nextUpdateTime": 1538343500501,
-      "userAction": ""
-    },
-    "api.pymx5.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538328923918,
-      "userAction": ""
-    },
-    "api.sabavision.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538058807775,
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "apis.google.com": {
@@ -939,13 +585,7 @@
     "app.link": {
       "dnt": false,
       "heuristicAction": "block",
-      "nextUpdateTime": 1538267380235,
-      "userAction": ""
-    },
-    "app.vssps.visualstudio.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538349547779,
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "apple.com": {
@@ -954,15 +594,9 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "aps.hearstnp.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538071048301,
-      "userAction": ""
-    },
     "architecturaldigest.com": {
       "dnt": false,
-      "heuristicAction": "block",
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -976,36 +610,6 @@
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "as-sec.casalemedia.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538321865785,
-      "userAction": ""
-    },
-    "as.casalemedia.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538094506065,
-      "userAction": ""
-    },
-    "assets-gulfnews.sportz.io": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538268936081,
-      "userAction": ""
-    },
-    "assets.adobedtm.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538518662620,
-      "userAction": ""
-    },
-    "assets.pinterest.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538397145272,
       "userAction": ""
     },
     "atdmt.com": {
@@ -1022,14 +626,8 @@
     },
     "ati-host.net": {
       "dnt": false,
-      "heuristicAction": "allow",
+      "heuristicAction": "block",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "atlasobscura-travel.t.domdex.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538333342983,
       "userAction": ""
     },
     "att.com": {
@@ -1044,13 +642,13 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "au.tags.newscgp.com": {
+    "attvlt2.azurewebsites.net": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538525497075,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
-    "audtd.com": {
+    "audiencemanager.de": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
@@ -1064,26 +662,8 @@
     },
     "autopilothq.com": {
       "dnt": false,
-      "heuristicAction": "allow",
+      "heuristicAction": "block",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "b-code.liadm.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538297140111,
-      "userAction": ""
-    },
-    "b.scorecardresearch.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538294619765,
-      "userAction": ""
-    },
-    "b1sync.zemanta.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538132077041,
       "userAction": ""
     },
     "baidu.com": {
@@ -1101,13 +681,7 @@
     "bam.nr-data.net": {
       "dnt": false,
       "heuristicAction": "",
-      "nextUpdateTime": 1538443530778,
-      "userAction": ""
-    },
-    "bat.bing.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538247008130,
+      "nextUpdateTime": 1538523364120,
       "userAction": ""
     },
     "baur.de": {
@@ -1128,12 +702,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "bdimg.share.baidu.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538404525556,
-      "userAction": ""
-    },
     "beemray.com": {
       "dnt": false,
       "heuristicAction": "allow",
@@ -1141,6 +709,12 @@
       "userAction": ""
     },
     "beian.gov.cn": {
+      "dnt": false,
+      "heuristicAction": "block",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "betrad.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
@@ -1152,28 +726,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "bh.contextweb.com": {
+    "bfmtv.com": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538421717180,
-      "userAction": ""
-    },
-    "bid.contextweb.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538470282368,
-      "userAction": ""
-    },
-    "bid.g.doubleclick.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538243655658,
-      "userAction": ""
-    },
-    "bidder.criteo.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538449269932,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "biddingx.com": {
@@ -1200,6 +756,12 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
+    "bitbucket.org": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
     "bizible.com": {
       "dnt": false,
       "heuristicAction": "block",
@@ -1218,15 +780,9 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "block.lp1block.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538176389447,
-      "userAction": ""
-    },
     "bluecava.com": {
       "dnt": false,
-      "heuristicAction": "block",
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -1254,12 +810,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "bobo.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
     "boldchat.com": {
       "dnt": false,
       "heuristicAction": "cookieblock",
@@ -1268,7 +818,7 @@
     },
     "bonappetit.com": {
       "dnt": false,
-      "heuristicAction": "block",
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -1304,7 +854,7 @@
     },
     "brides.com": {
       "dnt": false,
-      "heuristicAction": "block",
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -1320,28 +870,16 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "bs.serving-sys.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538238980390,
-      "userAction": ""
-    },
     "bshare.cn": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "bshare.optimix.asia": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538143370691,
-      "userAction": ""
-    },
     "bttrack.com": {
       "dnt": false,
       "heuristicAction": "block",
-      "nextUpdateTime": 1538135297080,
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "btttag.com": {
@@ -1356,46 +894,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "c.adsymptotic.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538456439921,
-      "userAction": ""
-    },
-    "c.amazon-adsystem.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538109343951,
-      "userAction": ""
-    },
-    "c.deployads.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538317787251,
-      "userAction": ""
-    },
-    "c.jsrdn.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538549605036,
-      "userAction": ""
-    },
-    "c.pub.network": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538231054008,
-      "userAction": ""
-    },
     "c1.neweggimages.com": {
       "dnt": true,
       "heuristicAction": "allow",
-      "nextUpdateTime": 1538193299183,
-      "userAction": ""
-    },
-    "c2.taboola.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538552135048,
+      "nextUpdateTime": 1538335697441,
       "userAction": ""
     },
     "c212.net": {
@@ -1422,10 +924,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "capture.condenastdigital.com": {
+    "capturehighered.net": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538149772927,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "carambo.la": {
@@ -1458,106 +960,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "cdn-gl.imrworldwide.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538505275561,
-      "userAction": ""
-    },
-    "cdn.bizible.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538183210921,
-      "userAction": ""
-    },
-    "cdn.blueconic.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538409772024,
-      "userAction": ""
-    },
-    "cdn.digitru.st": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538464924771,
-      "userAction": ""
-    },
-    "cdn.districtm.io": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538502123391,
-      "userAction": ""
-    },
-    "cdn.dynamicyield.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538054972489,
-      "userAction": ""
-    },
-    "cdn.keywee.co": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538056897091,
-      "userAction": ""
-    },
     "cdn.native.ai": {
       "dnt": true,
       "heuristicAction": "allow",
-      "nextUpdateTime": 1538112716764,
-      "userAction": ""
-    },
-    "cdn.oas-c18.adnxs.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538491657369,
-      "userAction": ""
-    },
-    "cdn.selectablemedia.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538325259903,
-      "userAction": ""
-    },
-    "cdn.siftscience.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538255124011,
-      "userAction": ""
-    },
-    "cdn.static.zdbb.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538423691203,
-      "userAction": ""
-    },
-    "cdn.taboola.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538052152256,
-      "userAction": ""
-    },
-    "cdn.tinypass.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538350048168,
-      "userAction": ""
-    },
-    "cdn.tynt.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538121563634,
-      "userAction": ""
-    },
-    "cdn.viglink.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538552819503,
-      "userAction": ""
-    },
-    "cdn1-res.sundaysky.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538331283935,
+      "nextUpdateTime": 1538359925677,
       "userAction": ""
     },
     "cdnwidget.com": {
@@ -1572,16 +978,16 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
+    "changeagain.me": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
     "checkout.google.com": {
       "dnt": false,
       "heuristicAction": "cookieblock",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "checkout.stripe.com": {
-      "dnt": false,
-      "heuristicAction": "cookieblock",
-      "nextUpdateTime": 1538056961121,
       "userAction": ""
     },
     "chei.com.cn": {
@@ -1614,16 +1020,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "ck.connatix.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538079083152,
-      "userAction": ""
-    },
     "ckies.net": {
       "dnt": false,
       "heuristicAction": "allow",
-      "nextUpdateTime": 1538290612775,
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "clickability.com": {
@@ -1662,16 +1062,22 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "cm.g.doubleclick.net": {
+    "cmgdigital.com": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538084946321,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
-    "cms.tanx.com": {
+    "cmp.smartadserver.mgr.consensu.org": {
       "dnt": false,
       "heuristicAction": "",
-      "nextUpdateTime": 1538314445492,
+      "nextUpdateTime": 1538208881807,
+      "userAction": ""
+    },
+    "cmsadmin30.convio.net": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 1538440206675,
       "userAction": ""
     },
     "cnet.com": {
@@ -1680,21 +1086,15 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "cnid.condenastdigital.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538212613316,
-      "userAction": ""
-    },
-    "cnn.net": {
+    "cntraveler.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "cntraveler.com": {
+    "cnzz.com": {
       "dnt": false,
-      "heuristicAction": "block",
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -1708,24 +1108,6 @@
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "collecte.audience.acpm.fr": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538216572940,
-      "userAction": ""
-    },
-    "collector-963.tvsquared.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538075212407,
-      "userAction": ""
-    },
-    "collector-pxbecn7fqx.perimeterx.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538178626553,
       "userAction": ""
     },
     "collegenet.com": {
@@ -1746,28 +1128,28 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
+    "complex.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "conative.de": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
     "condenastdigital.com": {
       "dnt": false,
       "heuristicAction": "block",
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "config.lrcontent.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538224661599,
-      "userAction": ""
-    },
     "connatix.com": {
       "dnt": false,
       "heuristicAction": "block",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "connect.facebook.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538044706175,
       "userAction": ""
     },
     "connexity.net": {
@@ -1782,12 +1164,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "consent-pref.trustarc.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538382256612,
-      "userAction": ""
-    },
     "consent.google.com": {
       "dnt": false,
       "heuristicAction": "cookieblock",
@@ -1800,16 +1176,22 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "contextual.media.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538123517033,
-      "userAction": ""
-    },
     "contextweb.com": {
       "dnt": false,
       "heuristicAction": "block",
       "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "conv-blizzard-emea.cd.serving-sys.com": {
+      "dnt": false,
+      "heuristicAction": "",
+      "nextUpdateTime": 1538493335476,
+      "userAction": ""
+    },
+    "conv-blizzard-na.cd.serving-sys.com": {
+      "dnt": false,
+      "heuristicAction": "",
+      "nextUpdateTime": 1538480483471,
       "userAction": ""
     },
     "convertro.com": {
@@ -1818,22 +1200,16 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "core.connatix.com": {
+    "convio.net": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538077162990,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "cornell.edu": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "counter.yadro.ru": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538315953930,
       "userAction": ""
     },
     "coxmediagroup.com": {
@@ -1849,6 +1225,12 @@
       "userAction": ""
     },
     "creativecdn.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "creativecommons.org": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
@@ -1878,40 +1260,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "ct.pinterest.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538334484197,
-      "userAction": ""
-    },
-    "cx.atdmt.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538107799509,
-      "userAction": ""
-    },
     "cxense.com": {
       "dnt": false,
       "heuristicAction": "block",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "d.company-target.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538510704544,
-      "userAction": ""
-    },
-    "d.la1-c2-dfw.salesforceliveagent.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538196982209,
-      "userAction": ""
-    },
-    "d.turn.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538294378750,
       "userAction": ""
     },
     "d1af033869koo7.cloudfront.net": {
@@ -1944,13 +1296,13 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "data.dianomi.com": {
+    "datamind.ru": {
       "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538215972432,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
-    "datamind.ru": {
+    "daum.net": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
@@ -1960,24 +1312,6 @@
       "dnt": false,
       "heuristicAction": "block",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "dc.ads.linkedin.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538143536390,
-      "userAction": ""
-    },
-    "decajo.ru": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538503040838,
-      "userAction": ""
-    },
-    "delivery.zidtech.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538180066266,
       "userAction": ""
     },
     "demdex.net": {
@@ -2016,22 +1350,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "digitaltarget.ru": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
     "digitru.st": {
       "dnt": false,
       "heuristicAction": "block",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "display.apester.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538272371129,
       "userAction": ""
     },
     "disqus.com": {
@@ -2052,13 +1374,13 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "dmx.districtm.io": {
+    "dmxleo.com": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538077158657,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
-    "dmxleo.com": {
+    "dnnapi.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
@@ -2067,12 +1389,6 @@
     "docs.google.com": {
       "dnt": false,
       "heuristicAction": "cookieblock",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "dol.gov": {
-      "dnt": false,
-      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -2106,12 +1422,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "dpm.demdex.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538127110451,
-      "userAction": ""
-    },
     "dpmsrv.com": {
       "dnt": false,
       "heuristicAction": "block",
@@ -2124,22 +1434,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "dt.admission.net": {
+    "dsp.com": {
       "dnt": false,
       "heuristicAction": "allow",
-      "nextUpdateTime": 1538348346597,
-      "userAction": ""
-    },
-    "dt.cobaltgroup.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538296791629,
-      "userAction": ""
-    },
-    "dx.steelhousemedia.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538412044496,
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "dynad.net": {
@@ -2160,10 +1458,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "e-2072.adzerk.net": {
+    "ebay-us.com": {
       "dnt": false,
       "heuristicAction": "allow",
-      "nextUpdateTime": 1538325723457,
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "ebay.com": {
@@ -2174,7 +1472,7 @@
     },
     "ebayrtm.com": {
       "dnt": false,
-      "heuristicAction": "cookieblock",
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -2184,28 +1482,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "echo.intergient.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538161191136,
-      "userAction": ""
-    },
-    "eclick.baidu.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538421526521,
-      "userAction": ""
-    },
     "edge-cdn.net": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "edge.quantserve.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538303768684,
       "userAction": ""
     },
     "effectivemeasure.net": {
@@ -2232,33 +1512,15 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "embed.sendtonews.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538199320008,
-      "userAction": ""
-    },
     "emlgrid.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "engage.commander1.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538534356108,
-      "userAction": ""
-    },
-    "engine.addroplet.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538467483460,
-      "userAction": ""
-    },
     "epicurious.com": {
       "dnt": false,
-      "heuristicAction": "block",
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -2268,28 +1530,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "eset.marketlinc.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538430898085,
-      "userAction": ""
-    },
-    "eset.tt.omtrdc.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538356537340,
-      "userAction": ""
-    },
     "estat.com": {
       "dnt": false,
       "heuristicAction": "block",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "events.mediarithmics.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538345920195,
       "userAction": ""
     },
     "everesttech.net": {
@@ -2298,10 +1542,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "everydayhealth.demdex.net": {
+    "everyaction.com": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538552306958,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "evise.com": {
@@ -2313,13 +1557,13 @@
     "evvnt-api.global.ssl.fastly.net": {
       "dnt": false,
       "heuristicAction": "allow",
-      "nextUpdateTime": 1538336434789,
+      "nextUpdateTime": 0,
       "userAction": ""
     },
-    "ewscripps.hb.omtrdc.net": {
+    "ew3.io": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538506157825,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "exactag.com": {
@@ -2338,12 +1582,6 @@
       "dnt": false,
       "heuristicAction": "block",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "experience.tinypass.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538171166728,
       "userAction": ""
     },
     "eyeota.net": {
@@ -2382,18 +1620,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "fastlane-adv.rubiconproject.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538455076395,
-      "userAction": ""
-    },
-    "fastlane.rubiconproject.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538277861999,
-      "userAction": ""
-    },
     "fdlstatic.com": {
       "dnt": false,
       "heuristicAction": "allow",
@@ -2426,7 +1652,7 @@
     },
     "firstimpression.io": {
       "dnt": false,
-      "heuristicAction": "allow",
+      "heuristicAction": "block",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -2448,12 +1674,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "fls.doubleclick.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538174863248,
-      "userAction": ""
-    },
     "flyertown.ca": {
       "dnt": false,
       "heuristicAction": "cookieblock",
@@ -2472,12 +1692,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "forms.hubspot.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538138908700,
-      "userAction": ""
-    },
     "formstack.com": {
       "dnt": false,
       "heuristicAction": "allow",
@@ -2490,6 +1704,18 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
+    "foxbusiness.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "foxsports.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
     "foxycart.com": {
       "dnt": false,
       "heuristicAction": "allow",
@@ -2497,6 +1723,18 @@
       "userAction": ""
     },
     "freshdesk.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "friendbuy.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "funnyordie.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
@@ -2514,43 +1752,37 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "g.3gl.net": {
+    "g.cn.miaozhen.com": {
       "dnt": false,
       "heuristicAction": "",
-      "nextUpdateTime": 1538410704427,
+      "nextUpdateTime": 1538491763887,
       "userAction": ""
     },
-    "g.ign.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538148864057,
-      "userAction": ""
-    },
-    "gateway.answerscloud.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538395883518,
-      "userAction": ""
-    },
-    "gemius.pl": {
+    "geetest.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "geocoding.internetbrands.com": {
+    "gemius.pl": {
       "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538536149847,
+      "heuristicAction": "block",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
-    "geolocation.onetrust.com": {
+    "gentags.net": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538218189361,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "getclicky.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "getsmartcontent.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
@@ -2570,7 +1802,7 @@
     },
     "glamour.com": {
       "dnt": false,
-      "heuristicAction": "block",
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -2578,6 +1810,12 @@
       "dnt": false,
       "heuristicAction": "block",
       "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "gmglobalcorporatefunctions.sc.omtrdc.net": {
+      "dnt": false,
+      "heuristicAction": "",
+      "nextUpdateTime": 1538558542584,
       "userAction": ""
     },
     "go.com": {
@@ -2588,7 +1826,7 @@
     },
     "golfdigest.com": {
       "dnt": false,
-      "heuristicAction": "block",
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -2607,19 +1845,13 @@
     "googleads.g.doubleclick.net": {
       "dnt": false,
       "heuristicAction": "",
-      "nextUpdateTime": 1538370377555,
+      "nextUpdateTime": 1538340601964,
       "userAction": ""
     },
     "gq.com": {
       "dnt": false,
-      "heuristicAction": "block",
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "graph.facebook.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538295132337,
       "userAction": ""
     },
     "gridsumdissector.com": {
@@ -2640,15 +1872,9 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "gslbeacon.lijit.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538471693280,
-      "userAction": ""
-    },
     "gtags.net": {
       "dnt": false,
-      "heuristicAction": "allow",
+      "heuristicAction": "block",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -2664,10 +1890,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "gwiqcdn.globalwebindex.net": {
+    "gxbr.cnzz.com": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538329164909,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 1538181812392,
       "userAction": ""
     },
     "hatena.com": {
@@ -2682,10 +1908,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "hbopenbid.pubmatic.com": {
+    "hdslb.com": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538228306081,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "healte.de": {
@@ -2718,10 +1944,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "hm.baidu.com": {
+    "hiwoenrep.ru": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538383968817,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "horyzon-media.com": {
@@ -2730,9 +1956,27 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
+    "huanqiu.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "hubpd.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
     "hubspot.com": {
       "dnt": false,
       "heuristicAction": "block",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "huffingtonpost.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -2754,34 +1998,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "hybrid.ai": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "i.connatix.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538433396017,
-      "userAction": ""
-    },
-    "i.tianqi.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538262509948,
-      "userAction": ""
-    },
     "iasds01.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "ib.adnxs.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538182536434,
       "userAction": ""
     },
     "ibclick.stream": {
@@ -2802,34 +2022,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "id.rlcdn.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538459618997,
-      "userAction": ""
-    },
     "id5-sync.com": {
       "dnt": false,
       "heuristicAction": "block",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "idealmedia.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "identityssl.newscdn.com.au": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538550188509,
-      "userAction": ""
-    },
-    "idsync.rlcdn.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538467403404,
       "userAction": ""
     },
     "ign.com": {
@@ -2856,12 +2052,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "img.purch.com": {
-      "dnt": false,
-      "heuristicAction": "cookieblock",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
     "imgur.com": {
       "dnt": false,
       "heuristicAction": "allow",
@@ -2880,22 +2070,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "in.getclicky.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538484989853,
-      "userAction": ""
-    },
     "infinity-tracking.net": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "infinityid.condenastdigital.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538163838777,
       "userAction": ""
     },
     "inq.com": {
@@ -2904,10 +2082,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "insight.adsrvr.org": {
+    "inquisitr.com": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538092323704,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "insightexpressai.com": {
@@ -2922,15 +2100,9 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "insticator-d.openx.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538177453642,
-      "userAction": ""
-    },
     "instinctiveads.com": {
       "dnt": false,
-      "heuristicAction": "allow",
+      "heuristicAction": "block",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -2964,12 +2136,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "investing-channel-d.openx.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538398006786,
-      "userAction": ""
-    },
     "investingchannel.com": {
       "dnt": false,
       "heuristicAction": "allow",
@@ -2996,38 +2162,26 @@
     },
     "iperceptions.com": {
       "dnt": false,
+      "heuristicAction": "block",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "ipinyou.com": {
+      "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
     "ipredictive.com": {
       "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "ips-invite.iperceptions.com": {
-      "dnt": false,
       "heuristicAction": "allow",
-      "nextUpdateTime": 1538513891249,
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "irs01.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "italiaonline01.wt-eu02.net": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538262101357,
-      "userAction": ""
-    },
-    "jadserve.postrelease.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538426276329,
       "userAction": ""
     },
     "janrainsso.com": {
@@ -3050,20 +2204,14 @@
     },
     "jrs5.com": {
       "dnt": false,
-      "heuristicAction": "block",
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "js.adsrvr.org": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538190129186,
       "userAction": ""
     },
     "js.matheranalytics.com": {
       "dnt": true,
       "heuristicAction": "",
-      "nextUpdateTime": 1538279062905,
+      "nextUpdateTime": 1538500509571,
       "userAction": ""
     },
     "jsrdn.com": {
@@ -3073,6 +2221,12 @@
       "userAction": ""
     },
     "justuno.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "kakao.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
@@ -3159,7 +2313,7 @@
     "leadintel.io": {
       "dnt": false,
       "heuristicAction": "allow",
-      "nextUpdateTime": 1538046595757,
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "leadlander.com": {
@@ -3168,21 +2322,9 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "legocdn.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
     "liadm.com": {
       "dnt": false,
       "heuristicAction": "block",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "licasd.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -3234,12 +2376,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "live.sekindo.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538332400243,
-      "userAction": ""
-    },
     "livechatinc.com": {
       "dnt": false,
       "heuristicAction": "cookieblock",
@@ -3258,18 +2394,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "load.sumo.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538194386904,
-      "userAction": ""
-    },
-    "loadus.exelator.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538189709302,
-      "userAction": ""
-    },
     "loc.gov": {
       "dnt": false,
       "heuristicAction": "allow",
@@ -3279,19 +2403,7 @@
     "lockerdome.com": {
       "dnt": false,
       "heuristicAction": "allow",
-      "nextUpdateTime": 1538146284566,
-      "userAction": ""
-    },
-    "log.mmstat.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538355091856,
-      "userAction": ""
-    },
-    "login.dotomi.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538513913912,
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "logly.co.jp": {
@@ -3300,28 +2412,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "logs11.xiti.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538403190845,
-      "userAction": ""
-    },
-    "logs1136.xiti.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538251719016,
-      "userAction": ""
-    },
     "lp1block.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "lptag.liveperson.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538533427768,
       "userAction": ""
     },
     "lqm.io": {
@@ -3348,9 +2442,21 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
+    "madeleine.de": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
     "mail.ru": {
       "dnt": false,
       "heuristicAction": "cookieblock",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "mailchimp.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -3380,7 +2486,7 @@
     },
     "marketlinc.com": {
       "dnt": false,
-      "heuristicAction": "block",
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -3388,18 +2494,6 @@
       "dnt": false,
       "heuristicAction": "cookieblock",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "match.adsrvr.org": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538200836706,
-      "userAction": ""
-    },
-    "match.prod.bidr.io": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538339384874,
       "userAction": ""
     },
     "matheranalytics.com": {
@@ -3414,6 +2508,12 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
+    "mct01.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
     "media.net": {
       "dnt": false,
       "heuristicAction": "block",
@@ -3424,12 +2524,6 @@
       "dnt": false,
       "heuristicAction": "block",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "mediadc-d.openx.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538439252020,
       "userAction": ""
     },
     "mediaforge.com": {
@@ -3446,19 +2540,13 @@
     },
     "mediarithmics.com": {
       "dnt": false,
-      "heuristicAction": "allow",
+      "heuristicAction": "block",
       "nextUpdateTime": 0,
       "userAction": ""
     },
     "mediav.com": {
       "dnt": false,
       "heuristicAction": "block",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "mediawallahscript.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -3481,12 +2569,6 @@
       "userAction": ""
     },
     "metadsp.co.uk": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "mfadsrvr.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
@@ -3528,12 +2610,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "mid.rkdms.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538247909740,
-      "userAction": ""
-    },
     "mktoresp.com": {
       "dnt": false,
       "heuristicAction": "block",
@@ -3543,7 +2619,7 @@
     "ml314.com": {
       "dnt": false,
       "heuristicAction": "block",
-      "nextUpdateTime": 1538394141616,
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "mmstat.com": {
@@ -3594,12 +2670,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "mssl.fwmrm.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538487358307,
-      "userAction": ""
-    },
     "mt0.google.com": {
       "dnt": false,
       "heuristicAction": "cookieblock",
@@ -3610,12 +2680,6 @@
       "dnt": false,
       "heuristicAction": "cookieblock",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "mtrx.go.sonobi.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538555902065,
       "userAction": ""
     },
     "mts0.google.com": {
@@ -3654,6 +2718,12 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
+    "myhard.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
     "mynativeplatform.com": {
       "dnt": false,
       "heuristicAction": "allow",
@@ -3678,12 +2748,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "narrative.io": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
     "nasdaq.com": {
       "dnt": false,
       "heuristicAction": "allow",
@@ -3700,12 +2764,6 @@
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "native.sharethrough.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538320667027,
       "userAction": ""
     },
     "nativendo.de": {
@@ -3726,15 +2784,15 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "nbcu.demdex.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538463121539,
-      "userAction": ""
-    },
     "nbcuni.com": {
       "dnt": false,
       "heuristicAction": "cookieblock",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "netmng.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -3758,13 +2816,13 @@
     },
     "news.com.au": {
       "dnt": false,
-      "heuristicAction": "allow",
+      "heuristicAction": "block",
       "nextUpdateTime": 0,
       "userAction": ""
     },
     "newscdn.com.au": {
       "dnt": false,
-      "heuristicAction": "allow",
+      "heuristicAction": "block",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -3772,12 +2830,6 @@
       "dnt": false,
       "heuristicAction": "block",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "newscorpau.sc.omtrdc.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538421923960,
       "userAction": ""
     },
     "newsinc.com": {
@@ -3800,7 +2852,7 @@
     },
     "newyorker.com": {
       "dnt": false,
-      "heuristicAction": "block",
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -3820,6 +2872,12 @@
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "now.eloqua.com": {
+      "dnt": false,
+      "heuristicAction": "",
+      "nextUpdateTime": 1538366209349,
       "userAction": ""
     },
     "nr-data.net": {
@@ -3846,10 +2904,16 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "oasc10.247realmedia.com": {
+    "oath.com": {
       "dnt": false,
       "heuristicAction": "allow",
-      "nextUpdateTime": 1538268830533,
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "ocdn.eu": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "office.com": {
@@ -3859,12 +2923,6 @@
       "userAction": ""
     },
     "office365.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "ojrq.net": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
@@ -3894,12 +2952,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "omnidsp.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
     "omnitagjs.com": {
       "dnt": false,
       "heuristicAction": "block",
@@ -3922,12 +2974,6 @@
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "onetag.mgr.consensu.org": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538426323108,
       "userAction": ""
     },
     "onetrust.com": {
@@ -3978,12 +3024,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "ophan.theguardian.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538371630281,
-      "userAction": ""
-    },
     "opinionstage.com": {
       "dnt": false,
       "heuristicAction": "allow",
@@ -4006,6 +3046,12 @@
       "dnt": false,
       "heuristicAction": "cookieblock",
       "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "optout.betrad.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 1538300013262,
       "userAction": ""
     },
     "ora.tv": {
@@ -4050,22 +3096,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "p.dlx.addthis.com": {
+    "paddle.com": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538076392629,
-      "userAction": ""
-    },
-    "p.rfihub.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538159006482,
-      "userAction": ""
-    },
-    "p2.keywee.co": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538075969602,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "pardot.com": {
@@ -4098,12 +3132,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "pd.sharethis.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538125278981,
-      "userAction": ""
-    },
     "performgroup.com": {
       "dnt": false,
       "heuristicAction": "allow",
@@ -4116,28 +3144,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "phonograph2.voxmedia.com": {
-      "dnt": false,
-      "heuristicAction": "cookieblock",
-      "nextUpdateTime": 1538254593492,
-      "userAction": ""
-    },
     "photobucket.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "pi.pardot.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538374590064,
-      "userAction": ""
-    },
-    "pic.fastapi.net": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538255329652,
       "userAction": ""
     },
     "picasaweb.google.com": {
@@ -4170,36 +3180,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "pixel.condenastdigital.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538133315883,
-      "userAction": ""
-    },
-    "pixel.keywee.co": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538133366404,
-      "userAction": ""
-    },
-    "pixel.quantserve.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538522752196,
-      "userAction": ""
-    },
-    "pixel.sitescout.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538192671832,
-      "userAction": ""
-    },
-    "pixel.zprk.io": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538486726252,
-      "userAction": ""
-    },
     "piximedia.com": {
       "dnt": false,
       "heuristicAction": "allow",
@@ -4210,18 +3190,6 @@
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "platform-api.sharethis.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538056097475,
-      "userAction": ""
-    },
-    "platform.linkedin.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538260131857,
       "userAction": ""
     },
     "platform.twitter.com": {
@@ -4236,28 +3204,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "player.performgroup.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538214631976,
-      "userAction": ""
-    },
-    "player.vimeo.com": {
-      "dnt": false,
-      "heuristicAction": "cookieblock",
-      "nextUpdateTime": 1538362569129,
-      "userAction": ""
-    },
     "players.brightcove.net": {
       "dnt": false,
       "heuristicAction": "cookieblock",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "playwire-d.openx.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538319307097,
       "userAction": ""
     },
     "plista.com": {
@@ -4275,25 +3225,13 @@
     "po.st": {
       "dnt": false,
       "heuristicAction": "allow",
-      "nextUpdateTime": 1538187345852,
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "popsugar-assets.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "pos.baidu.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538418412765,
-      "userAction": ""
-    },
-    "postmedia.us.janrainsso.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538174985349,
       "userAction": ""
     },
     "postrelease.com": {
@@ -4309,12 +3247,6 @@
       "userAction": ""
     },
     "pressboard.ca": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "prfct.co": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
@@ -4356,22 +3288,16 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "proximus.demdex.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538427583405,
-      "userAction": ""
-    },
     "pub.network": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "pubads.g.doubleclick.net": {
+    "publishme.se": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538202489440,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "pubmatic.com": {
@@ -4394,12 +3320,6 @@
     },
     "purch.com": {
       "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "purechat.com": {
-      "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
@@ -4413,13 +3333,7 @@
     "px.ads.linkedin.com": {
       "dnt": false,
       "heuristicAction": "",
-      "nextUpdateTime": 1538206203762,
-      "userAction": ""
-    },
-    "px.dynamicyield.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538460515426,
+      "nextUpdateTime": 1538262359887,
       "userAction": ""
     },
     "pxi.pub": {
@@ -4431,12 +3345,12 @@
     "pymx5.com": {
       "dnt": false,
       "heuristicAction": "block",
-      "nextUpdateTime": 1538200483882,
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "qq.com": {
       "dnt": false,
-      "heuristicAction": "allow",
+      "heuristicAction": "block",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -4444,12 +3358,6 @@
       "dnt": false,
       "heuristicAction": "cookieblock",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "quantcast.mgr.consensu.org": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538327762416,
       "userAction": ""
     },
     "quantserve.com": {
@@ -4476,12 +3384,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "r.turn.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538114432566,
-      "userAction": ""
-    },
     "rackcdn.com": {
       "dnt": false,
       "heuristicAction": "allow",
@@ -4494,21 +3396,21 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
+    "rakuten.co.jp": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
     "rambler.ru": {
       "dnt": false,
       "heuristicAction": "cookieblock",
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "rcom.dynamicyield.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538208445032,
-      "userAction": ""
-    },
     "reachmax.cn": {
       "dnt": false,
-      "heuristicAction": "allow",
+      "heuristicAction": "block",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -4530,7 +3432,13 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "republer.com": {
+    "render.githubusercontent.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "researchintel.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
@@ -4548,15 +3456,9 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "reutersmedia.net": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
     "revcontent.com": {
       "dnt": false,
-      "heuristicAction": "block",
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -4568,7 +3470,7 @@
     },
     "rezync.com": {
       "dnt": false,
-      "heuristicAction": "allow",
+      "heuristicAction": "block",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -4626,46 +3528,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "rp.gwallet.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538294745257,
-      "userAction": ""
-    },
-    "rqtrk.eu": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "rs.gwallet.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538129421105,
-      "userAction": ""
-    },
-    "rss.art19.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538167421505,
-      "userAction": ""
-    },
-    "rtb.connatix.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538352452690,
-      "userAction": ""
-    },
     "rtk.io": {
       "dnt": false,
       "heuristicAction": "block",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "rtve.d1.sc.omtrdc.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538202862196,
       "userAction": ""
     },
     "ru4.com": {
@@ -4680,88 +3546,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "rudy.adsnative.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538152569067,
-      "userAction": ""
-    },
-    "rutarget.ru": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
     "s-static.ak.facebook.com": {
       "dnt": false,
       "heuristicAction": "cookieblock",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "s.adroll.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538369224004,
-      "userAction": ""
-    },
-    "s.amazon-adsystem.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538062771361,
-      "userAction": ""
-    },
-    "s.clickability.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538478226394,
-      "userAction": ""
-    },
-    "s.effectivemeasure.net": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538149322611,
-      "userAction": ""
-    },
-    "s.nexac.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538515216122,
-      "userAction": ""
-    },
-    "s.skimresources.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538221863124,
-      "userAction": ""
-    },
-    "s.spoutable.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538331458176,
-      "userAction": ""
-    },
-    "s.thebrighttag.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538183045497,
-      "userAction": ""
-    },
-    "s1061485456.t.eloqua.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538180635780,
-      "userAction": ""
-    },
-    "s118899503.t.eloqua.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538367243127,
-      "userAction": ""
-    },
-    "s2208.t.eloqua.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538366295174,
       "userAction": ""
     },
     "s3-us-west-2.amazonaws.com": {
@@ -4770,10 +3558,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "s7.addthis.com": {
+    "s3xified.com": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538491765915,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "sabavision.com": {
@@ -4806,34 +3594,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "samplicio.us": {
+    "scarabresearch.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "sb-stage.scorecardresearch.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538303818062,
-      "userAction": ""
-    },
-    "sb.scorecardresearch.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538237980451,
-      "userAction": ""
-    },
-    "sbnationbidder-d.openx.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538343887161,
-      "userAction": ""
-    },
-    "scdn.cxense.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538475610945,
       "userAction": ""
     },
     "scholarlyiq.com": {
@@ -4878,34 +3642,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "scribd.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "scripps.demdex.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538500013668,
-      "userAction": ""
-    },
-    "scripps.tt.omtrdc.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538350668625,
-      "userAction": ""
-    },
     "script.ioam.de": {
       "dnt": false,
       "heuristicAction": "cookieblock",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "sdc-qczj.pingan.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538490872689,
       "userAction": ""
     },
     "sdp-campaign.de": {
@@ -4914,100 +3654,16 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "search.spotxchange.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538422064517,
-      "userAction": ""
-    },
     "search.yahoo.com": {
       "dnt": false,
       "heuristicAction": "cookieblock",
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "seccdn-gl.imrworldwide.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538546208242,
-      "userAction": ""
-    },
-    "secure-assets.rubiconproject.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538187034130,
-      "userAction": ""
-    },
-    "secure-dcr.imrworldwide.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538214152681,
-      "userAction": ""
-    },
-    "secure-ds.serving-sys.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538262143169,
-      "userAction": ""
-    },
-    "secure-gl.imrworldwide.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538371117898,
-      "userAction": ""
-    },
-    "secure-it.imrworldwide.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538367254534,
-      "userAction": ""
-    },
-    "secure-us.imrworldwide.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538062926851,
-      "userAction": ""
-    },
-    "secure.adnxs.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538515294111,
-      "userAction": ""
-    },
-    "secure.livechatinc.com": {
-      "dnt": false,
-      "heuristicAction": "cookieblock",
-      "nextUpdateTime": 1538269531819,
-      "userAction": ""
-    },
-    "secure.quantserve.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538219869201,
-      "userAction": ""
-    },
-    "secure.statcounter.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538453154129,
-      "userAction": ""
-    },
     "securedvisit.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "securepubads.g.doubleclick.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538165745281,
-      "userAction": ""
-    },
-    "segapi.quantserve.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538077819865,
       "userAction": ""
     },
     "sekindo.com": {
@@ -5024,7 +3680,7 @@
     },
     "self.com": {
       "dnt": false,
-      "heuristicAction": "block",
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -5040,10 +3696,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "servedby.flashtalking.com": {
+    "servedby-buysellads.com": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538477934971,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "serverbid.com": {
@@ -5056,12 +3712,6 @@
       "dnt": false,
       "heuristicAction": "block",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "session.timecommerce.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538421892505,
       "userAction": ""
     },
     "sessioncam.com": {
@@ -5108,7 +3758,7 @@
     },
     "simpli.fi": {
       "dnt": false,
-      "heuristicAction": "block",
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -5157,7 +3807,7 @@
     "sjs.bizographics.com": {
       "dnt": false,
       "heuristicAction": "",
-      "nextUpdateTime": 1538374333246,
+      "nextUpdateTime": 1538321907146,
       "userAction": ""
     },
     "skimresources.com": {
@@ -5182,12 +3832,6 @@
       "dnt": false,
       "heuristicAction": "block",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "smartlock.google.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538354484555,
       "userAction": ""
     },
     "smashing-delivery.herokuapp.com": {
@@ -5244,22 +3888,16 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "sohu.irs01.com": {
+    "sohu.com": {
       "dnt": false,
       "heuristicAction": "allow",
-      "nextUpdateTime": 1538175757124,
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "sokrati.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "solarwinds.tt.omtrdc.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538167927210,
       "userAction": ""
     },
     "sonobi.com": {
@@ -5274,12 +3912,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "sp.analytics.yahoo.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538339922746,
-      "userAction": ""
-    },
     "sphereup.com": {
       "dnt": false,
       "heuristicAction": "allow",
@@ -5289,6 +3921,18 @@
     "spiceworks.com": {
       "dnt": false,
       "heuristicAction": "block",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "spineuniverse.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "spingo.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -5330,7 +3974,7 @@
     },
     "springernature.com": {
       "dnt": false,
-      "heuristicAction": "block",
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -5346,46 +3990,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "srv-2018-09-26-09.config.parsely.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538359586941,
-      "userAction": ""
-    },
-    "srv-2018-09-26-09.pixel.parsely.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538445425688,
-      "userAction": ""
-    },
-    "srv-2018-09-26-10.config.parsely.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538474458903,
-      "userAction": ""
-    },
-    "srv.au.ebayrtm.com": {
-      "dnt": false,
-      "heuristicAction": "cookieblock",
-      "nextUpdateTime": 1538460842793,
-      "userAction": ""
-    },
     "srx.com.sg": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "sslwidget.criteo.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538250386292,
-      "userAction": ""
-    },
-    "st.dynamicyield.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538512151649,
       "userAction": ""
     },
     "stackadapt.com": {
@@ -5394,34 +4002,16 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "stanza-d.openx.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538238071781,
-      "userAction": ""
-    },
     "statcounter.com": {
       "dnt": false,
       "heuristicAction": "block",
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "static.bshare.cn": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538407047481,
-      "userAction": ""
-    },
     "static.doubleclick.net": {
       "dnt": false,
       "heuristicAction": "",
-      "nextUpdateTime": 1538438476744,
-      "userAction": ""
-    },
-    "static.parsely.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538374661983,
+      "nextUpdateTime": 1538398711735,
       "userAction": ""
     },
     "staticxx.facebook.com": {
@@ -5433,13 +4023,7 @@
     "stats.g.doubleclick.net": {
       "dnt": false,
       "heuristicAction": "",
-      "nextUpdateTime": 1538123969054,
-      "userAction": ""
-    },
-    "statse.webtrendslive.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538383272999,
+      "nextUpdateTime": 1538480363136,
       "userAction": ""
     },
     "steelhousemedia.com": {
@@ -5490,7 +4074,19 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
+    "suning.cn": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
     "suning.com": {
+      "dnt": false,
+      "heuristicAction": "block",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "sunrtb.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
@@ -5502,64 +4098,16 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "survata.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "survey.g.doubleclick.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538409550581,
-      "userAction": ""
-    },
     "surveymonkey.com": {
       "dnt": false,
       "heuristicAction": "cookieblock",
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "svcs.ebay.com": {
-      "dnt": false,
-      "heuristicAction": "cookieblock",
-      "nextUpdateTime": 1538325865068,
-      "userAction": ""
-    },
-    "sw88.go.com": {
-      "dnt": false,
-      "heuristicAction": "cookieblock",
-      "nextUpdateTime": 1538045911214,
-      "userAction": ""
-    },
     "switchadhub.com": {
       "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "symantec.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "sync.adaptv.advertising.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538159389370,
-      "userAction": ""
-    },
-    "sync.graph.bluecava.com": {
-      "dnt": false,
       "heuristicAction": "block",
-      "nextUpdateTime": 1538100879756,
-      "userAction": ""
-    },
-    "sync.search.spotxchange.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538407016386,
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "syndication.twitter.com": {
@@ -5578,30 +4126,6 @@
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "tag.bounceexchange.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538489495789,
-      "userAction": ""
-    },
-    "tag.mtrcs.samba.tv": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538210741846,
-      "userAction": ""
-    },
-    "tag.placelocal.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538095525832,
-      "userAction": ""
-    },
-    "tags.news.com.au": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538246007029,
       "userAction": ""
     },
     "tailtarget.com": {
@@ -5634,28 +4158,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "tap-secure.rubiconproject.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538492207266,
-      "userAction": ""
-    },
     "tapad.com": {
       "dnt": false,
       "heuristicAction": "block",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "tapestry.tapad.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538235641061,
-      "userAction": ""
-    },
-    "target.smi2.ru": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538428202945,
       "userAction": ""
     },
     "tawk.to": {
@@ -5664,7 +4170,7 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "taylorandfrancis.com": {
+    "teads.tv": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
@@ -5684,7 +4190,7 @@
     },
     "teenvogue.com": {
       "dnt": false,
-      "heuristicAction": "block",
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -5712,18 +4218,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "thrtle.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "thunder.adnxs.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538123580474,
-      "userAction": ""
-    },
     "tianqi.com": {
       "dnt": false,
       "heuristicAction": "allow",
@@ -5748,12 +4242,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "timeinc.demdex.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538072239103,
-      "userAction": ""
-    },
     "timewarnercable.com": {
       "dnt": false,
       "heuristicAction": "allow",
@@ -5769,18 +4257,6 @@
     "tiqcdn.com": {
       "dnt": false,
       "heuristicAction": "cookieblock",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "tlx.3lift.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538202979002,
-      "userAction": ""
-    },
-    "tm-awx.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -5802,19 +4278,13 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "track.adform.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538111155067,
-      "userAction": ""
-    },
-    "track.hubspot.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538073273875,
-      "userAction": ""
-    },
     "tradelab.fr": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "traffic-media.co": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
@@ -5862,12 +4332,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "trends.revcontent.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538067659492,
-      "userAction": ""
-    },
     "tribalfusion.com": {
       "dnt": false,
       "heuristicAction": "block",
@@ -5880,22 +4344,16 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "triblive.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
     "tripadvisor.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "trk.connatix.com": {
+    "trk.mct01.com": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538056981974,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 1538388427712,
       "userAction": ""
     },
     "tronc.com": {
@@ -5922,16 +4380,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "trustpilot.com": {
+    "tumblr.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "tt.onthe.io": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538407164376,
       "userAction": ""
     },
     "turn.com": {
@@ -5949,12 +4401,6 @@
     "tvsquared.com": {
       "dnt": false,
       "heuristicAction": "block",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "twimg.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -5982,12 +4428,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "uconnect.tealiumiq.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538086919054,
-      "userAction": ""
-    },
     "ucoz.net": {
       "dnt": false,
       "heuristicAction": "allow",
@@ -5997,19 +4437,13 @@
     "udmserve.net": {
       "dnt": false,
       "heuristicAction": "allow",
-      "nextUpdateTime": 1538457145899,
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "ugdturner.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "unagi-eu.amazon.com": {
-      "dnt": false,
-      "heuristicAction": "cookieblock",
-      "nextUpdateTime": 1538257470790,
       "userAction": ""
     },
     "undertone.com": {
@@ -6038,7 +4472,7 @@
     },
     "upsellit.com": {
       "dnt": false,
-      "heuristicAction": "allow",
+      "heuristicAction": "block",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -6048,13 +4482,13 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "us-u.openx.net": {
+    "usa.gov": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538339771741,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
-    "usa.gov": {
+    "useproof.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
@@ -6081,19 +4515,19 @@
     "utarget.pro": {
       "dnt": false,
       "heuristicAction": "allow",
-      "nextUpdateTime": 1538409562664,
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "utarget.ru": {
       "dnt": false,
       "heuristicAction": "allow",
-      "nextUpdateTime": 1538382140645,
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "uuidksinc.net": {
       "dnt": false,
       "heuristicAction": "allow",
-      "nextUpdateTime": 1538344768057,
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "v-biz.com.ua": {
@@ -6102,9 +4536,15 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
+    "v.admaster.com.cn": {
+      "dnt": false,
+      "heuristicAction": "",
+      "nextUpdateTime": 1538367082123,
+      "userAction": ""
+    },
     "vanityfair.com": {
       "dnt": false,
-      "heuristicAction": "block",
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -6120,10 +4560,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "vendorlist.consensu.org": {
+    "verticalhealth.net": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538143303737,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "viafoura.co": {
@@ -6210,10 +4650,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "vop.sundaysky.com": {
+    "volvelle.tech": {
       "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538418284544,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "voxmedia.com": {
@@ -6222,15 +4662,9 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "w.soundcloud.com": {
-      "dnt": false,
-      "heuristicAction": "cookieblock",
-      "nextUpdateTime": 1538264689912,
-      "userAction": ""
-    },
     "w55c.net": {
       "dnt": false,
-      "heuristicAction": "block",
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -6240,22 +4674,22 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "wal.wolfram.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538507015629,
-      "userAction": ""
-    },
     "wallst.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "wamfactory.solution.weborama.fr": {
+    "waptime.cn": {
       "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538404424123,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "warnerbros.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "wbtrk.net": {
@@ -6300,12 +4734,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "webservices.webspectator.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538420584854,
-      "userAction": ""
-    },
     "websimages.com": {
       "dnt": false,
       "heuristicAction": "allow",
@@ -6336,22 +4764,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "welt.de": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 0,
-      "userAction": ""
-    },
     "whistleout.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "widget.intercom.io": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538468993614,
       "userAction": ""
     },
     "wikia-services.com": {
@@ -6384,6 +4800,12 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
+    "wishpond.net": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
     "wistia.com": {
       "dnt": false,
       "heuristicAction": "cookieblock",
@@ -6410,14 +4832,8 @@
     },
     "wmagazine.com": {
       "dnt": false,
-      "heuristicAction": "block",
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "wms-na.amazon-adsystem.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538561096392,
       "userAction": ""
     },
     "wnyc.org": {
@@ -6456,18 +4872,6 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "ws.sessioncam.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538093572796,
-      "userAction": ""
-    },
-    "ws.sharethis.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538495803032,
-      "userAction": ""
-    },
     "wsj.net": {
       "dnt": false,
       "heuristicAction": "allow",
@@ -6486,58 +4890,10 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "www.allure.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538510946198,
-      "userAction": ""
-    },
-    "www.architecturaldigest.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538087322367,
-      "userAction": ""
-    },
-    "www.beian.gov.cn": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538073326388,
-      "userAction": ""
-    },
     "www.bing.com": {
       "dnt": false,
       "heuristicAction": "cookieblock",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "www.bonappetit.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538446372221,
-      "userAction": ""
-    },
-    "www.brides.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538493655891,
-      "userAction": ""
-    },
-    "www.cntraveler.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538123690650,
-      "userAction": ""
-    },
-    "www.dezeenjobs.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538195644309,
-      "userAction": ""
-    },
-    "www.epicurious.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538168960663,
       "userAction": ""
     },
     "www.facebook.com": {
@@ -6546,100 +4902,16 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "www.glamour.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538116834884,
-      "userAction": ""
-    },
-    "www.golfdigest.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538157891279,
-      "userAction": ""
-    },
     "www.google.com": {
       "dnt": false,
       "heuristicAction": "cookieblock",
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "www.gq.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538093232146,
-      "userAction": ""
-    },
-    "www.iolam.it": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538193507860,
-      "userAction": ""
-    },
-    "www.lightboxcdn.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538121151651,
-      "userAction": ""
-    },
-    "www.newyorker.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538278936690,
-      "userAction": ""
-    },
-    "www.proximus.be": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538480707132,
-      "userAction": ""
-    },
-    "www.self.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538341119642,
-      "userAction": ""
-    },
-    "www.teenvogue.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538191505978,
-      "userAction": ""
-    },
-    "www.tns-counter.ru": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538165597564,
-      "userAction": ""
-    },
-    "www.vanityfair.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538511390052,
-      "userAction": ""
-    },
-    "www.vogue.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538445532831,
-      "userAction": ""
-    },
-    "www.wired.com": {
-      "dnt": false,
-      "heuristicAction": "allow",
-      "nextUpdateTime": 1538290704894,
-      "userAction": ""
-    },
-    "www.wmagazine.com": {
-      "dnt": false,
-      "heuristicAction": "block",
-      "nextUpdateTime": 1538343058111,
-      "userAction": ""
-    },
     "www.youtube.com": {
       "dnt": false,
       "heuristicAction": "cookieblock",
-      "nextUpdateTime": 1538182668807,
+      "nextUpdateTime": 1538427419875,
       "userAction": ""
     },
     "wwwimages.adobe.com": {
@@ -6648,13 +4920,19 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
-    "x.bidswitch.net": {
+    "xad.com": {
       "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538550095595,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
       "userAction": ""
     },
-    "xad.com": {
+    "xg4ken.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "xinhuanet.com": {
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
@@ -6690,6 +4968,12 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
+    "xtgreat.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
     "y3.analytics.yahoo.com": {
       "dnt": false,
       "heuristicAction": "cookieblock",
@@ -6714,6 +4998,12 @@
       "nextUpdateTime": 0,
       "userAction": ""
     },
+    "yahoosmallbusiness.com": {
+      "dnt": false,
+      "heuristicAction": "allow",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
     "yandex.ru": {
       "dnt": false,
       "heuristicAction": "cookieblock",
@@ -6723,7 +5013,7 @@
     "yastatic.net": {
       "dnt": false,
       "heuristicAction": "block",
-      "nextUpdateTime": 1538421382254,
+      "nextUpdateTime": 0,
       "userAction": ""
     },
     "yieldlab.net": {
@@ -6764,7 +5054,7 @@
     },
     "youvisit.com": {
       "dnt": false,
-      "heuristicAction": "allow",
+      "heuristicAction": "block",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -6772,18 +5062,6 @@
       "dnt": false,
       "heuristicAction": "allow",
       "nextUpdateTime": 0,
-      "userAction": ""
-    },
-    "z-na.amazon-adsystem.com": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538367319132,
-      "userAction": ""
-    },
-    "za-cdn.effectivemeasure.net": {
-      "dnt": false,
-      "heuristicAction": "",
-      "nextUpdateTime": 1538234483947,
       "userAction": ""
     },
     "zdbb.net": {
@@ -6794,7 +5072,7 @@
     },
     "zedo.com": {
       "dnt": false,
-      "heuristicAction": "allow",
+      "heuristicAction": "block",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -6807,6 +5085,12 @@
     "zergnet.com": {
       "dnt": false,
       "heuristicAction": "cookieblock",
+      "nextUpdateTime": 0,
+      "userAction": ""
+    },
+    "zhaopin.cn": {
+      "dnt": false,
+      "heuristicAction": "allow",
       "nextUpdateTime": 0,
       "userAction": ""
     },
@@ -6848,12 +5132,12 @@
     "15gifts.com": [
       "thetimes.co.uk"
     ],
+    "247-inc.net": [
+      "marriott.com"
+    ],
     "247realmedia.com": [
       "bmj.com",
       "americanbar.org"
-    ],
-    "254a.com": [
-      "tinyurl.com"
     ],
     "2o7.net": [
       "cdc.gov",
@@ -6861,19 +5145,20 @@
       "fastcompany.com"
     ],
     "33across.com": [
-      "accuweather.com"
+      "salon.com"
     ],
     "360.cn": [
       "so.com"
     ],
     "360yield.com": [
+      "telegraph.co.uk",
       "springer.com",
       "home.pl"
     ],
     "3gl.net": [
       "go.com",
       "economist.com",
-      "sfgate.com"
+      "thedailybeast.com"
     ],
     "3lift.com": [
       "msn.com",
@@ -6889,9 +5174,6 @@
     "58cdn.com.cn": [
       "ganji.com"
     ],
-    "5p4rk13.com": [
-      "sfu.ca"
-    ],
     "6sc.co": [
       "brightcove.com"
     ],
@@ -6901,10 +5183,10 @@
       "post-gazette.com"
     ],
     "aaxads.com": [
-      "forbes.com",
       "speedtest.net"
     ],
     "abmr.net": [
+      "paypal.com",
       "nike.com",
       "freetype.org"
     ],
@@ -6917,29 +5199,32 @@
     "acpm.fr": [
       "lemonde.fr",
       "lefigaro.fr",
-      "leparisien.fr"
+      "liberation.fr"
     ],
     "acquia.com": [
       "panasonic.com",
       "osu.edu",
       "amd.com"
     ],
+    "actionnetwork.org": [
+      "dailykos.com"
+    ],
     "acuityplatform.com": [
       "medscape.com"
     ],
-    "acxiomapac.com": [
-      "businessinsider.com",
-      "npr.org"
-    ],
     "ad-hatena.com": [
       "hatena.ne.jp"
+    ],
+    "ad-plus.cn": [
+      "sohu.com"
     ],
     "ad-stir.com": [
       "sakura.ne.jp",
       "seesaa.jp"
     ],
     "ad-survey.com": [
-      "huanqiu.com"
+      "huanqiu.com",
+      "yesky.com"
     ],
     "adapf.com": [
       "sakura.ne.jp"
@@ -6947,33 +5232,27 @@
     "adc-srv.net": [
       "autodesk.com"
     ],
-    "adclear.net": [
-      "t-online.de"
-    ],
     "addroplet.com": [
-      "tinypic.com",
+      "wallinside.com",
       "washingtonexaminer.com"
     ],
     "addthis.com": [
-      "nasa.gov",
       "who.int",
-      "npr.org"
+      "columbia.edu",
+      "uci.edu"
     ],
     "adentifi.com": [
       "metmuseum.org"
     ],
     "adform.net": [
-      "forbes.com",
-      "imdb.com",
-      "t-online.de"
+      "t-online.de",
+      "bloomberg.com",
+      "telegraph.co.uk"
     ],
     "adfox.ru": [
       "livejournal.com",
       "liveinternet.ru",
       "sputniknews.com"
-    ],
-    "adhigh.net": [
-      "rambler.ru"
     ],
     "adingo.jp": [
       "seesaa.jp"
@@ -6981,7 +5260,7 @@
     "adition.com": [
       "t-online.de",
       "dailymotion.com",
-      "lemonde.fr"
+      "spiegel.de"
     ],
     "adjust-net.jp": [
       "goo.ne.jp",
@@ -6992,57 +5271,63 @@
       "space.com",
       "howtogeek.com"
     ],
+    "admaster.com.cn": [
+      "sohu.com",
+      "yesky.com",
+      "bshare.cn"
+    ],
     "admission.net": [
       "edmunds.com"
     ],
     "adnxs.com": [
       "sourceforge.net",
       "nytimes.com",
-      "forbes.com"
+      "dropbox.com"
     ],
     "adobe.com": [
       "behance.net",
       "history.com",
       "nbc.com"
     ],
+    "adobecqms.net": [
+      "gopro.com"
+    ],
     "adobedtm.com": [
       "newyorker.com",
-      "symantec.com",
-      "worldbank.org"
+      "worldbank.org",
+      "nbcnews.com"
     ],
     "adotmob.com": [
-      "variety.com",
-      "standard.co.uk"
+      "dailymotion.com",
+      "nypost.com",
+      "variety.com"
     ],
     "adriver.ru": [
       "liveinternet.ru",
       "sputniknews.com",
-      "rambler.ru"
+      "ria.ru"
     ],
     "adroll.com": [
+      "nginx.org",
       "photobucket.com",
-      "cloudflare.com",
-      "ning.com"
+      "cloudflare.com"
     ],
     "adrta.com": [
       "seesaa.jp"
     ],
-    "adsafety.net": [
-      "npr.org"
-    ],
     "adscale.de": [
       "t-online.de",
-      "springer.com",
-      "home.pl"
+      "telegraph.co.uk",
+      "springer.com"
     ],
     "adsnative.com": [
+      "thehill.com",
       "squareup.com",
-      "informationweek.com",
-      "bostonherald.com"
+      "informationweek.com"
     ],
     "adsrvr.org": [
+      "adobe.com",
       "sourceforge.net",
-      "nytimes.com",
       "forbes.com"
     ],
     "adswizz.com": [
@@ -7051,20 +5336,14 @@
       "tunein.com"
     ],
     "adsymptotic.com": [
-      "forbes.com",
-      "wsj.com",
-      "etsy.com"
-    ],
-    "adtng.com": [
-      "pornhub.com"
+      "tinyurl.com",
+      "etsy.com",
+      "tripadvisor.com"
     ],
     "advertising.com": [
       "yahoo.com",
-      "nytimes.com",
-      "msn.com"
-    ],
-    "adx.com.ru": [
-      "rambler.ru"
+      "wsj.com",
+      "huffingtonpost.com"
     ],
     "adzerk.net": [
       "asp.net"
@@ -7076,9 +5355,9 @@
       "autodesk.com"
     ],
     "agkn.com": [
-      "imdb.com",
-      "bloomberg.com",
-      "cnet.com"
+      "cnet.com",
+      "businessinsider.com",
+      "dailymotion.com"
     ],
     "akamaihd.net": [
       "forbes.com",
@@ -7103,7 +5382,8 @@
       "sohu.com"
     ],
     "alipay.com": [
-      "youku.com"
+      "youku.com",
+      "taobao.com"
     ],
     "aliyun.com": [
       "alibabacloud.com",
@@ -7111,13 +5391,15 @@
     ],
     "allure.com": [
       "wired.com",
-      "vogue.com",
-      "pitchfork.com"
+      "vogue.com"
+    ],
+    "amap.com": [
+      "zhaopin.com"
     ],
     "amazon-adsystem.com": [
-      "forbes.com",
-      "imdb.com",
-      "washingtonpost.com"
+      "amazon.com",
+      "vimeo.com",
+      "nytimes.com"
     ],
     "amazon.co.uk": [
       "amazon.de"
@@ -7125,8 +5407,7 @@
     "amazon.com": [
       "imdb.com",
       "amazon.co.uk",
-      "amazon.de",
-      "amazon.es"
+      "amazon.de"
     ],
     "ameba.jp": [
       "ameblo.jp"
@@ -7162,14 +5443,19 @@
       "answers.com"
     ],
     "answerscloud.com": [
+      "worldbank.org",
       "acs.org",
-      "fbi.gov",
-      "uscourts.gov"
+      "fbi.gov"
     ],
     "aol.co.uk": [
       "huffingtonpost.co.uk"
     ],
+    "aol.com": [
+      "techcrunch.com"
+    ],
     "apester.com": [
+      "inquisitr.com",
+      "searchenginewatch.com",
       "nme.com"
     ],
     "apn.co.nz": [
@@ -7187,8 +5473,7 @@
     ],
     "architecturaldigest.com": [
       "wired.com",
-      "vogue.com",
-      "pitchfork.com"
+      "vogue.com"
     ],
     "arcpublishing.com": [
       "washingtonpost.com"
@@ -7207,16 +5492,22 @@
     ],
     "ati-host.net": [
       "bbc.com",
-      "straitstimes.com"
+      "straitstimes.com",
+      "thestar.com.my"
     ],
     "att.com": [
       "att.net"
     ],
-    "audtd.com": [
-      "rambler.ru"
+    "attvlt2.azurewebsites.net": [
+      "att.com"
+    ],
+    "audiencemanager.de": [
+      "macrumors.com"
     ],
     "autopilothq.com": [
-      "typeform.com"
+      "bitbucket.org",
+      "typeform.com",
+      "atlassian.com"
     ],
     "baidu.com": [
       "sina.com.cn",
@@ -7241,15 +5532,23 @@
     ],
     "beian.gov.cn": [
       "dzwww.com",
+      "ku6.com",
       "qianlong.com"
+    ],
+    "betrad.com": [
+      "gm.com"
     ],
     "bfmio.com": [
       "tinypic.com",
       "livescience.com",
       "space.com"
     ],
+    "bfmtv.com": [
+      "liberation.fr"
+    ],
     "biddingx.com": [
-      "sina.com.cn"
+      "sina.com.cn",
+      "sohu.com"
     ],
     "bidr.io": [
       "adobe.com",
@@ -7257,14 +5556,17 @@
       "dailymotion.com"
     ],
     "bidswitch.net": [
-      "forbes.com",
-      "tinyurl.com",
-      "imdb.com"
+      "dropbox.com",
+      "telegraph.co.uk",
+      "time.com"
     ],
     "bing.com": [
       "vimeo.com",
       "cnn.com",
       "weebly.com"
+    ],
+    "bitbucket.org": [
+      "atlassian.com"
     ],
     "bizible.com": [
       "cloudflare.com",
@@ -7282,9 +5584,8 @@
       "people.com"
     ],
     "bluecava.com": [
-      "wsj.com",
       "giphy.com",
-      "active.com"
+      "walmart.com"
     ],
     "blueconic.net": [
       "nationalgeographic.com",
@@ -7301,9 +5602,6 @@
       "bravenet.com",
       "jigsy.com"
     ],
-    "bobo.com": [
-      "163.com"
-    ],
     "boldchat.com": [
       "buydomains.com",
       "gotomeeting.com",
@@ -7311,8 +5609,7 @@
     ],
     "bonappetit.com": [
       "wired.com",
-      "vogue.com",
-      "pitchfork.com"
+      "vogue.com"
     ],
     "boston.com": [
       "bostonglobe.com"
@@ -7330,8 +5627,7 @@
     ],
     "brides.com": [
       "wired.com",
-      "vogue.com",
-      "pitchfork.com"
+      "vogue.com"
     ],
     "brightcove.com": [
       "aarp.org",
@@ -7340,16 +5636,16 @@
     ],
     "brightcove.net": [
       "lonelyplanet.com",
-      "thetimes.co.uk",
-      "thenational.ae"
+      "techtarget.com",
+      "thetimes.co.uk"
     ],
     "bshare.cn": [
       "qianlong.com"
     ],
     "bttrack.com": [
+      "nypost.com",
       "livescience.com",
-      "variety.com",
-      "hpe.com"
+      "variety.com"
     ],
     "btttag.com": [
       "samsung.com",
@@ -7367,13 +5663,18 @@
     "cadreon.com": [
       "economist.com"
     ],
+    "capturehighered.net": [
+      "ku.edu",
+      "unm.edu"
+    ],
     "carambo.la": [
+      "salon.com",
       "accuweather.com"
     ],
     "casalemedia.com": [
-      "imdb.com",
       "washingtonpost.com",
-      "bloomberg.com"
+      "myspace.com",
+      "telegraph.co.uk"
     ],
     "cbsi.com": [
       "cnet.com",
@@ -7393,6 +5694,9 @@
     "cern.ch": [
       "home.cern"
     ],
+    "changeagain.me": [
+      "iconosquare.com"
+    ],
     "chei.com.cn": [
       "chsi.com.cn"
     ],
@@ -7410,7 +5714,8 @@
       "stltoday.com"
     ],
     "civicscience.com": [
-      "post-gazette.com"
+      "post-gazette.com",
+      "knowyourmeme.com"
     ],
     "ckies.net": [
       "abril.com.br"
@@ -7431,16 +5736,18 @@
       "sciencemag.org",
       "uci.edu"
     ],
+    "cmgdigital.com": [
+      "ajc.com"
+    ],
     "cnet.com": [
       "zdnet.com"
     ],
-    "cnn.net": [
-      "cnn.com"
-    ],
     "cntraveler.com": [
       "wired.com",
-      "vogue.com",
-      "pitchfork.com"
+      "vogue.com"
+    ],
+    "cnzz.com": [
+      "zol.com.cn"
     ],
     "cobaltgroup.com": [
       "edmunds.com"
@@ -7461,6 +5768,13 @@
       "ibm.com",
       "hp.com"
     ],
+    "complex.com": [
+      "knowyourmeme.com",
+      "dailydot.com"
+    ],
+    "conative.de": [
+      "focus.de"
+    ],
     "condenastdigital.com": [
       "wired.com",
       "newyorker.com",
@@ -7475,20 +5789,23 @@
       "sourceforge.net"
     ],
     "consensu.org": [
+      "buzzfeed.com",
       "pcworld.com",
-      "us.org",
-      "rollingstone.com"
+      "us.org"
     ],
     "content.ad": [
       "tinypic.com"
     ],
     "contextweb.com": [
       "sourceforge.net",
-      "forbes.com",
-      "imdb.com"
+      "myspace.com",
+      "uci.edu"
     ],
     "convertro.com": [
       "slack.com"
+    ],
+    "convio.net": [
+      "convio.com"
     ],
     "cornell.edu": [
       "arxiv.org"
@@ -7504,10 +5821,13 @@
     "creativecdn.com": [
       "ria.ru"
     ],
+    "creativecommons.org": [
+      "perl.com"
+    ],
     "criteo.com": [
-      "dropbox.com",
-      "forbes.com",
-      "reuters.com"
+      "washingtonpost.com",
+      "telegraph.co.uk",
+      "dailymail.co.uk"
     ],
     "crsspxl.com": [
       "sourceforge.net",
@@ -7518,9 +5838,9 @@
       "home.pl"
     ],
     "cxense.com": [
-      "wsj.com",
       "opera.com",
-      "talktalk.co.uk"
+      "talktalk.co.uk",
+      "gizmodo.com"
     ],
     "d1af033869koo7.cloudfront.net": [
       "marriott.com"
@@ -7540,21 +5860,21 @@
       "metro.co.uk"
     ],
     "datamind.ru": [
-      "rambler.ru",
       "novostimira.com"
+    ],
+    "daum.net": [
+      "shutterstock.com",
+      "tistory.com"
     ],
     "dc-storm.com": [
       "nike.com",
       "alibabacloud.com",
       "coursera.org"
     ],
-    "decajo.ru": [
-      "radikal.ru"
-    ],
     "demdex.net": [
       "adobe.com",
       "yahoo.com",
-      "soundcloud.com"
+      "amazon.com"
     ],
     "deployads.com": [
       "tinyurl.com",
@@ -7565,16 +5885,13 @@
       "dezeen.com"
     ],
     "di-dtaectolog-us-prod-1.appspot.com": [
-      "disney.com",
+      "go.com",
       "starwars.com"
     ],
     "dianomi.com": [
       "businessinsider.com",
       "marketwatch.com",
       "zerohedge.com"
-    ],
-    "digitaltarget.ru": [
-      "rambler.ru"
     ],
     "digitru.st": [
       "britannica.com",
@@ -7592,25 +5909,25 @@
       "washingtontimes.com"
     ],
     "districtm.io": [
-      "forbes.com",
       "barnesandnoble.com",
-      "timeanddate.com"
+      "scmp.com",
+      "seattletimes.com"
     ],
     "dmxleo.com": [
       "dailymotion.com"
     ],
-    "dol.gov": [
-      "osha.gov"
+    "dnnapi.com": [
+      "zenfolio.com"
     ],
     "domdex.com": [
       "adobe.com",
       "sourceforge.net",
-      "wsj.com"
+      "tinypic.com"
     ],
     "dotomi.com": [
-      "forbes.com",
       "samsung.com",
-      "economist.com"
+      "economist.com",
+      "barnesandnoble.com"
     ],
     "dotsub.com": [
       "aarp.org"
@@ -7628,24 +5945,30 @@
       "theregister.co.uk",
       "adweek.com"
     ],
+    "dsp.com": [
+      "qq.com"
+    ],
     "dynad.net": [
       "uol.com.br"
     ],
     "dynamicyield.com": [
       "cnbc.com",
-      "norton.com",
+      "nbcnews.com",
       "washingtonexaminer.com"
     ],
     "dyntrk.com": [
       "dailymotion.com"
     ],
-    "ebay.com": [
-      "ebay.co.uk",
-      "ebay.de",
+    "ebay-us.com": [
+      "ebay.com",
       "ebay.com.au"
     ],
-    "ebayrtm.com": [
+    "ebay.com": [
+      "t-online.de",
       "ebay.co.uk",
+      "ebay.de"
+    ],
+    "ebayrtm.com": [
       "ebay.de",
       "ebay.com.au"
     ],
@@ -7678,8 +6001,7 @@
     ],
     "epicurious.com": [
       "wired.com",
-      "vogue.com",
-      "pitchfork.com"
+      "vogue.com"
     ],
     "equalstyle.com": [
       "hubpages.com"
@@ -7687,12 +6009,15 @@
     "estat.com": [
       "over-blog.com",
       "canalblog.com",
-      "tomshardware.com"
+      "eklablog.com"
     ],
     "everesttech.net": [
       "adobe.com",
       "sourceforge.net",
-      "nytimes.com"
+      "dropbox.com"
+    ],
+    "everyaction.com": [
+      "greenpeace.org"
     ],
     "evise.com": [
       "thelancet.com",
@@ -7701,6 +6026,9 @@
     "evvnt-api.global.ssl.fastly.net": [
       "seattlepi.com"
     ],
+    "ew3.io": [
+      "liberation.fr"
+    ],
     "exactag.com": [
       "t-online.de"
     ],
@@ -7708,20 +6036,20 @@
       "exblog.jp"
     ],
     "exelator.com": [
-      "soundcloud.com",
-      "forbes.com",
-      "businessinsider.com"
+      "businessinsider.com",
+      "surveymonkey.com",
+      "talktalk.co.uk"
     ],
     "eyeota.net": [
       "sourceforge.net",
       "wsj.com",
-      "npr.org"
+      "scientificamerican.com"
     ],
     "eyereturn.com": [
       "thestar.com"
     ],
     "eyeviewads.com": [
-      "boingboing.net"
+      "nypost.com"
     ],
     "ezoic.net": [
       "tinyurl.com",
@@ -7747,7 +6075,8 @@
     ],
     "firstimpression.io": [
       "jpost.com",
-      "haaretz.com"
+      "haaretz.com",
+      "zerohedge.com"
     ],
     "flashtalking.com": [
       "adobe.com",
@@ -7784,7 +6113,13 @@
     "fout.jp": [
       "economist.com",
       "exblog.jp",
-      "biglobe.ne.jp"
+      "seesaa.jp"
+    ],
+    "foxbusiness.com": [
+      "fox.com"
+    ],
+    "foxsports.com": [
+      "fox.com"
     ],
     "foxycart.com": [
       "brookings.edu"
@@ -7792,18 +6127,34 @@
     "freshdesk.com": [
       "podbean.com"
     ],
+    "friendbuy.com": [
+      "lulu.com"
+    ],
+    "funnyordie.com": [
+      "videojs.com"
+    ],
     "fwmrm.net": [
       "go.com",
       "discovery.com",
       "foodnetwork.com"
     ],
+    "geetest.com": [
+      "axs.com"
+    ],
     "gemius.pl": [
       "sapo.pt",
-      "ria.ru"
+      "ria.ru",
+      "onet.pl"
+    ],
+    "gentags.net": [
+      "sohu.com"
     ],
     "getclicky.com": [
       "newatlas.com",
       "cyberchimps.com"
+    ],
+    "getsmartcontent.com": [
+      "pcworld.com"
     ],
     "gigya.com": [
       "cnn.com",
@@ -7815,8 +6166,7 @@
     ],
     "glamour.com": [
       "wired.com",
-      "vogue.com",
-      "pitchfork.com"
+      "vogue.com"
     ],
     "globalwebindex.net": [
       "reuters.com",
@@ -7830,21 +6180,19 @@
     ],
     "golfdigest.com": [
       "wired.com",
-      "vogue.com",
-      "pitchfork.com"
+      "vogue.com"
     ],
     "goo.ne.jp": [
       "ocn.ne.jp"
     ],
     "google.com": [
       "youtube.com",
-      "vimeo.com",
-      "goo.gl"
+      "linkedin.com",
+      "vimeo.com"
     ],
     "gq.com": [
       "wired.com",
-      "vogue.com",
-      "pitchfork.com"
+      "vogue.com"
     ],
     "gridsumdissector.com": [
       "www.gov.cn"
@@ -7853,27 +6201,31 @@
       "groupon.com"
     ],
     "gtags.net": [
-      "ctrip.com"
+      "ctrip.com",
+      "sina.com.cn",
+      "suning.com"
     ],
     "gumgum.com": [
-      "snopes.com",
       "thehindu.com",
-      "home.pl"
+      "home.pl",
+      "zimbio.com"
     ],
     "gwallet.com": [
+      "adobe.com",
       "economist.com",
-      "ox.ac.uk",
-      "smithsonianmag.com"
+      "ox.ac.uk"
     ],
     "hatena.com": [
       "hatena.ne.jp"
     ],
     "hatena.ne.jp": [
-      "hatenablog.com",
-      "cronolog.org"
+      "hatenablog.com"
+    ],
+    "hdslb.com": [
+      "bilibili.com"
     ],
     "healte.de": [
-      "reuters.com"
+      "spiegel.de"
     ],
     "hearstnp.com": [
       "sfgate.com",
@@ -7889,13 +6241,25 @@
     "hive.co": [
       "complex.com"
     ],
+    "hiwoenrep.ru": [
+      "radikal.ru"
+    ],
     "horyzon-media.com": [
       "skyrock.com"
+    ],
+    "huanqiu.com": [
+      "sina.com.cn"
+    ],
+    "hubpd.com": [
+      "huanqiu.com"
     ],
     "hubspot.com": [
       "scoop.it",
       "500px.com",
       "thelancet.com"
+    ],
+    "huffingtonpost.com": [
+      "huffingtonpost.co.uk"
     ],
     "hugedata.com.cn": [
       "miit.gov.cn"
@@ -7906,14 +6270,12 @@
     "hwcdn.net": [
       "boingboing.net"
     ],
-    "hybrid.ai": [
-      "rambler.ru"
-    ],
     "iasds01.com": [
       "discovery.com"
     ],
     "ibclick.stream": [
-      "webmd.com"
+      "webmd.com",
+      "wikitravel.org"
     ],
     "ibillboard.com": [
       "t-online.de",
@@ -7929,9 +6291,6 @@
       "livescience.com",
       "skyrock.com"
     ],
-    "idealmedia.com": [
-      "thehill.com"
-    ],
     "ign.com": [
       "videojs.com"
     ],
@@ -7943,18 +6302,18 @@
       "variety.com"
     ],
     "im-apps.net": [
+      "economist.com",
       "exblog.jp",
-      "biglobe.ne.jp",
-      "goo.ne.jp"
+      "biglobe.ne.jp"
     ],
     "imgur.com": [
       "stackoverflow.com",
       "stackexchange.com"
     ],
     "impact-ad.jp": [
+      "economist.com",
       "yahoo.co.jp",
-      "hatena.ne.jp",
-      "goo.ne.jp"
+      "hatena.ne.jp"
     ],
     "imrworldwide.com": [
       "cnn.com",
@@ -7968,6 +6327,9 @@
     "inq.com": [
       "ups.com"
     ],
+    "inquisitr.com": [
+      "flipboard.com"
+    ],
     "insightexpressai.com": [
       "unsplash.com",
       "philly.com"
@@ -7979,24 +6341,25 @@
     ],
     "instinctiveads.com": [
       "rollingstone.com",
-      "variety.com"
+      "variety.com",
+      "nist.gov"
     ],
     "intentiq.com": [
-      "thinkgeek.com",
-      "active.com"
+      "thinkgeek.com"
     ],
     "intentmedia.net": [
       "tripadvisor.com"
     ],
     "intercom.io": [
-      "themegrill.com",
-      "emarketer.com",
-      "diabetes.org"
+      "visual.ly",
+      "yumpu.com",
+      "emarketer.com"
     ],
     "intergient.com": [
       "infoplease.com"
     ],
     "internetbrands.com": [
+      "inhabitat.com",
       "wikitravel.org"
     ],
     "investingchannel.com": [
@@ -8014,10 +6377,14 @@
       "virgilio.it"
     ],
     "iperceptions.com": [
+      "seagate.com",
+      "honeywell.com",
       "boeing.com"
     ],
+    "ipinyou.com": [
+      "suning.com"
+    ],
     "ipredictive.com": [
-      "imdb.com",
       "myspace.com",
       "dailymotion.com"
     ],
@@ -8038,7 +6405,6 @@
       "businessinsider.com"
     ],
     "jrs5.com": [
-      "nike.com",
       "coursera.org",
       "bostonglobe.com"
     ],
@@ -8049,7 +6415,11 @@
     ],
     "justuno.com": [
       "gartner.com",
-      "searchengineland.com"
+      "zenfolio.com"
+    ],
+    "kakao.com": [
+      "daum.net",
+      "tistory.com"
     ],
     "kameleoon.eu": [
       "welt.de",
@@ -8072,9 +6442,9 @@
       "dzwww.com"
     ],
     "krxd.net": [
-      "cnn.com",
-      "theguardian.com",
-      "usatoday.com"
+      "slate.com",
+      "twitch.tv",
+      "nypost.com"
     ],
     "leadintel.io": [
       "nme.com"
@@ -8082,21 +6452,15 @@
     "leadlander.com": [
       "panasonic.com"
     ],
-    "legocdn.com": [
-      "lego.com"
-    ],
     "liadm.com": [
       "bloomberg.com",
       "time.com",
       "economist.com"
     ],
-    "licasd.com": [
-      "time.com"
-    ],
     "ligadx.com": [
+      "telegraph.co.uk",
       "springer.com",
-      "lemonde.fr",
-      "lefigaro.fr"
+      "lemonde.fr"
     ],
     "lightboxcdn.com": [
       "gizmodo.com",
@@ -8104,9 +6468,9 @@
       "fastcompany.com"
     ],
     "lijit.com": [
-      "sourceforge.net",
-      "wsj.com",
-      "bloomberg.com"
+      "deviantart.com",
+      "uci.edu",
+      "mirror.co.uk"
     ],
     "link-page.info": [
       "netvibes.com"
@@ -8117,23 +6481,22 @@
       "sourceforge.net"
     ],
     "linksynergy.com": [
+      "pcworld.com",
       "nike.com",
-      "alibabacloud.com",
-      "coursera.org"
+      "alibabacloud.com"
     ],
     "listrakbi.com": [
       "denverpost.com"
     ],
     "live.com": [
-      "microsoft.com",
       "msn.com",
-      "bing.com"
+      "bing.com",
+      "skype.com"
     ],
     "livechatinc.com": [
       "ning.com",
       "wpengine.com",
-      "sophos.com",
-      "nazwa.pl"
+      "sophos.com"
     ],
     "livejournal.net": [
       "livejournal.com"
@@ -8141,9 +6504,10 @@
     "liveperson.net": [
       "talktalk.co.uk",
       "earthlink.net",
-      "trendmicro.com"
+      "thetimes.co.uk"
     ],
     "loc.gov": [
+      "congress.gov",
       "copyright.gov"
     ],
     "lockerdome.com": [
@@ -8173,10 +6537,17 @@
       "t-online.de",
       "statista.com"
     ],
+    "madeleine.de": [
+      "t-online.de"
+    ],
     "mail.ru": [
       "vk.com",
       "yandex.ru",
       "icq.com"
+    ],
+    "mailchimp.com": [
+      "boingboing.net",
+      "colorlib.com"
     ],
     "marinsm.com": [
       "webs.com",
@@ -8185,7 +6556,6 @@
     ],
     "marketlinc.com": [
       "teamviewer.us",
-      "norton.com",
       "eset.com"
     ],
     "marketo.com": [
@@ -8199,19 +6569,22 @@
       "mercurynews.com"
     ],
     "mathtag.com": [
-      "sourceforge.net",
-      "nytimes.com",
-      "forbes.com"
+      "adobe.com",
+      "vimeo.com",
+      "sourceforge.net"
+    ],
+    "mct01.com": [
+      "zol.com.cn"
     ],
     "media.net": [
       "nytimes.com",
-      "forbes.com",
-      "reuters.com"
+      "dropbox.com",
+      "forbes.com"
     ],
     "media6degrees.com": [
       "bloomberg.com",
-      "uci.edu",
-      "autodesk.com"
+      "columbia.edu",
+      "uci.edu"
     ],
     "mediaforge.com": [
       "nike.com",
@@ -8219,12 +6592,13 @@
       "bostonglobe.com"
     ],
     "mediaplex.com": [
-      "t-online.de",
       "economist.com",
-      "dell.com"
+      "dell.com",
+      "shutterfly.com"
     ],
     "mediarithmics.com": [
       "orange.fr",
+      "liberation.fr",
       "leparisien.fr"
     ],
     "mediav.com": [
@@ -8232,22 +6606,15 @@
       "ctrip.com",
       "toutiao.com"
     ],
-    "mediawallahscript.com": [
-      "sourceforge.net"
-    ],
     "medtargetsystem.com": [
       "medscape.com"
     ],
     "mendeley.com": [
-      "thelancet.com",
       "cell.com"
     ],
     "metadsp.co.uk": [
-      "boingboing.net",
-      "standard.co.uk"
-    ],
-    "mfadsrvr.com": [
-      "forbes.com"
+      "nypost.com",
+      "variety.com"
     ],
     "mg2connext.com": [
       "philly.com",
@@ -8257,27 +6624,27 @@
       "liveleak.com"
     ],
     "miaozhen.com": [
+      "qq.com",
       "sina.com.cn",
-      "pconline.com.cn",
-      "qq.com"
+      "pconline.com.cn"
     ],
     "microad.jp": [
       "sakura.ne.jp",
       "hatena.ne.jp"
     ],
     "microsoft.com": [
+      "msn.com",
       "live.com",
-      "skype.com",
-      "office.com"
+      "skype.com"
     ],
     "microsoftonline.com": [
       "office.com",
       "microsoft.com"
     ],
     "mktoresp.com": [
-      "parallels.com",
       "zend.com",
-      "prweb.com"
+      "prweb.com",
+      "techtarget.com"
     ],
     "ml314.com": [
       "sourceforge.net",
@@ -8286,8 +6653,8 @@
     ],
     "mmstat.com": [
       "youku.com",
-      "sohu.com",
-      "taobao.com"
+      "taobao.com",
+      "alibaba.com"
     ],
     "monetate.net": [
       "nationalgeographic.com",
@@ -8296,7 +6663,7 @@
     "mookie1.com": [
       "t-online.de",
       "businessinsider.com",
-      "npr.org"
+      "photobucket.com"
     ],
     "mouseflow.com": [
       "nintendo.com"
@@ -8306,14 +6673,12 @@
       "heise.de"
     ],
     "mrpfd.com": [
-      "symantec.com",
       "hpe.com"
     ],
     "msgapp.com": [
       "post-gazette.com"
     ],
     "msn.com": [
-      "w3.org",
       "marketwatch.com"
     ],
     "mtvnservices.com": [
@@ -8323,6 +6688,9 @@
     "musthird.com": [
       "airbnb.com"
     ],
+    "myhard.com": [
+      "yesky.com"
+    ],
     "mynativeplatform.com": [
       "springer.com",
       "home.pl"
@@ -8331,16 +6699,13 @@
       "myspace.com"
     ],
     "myvisualiq.net": [
-      "soundcloud.com",
-      "paypal.com",
-      "surveymonkey.com"
+      "surveymonkey.com",
+      "spotify.com",
+      "economist.com"
     ],
     "nanigans.com": [
       "thinkgeek.com",
       "yellowpages.com"
-    ],
-    "narrative.io": [
-      "sourceforge.net"
     ],
     "nasdaq.com": [
       "globenewswire.com"
@@ -8355,7 +6720,8 @@
       "t-online.de"
     ],
     "naver.com": [
-      "unity3d.com"
+      "unity3d.com",
+      "cafe24.com"
     ],
     "naver.jp": [
       "line.me"
@@ -8364,6 +6730,9 @@
       "cnbc.com",
       "nbcnews.com",
       "today.com"
+    ],
+    "netmng.com": [
+      "theknot.com"
     ],
     "neweggimages.com": [
       "newegg.com"
@@ -8377,10 +6746,13 @@
     ],
     "news.com.au": [
       "theaustralian.com.au",
-      "heraldsun.com.au"
+      "heraldsun.com.au",
+      "dailytelegraph.com.au"
     ],
     "newscdn.com.au": [
-      "heraldsun.com.au"
+      "theaustralian.com.au",
+      "heraldsun.com.au",
+      "dailytelegraph.com.au"
     ],
     "newscgp.com": [
       "wsj.com",
@@ -8402,8 +6774,7 @@
     ],
     "newyorker.com": [
       "wired.com",
-      "vogue.com",
-      "pitchfork.com"
+      "vogue.com"
     ],
     "nexac.com": [
       "edmunds.com"
@@ -8420,15 +6791,23 @@
       "huffingtonpost.com"
     ],
     "nuggad.net": [
-      "t-online.de"
+      "t-online.de",
+      "liberation.fr"
     ],
     "nxtck.com": [
-      "nike.com",
       "coursera.org",
-      "bostonglobe.com"
+      "bostonglobe.com",
+      "orange.fr"
     ],
     "o0bg.com": [
       "bostonglobe.com"
+    ],
+    "oath.com": [
+      "huffingtonpost.co.uk",
+      "techradar.com"
+    ],
+    "ocdn.eu": [
+      "onet.pl"
     ],
     "office.com": [
       "microsoftonline.com"
@@ -8436,14 +6815,10 @@
     "office365.com": [
       "microsoftonline.com"
     ],
-    "ojrq.net": [
-      "autodesk.com"
-    ],
     "ok.ru": [
       "ria.ru"
     ],
     "olark.com": [
-      "texas.gov",
       "webstarts.com"
     ],
     "olympicchannel.com": [
@@ -8452,13 +6827,10 @@
     "omkt.co": [
       "prweb.com"
     ],
-    "omnidsp.com": [
-      "rambler.ru"
-    ],
     "omnitagjs.com": [
-      "variety.com",
-      "standard.co.uk",
-      "home.pl"
+      "independent.co.uk",
+      "springer.com",
+      "variety.com"
     ],
     "omtrdc.net": [
       "adobe.com",
@@ -8485,11 +6857,10 @@
     "onthe.io": [
       "indiatimes.com",
       "express.co.uk",
-      "rbc.ru"
+      "wn.com"
     ],
     "ooyala.com": [
-      "accuweather.com",
-      "fedex.com"
+      "accuweather.com"
     ],
     "openhub.net": [
       "mariadb.org"
@@ -8498,9 +6869,9 @@
       "novostimira.com"
     ],
     "openx.net": [
-      "yahoo.com",
       "nytimes.com",
-      "forbes.com"
+      "dropbox.com",
+      "telegraph.co.uk"
     ],
     "opinionstage.com": [
       "nobelprize.org"
@@ -8513,14 +6884,10 @@
       "qianlong.com"
     ],
     "optimizely.com": [
-      "nytimes.com",
       "creativecommons.org",
-      "webs.com",
-      "couchsurfing.com",
-      "gitlab.com",
-      "imageshack.com",
-      "box.com",
-      "fox.com"
+      "live.com",
+      "ibm.com",
+      "blizzard.com"
     ],
     "ora.tv": [
       "cheezburger.com",
@@ -8548,10 +6915,13 @@
     "owox.com": [
       "boredpanda.com"
     ],
+    "paddle.com": [
+      "snapwidget.com"
+    ],
     "pardot.com": [
-      "tandfonline.com",
       "prezi.com",
-      "ap.org"
+      "ap.org",
+      "rebelmouse.com"
     ],
     "parsely.com": [
       "wsj.com",
@@ -8602,16 +6972,15 @@
       "express.co.uk"
     ],
     "po.st": [
-      "smithsonianmag.com",
       "nme.com"
     ],
     "popsugar-assets.com": [
       "popsugar.com"
     ],
     "postrelease.com": [
-      "wsj.com",
       "reuters.com",
-      "independent.co.uk"
+      "independent.co.uk",
+      "chicagotribune.com"
     ],
     "powerlinks.com": [
       "variety.com",
@@ -8619,10 +6988,8 @@
       "howtogeek.com"
     ],
     "pressboard.ca": [
-      "thestar.com"
-    ],
-    "prfct.co": [
-      "smugmug.com"
+      "thestar.com",
+      "observer.com"
     ],
     "pro-market.net": [
       "sourceforge.net",
@@ -8649,9 +7016,12 @@
     "pub.network": [
       "coindesk.com"
     ],
+    "publishme.se": [
+      "blogg.se"
+    ],
     "pubmatic.com": [
-      "forbes.com",
-      "bloomberg.com",
+      "tinyurl.com",
+      "telegraph.co.uk",
       "usatoday.com"
     ],
     "pubmine.com": [
@@ -8661,12 +7031,7 @@
       "variety.com"
     ],
     "purch.com": [
-      "livescience.com",
-      "space.com",
-      "tomshardware.com"
-    ],
-    "purechat.com": [
-      "byu.edu"
+      "space.com"
     ],
     "pushanert.com": [
       "4shared.com"
@@ -8677,20 +7042,22 @@
     "pymx5.com": [
       "sfgate.com",
       "seattletimes.com",
-      "seattlepi.com"
+      "rd.com"
     ],
     "qq.com": [
-      "tencent.com"
+      "tencent.com",
+      "yesky.com",
+      "bshare.cn"
     ],
     "qualtrics.com": [
+      "techrepublic.com",
       "nintendo.com",
-      "cnet.com",
-      "mayoclinic.org"
+      "cnet.com"
     ],
     "quantserve.com": [
+      "vimeo.com",
       "wordpress.org",
-      "reddit.com",
-      "soundcloud.com"
+      "reddit.com"
     ],
     "quickbooks.com": [
       "intuit.com"
@@ -8709,13 +7076,18 @@
     "radiotime.com": [
       "tunein.com"
     ],
+    "rakuten.co.jp": [
+      "infoseek.co.jp"
+    ],
     "rambler.ru": [
       "livejournal.com",
       "novostimira.com",
       "ria.ru"
     ],
     "reachmax.cn": [
-      "qq.com"
+      "yesky.com",
+      "bshare.cn",
+      "sohu.com"
     ],
     "reddit.com": [
       "acm.org",
@@ -8727,35 +7099,34 @@
     "regmedia.co.uk": [
       "theregister.co.uk"
     ],
-    "republer.com": [
-      "rambler.ru"
+    "render.githubusercontent.com": [
+      "github.com"
+    ],
+    "researchintel.com": [
+      "intel.com"
     ],
     "reson8.com": [
-      "startribune.com",
-      "biography.com"
+      "startribune.com"
     ],
     "responsetap.com": [
       "manchester.ac.uk"
     ],
-    "reutersmedia.net": [
-      "reuters.com"
-    ],
     "revcontent.com": [
       "jpost.com",
-      "breitbart.com",
-      "bostonherald.com"
+      "breitbart.com"
     ],
     "revjet.com": [
       "bankrate.com"
     ],
     "rezync.com": [
       "economist.com",
+      "salon.com",
       "investopedia.com"
     ],
     "rfihub.com": [
-      "forbes.com",
-      "npr.org",
-      "economist.com"
+      "dropbox.com",
+      "tinyurl.com",
+      "npr.org"
     ],
     "rhombusads.com": [
       "adweek.com"
@@ -8773,8 +7144,8 @@
     ],
     "rkdms.com": [
       "wired.com",
-      "npr.org",
-      "cbsnews.com"
+      "cbsnews.com",
+      "gizmodo.com"
     ],
     "rlcdn.com": [
       "adobe.com",
@@ -8787,38 +7158,32 @@
     "rockyou.net": [
       "springer.com"
     ],
-    "rqtrk.eu": [
-      "npr.org"
-    ],
     "rtk.io": [
       "seattletimes.com",
       "startribune.com",
       "azcentral.com"
     ],
     "ru4.com": [
-      "bloomberg.com",
-      "npr.org"
+      "uci.edu"
     ],
     "rubiconproject.com": [
-      "nytimes.com",
-      "forbes.com",
-      "wsj.com"
-    ],
-    "rutarget.ru": [
-      "rambler.ru",
-      "ria.ru"
+      "yahoo.com",
+      "amazon.com",
+      "sourceforge.net"
     ],
     "s3-us-west-2.amazonaws.com": [
-      "bell-labs.com",
-      "hwg.org"
+      "bell-labs.com"
+    ],
+    "s3xified.com": [
+      "coindesk.com"
     ],
     "sabavision.com": [
       "mihanblog.com"
     ],
     "salesforceliveagent.com": [
       "marriott.com",
-      "teamviewer.us",
-      "prweb.com"
+      "prweb.com",
+      "salesforce.com"
     ],
     "salesloft.com": [
       "wpengine.com",
@@ -8833,8 +7198,8 @@
       "lifehacker.com",
       "history.com"
     ],
-    "samplicio.us": [
-      "go.com"
+    "scarabresearch.com": [
+      "tate.org.uk"
     ],
     "scholarlyiq.com": [
       "oup.com"
@@ -8855,16 +7220,13 @@
       "cell.com"
     ],
     "scorecardresearch.com": [
+      "linkedin.com",
       "yahoo.com",
-      "tumblr.com",
-      "flickr.com"
+      "tumblr.com"
     ],
     "scribblelive.com": [
       "cbslocal.com",
       "startribune.com"
-    ],
-    "scribd.com": [
-      "macrumors.com"
     ],
     "sdp-campaign.de": [
       "t-online.de"
@@ -8882,8 +7244,7 @@
     ],
     "self.com": [
       "wired.com",
-      "vogue.com",
-      "pitchfork.com"
+      "vogue.com"
     ],
     "sendtonews.com": [
       "bostonherald.com"
@@ -8893,13 +7254,16 @@
       "space.com",
       "howtogeek.com"
     ],
+    "servedby-buysellads.com": [
+      "dribbble.com"
+    ],
     "serverbid.com": [
       "sciencedaily.com"
     ],
     "serving-sys.com": [
       "dropbox.com",
       "businessinsider.com",
-      "npr.org"
+      "sciencemag.org"
     ],
     "sessioncam.com": [
       "ama-assn.org",
@@ -8913,24 +7277,23 @@
     ],
     "sharethis.com": [
       "uk.com",
-      "us.org",
-      "www.vic.gov.au"
+      "uci.edu",
+      "us.org"
     ],
     "sharethrough.com": [
-      "cnet.com",
-      "time.com",
-      "wired.com"
+      "springer.com",
+      "photobucket.com",
+      "cnbc.com"
     ],
     "shop.pe": [
-      "dyn.com"
+      "bluehost.com"
     ],
     "siftscience.com": [
+      "scribd.com",
       "kickstarter.com",
-      "flickr.com",
-      "shutterstock.com"
+      "flickr.com"
     ],
     "simpli.fi": [
-      "washingtontimes.com",
       "thinkgeek.com",
       "tampabay.com"
     ],
@@ -8938,7 +7301,8 @@
       "sina.com.cn"
     ],
     "sina.com.cn": [
-      "weibo.com"
+      "weibo.com",
+      "suning.com"
     ],
     "siteimprove.com": [
       "berkeley.edu",
@@ -8949,12 +7313,13 @@
       "in.gov"
     ],
     "sitelock.com": [
-      "joomla.org"
+      "joomla.org",
+      "netfirms.com"
     ],
     "sitescout.com": [
-      "forbes.com",
-      "tinyurl.com",
-      "time.com"
+      "barnesandnoble.com",
+      "tinypic.com",
+      "salon.com"
     ],
     "skimresources.com": [
       "businessinsider.com",
@@ -8968,9 +7333,9 @@
       "slashdot.org"
     ],
     "smartadserver.com": [
+      "telegraph.co.uk",
       "springer.com",
-      "elpais.com",
-      "skyrock.com"
+      "elpais.com"
     ],
     "smashing-delivery.herokuapp.com": [
       "smashingmagazine.com"
@@ -8983,9 +7348,9 @@
       "smithsonianmag.com"
     ],
     "snapchat.com": [
-      "wsj.com",
       "giphy.com",
-      "walmart.com"
+      "walmart.com",
+      "wpengine.com"
     ],
     "so.com": [
       "360.cn"
@@ -9002,22 +7367,23 @@
       "howstuffworks.com"
     ],
     "sogou.com": [
-      "ifeng.com",
       "soso.com"
+    ],
+    "sohu.com": [
+      "bshare.cn"
     ],
     "sokrati.com": [
       "business-standard.com"
     ],
     "sonobi.com": [
-      "myspace.com",
-      "cnet.com",
-      "usatoday.com"
+      "usatoday.com",
+      "springer.com",
+      "deviantart.com"
     ],
     "soundcloud.com": [
       "harvard.edu",
       "bmj.com",
-      "ea.com",
-      "mo.gov"
+      "ea.com"
     ],
     "sphereup.com": [
       "jpost.com"
@@ -9026,6 +7392,12 @@
       "hp.com",
       "slack.com",
       "sophos.com"
+    ],
+    "spineuniverse.com": [
+      "psychcentral.com"
+    ],
+    "spingo.com": [
+      "detroitnews.com"
     ],
     "sportz.io": [
       "gulfnews.com"
@@ -9038,17 +7410,15 @@
       "denverpost.com"
     ],
     "spotxchange.com": [
-      "imdb.com",
       "dailymotion.com",
-      "npr.org"
+      "express.co.uk",
+      "thenextweb.com"
     ],
     "spoutable.com": [
       "alternet.org",
       "dailydot.com"
     ],
     "springernature.com": [
-      "nature.com",
-      "springer.com",
       "biomedcentral.com"
     ],
     "springserve.com": [
@@ -9091,29 +7461,31 @@
     "stripe.com": [
       "smashballoon.com",
       "presscustomizr.com",
-      "themezee.com",
-      "documentcloud.org"
+      "themezee.com"
     ],
     "sumo.com": [
       "snopes.com",
-      "cdbaby.com",
-      "studiopress.com"
+      "studiopress.com",
+      "sitepoint.com"
     ],
     "sundaysky.com": [
       "fiverr.com",
       "jpost.com",
-      "dailydot.com"
+      "careerbuilder.com"
+    ],
+    "suning.cn": [
+      "suning.com"
     ],
     "suning.com": [
       "qq.com",
+      "sohu.com",
       "ifeng.com"
     ],
-    "supplyframe.com": [
-      "arduino.cc",
-      "ti.com"
+    "sunrtb.com": [
+      "yesky.com"
     ],
-    "survata.com": [
-      "tripadvisor.com"
+    "supplyframe.com": [
+      "arduino.cc"
     ],
     "surveymonkey.com": [
       "cambridge.org",
@@ -9122,31 +7494,27 @@
     ],
     "switchadhub.com": [
       "lycos.com",
-      "thehindu.com"
-    ],
-    "symantec.com": [
-      "norton.com"
+      "thehindu.com",
+      "coindesk.com"
     ],
     "taboola.com": [
       "weebly.com",
-      "msn.com",
-      "wsj.com"
+      "dropbox.com",
+      "msn.com"
     ],
     "tacdn.com": [
       "tripadvisor.com"
     ],
     "tailtarget.com": [
-      "uol.com.br",
-      "variety.com"
+      "uol.com.br"
     ],
     "tamgrt.com": [
-      "tripadvisor.com",
-      "hotels.com"
+      "tripadvisor.com"
     ],
     "tanx.com": [
+      "sina.com.cn",
       "sohu.com",
-      "ifeng.com",
-      "tmall.com"
+      "alibaba.com"
     ],
     "taobao.com": [
       "sina.com.cn",
@@ -9154,15 +7522,16 @@
       "tmall.com"
     ],
     "tapad.com": [
-      "tinyurl.com",
-      "wsj.com",
-      "paypal.com"
+      "hp.com",
+      "wired.com",
+      "spotify.com"
     ],
     "tawk.to": [
-      "cba.pl"
+      "cba.pl",
+      "affordable-papers.net"
     ],
-    "taylorandfrancis.com": [
-      "tandfonline.com"
+    "teads.tv": [
+      "telegraph.co.uk"
     ],
     "tealiumiq.com": [
       "ibm.com",
@@ -9174,8 +7543,7 @@
     ],
     "teenvogue.com": [
       "wired.com",
-      "vogue.com",
-      "pitchfork.com"
+      "vogue.com"
     ],
     "theadex.com": [
       "t-online.de",
@@ -9183,18 +7551,15 @@
       "sueddeutsche.de"
     ],
     "thebrighttag.com": [
-      "netflix.com",
       "playstation.com",
-      "washingtontimes.com"
+      "washingtontimes.com",
+      "mercurynews.com"
     ],
     "theglobeandmail.ca": [
       "theglobeandmail.com"
     ],
     "theguardian.com": [
       "videojs.com"
-    ],
-    "thrtle.com": [
-      "sourceforge.net"
     ],
     "tianqi.com": [
       "qianlong.com"
@@ -9216,15 +7581,12 @@
     "tinypass.com": [
       "bloomberg.com",
       "businessinsider.com",
-      "techcrunch.com"
+      "independent.co.uk"
     ],
     "tiqcdn.com": [
       "wsj.com",
       "cisco.com",
       "marketwatch.com"
-    ],
-    "tm-awx.com": [
-      "mirror.co.uk"
     ],
     "tmall.com": [
       "taobao.com"
@@ -9238,7 +7600,11 @@
       "qualtrics.com"
     ],
     "tradelab.fr": [
-      "eklablog.com"
+      "eklablog.com",
+      "leparisien.fr"
+    ],
+    "traffic-media.co": [
+      "radikal.ru"
     ],
     "trafficjunky.net": [
       "pornhub.com"
@@ -9268,9 +7634,6 @@
       "prnewswire.com",
       "zimbra.com"
     ],
-    "triblive.com": [
-      "bleacherreport.com"
-    ],
     "tripadvisor.com": [
       "accorhotels.com"
     ],
@@ -9289,11 +7652,11 @@
     "trustarc.com": [
       "skynet.be"
     ],
-    "trustpilot.com": [
-      "jalbum.net"
+    "tumblr.com": [
+      "theweek.com"
     ],
     "turn.com": [
-      "forbes.com",
+      "tinyurl.com",
       "hp.com",
       "wired.com"
     ],
@@ -9305,19 +7668,15 @@
       "jimdo.com",
       "squarespace.com"
     ],
-    "twimg.com": [
-      "coe.int",
-      "dol.gov"
-    ],
     "twitter.com": [
+      "amazon.com",
       "wordpress.org",
-      "nytimes.com",
-      "dropbox.com"
+      "nytimes.com"
     ],
     "tynt.com": [
+      "salon.com",
       "investopedia.com",
-      "accuweather.com",
-      "washingtontimes.com"
+      "accuweather.com"
     ],
     "uc.se": [
       "jalbum.net"
@@ -9346,12 +7705,13 @@
     ],
     "unrulymedia.com": [
       "nypost.com",
-      "boingboing.net",
-      "bell-labs.com"
+      "hbr.org",
+      "boingboing.net"
     ],
     "upsellit.com": [
       "samsung.com",
-      "motorola.com"
+      "motorola.com",
+      "ccleaner.com"
     ],
     "urbandictionary.store": [
       "urbandictionary.com"
@@ -9359,11 +7719,15 @@
     "usa.gov": [
       "transportation.gov"
     ],
+    "useproof.com": [
+      "iconosquare.com"
+    ],
     "usergram.info": [
       "ocn.ne.jp"
     ],
     "uservoice.com": [
-      "scoop.it"
+      "scoop.it",
+      "theknot.com"
     ],
     "ustream.tv": [
       "ibm.com"
@@ -9382,14 +7746,16 @@
     ],
     "vanityfair.com": [
       "wired.com",
-      "vogue.com",
-      "pitchfork.com"
+      "vogue.com"
     ],
     "veinteractive.com": [
       "prweb.com"
     ],
     "velaro.com": [
       "lg.com"
+    ],
+    "verticalhealth.net": [
+      "psychcentral.com"
     ],
     "viafoura.co": [
       "cbc.ca",
@@ -9404,7 +7770,7 @@
     ],
     "videohub.tv": [
       "wsj.com",
-      "bloomberg.com"
+      "uci.edu"
     ],
     "vidible.tv": [
       "huffingtonpost.com",
@@ -9412,9 +7778,9 @@
       "autoblog.com"
     ],
     "viglink.com": [
-      "cnet.com",
       "zdnet.com",
-      "thedailybeast.com"
+      "thedailybeast.com",
+      "softonic.com"
     ],
     "vilynx.com": [
       "cbsnews.com",
@@ -9424,8 +7790,7 @@
     "vimeo.com": [
       "creativecommons.org",
       "dotdash.com",
-      "wufoo.com",
-      "oclc.org"
+      "wufoo.com"
     ],
     "vindicosuite.com": [
       "myspace.com",
@@ -9441,28 +7806,33 @@
     "vk.com": [
       "yandex.ru",
       "rt.com",
-      "ria.ru"
+      "liveinternet.ru"
     ],
     "vogue.com": [
-      "wired.com",
-      "pitchfork.com"
+      "wired.com"
+    ],
+    "volvelle.tech": [
+      "prweb.com"
     ],
     "voxmedia.com": [
       "theverge.com",
       "vox.com",
-      "recode.net",
-      "polygon.com"
+      "recode.net"
     ],
     "w55c.net": [
-      "forbes.com",
-      "hp.com",
-      "businessinsider.com"
+      "hpe.com"
     ],
     "wal.co": [
       "walmart.com"
     ],
     "wallst.com": [
       "reuters.com"
+    ],
+    "waptime.cn": [
+      "tianqi.com"
+    ],
+    "warnerbros.com": [
+      "tmz.com"
     ],
     "wbtrk.net": [
       "bild.de",
@@ -9477,8 +7847,7 @@
       "wunderground.com"
     ],
     "webmd.com": [
-      "medscape.com",
-      "medicinenet.com"
+      "medscape.com"
     ],
     "weborama.fr": [
       "lemonde.fr",
@@ -9511,9 +7880,6 @@
     "weibo.com": [
       "sina.com.cn"
     ],
-    "welt.de": [
-      "bild.de"
-    ],
     "whistleout.com": [
       "earthlink.net"
     ],
@@ -9526,16 +7892,17 @@
       "wikisource.org"
     ],
     "wired.com": [
-      "vogue.com",
-      "pitchfork.com"
+      "vogue.com"
     ],
     "wishabi.com": [
       "nationalpost.com",
       "suntimes.com",
-      "globalnews.ca",
-      "vancouversun.com"
+      "globalnews.ca"
     ],
     "wishpond.com": [
+      "discovermagazine.com"
+    ],
+    "wishpond.net": [
       "discovermagazine.com"
     ],
     "wistia.com": [
@@ -9550,13 +7917,11 @@
       "deviantart.com"
     ],
     "wkxppshj-qx.global.ssl.fastly.net": [
-      "redbubble.com",
-      "upwork.com"
+      "zappos.com"
     ],
     "wmagazine.com": [
       "wired.com",
-      "vogue.com",
-      "pitchfork.com"
+      "vogue.com"
     ],
     "wnyc.org": [
       "newyorker.com"
@@ -9593,6 +7958,13 @@
     "xad.com": [
       "vt.edu"
     ],
+    "xg4ken.com": [
+      "bluehost.com",
+      "kaspersky.com"
+    ],
+    "xinhuanet.com": [
+      "news.cn"
+    ],
     "xiti.com": [
       "lemonde.fr",
       "skyrock.com",
@@ -9603,12 +7975,16 @@
       "ocn.ne.jp"
     ],
     "xplosion.de": [
+      "t-online.de",
       "spiegel.de",
-      "sueddeutsche.de",
-      "zeit.de"
+      "sueddeutsche.de"
     ],
     "xs4all.net": [
       "xs4all.nl"
+    ],
+    "xtgreat.com": [
+      "qq.com",
+      "sohu.com"
     ],
     "yadro.ru": [
       "vk.com",
@@ -9625,6 +8001,9 @@
       "tumblr.com",
       "flickr.com"
     ],
+    "yahoosmallbusiness.com": [
+      "yahoo.com"
+    ],
     "yandex.ru": [
       "opera.com",
       "livejournal.com",
@@ -9633,21 +8012,20 @@
     "yastatic.net": [
       "liveinternet.ru",
       "sputniknews.com",
-      "ria.ru"
+      "qip.ru"
     ],
     "yieldlab.net": [
       "t-online.de",
-      "springer.com",
-      "spiegel.de"
+      "telegraph.co.uk",
+      "springer.com"
     ],
     "yieldoptimizer.com": [
-      "philly.com",
-      "groupon.com"
+      "fourseasons.com"
     ],
     "yimg.com": [
+      "yahoo.com",
       "flickr.com",
-      "nytimes.com",
-      "dropbox.com"
+      "nytimes.com"
     ],
     "yldbt.com": [
       "biography.com",
@@ -9663,11 +8041,12 @@
       "google.com",
       "mozilla.org",
       "nih.gov",
-      "honeywell.com"
+      "unt.edu"
     ],
     "youvisit.com": [
       "osu.edu",
-      "fsu.edu"
+      "fsu.edu",
+      "unh.edu"
     ],
     "ypcdn.com": [
       "yellowpages.com"
@@ -9679,17 +8058,21 @@
     ],
     "zedo.com": [
       "tinypic.com",
-      "thehindu.com"
+      "thehindu.com",
+      "infoplease.com"
     ],
     "zemanta.com": [
       "variety.com",
       "lemonde.fr",
-      "standard.co.uk"
+      "farfetch.com"
     ],
     "zergnet.com": [
       "imdb.com",
       "marketwatch.com",
       "weather.com"
+    ],
+    "zhaopin.cn": [
+      "zhaopin.com"
     ],
     "zidtech.com": [
       "coindesk.com"
@@ -9709,5 +8092,5 @@
       "parallels.com"
     ]
   },
-  "version": "2018.9.26"
+  "version": "2018.9.27"
 }
