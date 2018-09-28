@@ -101,7 +101,7 @@ if [ "$GIT_PUSH" = "1" ] ; then
   echo "Updating public repository."
 
   # Commit updated list to github
-  git add results.json results-prev.json
+  git add results.json
   git commit -m "Update seed data: $VERSION"
   git push
 fi
