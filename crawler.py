@@ -54,6 +54,9 @@ ap.add_argument('--log-stdout', action='store_true', default=False,
                 help='If set, log to stdout as well as log.txt')
 ap.add_argument('--survey', action='store_true', default=False,
                 help="If set, don't block anything or store action_map data")
+ap.add_argument('--domain-list', default=None,
+                help="If set, load domains from this file instead of the "
+                "majestic million (survey mode only)")
 ap.add_argument('--max-data-size', type=int, default=2e6,
                 help='Maximum size of serialized localstorage data')
 
@@ -475,6 +478,17 @@ class SurveyCrawler(Crawler):
         self.max_data_size = kwargs.get('max_data_size')
         self.storage_objects = ['snitch_map']
 
+        if kwargs.get('domain_list'):
+            self.domain_list = []
+            with open(kwargs.get('domain_list')) as f:
+                for l in f:
+                    self.domain_list.append(l.strip())
+            if self.n_sites > 0:
+                self.domain_list = self.domain_list[:self.n_sites]
+        else:
+            self.domain_list = None
+
+
     def set_passive_mode(self):
         self.load_extension_page(OPTIONS)
         script = '''
@@ -515,7 +529,11 @@ chrome.runtime.sendMessage({
         virtual browser with Privacy Badger installed. Afterwards, save the
         and snitch_map that the Badger learned.
         """
-        domains = get_domain_list(self.n_sites, self.out_path)
+        if self.domain_list:
+            domains = self.domain_list
+        else:
+            domains = get_domain_list(self.logger, self.n_sites, self.out_path)
+
         self.logger.info('starting new crawl with timeout %s n_sites %s',
                          self.timeout, self.n_sites)
 
