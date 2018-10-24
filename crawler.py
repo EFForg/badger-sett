@@ -10,6 +10,7 @@ import logging
 import os
 import struct
 import string
+import subprocess
 import sys
 import time
 from urllib.request import urlopen
@@ -63,7 +64,7 @@ ap.add_argument('--max-data-size', type=int, default=2e6,
 # Arguments below here should never have to be used within the docker container.
 ap.add_argument('--out-path', default='./',
                 help='Path at which to save output')
-ap.add_argument('--ext-path', default='./privacybadger/src',
+ap.add_argument('--pb-path', default='./privacybadger/src',
                 help='Path to the Privacy Badger binary or source directory')
 ap.add_argument('--chromedriver-path', default=CHROMEDRIVER_PATH,
                 help='Path to the chromedriver binary')
@@ -161,7 +162,7 @@ def size_of(data):
 
 class Crawler(object):
     def __init__(self, browser, n_sites, timeout, wait_time, log_stdout,
-                 out_path, ext_path, chromedriver_path, firefox_path,
+                 out_path, pb_path, chromedriver_path, firefox_path,
                  **kwargs):
         self.browser = browser
         assert self.browser in (CHROME, FIREFOX)
@@ -169,7 +170,7 @@ class Crawler(object):
         self.timeout = timeout
         self.wait_time = wait_time
         self.out_path = out_path
-        self.ext_path = ext_path
+        self.pb_path = pb_path
         self.chromedriver_path = chromedriver_path
         self.firefox_path = firefox_path
 
@@ -186,7 +187,7 @@ class Crawler(object):
         fh.setFormatter(log_fmt)
         self.logger.addHandler(fh)
 
-        # log to stdout if configured
+        # log to stdout as well if configured
         if log_stdout:
             sh = logging.StreamHandler(sys.stdout)
             sh.setFormatter(log_fmt)
@@ -197,9 +198,16 @@ class Crawler(object):
     def start_driver(self):
         """Start a new Selenium web driver and install the bundled extension."""
         if self.browser == CHROME:
+            # in Chrome, we need to install the extension as a .crx file, which
+            # means building it first
+            cmd = ['make', '-sC', self.pb_path, 'travisbuild']
+            build = subprocess.check_output(cmd).strip().decode('utf8').split()[-1]
+            self.crx_path = os.path.join(self.pb_path, build)
+
             opts = Options()
             opts.add_argument('--no-sandbox')
-            opts.add_extension(self.ext_path)
+            opts.add_extension(self.crx_path)
+
             prefs = {"profile.block_third_party_cookies": False}
             opts.add_experimental_option("prefs", prefs)
             opts.add_argument('--dns-prefetch-disable')
@@ -219,7 +227,8 @@ class Crawler(object):
             command = 'addonInstall'
             info = ('POST', '/session/$sessionId/moz/addon/install')
             self.driver.command_executor._commands[command] = info
-            self.driver.execute(command, params={'path': self.ext_path,
+            path = os.path.join(self.pb_path, 'src')
+            self.driver.execute(command, params={'path': path,
                                                  'temporary': True})
             time.sleep(2)
 
@@ -233,7 +242,7 @@ class Crawler(object):
         BACKGROUND or OPTIONS.
         """
         if self.browser == CHROME:
-            ext_url = (CHROME_URL_FMT + page) % get_chrome_extension_id(ext_path)
+            ext_url = (CHROME_URL_FMT + page) % get_chrome_extension_id(self.crx_path)
         elif self.browser == FIREFOX:
             ext_url = (FF_URL_FMT + page) % FF_UUID
 
