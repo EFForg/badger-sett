@@ -5,6 +5,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PB_DIR=$DIR/privacybadger
 PB_BRANCH=${PB_BRANCH:-master}
+BROWSER=${BROWSER:-firefox}
 USER=$(whoami)
 
 # fetch the latest version of the chosen branch of Privacy Badger
@@ -46,7 +47,9 @@ echo "Building Docker container..."
 
 # pass in the current user's uid and gid so that the scan can be run with the
 # same bits in the container (this prevents permissions issues in the out/ folder)
-if ! docker build --build-arg UID=$(id -u "$USER") \
+if ! docker build --build-arg BROWSER=$BROWSER \
+    --build-arg VALIDATE=$GIT_PUSH \
+    --build-arg UID=$(id -u "$USER") \
     --build-arg GID=$(id -g "$USER") \
     --build-arg UNAME=$USER -t badger-sett . ; then
   echo "Docker build failed."
@@ -73,7 +76,7 @@ fi
 if ! docker run $FLAGS \
     -v "$DOCKER_OUT":/home/$USER/out:z \
     -v /dev/shm:/dev/shm \
-    badger-sett "$@" ; then
+    badger-sett --browser $BROWSER "$@" ; then
   mv "$DOCKER_OUT"/log.txt ./
   echo "Scan failed. See log.txt for details."
   exit 1;
