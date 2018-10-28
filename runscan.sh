@@ -75,7 +75,7 @@ fi
 # Run the scan, passing any extra command line arguments to crawler.py
 # Run in Firefox:
 if ! docker run $FLAGS \
-    -v "$DOCKER_OUT":/home/$USER/out:z \
+    -v "$DOCKER_OUT":"$DOCKER_OUT":z \
     -v /dev/shm:/dev/shm \
     badger-sett --browser $BROWSER "$@" ; then
   mv "$DOCKER_OUT"/log.txt ./
@@ -85,7 +85,7 @@ fi
 
 # Run in Chrome (seccomp doesn't work in jessie):
 #docker run -t -i \
-  #-v $DOCKER_OUT:/home/$USER/out:z \
+  #-v $DOCKER_OUT:$DOCKER_OUT:z \
   #-v /dev/shm:/dev/shm \
   #--device /dev/dri \
   #--security-opt seccomp=./chrome-seccomp.json \
