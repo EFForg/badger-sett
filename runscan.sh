@@ -59,6 +59,7 @@ fi
 # create the output folder if necessary
 DOCKER_OUT="$(pwd)/docker-out"
 mkdir -p "$DOCKER_OUT"
+touch "$DOCKER_OUT"/log.txt
 
 FLAGS=""
 echo "Running scan in Docker..."
