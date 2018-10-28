@@ -28,7 +28,8 @@ else \
   useradd -ms /bin/bash -u $UID -g $GID $UNAME; \
 fi
 
-USER $UNAME
+RUN useradd -ms /bin/bash badgersett
+USER badgersett
 ENV USER=$UNAME
 ENV HOME=/home/$USER
 ENV OUTPATH=$HOME/out/
@@ -43,7 +44,7 @@ RUN pip3 install --user -r requirements.txt
 COPY crawler.py validate.py docker-entry.sh $HOME/
 COPY domain-lists $HOME/domain-lists
 COPY results.json $HOME/old-results.json
-COPY --chown=bennett:bennett privacybadger $PBPATH
+COPY --chown=badgersett:badgersett privacybadger $PBPATH
 RUN mkdir -p $OUTPATH
 
 ENTRYPOINT ["./docker-entry.sh"]
