@@ -262,7 +262,8 @@ class Crawler(object):
         for obj in self.storage_objects:
             script = '''
 data = JSON.parse(arguments[0]);
-badger.storage.%s.merge(data.%s);''' % (obj, obj)
+bkgr = chrome.extension.getBackgroundPage();
+bkgr.badger.storage.%s.merge(data.%s);''' % (obj, obj)
             self.driver.execute_script(script, json.dumps(data))
 
         time.sleep(2)   # wait for localstorage to sync
@@ -280,7 +281,7 @@ badger.storage.%s.merge(data.%s);''' % (obj, obj)
     def clear_data(self):
         """Clear the training data Privacy Badger starts with."""
         self.load_extension_page(OPTIONS)
-        self.driver.execute_script("badger.storage.clearTrackerData();")
+        self.driver.execute_script("chrome.extension.getBackgroundPage().badger.storage.clearTrackerData();")
 
     def timeout_workaround(self):
         """
