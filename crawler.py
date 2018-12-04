@@ -4,15 +4,15 @@
 import argparse
 import glob
 import copy
-import hashlib
 import json
 import logging
 import os
-import struct
 import string
 import subprocess
 import sys
+import tempfile
 import time
+from shutil import copytree
 from urllib.request import urlopen
 
 from PyFunceble import test as PyFunceble
@@ -26,6 +26,7 @@ from tldextract import TLDExtract
 from xvfbwrapper import Xvfb
 
 
+CHROME_EXT_ID = 'mcgekeccgjgcmhnhbabplanchdogjcnh'
 CHROME_URL_FMT = 'chrome-extension://%s/'
 CHROMEDRIVER_PATH='/usr/bin/chromedriver'
 FF_URL_FMT = 'moz-extension://%s/'
@@ -84,22 +85,6 @@ Components.utils.import("resource://gre/modules/ctypes.jsm");
 var zero = new ctypes.intptr_t(8);
 var badptr = ctypes.cast(zero, ctypes.PointerType(ctypes.int32_t));
 var crash = badptr.contents;""")
-
-
-def get_chrome_extension_id(crx_file):
-    """
-    Interpret a .crx file's extension ID
-    TODO: update for CRX3
-    """
-    with open(crx_file, 'rb') as f:
-        data = f.read()
-    header = struct.unpack('<4sIII', data[:16])
-    pubkey = struct.unpack('<%ds' % header[2], data[16:16+header[2]])[0]
-
-    digest = hashlib.sha256(pubkey).hexdigest()
-
-    trans = str.maketrans('0123456789abcdef', string.ascii_lowercase[:16])
-    return str.translate(digest[:32], trans)
 
 
 def get_domain_list(logger, n_sites, out_path):
@@ -198,15 +183,27 @@ class Crawler(object):
     def start_driver(self):
         """Start a new Selenium web driver and install the bundled extension."""
         if self.browser == CHROME:
-            # in Chrome, we need to install the extension as a .crx file, which
-            # means building it first
-            cmd = ['make', '-sC', self.pb_path, 'travisbuild']
-            build = subprocess.check_output(cmd).strip().decode('utf8').split()[-1]
-            self.crx_path = os.path.join(self.pb_path, build)
+            # make extension ID constant across runs
+
+            # create temp directory
+            self.tmp_dir = tempfile.TemporaryDirectory()
+            new_extension_path = os.path.join(self.tmp_dir.name, "src")
+
+            # copy extension sources there
+            copytree(os.path.join(self.pb_path, 'src'), new_extension_path)
+
+            # update manifest.json
+            manifest_path = os.path.join(new_extension_path, "manifest.json")
+            with open(manifest_path, "r") as f:
+                manifest = json.load(f)
+            # this key and the extension ID must both be derived from the same private key
+            manifest['key'] = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArMdgFkGsm7nOBr/9qkx8XEcmYSu1VkIXXK94oXLz1VKGB0o2MN+mXL/Dsllgkh61LZgK/gVuFFk89e/d6Vlsp9IpKLANuHgyS98FKx1+3sUoMujue+hyxulEGxXXJKXhk0kGxWdE0IDOamFYpF7Yk0K8Myd/JW1U2XOoOqJRZ7HR6is1W6iO/4IIL2/j3MUioVqu5ClT78+fE/Fn9b/DfzdX7RxMNza9UTiY+JCtkRTmm4ci4wtU1lxHuVmWiaS45xLbHphQr3fpemDlyTmaVoE59qG5SZZzvl6rwDah06dH01YGSzUF1ezM2IvY9ee1nMSHEadQRQ2sNduNZWC9gwIDAQAB" # noqa:E501 pylint:disable=line-too-long
+            with open(manifest_path, "w") as f:
+                json.dump(manifest, f)
 
             opts = Options()
             opts.add_argument('--no-sandbox')
-            opts.add_extension(self.crx_path)
+            opts.add_argument("--load-extension=" + new_extension_path)
 
             prefs = {"profile.block_third_party_cookies": False}
             opts.add_experimental_option("prefs", prefs)
@@ -242,7 +239,7 @@ class Crawler(object):
         BACKGROUND or OPTIONS.
         """
         if self.browser == CHROME:
-            ext_url = (CHROME_URL_FMT + page) % get_chrome_extension_id(self.crx_path)
+            ext_url = (CHROME_URL_FMT + page) % CHROME_EXT_ID
         elif self.browser == FIREFOX:
             ext_url = (FF_URL_FMT + page) % FF_UUID
 
