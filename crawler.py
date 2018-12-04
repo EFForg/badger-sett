@@ -28,7 +28,7 @@ from xvfbwrapper import Xvfb
 
 CHROME_EXT_ID = 'mcgekeccgjgcmhnhbabplanchdogjcnh'
 CHROME_URL_FMT = 'chrome-extension://%s/'
-CHROMEDRIVER_PATH='/usr/bin/chromedriver'
+CHROMEDRIVER_PATH='chromedriver'
 FF_URL_FMT = 'moz-extension://%s/'
 FF_EXT_ID = 'jid1-MnnxcxisBPnSXQ@jetpack'
 FF_UUID = 'd56a5b99-51b6-4e83-ab23-796216679614'
