@@ -434,10 +434,12 @@ bkgr.badger.storage.%s.merge(data.%s);''' % (obj, obj)
         # handle blank domain bug
         if '' in action_map:
             self.logger.info('Deleting blank domain from action map')
+            self.logger.info(str(action_map['']))
             del action_map['']
 
         if '' in snitch_map:
             self.logger.info('Deleting blank domain from snitch map')
+            self.logger.info(str(snitch_map['']))
             del snitch_map['']
 
         extract = TLDExtract()
