@@ -5,7 +5,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PB_DIR=$DIR/privacybadger
 PB_BRANCH=${PB_BRANCH:-master}
-BROWSER=${BROWSER:-firefox}
+BROWSER=${BROWSER:-chrome}
 USER=$(whoami)
 
 # fetch the latest version of the chosen branch of Privacy Badger

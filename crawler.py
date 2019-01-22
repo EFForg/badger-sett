@@ -44,7 +44,7 @@ WEEK_IN_SECONDS = 604800
 RESTART_RETRIES = 5
 
 ap = argparse.ArgumentParser()
-ap.add_argument('--browser', choices=[FIREFOX, CHROME], default=FIREFOX,
+ap.add_argument('--browser', choices=[FIREFOX, CHROME], default=CHROME,
                 help='Browser to use for the scan')
 ap.add_argument('--n-sites', type=int, default=2000,
                 help='Number of websites to visit on the crawl')
