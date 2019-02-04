@@ -43,6 +43,8 @@ MAJESTIC_URL = "http://downloads.majesticseo.com/majestic_million.csv"
 WEEK_IN_SECONDS = 604800
 RESTART_RETRIES = 5
 
+OUR_PYFUNCEBLE_CONFIG = {"share_logs": False}
+
 ap = argparse.ArgumentParser()
 ap.add_argument('--browser', choices=[FIREFOX, CHROME], default=CHROME,
                 help='Browser to use for the scan')
@@ -124,7 +126,7 @@ def get_domain_list(logger, n_sites, out_path):
                 if pyfunc_cache[domain] == 'ACTIVE':
                     domains.append(domain)
             else:
-                status = PyFunceble(domain)
+                status = PyFunceble(domain, config=OUR_PYFUNCEBLE_CONFIG)
                 logger.info('PyFunceble: %s is %s', domain, status)
                 if status == 'ACTIVE':
                     domains.append(domain)
