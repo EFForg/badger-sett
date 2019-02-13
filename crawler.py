@@ -89,6 +89,18 @@ var badptr = ctypes.cast(zero, ctypes.PointerType(ctypes.int32_t));
 var crash = badptr.contents;""")
 
 
+def wait_for_files(basedir, files):
+    for f in files:
+        if not os.path.isfile(os.path.join(basedir, f)):
+            return False
+
+    # Firefox and Chrome both create partial files in the same directory while
+    # downloading; make sure those are gone.
+    if len(os.listdir(basedir)) != len(files):
+        return False
+
+    return True
+
 def get_domain_list(logger, n_sites, out_path):
     """Load the top million domains from disk or the web"""
     top_1m_file = os.path.join(out_path, MAJESTIC_URL.split('/')[-1])
@@ -164,6 +176,15 @@ class Crawler(object):
         # version is based on when the crawl started
         self.version = time.strftime('%Y.%-m.%-d', time.localtime())
 
+        # where to store temporary downloaded files
+        self.dl_dir = os.path.join(self.out_path, 'downloads')
+        if os.path.exists(self.dl_dir):
+            for f in os.listdir(self.dl_dir):
+                os.remove(os.path.join(self.dl_dir, f))
+        else:
+            os.mkdir(self.dl_dir)
+
+
         # set up logging
         self.logger = logging.getLogger()
         self.logger.setLevel(logging.INFO)
@@ -207,7 +228,9 @@ class Crawler(object):
             opts.add_argument('--no-sandbox')
             opts.add_argument("--load-extension=" + new_extension_path)
 
-            prefs = {"profile.block_third_party_cookies": False}
+            prefs = {"profile.block_third_party_cookies": False,
+                     "profile.default_content_settings.popups": 0,
+                     "download.default_directory": self.dl_dir}
             opts.add_experimental_option("prefs", prefs)
             opts.add_argument('--dns-prefetch-disable')
             self.driver = webdriver.Chrome(self.chromedriver_path,
@@ -217,6 +240,11 @@ class Crawler(object):
             profile = webdriver.FirefoxProfile()
             profile.set_preference('extensions.webextensions.uuids',
                                    '{"%s": "%s"}' % (FF_EXT_ID, FF_UUID))
+            profile.set_preference("browser.download.folderList", 2)
+            profile.set_preference("browser.download.manager.showWhenStarting", False)
+            profile.set_preference("browser.download.dir", self.dl_dir)
+            profile.set_preference("browser.helperApps.neverAsk.saveToDisk",
+                                   "application/json")
 
             # this is kind of a hack; eventually the functionality to install an
             # extension should be part of Selenium. See
@@ -269,11 +297,10 @@ bkgr.badger.storage.%s.merge(data.%s);''' % (obj, obj)
 
     def dump_data(self):
         """Extract the objects Privacy Badger learned during its training run."""
-        self.load_extension_page(BACKGROUND)
-
+        self.load_extension_page(OPTIONS)
         data = {}
         for obj in self.storage_objects:
-            script = 'return badger.storage.%s.getItemClones()' % obj
+            script = 'return chrome.extension.getBackgroundPage().badger.storage.%s.getItemClones()' % obj
             data[obj] = self.driver.execute_script(script)
         return data
 
@@ -487,7 +514,7 @@ class SurveyCrawler(Crawler):
         super(SurveyCrawler, self).__init__(**kwargs)
 
         self.max_data_size = kwargs.get('max_data_size')
-        self.storage_objects = ['snitch_map']
+        self.storage_objects = ['snitch_map', 'request_log']
 
         if kwargs.get('domain_list'):
             self.domain_list = []
@@ -514,25 +541,54 @@ chrome.runtime.sendMessage({
         # don't block anything, just listen and log
         self.set_passive_mode()
 
+    def dump_data(self):
+        """Extract the objects Privacy Badger learned during its training run."""
+        self.load_extension_page(OPTIONS)
+
+        data = {}
+        # download data as json
+        for obj in self.storage_objects:
+            script = '''
+let bkgr = chrome.extension.getBackgroundPage();
+let obj = bkgr.badger.storage.getBadgerStorageObject("%s");
+obj.downloadObject("%s.json");''' % (obj, obj)
+            self.driver.execute_script(script)
+
+        # wait for downloads to complete
+        paths = ['%s.json' % o for o in self.storage_objects]
+        while not wait_for_files(self.dl_dir, paths):
+            time.sleep(0.1)
+
+	# load saved json files and remove them
+        for obj in self.storage_objects:
+            path = os.path.join(self.dl_dir, '%s.json' % obj)
+            content = open(path).read() or '{}'
+            data[obj] = json.loads(content)
+            os.remove(path)
+
+        return data
+
     def merge_saved_data(self):
         paths = glob.glob(os.path.join(self.out_path, 'results-*.json'))
         snitch_map = {}
+        request_log = {}
         for p in paths:
             with open(p) as f:
-                sm = json.load(f)['snitch_map']
-            for tracker, snitches in sm.items():
+                js = json.load(f)
+
+            for tracker, snitches in js['snitch_map'].items():
                 if tracker not in snitch_map:
                     snitch_map[tracker] = snitches
                     continue
 
                 for snitch, data in snitches.items():
-                    if snitch == 'length':
-                        snitch_map[tracker]['length'] = \
-                            int(snitch_map[tracker]['length']) + int(data)
-                        continue
                     snitch_map[tracker][snitch] = data
 
-        return {'version': self.version, 'snitch_map': snitch_map}
+            request_log.update(js['request_log'])
+
+        return {'version': self.version,
+                'snitch_map': snitch_map,
+                'request_log': request_log}
 
     def crawl(self):
         """
