@@ -363,8 +363,10 @@ bkgr.badger.storage.%s.merge(data.%s);''' % (obj, obj)
         action_map and snitch_map that the Badger learned.
         """
         domains = get_domain_list(self.logger, self.n_sites, self.out_path)
-        self.logger.info('starting new crawl with timeout %s n_sites %s',
-                         self.timeout, self.n_sites)
+        self.logger.info('starting new crawl:\n\ttimeout: %ss\n\twait time: %ss' +
+                         '\n\tbrowser: %s\n\tsurvey mode: False' +
+                         '\n\tdomains to crawl: %d', self.timeout,
+                         self.wait_time, self.browser, self.n_sites)
 
         # create an XVFB virtual display (to avoid opening an actual browser)
         self.vdisplay = Xvfb(width=1280, height=720)
@@ -545,8 +547,10 @@ chrome.runtime.sendMessage({
         else:
             domains = get_domain_list(self.logger, self.n_sites, self.out_path)
 
-        self.logger.info('starting new crawl with timeout %s n_sites %s',
-                         self.timeout, self.n_sites)
+        self.logger.info('starting new crawl:\n\ttimeout: %ss\n\twait time: %ss' +
+                         '\n\tbrowser: %s\n\tsurvey mode: True' +
+                         '\n\tdomains to crawl: %d', self.timeout,
+                         self.wait_time, self.browser, self.n_sites)
 
         # create an XVFB virtual display (to avoid opening an actual browser)
         self.vdisplay = Xvfb(width=1280, height=720)
