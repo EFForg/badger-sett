@@ -41,7 +41,7 @@ FIREFOX = 'firefox'
 
 MAJESTIC_URL = "http://downloads.majesticseo.com/majestic_million.csv"
 WEEK_IN_SECONDS = 604800
-RESTART_RETRIES = 5
+RESTART_RETRIES = 10
 
 OUR_PYFUNCEBLE_CONFIG = {"share_logs": False}
 
@@ -101,7 +101,7 @@ def wait_for_files(basedir, files):
 
     return True
 
-def get_domain_list(logger, n_sites, out_path):
+def get_domain_list(logger, n_sites, out_path, pyfunc=True):
     """Load the top million domains from disk or the web"""
     top_1m_file = os.path.join(out_path, MAJESTIC_URL.split('/')[-1])
     pyfunc_cache_file = os.path.join(out_path, 'pyfunceable_cache.json')
@@ -119,7 +119,7 @@ def get_domain_list(logger, n_sites, out_path):
             os.remove(pyfunc_cache_file)
 
     # load cache
-    if os.path.exists(pyfunc_cache_file):
+    if pyfunc and os.path.exists(pyfunc_cache_file):
         with open(pyfunc_cache_file) as f:
             pyfunc_cache = json.load(f)
     else:
@@ -134,24 +134,55 @@ def get_domain_list(logger, n_sites, out_path):
         for l in f:
             domain = l.split(',')[2]
 
-            if domain in pyfunc_cache:
-                if pyfunc_cache[domain] == 'ACTIVE':
-                    domains.append(domain)
+            if pyfunc:
+                if domain in pyfunc_cache:
+                    if pyfunc_cache[domain] == 'ACTIVE':
+                        domains.append(domain)
+                else:
+                    status = PyFunceble(domain, config=OUR_PYFUNCEBLE_CONFIG)
+                    logger.info('PyFunceble: %s is %s', domain, status)
+                    if status == 'ACTIVE':
+                        domains.append(domain)
+                    pyfunc_cache[domain] = status
             else:
-                status = PyFunceble(domain, config=OUR_PYFUNCEBLE_CONFIG)
-                logger.info('PyFunceble: %s is %s', domain, status)
-                if status == 'ACTIVE':
-                    domains.append(domain)
-                pyfunc_cache[domain] = status
+                domains.append(domain)
 
             if len(domains) >= n_sites:
                 break
 
     # save pyfunceble cache again
-    with open(pyfunc_cache_file, 'w') as f:
-        json.dump(pyfunc_cache, f)
+    if pyfunc:
+        with open(pyfunc_cache_file, 'w') as f:
+            json.dump(pyfunc_cache, f)
 
     return domains
+
+
+def merge_saved_data(path, version):
+    paths = glob.glob(os.path.join(path, 'results-*.json'))
+    snitch_map = {}
+    request_log = {}
+    for p in paths:
+        with open(p) as f:
+            js = json.load(f)
+
+        for tracker, snitches in js['snitch_map'].items():
+            if tracker not in snitch_map:
+                snitch_map[tracker] = snitches
+                continue
+
+            for snitch, data in snitches.items():
+                snitch_map[tracker][snitch] = data
+
+        for fp, log in js['request_log'].items():
+            if fp in request_log:
+                request_log[fp].extend(log)
+            else:
+                request_log[fp] = log
+
+    return {'version': version,
+            'snitch_map': snitch_map,
+            'request_log': request_log}
 
 
 def size_of(data):
@@ -352,6 +383,11 @@ bkgr.badger.storage.%s.merge(data.%s);''' % (obj, obj)
         # It's ugly, but this section needs to be ABSOLUTELY crash-proof.
         for _ in range(RESTART_RETRIES):
             try:
+                self.driver.close()
+            except:
+                pass
+
+            try:
                 self.driver.quit()
             except:
                 pass
@@ -381,7 +417,9 @@ bkgr.badger.storage.%s.merge(data.%s);''' % (obj, obj)
     def should_restart(self, e):
         return (type(e) == NoSuchWindowException or
             type(e) == SessionNotCreatedException or
-            'response from marionette' in e.msg)
+            'response from marionette' in e.msg or
+            'session deleted because of page crash' in e.msg or
+            'invalid session id' in e.msg)
 
     def crawl(self):
         """
@@ -389,7 +427,8 @@ bkgr.badger.storage.%s.merge(data.%s);''' % (obj, obj)
         virtual browser with Privacy Badger installed. Afterwards, save the
         action_map and snitch_map that the Badger learned.
         """
-        domains = get_domain_list(self.logger, self.n_sites, self.out_path)
+        domains = get_domain_list(self.logger, self.n_sites, self.out_path,
+                                  pyfunc=True)
         self.logger.info('starting new crawl with timeout %s n_sites %s',
                          self.timeout, self.n_sites)
 
@@ -500,10 +539,8 @@ bkgr.badger.storage.%s.merge(data.%s);''' % (obj, obj)
         return new_data
 
     def save(self, data, name='results.json'):
-        data['version'] = self.version
-
-        self.logger.info('Saving seed data version %s...', self.version)
         # save the snitch_map in a human-readable JSON file
+        data['version'] = self.version
         with open(os.path.join(self.out_path, name), 'w') as f:
             json.dump(data, f, indent=2, sort_keys=True, separators=(',', ': '))
         self.logger.info('Saved data to %s.', name)
@@ -569,26 +606,7 @@ obj.downloadObject("%s.json");''' % (obj, obj)
         return data
 
     def merge_saved_data(self):
-        paths = glob.glob(os.path.join(self.out_path, 'results-*.json'))
-        snitch_map = {}
-        request_log = {}
-        for p in paths:
-            with open(p) as f:
-                js = json.load(f)
-
-            for tracker, snitches in js['snitch_map'].items():
-                if tracker not in snitch_map:
-                    snitch_map[tracker] = snitches
-                    continue
-
-                for snitch, data in snitches.items():
-                    snitch_map[tracker][snitch] = data
-
-            request_log.update(js['request_log'])
-
-        return {'version': self.version,
-                'snitch_map': snitch_map,
-                'request_log': request_log}
+        return merge_saved_data(self.out_path, self.version)
 
     def crawl(self):
         """
@@ -599,7 +617,8 @@ obj.downloadObject("%s.json");''' % (obj, obj)
         if self.domain_list:
             domains = self.domain_list
         else:
-            domains = get_domain_list(self.logger, self.n_sites, self.out_path)
+            domains = get_domain_list(self.logger, self.n_sites, self.out_path,
+                                      pyfunc=False)
 
         self.logger.info('starting new crawl with timeout %s n_sites %s',
                          self.timeout, self.n_sites)
