@@ -15,7 +15,6 @@ import time
 from shutil import copytree
 from urllib.request import urlopen
 
-from PyFunceble import test as PyFunceble
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException, WebDriverException,\
                                        NoSuchWindowException,\
@@ -101,7 +100,7 @@ def wait_for_files(basedir, files):
 
     return True
 
-def get_domain_list(logger, n_sites, out_path, pyfunc=True):
+def get_domain_list(logger, n_sites, out_path, pyfunc=False):
     """Load the top million domains from disk or the web"""
     top_1m_file = os.path.join(out_path, MAJESTIC_URL.split('/')[-1])
     pyfunc_cache_file = os.path.join(out_path, 'pyfunceable_cache.json')
@@ -147,7 +146,7 @@ def get_domain_list(logger, n_sites, out_path, pyfunc=True):
             else:
                 domains.append(domain)
 
-            if len(domains) >= n_sites:
+            if n_sites > 0 and len(domains) >= n_sites:
                 break
 
     # save pyfunceble cache again
@@ -427,8 +426,7 @@ bkgr.badger.storage.%s.merge(data.%s);''' % (obj, obj)
         virtual browser with Privacy Badger installed. Afterwards, save the
         action_map and snitch_map that the Badger learned.
         """
-        domains = get_domain_list(self.logger, self.n_sites, self.out_path,
-                                  pyfunc=True)
+        domains = get_domain_list(self.logger, self.n_sites, self.out_path)
         self.logger.info('starting new crawl with timeout %s n_sites %s',
                          self.timeout, self.n_sites)
 
