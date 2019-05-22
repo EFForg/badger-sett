@@ -3,7 +3,7 @@ import git
 import json
 import re
 
-def count_domain_blocks():
+def get_old_maps():
     repo = git.Repo('./')
     old_maps = {}
 
@@ -15,6 +15,11 @@ def count_domain_blocks():
                 js = json.load(f)
             if 'version' in js:
                 old_maps[js['version']] = js
+
+    return old_maps
+
+def count_domain_blocks():
+    old_maps = get_old_maps()
 
     # count number of times each domain has been blocked
     ctr = Counter()
