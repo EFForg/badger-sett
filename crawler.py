@@ -158,6 +158,14 @@ def should_restart(e):
     )
 
 
+def wait_for_script(
+        driver, script, timeout=20,
+        message="Timed out waiting for execute_script to eval to True"
+):
+    return webdriver.support.ui.WebDriverWait(driver, timeout).until(
+        lambda driver: driver.execute_script(script), message)
+
+
 class Crawler(object):
     def __init__(self, browser, n_sites, timeout, wait_time, log_stdout,
                  out_path, pb_path, chromedriver_path, firefox_path,
@@ -247,6 +255,16 @@ class Crawler(object):
         # apply timeout settings
         self.driver.set_page_load_timeout(self.timeout)
         self.driver.set_script_timeout(self.timeout)
+
+        # wait for Badger to finish initializing
+        self.load_extension_page(OPTIONS)
+        wait_for_script(self.driver, (
+            "return chrome.extension.getBackgroundPage().badger.INITIALIZED"
+            " && Object.keys("
+            "  chrome.extension.getBackgroundPage()"
+            "  .badger.storage.getBadgerStorageObject('action_map').getItemClones()"
+            ").length > 1"
+        ))
 
     def load_extension_page(self, page, retries=3):
         """
