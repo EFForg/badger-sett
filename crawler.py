@@ -283,11 +283,14 @@ bkgr.badger.storage.%s.merge(data.%s);''' % (obj, obj)
     def dump_data(self):
         """Extract the objects Privacy Badger learned during its training
         run."""
-        self.load_extension_page(BACKGROUND)
+        self.load_extension_page(OPTIONS)
 
         data = {}
         for obj in self.storage_objects:
-            script = 'return badger.storage.%s.getItemClones()' % obj
+            script = (
+                "return chrome.extension.getBackgroundPage()."
+                "badger.storage.%s.getItemClones()" % obj
+            )
             data[obj] = self.driver.execute_script(script)
         return data
 
