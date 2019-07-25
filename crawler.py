@@ -191,7 +191,7 @@ class Crawler(object):
             sh.setFormatter(log_fmt)
             self.logger.addHandler(sh)
 
-        self.storage_objects = ['action_map', 'snitch_map']
+        self.storage_objects = ['snitch_map', 'action_map']
 
     def start_driver(self):
         """Start a new Selenium web driver and install the bundled
@@ -272,10 +272,13 @@ class Crawler(object):
         """Load saved user data into Privacy Badger after a restart"""
         self.load_extension_page(OPTIONS)
         for obj in self.storage_objects:
-            script = '''
-data = JSON.parse(arguments[0]);
-bkgr = chrome.extension.getBackgroundPage();
-bkgr.badger.storage.%s.merge(data.%s);''' % (obj, obj)
+            script = (
+                "(function () {"
+                "let data = JSON.parse(arguments[0]);"
+                "let bg = chrome.extension.getBackgroundPage();"
+                "bg.badger.storage.%s.merge(data.%s);"
+                "}());"
+            ) % (obj, obj)
             self.driver.execute_script(script, json.dumps(data))
 
         time.sleep(2)   # wait for localstorage to sync
