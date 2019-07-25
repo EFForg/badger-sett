@@ -7,8 +7,6 @@ import copy
 import json
 import logging
 import os
-import string
-import subprocess
 import sys
 import tempfile
 import time
@@ -17,10 +15,12 @@ from urllib.request import urlopen
 
 from PyFunceble import test as PyFunceble
 from selenium import webdriver
-from selenium.common.exceptions import TimeoutException, WebDriverException,\
-                                       NoSuchWindowException,\
-                                       SessionNotCreatedException,\
-                                       JavascriptException
+from selenium.common.exceptions import (
+    NoSuchWindowException,
+    SessionNotCreatedException,
+    TimeoutException,
+    WebDriverException,
+)
 from selenium.webdriver.chrome.options import Options
 from tldextract import TLDExtract
 from xvfbwrapper import Xvfb
@@ -28,7 +28,7 @@ from xvfbwrapper import Xvfb
 
 CHROME_EXT_ID = 'mcgekeccgjgcmhnhbabplanchdogjcnh'
 CHROME_URL_FMT = 'chrome-extension://%s/'
-CHROMEDRIVER_PATH='chromedriver'
+CHROMEDRIVER_PATH = 'chromedriver'
 FF_URL_FMT = 'moz-extension://%s/'
 FF_EXT_ID = 'jid1-MnnxcxisBPnSXQ@jetpack'
 FF_UUID = 'd56a5b99-51b6-4e83-ab23-796216679614'
@@ -52,8 +52,9 @@ ap.add_argument('--n-sites', type=int, default=2000,
                 help='Number of websites to visit on the crawl')
 ap.add_argument('--timeout', type=float, default=30,
                 help='Amount of time to allow each site to load, in seconds')
-ap.add_argument('--wait-time', type=float, default=5,
-                help='Amount of time to wait on each site after it loads, in seconds')
+ap.add_argument('--wait-time', type=float, default=5, help=(
+    'Amount of time to wait on each site after it loads, in seconds'
+))
 ap.add_argument('--log-stdout', action='store_true', default=False,
                 help='If set, log to stdout as well as log.txt')
 ap.add_argument('--survey', action='store_true', default=False,
@@ -64,7 +65,7 @@ ap.add_argument('--domain-list', default=None,
 ap.add_argument('--max-data-size', type=int, default=2e6,
                 help='Maximum size of serialized localstorage data')
 
-# Arguments below here should never have to be used within the docker container.
+# Arguments below should never have to be used within the docker container.
 ap.add_argument('--out-path', default='./',
                 help='Path at which to save output')
 ap.add_argument('--pb-path', default='./privacybadger/src',
@@ -76,7 +77,7 @@ ap.add_argument('--firefox-path', default=FF_BIN_PATH,
 
 
 # Force a 'Failed to decode response from marionette' crash.
-# Example from this ticket: https://bugzilla.mozilla.org/show_bug.cgi?id=1401131
+# Example from https://bugzilla.mozilla.org/show_bug.cgi?id=1401131
 def test_crash(driver):
     driver.set_context("chrome")
     driver.execute_script("""
@@ -97,7 +98,8 @@ def get_domain_list(logger, n_sites, out_path):
     # download the file if it doesn't exist or if it's more than a week stale
     if (not os.path.exists(top_1m_file) or
             time.time() - os.path.getmtime(top_1m_file) > WEEK_IN_SECONDS):
-        logger.info('Loading new Majestic data and refreshing PyFunceble cache')
+        logger.info(
+            "Loading new Majestic data and refreshing PyFunceble cache")
         response = urlopen(MAJESTIC_URL)
         with open(top_1m_file, 'w') as f:
             f.write(response.read().decode())
@@ -147,6 +149,15 @@ def size_of(data):
     return len(json.dumps(data))
 
 
+# determine whether we need to restart the webdriver after an error
+def should_restart(e):
+    return (
+        type(e) == NoSuchWindowException or
+        type(e) == SessionNotCreatedException or
+        'response from marionette' in e.msg
+    )
+
+
 class Crawler(object):
     def __init__(self, browser, n_sites, timeout, wait_time, log_stdout,
                  out_path, pb_path, chromedriver_path, firefox_path,
@@ -183,7 +194,8 @@ class Crawler(object):
         self.storage_objects = ['action_map', 'snitch_map']
 
     def start_driver(self):
-        """Start a new Selenium web driver and install the bundled extension."""
+        """Start a new Selenium web driver and install the bundled
+        extension."""
         if self.browser == CHROME:
             # make extension ID constant across runs
 
@@ -198,8 +210,9 @@ class Crawler(object):
             manifest_path = os.path.join(new_extension_path, "manifest.json")
             with open(manifest_path, "r") as f:
                 manifest = json.load(f)
-            # this key and the extension ID must both be derived from the same private key
-            manifest['key'] = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArMdgFkGsm7nOBr/9qkx8XEcmYSu1VkIXXK94oXLz1VKGB0o2MN+mXL/Dsllgkh61LZgK/gVuFFk89e/d6Vlsp9IpKLANuHgyS98FKx1+3sUoMujue+hyxulEGxXXJKXhk0kGxWdE0IDOamFYpF7Yk0K8Myd/JW1U2XOoOqJRZ7HR6is1W6iO/4IIL2/j3MUioVqu5ClT78+fE/Fn9b/DfzdX7RxMNza9UTiY+JCtkRTmm4ci4wtU1lxHuVmWiaS45xLbHphQr3fpemDlyTmaVoE59qG5SZZzvl6rwDah06dH01YGSzUF1ezM2IvY9ee1nMSHEadQRQ2sNduNZWC9gwIDAQAB" # noqa:E501 pylint:disable=line-too-long
+            # this key and the extension ID
+            # must both be derived from the same private key
+            manifest['key'] = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArMdgFkGsm7nOBr/9qkx8XEcmYSu1VkIXXK94oXLz1VKGB0o2MN+mXL/Dsllgkh61LZgK/gVuFFk89e/d6Vlsp9IpKLANuHgyS98FKx1+3sUoMujue+hyxulEGxXXJKXhk0kGxWdE0IDOamFYpF7Yk0K8Myd/JW1U2XOoOqJRZ7HR6is1W6iO/4IIL2/j3MUioVqu5ClT78+fE/Fn9b/DfzdX7RxMNza9UTiY+JCtkRTmm4ci4wtU1lxHuVmWiaS45xLbHphQr3fpemDlyTmaVoE59qG5SZZzvl6rwDah06dH01YGSzUF1ezM2IvY9ee1nMSHEadQRQ2sNduNZWC9gwIDAQAB"  # noqa:E501 pylint:disable=line-too-long
             with open(manifest_path, "w") as f:
                 json.dump(manifest, f)
 
@@ -218,8 +231,8 @@ class Crawler(object):
             profile.set_preference('extensions.webextensions.uuids',
                                    '{"%s": "%s"}' % (FF_EXT_ID, FF_UUID))
 
-            # this is kind of a hack; eventually the functionality to install an
-            # extension should be part of Selenium. See
+            # this is kind of a hack; eventually the functionality to install
+            # an extension should be part of Selenium. See
             # https://github.com/SeleniumHQ/selenium/issues/4215
             self.driver = webdriver.Firefox(firefox_profile=profile,
                                             firefox_binary=self.firefox_path)
@@ -268,7 +281,8 @@ bkgr.badger.storage.%s.merge(data.%s);''' % (obj, obj)
         time.sleep(2)   # wait for localstorage to sync
 
     def dump_data(self):
-        """Extract the objects Privacy Badger learned during its training run."""
+        """Extract the objects Privacy Badger learned during its training
+        run."""
         self.load_extension_page(BACKGROUND)
 
         data = {}
@@ -280,7 +294,10 @@ bkgr.badger.storage.%s.merge(data.%s);''' % (obj, obj)
     def clear_data(self):
         """Clear the training data Privacy Badger starts with."""
         self.load_extension_page(OPTIONS)
-        self.driver.execute_script("chrome.extension.getBackgroundPage().badger.storage.clearTrackerData();")
+        self.driver.execute_script(
+            "chrome.extension.getBackgroundPage()."
+            "badger.storage.clearTrackerData();"
+        )
 
     def timeout_workaround(self):
         """
@@ -298,9 +315,9 @@ bkgr.badger.storage.%s.merge(data.%s);''' % (obj, obj)
 
     def get_domain(self, domain):
         """
-        Try to load a domain over https, and fall back to http if the initial load
-        times out. Then sleep `wait_time` seconds on the site to wait for AJAX calls
-        to complete.
+        Try to load a domain over https, and fall back to http if the initial
+        load times out. Then sleep `wait_time` seconds on the site to wait for
+        AJAX calls to complete.
         """
         try:
             url = "https://%s/" % domain
@@ -350,23 +367,22 @@ bkgr.badger.storage.%s.merge(data.%s);''' % (obj, obj)
             self.logger.error('Could not restart browser.')
             sys.exit(1)
 
-    # determine whether we need to restart the webdriver after an error
-    def should_restart(self, e):
-        return (type(e) == NoSuchWindowException or
-            type(e) == SessionNotCreatedException or
-            'response from marionette' in e.msg)
 
     def crawl(self):
         """
-        Visit the top `n_sites` websites in the Majestic Million, in order, in a
-        virtual browser with Privacy Badger installed. Afterwards, save the
+        Visit the top `n_sites` websites in the Majestic Million, in order, in
+        a virtual browser with Privacy Badger installed. Afterwards, save the
         action_map and snitch_map that the Badger learned.
         """
         domains = get_domain_list(self.logger, self.n_sites, self.out_path)
-        self.logger.info('starting new crawl:\n\ttimeout: %ss\n\twait time: %ss' +
-                         '\n\tbrowser: %s\n\tsurvey mode: False' +
-                         '\n\tdomains to crawl: %d', self.timeout,
-                         self.wait_time, self.browser, self.n_sites)
+        self.logger.info((
+            "starting new crawl:\n"
+            "\ttimeout: %ss\n"
+            "\twait time: %ss\n"
+            "\tbrowser: %s\n"
+            "\tsurvey mode: False\n"
+            "\tdomains to crawl: %d"
+        ), self.timeout, self.wait_time, self.browser, self.n_sites)
 
         # create an XVFB virtual display (to avoid opening an actual browser)
         self.vdisplay = Xvfb(width=1280, height=720)
@@ -378,14 +394,18 @@ bkgr.badger.storage.%s.merge(data.%s);''' % (obj, obj)
 
         for i, domain in enumerate(domains):
             try:
-                # This script could fail during the data dump (trying to get the
-                # options page), the data cleaning, or while trying to load the next
-                # domain.
+                # This script could fail during the data dump (trying to get
+                # the options page), the data cleaning, or while trying to load
+                # the next domain.
                 last_data = self.dump_data()
 
                 # try to fix misattribution errors
                 if i >= 2:
-                    clean_data = self.cleanup(domains[i-2], domains[i-1], last_data)
+                    clean_data = self.cleanup(
+                        domains[i - 2],
+                        domains[i - 1],
+                        last_data
+                    )
                     if last_data != clean_data:
                         self.clear_data()
                         self.load_user_data(clean_data)
@@ -399,16 +419,17 @@ bkgr.badger.storage.%s.merge(data.%s);''' % (obj, obj)
                 try:
                     self.timeout_workaround()
                 except WebDriverException as e:
-                    if self.should_restart(e):
+                    if should_restart(e):
                         self.restart_browser(last_data)
             except WebDriverException as e:
                 self.logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
-                if self.should_restart(e):
+                if should_restart(e):
                     self.restart_browser(last_data)
 
-        self.logger.info('Finished scan. Visited %d sites and errored on %d.',
-                    len(visited), len(domains) - len(visited))
-
+        self.logger.info(
+            "Finished scan. Visited %d sites and errored on %d.",
+            len(visited), len(domains) - len(visited)
+        )
 
         try:
             self.logger.info('Getting data from browser storage...')
@@ -450,12 +471,19 @@ bkgr.badger.storage.%s.merge(data.%s);''' % (obj, obj)
         # If a domain we visited was recorded as a tracker on the domain we
         # visited immediately after it, it's probably a bug
         if d1_base in snitch_map and d2 in snitch_map[d1_base]:
-            self.logger.info('Likely bug: domain %s tracking on %s', d1_base, d2)
+            self.logger.info(
+                'Likely bug: domain %s tracking on %s',
+                d1_base,
+                d2
+            )
             snitch_map[d1_base].remove(d2)
 
             # if the bug caused d1 to be added to the action map, remove it
             if not snitch_map[d1_base]:
-                self.logger.info('Deleting domain %s from action & snitch maps', d1_base)
+                self.logger.info(
+                    'Deleting domain %s from action & snitch maps',
+                    d1_base
+                )
                 if d1 in action_map:
                     del action_map[d1]
                 if d1_base in action_map:
@@ -465,11 +493,16 @@ bkgr.badger.storage.%s.merge(data.%s);''' % (obj, obj)
             # if the bug caused d1 to be blocked, unblock it
             elif len(snitch_map[d1_base]) == 2:
                 if d1 in action_map:
-                    self.logger.info('Downgrading domain %s from "block" to "allow"', d1)
+                    self.logger.info(
+                        'Downgrading domain %s from "block" to "allow"',
+                        d1
+                    )
                     action_map[d1]['heuristicAction'] = 'allow'
                 if d1_base in action_map:
-                    self.logger.info('Downgrading domain %s from "block" to "allow"',
-                                d1_base)
+                    self.logger.info(
+                        'Downgrading domain %s from "block" to "allow"',
+                        d1_base
+                    )
                     action_map[d1_base]['heuristicAction'] = 'allow'
 
         return new_data
@@ -480,7 +513,8 @@ bkgr.badger.storage.%s.merge(data.%s);''' % (obj, obj)
         self.logger.info('Saving seed data version %s...', self.version)
         # save the snitch_map in a human-readable JSON file
         with open(os.path.join(self.out_path, name), 'w') as f:
-            json.dump(data, f, indent=2, sort_keys=True, separators=(',', ': '))
+            json.dump(
+                data, f, indent=2, sort_keys=True, separators=(',', ': '))
         self.logger.info('Saved data to %s.', name)
 
 
@@ -500,7 +534,6 @@ class SurveyCrawler(Crawler):
                 self.domain_list = self.domain_list[:self.n_sites]
         else:
             self.domain_list = None
-
 
     def set_passive_mode(self):
         self.load_extension_page(OPTIONS)
@@ -538,8 +571,8 @@ chrome.runtime.sendMessage({
 
     def crawl(self):
         """
-        Visit the top `n_sites` websites in the Majestic Million, in order, in a
-        virtual browser with Privacy Badger installed. Afterwards, save the
+        Visit the top `n_sites` websites in the Majestic Million, in order, in
+        a virtual browser with Privacy Badger installed. Afterwards, save the
         and snitch_map that the Badger learned.
         """
         if self.domain_list:
@@ -547,10 +580,14 @@ chrome.runtime.sendMessage({
         else:
             domains = get_domain_list(self.logger, self.n_sites, self.out_path)
 
-        self.logger.info('starting new crawl:\n\ttimeout: %ss\n\twait time: %ss' +
-                         '\n\tbrowser: %s\n\tsurvey mode: True' +
-                         '\n\tdomains to crawl: %d', self.timeout,
-                         self.wait_time, self.browser, self.n_sites)
+        self.logger.info((
+            "starting new crawl:\n"
+            "\ttimeout: %ss\n"
+            "\twait time: %ss\n"
+            "\tbrowser: %s\n"
+            "\tsurvey mode: True\n"
+            "\tdomains to crawl: %d"
+        ), self.timeout, self.wait_time, self.browser, self.n_sites)
 
         # create an XVFB virtual display (to avoid opening an actual browser)
         self.vdisplay = Xvfb(width=1280, height=720)
@@ -569,7 +606,7 @@ chrome.runtime.sendMessage({
                 # save the state of privacy badger before we do anything else
                 last_data = self.dump_data()
 
-                # If the localstorage data is getting too big, dump it and restart
+                # If the localstorage data is getting too big, dump and restart
                 if size_of(last_data) > self.max_data_size:
                     self.save(last_data, 'results-%d-%d.json' % (first_i, i))
                     first_i = i + 1
@@ -585,14 +622,15 @@ chrome.runtime.sendMessage({
                 try:
                     self.timeout_workaround()
                 except WebDriverException as e:
-                    if self.should_restart(e):
+                    if should_restart(e):
                         self.restart_browser(last_data)
             except WebDriverException as e:
                 self.logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
-                if self.should_restart(e):
+                if should_restart(e):
                     self.restart_browser(last_data)
             except KeyboardInterrupt:
-                self.logger.warn('Keyboard interrupt. Ending scan after %d sites.', i+1)
+                self.logger.warning(
+                    "Keyboard interrupt. Ending scan after %d sites.", i + 1)
                 break
 
         self.logger.info('Finished scan. Visited %d sites and errored on %d.',
@@ -603,7 +641,8 @@ chrome.runtime.sendMessage({
             data = self.dump_data()
         except WebDriverException:
             if last_data:
-                self.logger.error('Could not get badger storage. Using cached data...')
+                self.logger.error(
+                    "Could not get badger storage. Using cached data...")
                 data = last_data
             else:
                 self.logger.error('Could not export data. Exiting.')
