@@ -273,11 +273,11 @@ class Crawler(object):
         self.load_extension_page(OPTIONS)
         for obj in self.storage_objects:
             script = (
-                "(function () {"
-                "let data = JSON.parse(arguments[0]);"
+                "(function (data) {"
+                "data = JSON.parse(data);"
                 "let bg = chrome.extension.getBackgroundPage();"
                 "bg.badger.storage.%s.merge(data.%s);"
-                "}());"
+                "}(arguments[0]));"
             ) % (obj, obj)
             self.driver.execute_script(script, json.dumps(data))
 
