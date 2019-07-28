@@ -415,6 +415,7 @@ class Crawler(object):
 
         # list of domains we actually visited
         visited = []
+        old_snitches = {}
 
         for i, domain in enumerate(domains):
             try:
@@ -449,6 +450,16 @@ class Crawler(object):
                 self.logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
                 if should_restart(e):
                     self.restart_browser(last_data)
+            finally:
+                self.load_extension_page(OPTIONS)
+                snitches = self.driver.execute_script(
+                    "return chrome.extension.getBackgroundPage()."
+                    "badger.storage.snitch_map._store;"
+                )
+                diff = set(snitches) - set(old_snitches)
+                if diff:
+                    self.logger.info("new trackers in snitch_map: %s", diff)
+                old_snitches = snitches
 
         self.logger.info(
             "Finished scan. Visited %d sites and errored on %d.",
