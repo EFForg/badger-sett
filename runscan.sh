@@ -13,13 +13,13 @@ if [ -e "$PB_DIR" ] ; then
   echo "Updating Privacy Badger..."
   cd "$PB_DIR"
   git fetch
-  git checkout $PB_BRANCH
+  git checkout "$PB_BRANCH"
   git pull
 else
   echo "Cloning Privacy Badger..."
   git clone https://github.com/efforg/privacybadger "$PB_DIR"
-  cd $PB_DIR
-  git checkout $PB_BRANCH
+  cd "$PB_DIR"
+  git checkout "$PB_BRANCH"
 fi
 
 # change to the badger-sett repository
@@ -47,11 +47,11 @@ echo "Building Docker container..."
 
 # pass in the current user's uid and gid so that the scan can be run with the
 # same bits in the container (this prevents permissions issues in the out/ folder)
-if ! docker build --build-arg BROWSER=$BROWSER \
-    --build-arg VALIDATE=$GIT_PUSH \
-    --build-arg UID=$(id -u "$USER") \
-    --build-arg GID=$(id -g "$USER") \
-    --build-arg UNAME=$USER -t badger-sett . ; then
+if ! docker build --build-arg BROWSER="$BROWSER" \
+    --build-arg VALIDATE="$GIT_PUSH" \
+    --build-arg UID="$(id -u "$USER")" \
+    --build-arg GID="$(id -g "$USER")" \
+    --build-arg UNAME="$USER" -t badger-sett . ; then
   echo "Docker build failed."
   exit 1;
 fi
@@ -74,9 +74,9 @@ fi
 # Run the scan, passing any extra command line arguments to crawler.py
 # Run in Firefox:
 if ! docker run $FLAGS \
-    -v "$DOCKER_OUT":/home/$USER/out:z \
+    -v "$DOCKER_OUT:/home/$USER/out:z" \
     -v /dev/shm:/dev/shm \
-    badger-sett --browser $BROWSER "$@" ; then
+    badger-sett --browser "$BROWSER" "$@" ; then
   mv "$DOCKER_OUT"/log.txt ./
   echo "Scan failed. See log.txt for details."
   exit 1;
