@@ -29,6 +29,9 @@ cd "$DIR"
 # merge conflicts later
 if [ "$GIT_PUSH" = "1" ] ; then
   echo "Updating Badger Sett..."
+
+  git fetch
+
   # figure out whether we need to pull
   UPSTREAM=${1:-'@{u}'}
   LOCAL=$(git rev-parse @)
