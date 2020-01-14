@@ -14,7 +14,6 @@ from shutil import copytree
 from urllib.request import urlopen
 from tranco import Tranco
 
-from PyFunceble import test as PyFunceble
 from selenium import webdriver
 from selenium.common.exceptions import (
     NoSuchWindowException,
@@ -40,13 +39,11 @@ OPTIONS = 'skin/options.html'
 CHROME = 'chrome'
 FIREFOX = 'firefox'
 
-WEEK_IN_SECONDS = 604800
 RESTART_RETRIES = 5
 
 TRANCO = Tranco(cache=True, cache_dir='.tranco')
 TRANCO_LIST = TRANCO.list()
 
-OUR_PYFUNCEBLE_CONFIG = {"share_logs": False}
 
 ap = argparse.ArgumentParser()
 ap.add_argument('--browser', choices=[FIREFOX, CHROME], default=CHROME,
