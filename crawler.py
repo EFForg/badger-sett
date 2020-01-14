@@ -12,6 +12,7 @@ import tempfile
 import time
 from shutil import copytree
 from urllib.request import urlopen
+from tranco import Tranco
 
 from PyFunceble import test as PyFunceble
 from selenium import webdriver
@@ -39,9 +40,11 @@ OPTIONS = 'skin/options.html'
 CHROME = 'chrome'
 FIREFOX = 'firefox'
 
-MAJESTIC_URL = "http://downloads.majesticseo.com/majestic_million.csv"
 WEEK_IN_SECONDS = 604800
 RESTART_RETRIES = 5
+
+TRANCO = Tranco(cache=True, cache_dir='.tranco')
+TRANCO_LIST = TRANCO.list()
 
 OUR_PYFUNCEBLE_CONFIG = {"share_logs": False}
 
