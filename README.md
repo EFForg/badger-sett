@@ -6,7 +6,7 @@
 
 This script is designed to raise young [Privacy Badgers](https://github.com/EFForg/privacybadger) by teaching them a little
 about the trackers on popular sites, thus preparing them to fight trackers out
-in the wild. `crawler.py` visits the top 2,000 sites of the Majestic Million
+in the wild. `crawler.py` visits the top 2,000 sites of the [Tranco List](https://tranco-list.eu)
 with a fresh version of Privacy Badger installed and saves the `action_map` and
 `snitch_map` it learns in `results.json`.
 
