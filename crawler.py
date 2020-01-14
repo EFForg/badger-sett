@@ -86,13 +86,14 @@ var badptr = ctypes.cast(zero, ctypes.PointerType(ctypes.int32_t));
 var crash = badptr.contents;""")
 
 
-def get_domain_list(n_sites):
+def get_domain_list(n_sites, out_path):
     """Get the top n sites from the tranco list"""
-    TRANCO = Tranco(cache=True, cache_dir= os.path.join(out_path,'.tranco'))
-    domains = TRANCO.list()
+    TRANCO = Tranco(cache=True, cache_dir=os.path.join(out_path, '.tranco'))
 
     if n_sites:
         domains = TRANCO.list().top(n_sites)
+    else:
+        domains = TRANCO.list().top(2000)
     return domains
 
 
@@ -351,7 +352,7 @@ class Crawler(object):
         a virtual browser with Privacy Badger installed. Afterwards, save the
         action_map and snitch_map that the Badger learned.
         """
-        domains = get_domain_list(self.n_sites)
+        domains = get_domain_list(self.n_sites, self.out_path)
         self.logger.info((
             "starting new crawl:\n"
             "\ttimeout: %ss\n"
@@ -566,7 +567,7 @@ chrome.runtime.sendMessage({
         if self.domain_list:
             domains = self.domain_list
         else:
-            domains = get_domain_list(self.n_sites)
+            domains = get_domain_list(self.n_sites, self.out_path)
 
         self.logger.info((
             "starting new crawl:\n"
