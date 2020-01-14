@@ -41,10 +41,6 @@ FIREFOX = 'firefox'
 
 RESTART_RETRIES = 5
 
-TRANCO = Tranco(cache=True, cache_dir='.tranco')
-TRANCO_LIST = TRANCO.list()
-
-
 ap = argparse.ArgumentParser()
 ap.add_argument('--browser', choices=[FIREFOX, CHROME], default=CHROME,
                 help='Browser to use for the scan')
@@ -92,9 +88,11 @@ var crash = badptr.contents;""")
 
 def get_domain_list(n_sites):
     """Get the top n sites from the tranco list"""
-    domains = TRANCO_LIST
+    TRANCO = Tranco(cache=True, cache_dir= os.path.join(out_path,'.tranco'))
+    domains = TRANCO.list()
+
     if n_sites:
-        domains = TRANCO_LIST.top(n_sites)
+        domains = TRANCO.list().top(n_sites)
     return domains
 
 
@@ -353,7 +351,7 @@ class Crawler(object):
         a virtual browser with Privacy Badger installed. Afterwards, save the
         action_map and snitch_map that the Badger learned.
         """
-        domains = get_domain_list(self.logger, self.n_sites, self.out_path)
+        domains = get_domain_list(self.n_sites)
         self.logger.info((
             "starting new crawl:\n"
             "\ttimeout: %ss\n"
@@ -568,7 +566,7 @@ chrome.runtime.sendMessage({
         if self.domain_list:
             domains = self.domain_list
         else:
-            domains = get_domain_list(self.logger, self.n_sites, self.out_path)
+            domains = get_domain_list(self.n_sites)
 
         self.logger.info((
             "starting new crawl:\n"
