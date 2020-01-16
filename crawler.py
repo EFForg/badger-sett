@@ -11,9 +11,8 @@ import sys
 import tempfile
 import time
 from shutil import copytree
-from urllib.request import urlopen
+from tranco import Tranco
 
-from PyFunceble import test as PyFunceble
 from selenium import webdriver
 from selenium.common.exceptions import (
     NoSuchWindowException,
@@ -39,11 +38,7 @@ OPTIONS = 'skin/options.html'
 CHROME = 'chrome'
 FIREFOX = 'firefox'
 
-MAJESTIC_URL = "http://downloads.majesticseo.com/majestic_million.csv"
-WEEK_IN_SECONDS = 604800
 RESTART_RETRIES = 5
-
-OUR_PYFUNCEBLE_CONFIG = {"share_logs": False}
 
 ap = argparse.ArgumentParser()
 ap.add_argument('--browser', choices=[FIREFOX, CHROME], default=CHROME,
@@ -61,7 +56,7 @@ ap.add_argument('--survey', action='store_true', default=False,
                 help="If set, don't block anything or store action_map data")
 ap.add_argument('--domain-list', default=None,
                 help="If set, load domains from this file instead of the "
-                "majestic million (survey mode only)")
+                "Tranco List (survey mode only)")
 ap.add_argument('--max-data-size', type=int, default=2e6,
                 help='Maximum size of serialized localstorage data')
 
@@ -90,57 +85,14 @@ var badptr = ctypes.cast(zero, ctypes.PointerType(ctypes.int32_t));
 var crash = badptr.contents;""")
 
 
-def get_domain_list(logger, n_sites, out_path):
-    """Load the top million domains from disk or the web"""
-    top_1m_file = os.path.join(out_path, MAJESTIC_URL.split('/')[-1])
-    pyfunc_cache_file = os.path.join(out_path, 'pyfunceable_cache.json')
+def get_domain_list(n_sites, out_path):
+    """Get the top n sites from the tranco list"""
+    tr = Tranco(cache=True, cache_dir=os.path.join(out_path, '.tranco'))
 
-    # download the file if it doesn't exist or if it's more than a week stale
-    if (not os.path.exists(top_1m_file) or
-            time.time() - os.path.getmtime(top_1m_file) > WEEK_IN_SECONDS):
-        logger.info(
-            "Loading new Majestic data and refreshing PyFunceble cache")
-        response = urlopen(MAJESTIC_URL)
-        with open(top_1m_file, 'w') as f:
-            f.write(response.read().decode())
-
-        # if the majestic file is expired, let's refresh the pyfunceable cache
-        if os.path.exists(pyfunc_cache_file):
-            os.remove(pyfunc_cache_file)
-
-    # load cache
-    if os.path.exists(pyfunc_cache_file):
-        with open(pyfunc_cache_file) as f:
-            pyfunc_cache = json.load(f)
+    if n_sites:
+        domains = tr.list().top(n_sites)
     else:
-        pyfunc_cache = {}
-
-    domains = []
-    with open(top_1m_file) as f:
-        # first line is CSV header
-        next(f)
-
-        # only read the first n_sites lines
-        for l in f:
-            domain = l.split(',')[2]
-
-            if domain in pyfunc_cache:
-                if pyfunc_cache[domain] == 'ACTIVE':
-                    domains.append(domain)
-            else:
-                status = PyFunceble(domain, config=OUR_PYFUNCEBLE_CONFIG)
-                logger.info('PyFunceble: %s is %s', domain, status)
-                if status == 'ACTIVE':
-                    domains.append(domain)
-                pyfunc_cache[domain] = status
-
-            if len(domains) >= n_sites:
-                break
-
-    # save pyfunceble cache again
-    with open(pyfunc_cache_file, 'w') as f:
-        json.dump(pyfunc_cache, f)
-
+        domains = tr.list().top(2000)
     return domains
 
 
@@ -395,11 +347,11 @@ class Crawler(object):
 
     def crawl(self):
         """
-        Visit the top `n_sites` websites in the Majestic Million, in order, in
+        Visit the top `n_sites` websites in the Tranco List, in order, in
         a virtual browser with Privacy Badger installed. Afterwards, save the
         action_map and snitch_map that the Badger learned.
         """
-        domains = get_domain_list(self.logger, self.n_sites, self.out_path)
+        domains = get_domain_list(self.n_sites, self.out_path)
         self.logger.info((
             "starting new crawl:\n"
             "\ttimeout: %ss\n"
@@ -607,14 +559,14 @@ chrome.runtime.sendMessage({
 
     def crawl(self):
         """
-        Visit the top `n_sites` websites in the Majestic Million, in order, in
+        Visit the top `n_sites` websites in the Tranco List, in order, in
         a virtual browser with Privacy Badger installed. Afterwards, save the
         and snitch_map that the Badger learned.
         """
         if self.domain_list:
             domains = self.domain_list
         else:
-            domains = get_domain_list(self.logger, self.n_sites, self.out_path)
+            domains = get_domain_list(self.n_sites, self.out_path)
 
         self.logger.info((
             "starting new crawl:\n"
