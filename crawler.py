@@ -11,7 +11,6 @@ import sys
 import tempfile
 import time
 from shutil import copytree
-from urllib.request import urlopen
 from tranco import Tranco
 
 from selenium import webdriver
@@ -88,12 +87,12 @@ var crash = badptr.contents;""")
 
 def get_domain_list(n_sites, out_path):
     """Get the top n sites from the tranco list"""
-    TRANCO = Tranco(cache=True, cache_dir=os.path.join(out_path, '.tranco'))
+    tr = Tranco(cache=True, cache_dir=os.path.join(out_path, '.tranco'))
 
     if n_sites:
-        domains = TRANCO.list().top(n_sites)
+        domains = tr.list().top(n_sites)
     else:
-        domains = TRANCO.list().top(2000)
+        domains = tr.list().top(2000)
     return domains
 
 
