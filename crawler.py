@@ -104,8 +104,7 @@ def size_of(data):
 # determine whether we need to restart the webdriver after an error
 def should_restart(e):
     return (
-        type(e) == NoSuchWindowException or
-        type(e) == SessionNotCreatedException or
+        isinstance(e, (NoSuchWindowException, SessionNotCreatedException)) or
         "response from marionette" in e.msg or
         "unknown error: failed to close window in 20 seconds" in e.msg
     )
@@ -119,10 +118,10 @@ def wait_for_script(
         lambda driver: driver.execute_script(script), message)
 
 
-class Crawler(object):
+class Crawler:
     def __init__(self, browser, n_sites, timeout, wait_time, log_stdout,
                  out_path, pb_path, chromedriver_path, firefox_path,
-                 **kwargs):
+                 **kwargs): # pylint:disable=too-many-arguments,unused-argument
         self.browser = browser
         assert self.browser in (CHROME, FIREFOX)
         self.n_sites = n_sites
@@ -173,7 +172,7 @@ class Crawler(object):
                 manifest = json.load(f)
             # this key and the extension ID
             # must both be derived from the same private key
-            manifest['key'] = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArMdgFkGsm7nOBr/9qkx8XEcmYSu1VkIXXK94oXLz1VKGB0o2MN+mXL/Dsllgkh61LZgK/gVuFFk89e/d6Vlsp9IpKLANuHgyS98FKx1+3sUoMujue+hyxulEGxXXJKXhk0kGxWdE0IDOamFYpF7Yk0K8Myd/JW1U2XOoOqJRZ7HR6is1W6iO/4IIL2/j3MUioVqu5ClT78+fE/Fn9b/DfzdX7RxMNza9UTiY+JCtkRTmm4ci4wtU1lxHuVmWiaS45xLbHphQr3fpemDlyTmaVoE59qG5SZZzvl6rwDah06dH01YGSzUF1ezM2IvY9ee1nMSHEadQRQ2sNduNZWC9gwIDAQAB"  # noqa:E501 pylint:disable=line-too-long
+            manifest['key'] = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArMdgFkGsm7nOBr/9qkx8XEcmYSu1VkIXXK94oXLz1VKGB0o2MN+mXL/Dsllgkh61LZgK/gVuFFk89e/d6Vlsp9IpKLANuHgyS98FKx1+3sUoMujue+hyxulEGxXXJKXhk0kGxWdE0IDOamFYpF7Yk0K8Myd/JW1U2XOoOqJRZ7HR6is1W6iO/4IIL2/j3MUioVqu5ClT78+fE/Fn9b/DfzdX7RxMNza9UTiY+JCtkRTmm4ci4wtU1lxHuVmWiaS45xLbHphQr3fpemDlyTmaVoE59qG5SZZzvl6rwDah06dH01YGSzUF1ezM2IvY9ee1nMSHEadQRQ2sNduNZWC9gwIDAQAB" # noqa:E501 pylint:disable=line-too-long
             with open(manifest_path, "w") as f:
                 json.dump(manifest, f)
 
@@ -199,7 +198,7 @@ class Crawler(object):
                                             firefox_binary=self.firefox_path)
             command = 'addonInstall'
             info = ('POST', '/session/$sessionId/moz/addon/install')
-            self.driver.command_executor._commands[command] = info
+            self.driver.command_executor._commands[command] = info # pylint:disable=protected-access
             path = os.path.join(self.pb_path, 'src')
             self.driver.execute(command, params={'path': path,
                                                  'temporary': True})
@@ -320,12 +319,12 @@ class Crawler(object):
         for _ in range(RESTART_RETRIES):
             try:
                 self.driver.quit()
-            except:
+            except: # noqa:E722 pylint:disable=bare-except
                 pass
 
             try:
                 del self.driver
-            except:
+            except: # noqa:E722 pylint:disable=bare-except
                 pass
 
             try:
@@ -335,7 +334,7 @@ class Crawler(object):
                 break
             except Exception as e:
                 self.logger.error('Error restarting browser. Trying again...')
-                if type(e) == WebDriverException:
+                if isinstance(e, WebDriverException):
                     self.logger.error('%s: %s', type(e).__name__, e.msg)
                 else:
                     self.logger.error('%s: %s', type(e).__name__, e)
@@ -587,6 +586,7 @@ chrome.runtime.sendMessage({
         last_data = None
         first_i = 0
 
+        i = None
         for i, domain in enumerate(domains):
             # If we can't load the options page for some reason, treat it like
             # any other error
