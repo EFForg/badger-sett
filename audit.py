@@ -9,7 +9,7 @@ def get_old_maps():
 
     # load old map data
     for c in repo.iter_commits('master'):
-        if re.match('Update seed data: \d+\.\d+\.\d+', c.message):
+        if re.match(r'Update seed data: \d+\.\d+\.\d+', c.message):
             repo.git.checkout(c.hexsha)
             with open('results.json') as f:
                 js = json.load(f)
