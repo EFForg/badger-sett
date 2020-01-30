@@ -18,6 +18,7 @@ from selenium.common.exceptions import (
     NoSuchWindowException,
     SessionNotCreatedException,
     TimeoutException,
+    UnexpectedAlertPresentException,
     WebDriverException,
 )
 from selenium.webdriver.chrome.options import Options
@@ -232,6 +233,8 @@ class Crawler:
             try:
                 self.driver.get(ext_url)
                 break
+            except UnexpectedAlertPresentException:
+                self.driver.switch_to_alert().dismiss()
             except WebDriverException as e:
                 err = e
         else:
