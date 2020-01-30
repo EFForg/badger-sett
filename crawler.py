@@ -38,12 +38,13 @@ OPTIONS = 'skin/options.html'
 CHROME = 'chrome'
 FIREFOX = 'firefox'
 
+DEFAULT_NUM_SITES = 2000
 RESTART_RETRIES = 5
 
 ap = argparse.ArgumentParser()
 ap.add_argument('--browser', choices=[FIREFOX, CHROME], default=CHROME,
                 help='Browser to use for the scan')
-ap.add_argument('--n-sites', type=int, default=2000,
+ap.add_argument('--n-sites', type=int, default=DEFAULT_NUM_SITES,
                 help='Number of websites to visit on the crawl')
 ap.add_argument('--timeout', type=float, default=30,
                 help='Amount of time to allow each site to load, in seconds')
@@ -92,7 +93,7 @@ def get_domain_list(n_sites, out_path):
     if n_sites:
         domains = tr.list().top(n_sites)
     else:
-        domains = tr.list().top(2000)
+        domains = tr.list().top(DEFAULT_NUM_SITES)
     return domains
 
 
