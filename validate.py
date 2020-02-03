@@ -79,11 +79,17 @@ print("\n{}++{} Newly blocked domains ({}):\n".format(
 for base in sorted(newly_blocked):
     subdomains = blocked_new[base]
     out = "  {}{}{}".format(C_GREEN, base, C_RESET)
+    if base in new_js['snitch_map']:
+        out = out + " on " + ", ".join(new_js['snitch_map'][base])
     print(out)
     if len(subdomains) > 1 or subdomains[0] != base:
         for y in sorted(subdomains):
-            if y != base:
-                print("    • {}".format(y))
+            if y == base:
+                continue
+            out = "    • {}"
+            if y in new_js['snitch_map']:
+                out = out + " on " + ", ".join(new_js['snitch_map'][y])
+            print(out.format(y))
 
 no_longer_blocked = blocked_bases_old - blocked_bases_new
 print("\n{}--{} No longer blocked domains ({}):\n".format(
@@ -91,11 +97,17 @@ print("\n{}--{} No longer blocked domains ({}):\n".format(
 for base in sorted(no_longer_blocked):
     subdomains = blocked_old[base]
     out = "  {}{}{}".format(C_RED, base, C_RESET)
+    if base in old_js['snitch_map']:
+        out = out + " on " + ", ".join(old_js['snitch_map'][base])
     print(out)
     if len(subdomains) > 1 or subdomains[0] != base:
         for y in sorted(subdomains):
-            if y != base:
-                print("    • {}".format(y))
+            if y == base:
+                continue
+            out = "    • {}"
+            if y in old_js['snitch_map']:
+                out = out + " on " + ", ".join(old_js['snitch_map'][y])
+            print(out.format(y))
 
 print("")
 
