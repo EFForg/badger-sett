@@ -82,7 +82,8 @@ for base in sorted(newly_blocked):
     print(out)
     if len(subdomains) > 1 or subdomains[0] != base:
         for y in sorted(subdomains):
-            print("    • {}".format(y))
+            if y != base:
+                print("    • {}".format(y))
 
 no_longer_blocked = blocked_bases_old - blocked_bases_new
 print("\n{}--{} No longer blocked domains ({}):\n".format(
@@ -93,7 +94,8 @@ for base in sorted(no_longer_blocked):
     print(out)
     if len(subdomains) > 1 or subdomains[0] != base:
         for y in sorted(subdomains):
-            print("    • {}".format(y))
+            if y != base:
+                print("    • {}".format(y))
 
 print("")
 
