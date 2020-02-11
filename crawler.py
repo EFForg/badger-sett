@@ -89,14 +89,29 @@ var badptr = ctypes.cast(zero, ctypes.PointerType(ctypes.int32_t));
 var crash = badptr.contents;""")
 
 
-def get_domain_list(n_sites):
+def get_domain_list(n_sites, exclude_option):
     """Get the top n sites from the tranco list"""
-    tr = Tranco(cache=False)
-
+    tranco_list = Tranco(cache=False).list().top()
+    extract = TLDExtract(cache_file=False)
+    domains = []
+    
     if not n_sites:
         n_sites = DEFAULT_NUM_SITES
 
-    return tr.list().top(n_sites)
+    # if the exclude TLD option is passed in, remove those TLDs
+    if exclude_option:
+        excluded_tlds = exclude_option.split(",")
+        # check for first occurring domains in list that don't have excluded TLD
+        for domain in tranco_list:
+            if extract(domain).suffix not in excluded_tlds:
+                domains.append(domain)
+            # return list of acceptable domains if it's the correct length
+            if len(domains) == n_sites:
+                return domains
+    # if no exclude option is passed in, just return top n domains from list
+    else:
+        domains = tranco_list[0 : n_sites]
+    return domains
 
 
 def size_of(data):
