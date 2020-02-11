@@ -47,6 +47,8 @@ ap.add_argument('--browser', choices=[FIREFOX, CHROME], default=CHROME,
                 help='Browser to use for the scan')
 ap.add_argument('--n-sites', type=int, default=DEFAULT_NUM_SITES,
                 help='Number of websites to visit on the crawl')
+ap.add_argument('--exclude', default=None,
+                help='Exclude a TLD or comma-separated TLDs from the scan')
 ap.add_argument('--timeout', type=float, default=30,
                 help='Amount of time to allow each site to load, in seconds')
 ap.add_argument('--wait-time', type=float, default=5, help=(
@@ -87,14 +89,29 @@ var badptr = ctypes.cast(zero, ctypes.PointerType(ctypes.int32_t));
 var crash = badptr.contents;""")
 
 
-def get_domain_list(n_sites):
+def get_domain_list(n_sites, exclude_option):
     """Get the top n sites from the tranco list"""
-    tr = Tranco(cache=False)
-
+    tranco_list = Tranco(cache=False).list().top()
+    extract = TLDExtract(cache_file=False)
+    domains = []
+    
     if not n_sites:
         n_sites = DEFAULT_NUM_SITES
 
-    return tr.list().top(n_sites)
+    # if the exclude TLD option is passed in, remove those TLDs
+    if exclude_option:
+        excluded_tlds = exclude_option.split(",")
+        # check for first occurring domains in list that don't have excluded TLD
+        for domain in tranco_list:
+            if extract(domain).suffix not in excluded_tlds:
+                domains.append(domain)
+            # return list of acceptable domains if it's the correct length
+            if len(domains) == n_sites:
+                return domains
+    # if no exclude option is passed in, just return top n domains from list
+    else:
+        domains = tranco_list[0 : n_sites]
+    return domains
 
 
 def size_of(data):
@@ -120,12 +137,13 @@ def wait_for_script(
 
 
 class Crawler:
-    def __init__(self, browser, n_sites, timeout, wait_time, log_stdout,
+    def __init__(self, browser, n_sites, exclude, timeout, wait_time, log_stdout,
                  out_path, pb_path, chromedriver_path, firefox_path,
                  **kwargs): # pylint:disable=too-many-arguments,unused-argument
         self.browser = browser
         assert self.browser in (CHROME, FIREFOX)
         self.n_sites = n_sites
+        self.exclude = exclude
         self.timeout = timeout
         self.wait_time = wait_time
         self.out_path = out_path
@@ -353,15 +371,16 @@ class Crawler:
         a virtual browser with Privacy Badger installed. Afterwards, save the
         action_map and snitch_map that the Badger learned.
         """
-        domains = get_domain_list(self.n_sites)
+        domains = get_domain_list(self.n_sites, self.exclude)
         self.logger.info((
             "starting new crawl:\n"
             "\ttimeout: %ss\n"
             "\twait time: %ss\n"
             "\tbrowser: %s\n"
             "\tsurvey mode: False\n"
-            "\tdomains to crawl: %d"
-        ), self.timeout, self.wait_time, self.browser, self.n_sites)
+            "\tdomains to crawl: %d\n"
+            "\tTLDs to exclude: %s"
+        ), self.timeout, self.wait_time, self.browser, self.n_sites, self.exclude)
 
         # create an XVFB virtual display (to avoid opening an actual browser)
         self.vdisplay = Xvfb(width=1280, height=720)
@@ -568,7 +587,7 @@ chrome.runtime.sendMessage({
         if self.domain_list:
             domains = self.domain_list
         else:
-            domains = get_domain_list(self.n_sites)
+            domains = get_domain_list(self.n_sites, self.exclude)
 
         self.logger.info((
             "starting new crawl:\n"
@@ -576,8 +595,9 @@ chrome.runtime.sendMessage({
             "\twait time: %ss\n"
             "\tbrowser: %s\n"
             "\tsurvey mode: True\n"
-            "\tdomains to crawl: %d"
-        ), self.timeout, self.wait_time, self.browser, self.n_sites)
+            "\tdomains to crawl: %d\n"
+            "\tTLDs to exclude: %s"
+        ), self.timeout, self.wait_time, self.browser, self.n_sites, self.exclude)
 
         # create an XVFB virtual display (to avoid opening an actual browser)
         self.vdisplay = Xvfb(width=1280, height=720)
