@@ -137,12 +137,13 @@ def wait_for_script(
 
 
 class Crawler:
-    def __init__(self, browser, n_sites, timeout, wait_time, log_stdout,
+    def __init__(self, browser, n_sites, exclude, timeout, wait_time, log_stdout,
                  out_path, pb_path, chromedriver_path, firefox_path,
                  **kwargs): # pylint:disable=too-many-arguments,unused-argument
         self.browser = browser
         assert self.browser in (CHROME, FIREFOX)
         self.n_sites = n_sites
+        self.exclude = exclude
         self.timeout = timeout
         self.wait_time = wait_time
         self.out_path = out_path
@@ -370,15 +371,16 @@ class Crawler:
         a virtual browser with Privacy Badger installed. Afterwards, save the
         action_map and snitch_map that the Badger learned.
         """
-        domains = get_domain_list(self.n_sites)
+        domains = get_domain_list(self.n_sites, self.exclude)
         self.logger.info((
             "starting new crawl:\n"
             "\ttimeout: %ss\n"
             "\twait time: %ss\n"
             "\tbrowser: %s\n"
             "\tsurvey mode: False\n"
-            "\tdomains to crawl: %d"
-        ), self.timeout, self.wait_time, self.browser, self.n_sites)
+            "\tdomains to crawl: %d\n"
+            "\tTLDs to exclude: %s"
+        ), self.timeout, self.wait_time, self.browser, self.n_sites, self.exclude)
 
         # create an XVFB virtual display (to avoid opening an actual browser)
         self.vdisplay = Xvfb(width=1280, height=720)
@@ -585,7 +587,7 @@ chrome.runtime.sendMessage({
         if self.domain_list:
             domains = self.domain_list
         else:
-            domains = get_domain_list(self.n_sites)
+            domains = get_domain_list(self.n_sites, self.exclude)
 
         self.logger.info((
             "starting new crawl:\n"
@@ -593,8 +595,9 @@ chrome.runtime.sendMessage({
             "\twait time: %ss\n"
             "\tbrowser: %s\n"
             "\tsurvey mode: True\n"
-            "\tdomains to crawl: %d"
-        ), self.timeout, self.wait_time, self.browser, self.n_sites)
+            "\tdomains to crawl: %d\n"
+            "\tTLDs to exclude: %s"
+        ), self.timeout, self.wait_time, self.browser, self.n_sites, self.exclude)
 
         # create an XVFB virtual display (to avoid opening an actual browser)
         self.vdisplay = Xvfb(width=1280, height=720)
