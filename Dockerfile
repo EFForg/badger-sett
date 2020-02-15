@@ -42,7 +42,11 @@ RUN pip3 install --user -r requirements.txt
 COPY crawler.py validate.py docker-entry.sh $HOME/
 COPY domain-lists $HOME/domain-lists
 COPY results.json $HOME/old-results.json
-COPY --chown=$USER:$USER privacybadger $PBPATH
+COPY privacybadger $PBPATH
+
+USER root
+RUN chown -R $USER:$USER $PBPATH
+USER $UNAME
 RUN mkdir -p $OUTPATH
 
 ENTRYPOINT ["./docker-entry.sh"]
