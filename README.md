@@ -10,6 +10,8 @@ in the wild. `crawler.py` visits the top 2,000 sites of the [Tranco List](https:
 with a fresh version of Privacy Badger installed and saves the `action_map` and
 `snitch_map` it learns in `results.json`.
 
+See the following eff.org blog post for more information: [Giving Privacy Badger a Jump Start](https://www.eff.org/deeplinks/2018/08/giving-privacy-badger-jump-start).
+
 ## Setup
 
 0. Prerequisites: have [docker](https://docs.docker.com/install/) installed.
