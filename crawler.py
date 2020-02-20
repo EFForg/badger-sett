@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 # adapted from https://github.com/cowlicks/badger-claw
+
 import argparse
 import glob
 import copy
@@ -10,8 +11,9 @@ import os
 import sys
 import tempfile
 import time
+
+from datetime import datetime, timedelta
 from shutil import copytree
-from tranco import Tranco
 
 from selenium import webdriver
 from selenium.common.exceptions import (
@@ -23,6 +25,7 @@ from selenium.common.exceptions import (
 )
 from selenium.webdriver.chrome.options import Options
 from tldextract import TLDExtract
+from tranco import Tranco
 from xvfbwrapper import Xvfb
 
 
@@ -41,6 +44,9 @@ FIREFOX = 'firefox'
 
 DEFAULT_NUM_SITES = 2000
 RESTART_RETRIES = 5
+
+# day before yesterday, as yesterday's list is sometimes not yet available
+TRANCO_VERSION = (datetime.utcnow() - timedelta(days=2)).strftime('%Y-%m-%d')
 
 ap = argparse.ArgumentParser()
 ap.add_argument('--browser', choices=[FIREFOX, CHROME], default=CHROME,
@@ -91,7 +97,7 @@ var crash = badptr.contents;""")
 
 def get_domain_list(n_sites, exclude_option):
     """Get the top n sites from the tranco list"""
-    tranco_list = Tranco(cache=False).list().top()
+    tranco_domains = Tranco(cache=False).list(TRANCO_VERSION).top()
     extract = TLDExtract(cache_file=False)
     domains = []
     
@@ -102,7 +108,7 @@ def get_domain_list(n_sites, exclude_option):
     if exclude_option:
         excluded_tlds = exclude_option.split(",")
         # check for first occurring domains in list that don't have excluded TLD
-        for domain in tranco_list:
+        for domain in tranco_domains:
             if extract(domain).suffix not in excluded_tlds:
                 domains.append(domain)
             # return list of acceptable domains if it's the correct length
@@ -110,7 +116,7 @@ def get_domain_list(n_sites, exclude_option):
                 return domains
     # if no exclude option is passed in, just return top n domains from list
     else:
-        domains = tranco_list[0 : n_sites]
+        domains = tranco_domains[0 : n_sites]
     return domains
 
 
@@ -378,9 +384,10 @@ class Crawler:
             "\twait time: %ss\n"
             "\tbrowser: %s\n"
             "\tsurvey mode: False\n"
+            "\tTranco version: %s\n"
             "\tdomains to crawl: %d\n"
             "\tTLDs to exclude: %s"
-        ), self.timeout, self.wait_time, self.browser, self.n_sites, self.exclude)
+        ), self.timeout, self.wait_time, self.browser, TRANCO_VERSION, self.n_sites, self.exclude)
 
         # create an XVFB virtual display (to avoid opening an actual browser)
         self.vdisplay = Xvfb(width=1280, height=720)
@@ -595,9 +602,10 @@ chrome.runtime.sendMessage({
             "\twait time: %ss\n"
             "\tbrowser: %s\n"
             "\tsurvey mode: True\n"
+            "\tTranco version: %s\n"
             "\tdomains to crawl: %d\n"
             "\tTLDs to exclude: %s"
-        ), self.timeout, self.wait_time, self.browser, self.n_sites, self.exclude)
+        ), self.timeout, self.wait_time, self.browser, TRANCO_VERSION, self.n_sites, self.exclude)
 
         # create an XVFB virtual display (to avoid opening an actual browser)
         self.vdisplay = Xvfb(width=1280, height=720)
