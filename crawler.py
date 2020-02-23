@@ -208,8 +208,17 @@ class Crawler:
             prefs = {"profile.block_third_party_cookies": False}
             opts.add_experimental_option("prefs", prefs)
             opts.add_argument('--dns-prefetch-disable')
-            self.driver = webdriver.Chrome(self.chromedriver_path,
-                                           chrome_options=opts)
+
+            for i in range(5):
+                try:
+                    self.driver = webdriver.Chrome(self.chromedriver_path, chrome_options=opts)
+                except ConnectionResetError as e:
+                    if i == 0: print("")
+                    print("Chrome WebDriver initialization failed:")
+                    print(str(e) + "Retrying ...")
+                    time.sleep(2)
+                else:
+                    break
 
         elif self.browser == FIREFOX:
             profile = webdriver.FirefoxProfile()
