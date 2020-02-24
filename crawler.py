@@ -209,13 +209,14 @@ class Crawler:
             opts.add_experimental_option("prefs", prefs)
             opts.add_argument('--dns-prefetch-disable')
 
-            for i in range(5):
+            for _ in range(5):
                 try:
-                    self.driver = webdriver.Chrome(self.chromedriver_path, chrome_options=opts)
+                    self.driver = webdriver.Chrome(
+                        self.chromedriver_path, chrome_options=opts)
                 except ConnectionResetError as e:
-                    if i == 0: print("")
-                    print("Chrome WebDriver initialization failed:")
-                    print(str(e) + "Retrying ...")
+                    self.logger.info("Chrome WebDriver initialization failed:")
+                    self.logger.info(str(e))
+                    self.logger.info("Retrying ...")
                     time.sleep(2)
                 else:
                     break
@@ -335,7 +336,7 @@ class Crawler:
             url = "https://%s/" % domain
             self.driver.get(url)
         except TimeoutException:
-            self.logger.info('timeout on %s ', url)
+            self.logger.info('timeout on %s', url)
             self.timeout_workaround()
             url = "http://%s/" % domain
             self.logger.info('trying %s', url)
@@ -429,7 +430,7 @@ class Crawler:
                 url = self.get_domain(domain)
                 visited.append(url)
             except TimeoutException:
-                self.logger.info('timeout on %s ', domain)
+                self.logger.info('timeout on %s', domain)
                 # TODO: how to get rid of this nested try?
                 try:
                     self.timeout_workaround()
@@ -645,7 +646,7 @@ chrome.runtime.sendMessage({
                 url = self.get_domain(domain)
                 visited.append(url)
             except TimeoutException:
-                self.logger.info('timeout on %s ', domain)
+                self.logger.info('timeout on %s', domain)
                 # TODO: how to get rid of this nested try?
                 try:
                     self.timeout_workaround()
