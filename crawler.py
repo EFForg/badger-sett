@@ -214,9 +214,10 @@ class Crawler:
                     self.driver = webdriver.Chrome(
                         self.chromedriver_path, chrome_options=opts)
                 except ConnectionResetError as e:
-                    self.logger.info("Chrome WebDriver initialization failed:")
-                    self.logger.info(str(e))
-                    self.logger.info("Retrying ...")
+                    self.logger.info((
+                        "Chrome WebDriver initialization failed:\n"
+                        "%s\n"
+                        "Retrying ..."), str(e))
                     time.sleep(2)
                 else:
                     break
@@ -267,6 +268,10 @@ class Crawler:
             try:
                 self.driver.get(ext_url)
                 break
+            except TimeoutException:
+                self.logger.info('Timed out loading %s, retrying after workaround ...', page)
+                self.timeout_workaround()
+                time.sleep(2)
             except UnexpectedAlertPresentException:
                 self.driver.switch_to_alert().dismiss()
             except WebDriverException as e:
