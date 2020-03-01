@@ -214,10 +214,10 @@ class Crawler:
                     self.driver = webdriver.Chrome(
                         self.chromedriver_path, chrome_options=opts)
                 except ConnectionResetError as e:
-                    self.logger.info((
+                    self.logger.warning((
                         "Chrome WebDriver initialization failed:\n"
-                        "%s\n"
-                        "Retrying ..."), str(e))
+                        "\t%s\n"
+                        "\tRetrying ..."), str(e))
                     time.sleep(2)
                 else:
                     break
@@ -269,7 +269,7 @@ class Crawler:
                 self.driver.get(ext_url)
                 break
             except TimeoutException:
-                self.logger.info('Timed out loading %s, retrying after workaround ...', page)
+                self.logger.warning("Timed out loading %s, retrying after workaround ...", page)
                 self.timeout_workaround()
                 time.sleep(2)
             except UnexpectedAlertPresentException:
@@ -277,7 +277,7 @@ class Crawler:
             except WebDriverException as e:
                 err = e
         else:
-            self.logger.error('Error loading extension page: %s', err.msg)
+            self.logger.error("Error loading extension page: %s", err.msg)
             raise err
 
     def load_user_data(self, data):
@@ -341,10 +341,10 @@ class Crawler:
             url = "https://%s/" % domain
             self.driver.get(url)
         except TimeoutException:
-            self.logger.info('timeout on %s', url)
+            self.logger.warning("Timeout on %s", url)
             self.timeout_workaround()
             url = "http://%s/" % domain
-            self.logger.info('trying %s', url)
+            self.logger.warning("Trying %s ...", url)
             self.driver.get(url)
 
         time.sleep(self.wait_time)
@@ -355,7 +355,7 @@ class Crawler:
         self.clear_data()
 
     def restart_browser(self, data):
-        self.logger.info('restarting browser...')
+        self.logger.info("Restarting browser ...")
 
         # It's ugly, but this section needs to be ABSOLUTELY crash-proof.
         for _ in range(RESTART_RETRIES):
@@ -372,17 +372,17 @@ class Crawler:
             try:
                 self.start_browser()
                 self.load_user_data(data)
-                self.logger.error('Success')
+                self.logger.info("Successfully restarted")
                 break
             except Exception as e:
-                self.logger.error('Error restarting browser. Trying again...')
+                self.logger.error("Error restarting browser. Retrying ...")
                 if isinstance(e, WebDriverException):
                     self.logger.error('%s: %s', type(e).__name__, e.msg)
                 else:
                     self.logger.error('%s: %s', type(e).__name__, e)
         else:
             # If we couldn't restart the browser after all that, just quit.
-            self.logger.error('Could not restart browser.')
+            self.logger.error("Could not restart browser")
             sys.exit(1)
 
 
@@ -394,7 +394,7 @@ class Crawler:
         """
         domains = get_domain_list(self.n_sites, self.exclude)
         self.logger.info((
-            "starting new crawl:\n"
+            "Starting new crawl:\n"
             "\ttimeout: %ss\n"
             "\twait time: %ss\n"
             "\tbrowser: %s\n"
@@ -431,11 +431,11 @@ class Crawler:
                         self.clear_data()
                         self.load_user_data(clean_data)
 
-                self.logger.info('visiting %d: %s', i + 1, domain)
+                self.logger.info("Visiting %d: %s", i + 1, domain)
                 url = self.get_domain(domain)
                 visited.append(url)
             except TimeoutException:
-                self.logger.info('timeout on %s', domain)
+                self.logger.warning("Timeout on %s", domain)
                 # TODO: how to get rid of this nested try?
                 try:
                     self.timeout_workaround()
@@ -443,7 +443,7 @@ class Crawler:
                     if should_restart(e):
                         self.restart_browser(last_data)
             except WebDriverException as e:
-                self.logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
+                self.logger.error("%s %s: %s", domain, type(e).__name__, e.msg)
                 if should_restart(e):
                     self.restart_browser(last_data)
             finally:
@@ -454,20 +454,20 @@ class Crawler:
                 )
                 diff = set(snitches) - set(old_snitches)
                 if diff:
-                    self.logger.info("new trackers in snitch_map: %s", diff)
+                    self.logger.info("New domains in snitch_map: %s", diff)
                 old_snitches = snitches
 
         self.logger.info(
-            "Finished scan. Visited %d sites and errored on %d.",
+            "Finished scan. Visited %d sites and errored on %d",
             len(visited), len(domains) - len(visited)
         )
 
         try:
-            self.logger.info('Getting data from browser storage...')
+            self.logger.info("Getting data from browser storage ...")
             data = self.dump_data()
         except WebDriverException:
             # If we can't load the background page here, just quit :(
-            self.logger.error('Could not get badger storage.')
+            self.logger.error("Could not get Badger storage")
             sys.exit(1)
 
         self.driver.quit()
@@ -486,12 +486,12 @@ class Crawler:
 
         # handle blank domain bug
         if '' in action_map:
-            self.logger.info('Deleting blank domain from action map')
+            self.logger.info("Deleting blank domain from action map")
             self.logger.info(str(action_map['']))
             del action_map['']
 
         if '' in snitch_map:
-            self.logger.info('Deleting blank domain from snitch map')
+            self.logger.info("Deleting blank domain from snitch map")
             self.logger.info(str(snitch_map['']))
             del snitch_map['']
 
@@ -503,7 +503,7 @@ class Crawler:
         # visited immediately after it, it's probably a bug
         if d1_base in snitch_map and d2 in snitch_map[d1_base]:
             self.logger.info(
-                'Likely bug: domain %s tracking on %s',
+                "Likely bug: domain %s tracking on %s",
                 d1_base,
                 d2
             )
@@ -512,7 +512,7 @@ class Crawler:
             # if the bug caused d1 to be added to the action map, remove it
             if not snitch_map[d1_base]:
                 self.logger.info(
-                    'Deleting domain %s from action & snitch maps',
+                    "Deleting domain %s from action and snitch maps",
                     d1_base
                 )
                 if d1 in action_map:
@@ -541,12 +541,12 @@ class Crawler:
     def save(self, data, name='results.json'):
         data['version'] = self.version
 
-        self.logger.info('Saving seed data version %s...', self.version)
+        self.logger.info("Saving seed data version %s ...", self.version)
         # save the snitch_map in a human-readable JSON file
         with open(os.path.join(self.out_path, name), 'w') as f:
             json.dump(
                 data, f, indent=2, sort_keys=True, separators=(',', ': '))
-        self.logger.info('Saved data to %s.', name)
+        self.logger.info("Saved data to %s", name)
 
 
 class SurveyCrawler(Crawler):
@@ -612,7 +612,7 @@ chrome.runtime.sendMessage({
             domains = get_domain_list(self.n_sites, self.exclude)
 
         self.logger.info((
-            "starting new crawl:\n"
+            "Starting new crawl:\n"
             "\ttimeout: %ss\n"
             "\twait time: %ss\n"
             "\tbrowser: %s\n"
@@ -647,11 +647,11 @@ chrome.runtime.sendMessage({
                     last_data = {}
                     self.restart_browser(last_data)
 
-                self.logger.info('visiting %d: %s', i + 1, domain)
+                self.logger.info("Visiting %d: %s", i + 1, domain)
                 url = self.get_domain(domain)
                 visited.append(url)
             except TimeoutException:
-                self.logger.info('timeout on %s', domain)
+                self.logger.warning("Timeout on %s", domain)
                 # TODO: how to get rid of this nested try?
                 try:
                     self.timeout_workaround()
@@ -659,7 +659,7 @@ chrome.runtime.sendMessage({
                     if should_restart(e):
                         self.restart_browser(last_data)
             except WebDriverException as e:
-                self.logger.error('%s %s: %s', domain, type(e).__name__, e.msg)
+                self.logger.error("%s %s: %s", domain, type(e).__name__, e.msg)
                 if should_restart(e):
                     self.restart_browser(last_data)
             except KeyboardInterrupt:
@@ -667,19 +667,19 @@ chrome.runtime.sendMessage({
                     "Keyboard interrupt. Ending scan after %d sites.", i + 1)
                 break
 
-        self.logger.info('Finished scan. Visited %d sites and errored on %d.',
+        self.logger.info("Finished scan. Visited %d sites and errored on %d",
                          len(visited), i + 1 - len(visited))
-        self.logger.info('Getting data from browser storage...')
+        self.logger.info("Getting data from browser storage ...")
 
         try:
             data = self.dump_data()
         except WebDriverException:
             if last_data:
                 self.logger.error(
-                    "Could not get badger storage. Using cached data...")
+                    "Could not get badger storage. Using cached data ...")
                 data = last_data
             else:
-                self.logger.error('Could not export data. Exiting.')
+                self.logger.error('Could not export data, exiting')
                 sys.exit(1)
 
         self.driver.quit()
