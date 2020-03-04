@@ -73,6 +73,11 @@ for domain in new_js['action_map'].keys():
 blocked_bases_old = set(blocked_old.keys())
 blocked_bases_new = set(blocked_new.keys())
 
+print("\nCount of blocked base domains went from {} to {} ({:+0.2f}%)".format(
+    len(blocked_bases_old), len(blocked_bases_new),
+    (len(blocked_bases_new) - len(blocked_bases_old)) / len(blocked_bases_old) * 100
+))
+
 newly_blocked = blocked_bases_new - blocked_bases_old
 print("\n{}++{} Newly blocked domains ({}):\n".format(
     C_GREEN, C_RESET, len(newly_blocked)))
