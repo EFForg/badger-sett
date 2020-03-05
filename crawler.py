@@ -254,7 +254,7 @@ class Crawler:
             ").length > 1"
         ))
 
-    def load_extension_page(self, page, retries=3):
+    def load_extension_page(self, page, tries=3):
         """
         Load a page in the Privacy Badger extension. `page` should either be
         BACKGROUND or OPTIONS.
@@ -264,21 +264,22 @@ class Crawler:
         elif self.browser == FIREFOX:
             ext_url = (FF_URL_FMT + page) % FF_UUID
 
-        for _ in range(retries):
+        for _ in range(tries):
             try:
                 self.driver.get(ext_url)
+                # wait for extension page to be ready
+                wait_for_script(self.driver, "return chrome.extension")
                 break
             except TimeoutException:
-                self.logger.warning("Timed out loading %s, retrying after workaround ...", page)
+                self.logger.warning("Timed out loading %s", page)
                 self.timeout_workaround()
                 time.sleep(2)
             except UnexpectedAlertPresentException:
                 self.driver.switch_to_alert().dismiss()
-            except WebDriverException as e:
-                err = e
+            except WebDriverException as err:
+                self.logger.warning("Error loading %s:\n\t%s", page, err.msg)
         else:
-            self.logger.error("Error loading extension page: %s", err.msg)
-            raise err
+            raise WebDriverException("Failed to load " + page)
 
     def load_user_data(self, data):
         """Load saved user data into Privacy Badger after a restart"""
