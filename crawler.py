@@ -143,19 +143,18 @@ def wait_for_script(
 
 
 class Crawler:
-    def __init__(self, browser, n_sites, exclude, timeout, wait_time, log_stdout,
-                 out_path, pb_path, chromedriver_path, firefox_path,
-                 **kwargs): # pylint:disable=too-many-arguments,unused-argument
-        self.browser = browser
-        assert self.browser in (CHROME, FIREFOX)
-        self.n_sites = n_sites
-        self.exclude = exclude
-        self.timeout = timeout
-        self.wait_time = wait_time
-        self.out_path = out_path
-        self.pb_path = pb_path
-        self.chromedriver_path = chromedriver_path
-        self.firefox_path = firefox_path
+    def __init__(self, args):
+        assert args.browser in (CHROME, FIREFOX)
+
+        self.browser = args.browser
+        self.n_sites = args.n_sites
+        self.exclude = args.exclude
+        self.timeout = args.timeout
+        self.wait_time = args.wait_time
+        self.out_path = args.out_path
+        self.pb_path = args.pb_path
+        self.chromedriver_path = args.chromedriver_path
+        self.firefox_path = args.firefox_path
 
         # version is based on when the crawl started
         self.version = time.strftime('%Y.%-m.%-d', time.localtime())
@@ -166,12 +165,12 @@ class Crawler:
         log_fmt = logging.Formatter('%(asctime)s %(message)s')
 
         # by default, just log to file
-        fh = logging.FileHandler(os.path.join(out_path, 'log.txt'))
+        fh = logging.FileHandler(os.path.join(self.out_path, 'log.txt'))
         fh.setFormatter(log_fmt)
         self.logger.addHandler(fh)
 
         # log to stdout as well if configured
-        if log_stdout:
+        if args.log_stdout:
             sh = logging.StreamHandler(sys.stdout)
             sh.setFormatter(log_fmt)
             self.logger.addHandler(sh)
@@ -551,15 +550,15 @@ class Crawler:
 
 
 class SurveyCrawler(Crawler):
-    def __init__(self, **kwargs):
-        super(SurveyCrawler, self).__init__(**kwargs)
+    def __init__(self, args):
+        super(SurveyCrawler, self).__init__(args)
 
-        self.max_data_size = kwargs.get('max_data_size')
+        self.max_data_size = args.max_data_size
         self.storage_objects = ['snitch_map']
 
-        if kwargs.get('domain_list'):
+        if args.domain_list:
             self.domain_list = []
-            with open(kwargs.get('domain_list')) as f:
+            with open(args.domain_list) as f:
                 for l in f:
                     self.domain_list.append(l.strip())
             if self.n_sites > 0:
@@ -691,12 +690,11 @@ chrome.runtime.sendMessage({
 
 
 if __name__ == '__main__':
-    # the argparse arguments must match the function signature of crawl()
     args = ap.parse_args()
 
     if args.survey:
-        crawler = SurveyCrawler(**vars(ap.parse_args()))
+        crawler = SurveyCrawler(args)
     else:
-        crawler = Crawler(**vars(ap.parse_args()))
+        crawler = Crawler(args)
 
     crawler.crawl()
