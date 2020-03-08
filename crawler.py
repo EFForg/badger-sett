@@ -84,6 +84,10 @@ ap.add_argument('--chromedriver-path', default=CHROMEDRIVER_PATH,
 ap.add_argument('--firefox-path', default=FF_BIN_PATH,
                 help='Path to the firefox browser binary')
 
+ap.add_argument('--firefox-tracking-protection',
+    choices=("off", "standard", "strict"), default="off",
+    help="Re-enable or set to strict Enhanced Tracking Protection in Firefox")
+
 
 # Force a 'Failed to decode response from marionette' crash.
 # Example from https://bugzilla.mozilla.org/show_bug.cgi?id=1401131
@@ -159,6 +163,7 @@ class Crawler:
         self.pb_path = args.pb_path
         self.chromedriver_path = args.chromedriver_path
         self.firefox_path = args.firefox_path
+        self.firefox_tracking_protection = args.firefox_tracking_protection
 
         # version is based on when the crawl started
         self.version = time.strftime('%Y.%-m.%-d', time.localtime())
@@ -186,11 +191,12 @@ class Crawler:
             "\ttimeout: %ss\n"
             "\twait time: %ss\n"
             "\tbrowser: %s\n"
+            "\tFirefox ETP: %s\n"
             "\tsurvey mode: %s\n"
             "\tTranco version: %s\n"
             "\tdomains to crawl: %d\n"
             "\tTLDs to exclude: %s"
-        ), self.timeout, self.wait_time, self.browser, args.survey, TRANCO_VERSION, self.n_sites, self.exclude)
+        ), self.timeout, self.wait_time, self.browser, self.firefox_tracking_protection, args.survey, TRANCO_VERSION, self.n_sites, self.exclude)
 
     def start_driver(self):
         """Start a new Selenium web driver and install the bundled
@@ -240,6 +246,19 @@ class Crawler:
             profile = webdriver.FirefoxProfile()
             profile.set_preference('extensions.webextensions.uuids',
                                    '{"%s": "%s"}' % (FF_EXT_ID, FF_UUID))
+
+            if self.firefox_tracking_protection == "off":
+                # disable all content blocking/Tracking Protection features
+                # https://wiki.mozilla.org/Security/Tracking_protection
+                profile.set_preference("privacy.trackingprotection.enabled", False)
+                profile.set_preference("privacy.trackingprotection.pbmode.enabled", False)
+                profile.set_preference("privacy.trackingprotection.cryptomining.enabled", False)
+                profile.set_preference("privacy.trackingprotection.fingerprinting.enabled", False)
+                profile.set_preference("privacy.trackingprotection.socialtracking.enabled", False)
+                # always allow third-party cookies
+                profile.set_preference("network.cookie.cookieBehavior", 0)
+            elif self.firefox_tracking_protection == "strict":
+                profile.set_preference("browser.contentblocking.category", "strict")
 
             # this is kind of a hack; eventually the functionality to install
             # an extension should be part of Selenium. See
