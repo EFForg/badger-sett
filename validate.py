@@ -8,17 +8,29 @@ from collections import defaultdict
 import colorama
 import tldextract
 
-# Use: ./validate.py old.json new.json
-old_path = sys.argv[1]
-new_path = sys.argv[2]
+# ./validate.py old.json new.json
+if len(sys.argv) == 3:
+    old_path = sys.argv[1]
+    new_path = sys.argv[2]
+# ./validate.py new.json
+elif len(sys.argv) == 2:
+    old_path = None
+    new_path = sys.argv[1]
+else:
+    print("Usage: {} [BADGER_JSON_OLD] BADGER_JSON_NEW".format(sys.argv[0]))
+    sys.exit(1)
 
-# make sure the files exist
-assert os.path.isfile(old_path)
+if old_path:
+    assert os.path.isfile(old_path)
+    with open(old_path) as f:
+        old_js = json.load(f)
+else:
+    old_js = {
+        "action_map": {},
+        "snitch_map": {},
+    }
+
 assert os.path.isfile(new_path)
-
-with open(old_path) as f:
-    old_js = json.load(f)
-
 with open(new_path) as f:
     new_js = json.load(f)
 
@@ -73,10 +85,11 @@ for domain in new_js['action_map'].keys():
 blocked_bases_old = set(blocked_old.keys())
 blocked_bases_new = set(blocked_new.keys())
 
-print("\nCount of blocked base domains went from {} to {} ({:+0.2f}%)".format(
-    len(blocked_bases_old), len(blocked_bases_new),
-    (len(blocked_bases_new) - len(blocked_bases_old)) / len(blocked_bases_old) * 100
-))
+if blocked_bases_old:
+    print("\nCount of blocked base domains went from {} to {} ({:+0.2f}%)".format(
+        len(blocked_bases_old), len(blocked_bases_new),
+        (len(blocked_bases_new) - len(blocked_bases_old)) / len(blocked_bases_old) * 100
+    ))
 
 newly_blocked = blocked_bases_new - blocked_bases_old
 print("\n{}++{} Newly blocked domains ({}):\n".format(
