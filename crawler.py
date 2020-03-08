@@ -48,7 +48,10 @@ RESTART_RETRIES = 5
 # day before yesterday, as yesterday's list is sometimes not yet available
 TRANCO_VERSION = (datetime.utcnow() - timedelta(days=2)).strftime('%Y-%m-%d')
 
-ap = argparse.ArgumentParser()
+
+ap = argparse.ArgumentParser(
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+
 ap.add_argument('--browser', choices=[FIREFOX, CHROME], default=CHROME,
                 help='Browser to use for the scan')
 ap.add_argument('--n-sites', type=int, default=DEFAULT_NUM_SITES,
@@ -62,6 +65,7 @@ ap.add_argument('--wait-time', type=float, default=5, help=(
 ))
 ap.add_argument('--log-stdout', action='store_true', default=False,
                 help='If set, log to stdout as well as log.txt')
+
 ap.add_argument('--survey', action='store_true', default=False,
                 help="If set, don't block anything or store action_map data")
 ap.add_argument('--domain-list', default=None,
