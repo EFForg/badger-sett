@@ -181,6 +181,17 @@ class Crawler:
 
         self.storage_objects = ['snitch_map', 'action_map']
 
+        self.logger.info((
+            "Starting new crawl:\n"
+            "\ttimeout: %ss\n"
+            "\twait time: %ss\n"
+            "\tbrowser: %s\n"
+            "\tsurvey mode: %s\n"
+            "\tTranco version: %s\n"
+            "\tdomains to crawl: %d\n"
+            "\tTLDs to exclude: %s"
+        ), self.timeout, self.wait_time, self.browser, args.survey, TRANCO_VERSION, self.n_sites, self.exclude)
+
     def start_driver(self):
         """Start a new Selenium web driver and install the bundled
         extension."""
@@ -396,17 +407,8 @@ class Crawler:
         a virtual browser with Privacy Badger installed. Afterwards, save the
         action_map and snitch_map that the Badger learned.
         """
+
         domains = get_domain_list(self.n_sites, self.exclude)
-        self.logger.info((
-            "Starting new crawl:\n"
-            "\ttimeout: %ss\n"
-            "\twait time: %ss\n"
-            "\tbrowser: %s\n"
-            "\tsurvey mode: False\n"
-            "\tTranco version: %s\n"
-            "\tdomains to crawl: %d\n"
-            "\tTLDs to exclude: %s"
-        ), self.timeout, self.wait_time, self.browser, TRANCO_VERSION, self.n_sites, self.exclude)
 
         # create an XVFB virtual display (to avoid opening an actual browser)
         self.vdisplay = Xvfb(width=1280, height=720)
@@ -610,21 +612,11 @@ chrome.runtime.sendMessage({
         a virtual browser with Privacy Badger installed. Afterwards, save the
         and snitch_map that the Badger learned.
         """
+
         if self.domain_list:
             domains = self.domain_list
         else:
             domains = get_domain_list(self.n_sites, self.exclude)
-
-        self.logger.info((
-            "Starting new crawl:\n"
-            "\ttimeout: %ss\n"
-            "\twait time: %ss\n"
-            "\tbrowser: %s\n"
-            "\tsurvey mode: True\n"
-            "\tTranco version: %s\n"
-            "\tdomains to crawl: %d\n"
-            "\tTLDs to exclude: %s"
-        ), self.timeout, self.wait_time, self.browser, TRANCO_VERSION, self.n_sites, self.exclude)
 
         # create an XVFB virtual display (to avoid opening an actual browser)
         self.vdisplay = Xvfb(width=1280, height=720)
