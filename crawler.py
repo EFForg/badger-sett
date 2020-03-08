@@ -186,17 +186,27 @@ class Crawler:
 
         self.storage_objects = ['snitch_map', 'action_map']
 
-        self.logger.info((
-            "Starting new crawl:\n"
-            "\ttimeout: %ss\n"
-            "\twait time: %ss\n"
-            "\tbrowser: %s\n"
-            "\tFirefox ETP: %s\n"
-            "\tsurvey mode: %s\n"
-            "\tTranco version: %s\n"
-            "\tdomains to crawl: %d\n"
-            "\tTLDs to exclude: %s"
-        ), self.timeout, self.wait_time, self.browser, self.firefox_tracking_protection, args.survey, TRANCO_VERSION, self.n_sites, self.exclude)
+        self.logger.info(
+            (
+                "Starting new crawl:\n"
+                "\ttimeout: %ss\n"
+                "\twait time: %ss\n"
+                "\tbrowser: %s\n"
+                "\tFirefox ETP: %s\n"
+                "\tsurvey mode: %s\n"
+                "\tTranco version: %s\n"
+                "\tdomains to crawl: %d\n"
+                "\tTLDs to exclude: %s"
+            ),
+            self.timeout,
+            self.wait_time,
+            self.browser,
+            self.firefox_tracking_protection,
+            args.survey,
+            TRANCO_VERSION,
+            self.n_sites,
+            self.exclude
+        )
 
     def start_driver(self):
         """Start a new Selenium web driver and install the bundled
