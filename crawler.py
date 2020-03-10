@@ -11,6 +11,7 @@ import os
 import sys
 import tempfile
 import time
+import pathlib
 
 from datetime import datetime, timedelta
 from shutil import copytree
@@ -193,9 +194,21 @@ class Crawler:
 
         browser_version = self.driver.capabilities["browserVersion"]
 
+        # returns most recent commit hash
+        def get_hash(path):
+            git_dir = pathlib.Path(path) / '.git'
+            with (git_dir / 'HEAD').open('r') as head:
+                ref = head.readline().split(' ')[-1].strip()
+
+            with (git_dir / ref).open('r') as git_hash:
+                return git_hash.readline().strip()
+
+        badger_hash = get_hash(self.pb_path)
+
         self.logger.info(
             (
                 "Starting new crawl:\n"
+                "\tBadger hash: %s\n"
                 "\ttimeout: %ss\n"
                 "\twait time: %ss\n"
                 "\tbrowser: %s (v. %s)\n"
@@ -205,6 +218,7 @@ class Crawler:
                 "\tdomains to crawl: %d\n"
                 "\tTLDs to exclude: %s"
             ),
+            badger_hash,
             self.timeout,
             self.wait_time,
             self.browser,
