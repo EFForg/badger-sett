@@ -108,7 +108,7 @@ def get_domain_list(n_sites, exclude_option):
     tranco_domains = Tranco(cache=False).list(TRANCO_VERSION).top()
     extract = TLDExtract(cache_file=False)
     domains = []
-    
+
     if not n_sites:
         n_sites = DEFAULT_NUM_SITES
 
@@ -185,6 +185,11 @@ class Crawler:
             self.logger.addHandler(sh)
 
         self.storage_objects = ['snitch_map', 'action_map']
+
+        # create an XVFB virtual display (to avoid opening an actual browser)
+        self.vdisplay = Xvfb(width=1280, height=720)
+        self.vdisplay.start()
+        self.start_browser()
 
         self.logger.info(
             (
@@ -439,11 +444,6 @@ class Crawler:
 
         domains = get_domain_list(self.n_sites, self.exclude)
 
-        # create an XVFB virtual display (to avoid opening an actual browser)
-        self.vdisplay = Xvfb(width=1280, height=720)
-        self.vdisplay.start()
-        self.start_browser()
-
         # list of domains we actually visited
         visited = []
         old_snitches = {}
@@ -646,11 +646,6 @@ chrome.runtime.sendMessage({
             domains = self.domain_list
         else:
             domains = get_domain_list(self.n_sites, self.exclude)
-
-        # create an XVFB virtual display (to avoid opening an actual browser)
-        self.vdisplay = Xvfb(width=1280, height=720)
-        self.vdisplay.start()
-        self.start_browser()
 
         # list of domains we actually visited
         visited = []
