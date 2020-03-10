@@ -195,19 +195,24 @@ class Crawler:
         browser_version = self.driver.capabilities["browserVersion"]
 
         # returns most recent commit hash
-        def get_hash(path):
+        def bundle_git_info(path):
+            git_info = []
             git_dir = pathlib.Path(path) / '.git'
             with (git_dir / 'HEAD').open('r') as head:
                 ref = head.readline().split(' ')[-1].strip()
+                git_info.append(ref.split('/')[2])
 
             with (git_dir / ref).open('r') as git_hash:
-                return git_hash.readline().strip()
+                git_info.append(git_hash.readline().strip())
 
-        badger_hash = get_hash(self.pb_path)
+            return git_info
+
+        git_data = bundle_git_info(self.pb_path)
 
         self.logger.info(
             (
                 "Starting new crawl:\n"
+                "\tBadger branch: %s\n"
                 "\tBadger hash: %s\n"
                 "\ttimeout: %ss\n"
                 "\twait time: %ss\n"
@@ -218,7 +223,8 @@ class Crawler:
                 "\tdomains to crawl: %d\n"
                 "\tTLDs to exclude: %s"
             ),
-            badger_hash,
+            git_data[0],
+            git_data[1],
             self.timeout,
             self.wait_time,
             self.browser,
