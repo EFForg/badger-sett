@@ -191,12 +191,14 @@ class Crawler:
         self.vdisplay.start()
         self.start_browser()
 
+        browser_version = self.driver.capabilities["browserVersion"]
+
         self.logger.info(
             (
                 "Starting new crawl:\n"
                 "\ttimeout: %ss\n"
                 "\twait time: %ss\n"
-                "\tbrowser: %s\n"
+                "\tbrowser: %s (v. %s)\n"
                 "\tFirefox ETP: %s\n"
                 "\tsurvey mode: %s\n"
                 "\tTranco version: %s\n"
@@ -206,6 +208,7 @@ class Crawler:
             self.timeout,
             self.wait_time,
             self.browser,
+            browser_version,
             self.firefox_tracking_protection,
             args.survey,
             TRANCO_VERSION,
