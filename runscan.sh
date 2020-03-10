@@ -8,6 +8,24 @@ PB_BRANCH=${PB_BRANCH:-master}
 BROWSER=${BROWSER:-chrome}
 USER=$(whoami)
 
+update_badger_sett_repo() {
+  echo "Updating Badger Sett..."
+
+  git fetch
+
+  # figure out whether we need to pull
+  UPSTREAM=${1:-'@{u}'}
+  LOCAL=$(git rev-parse @)
+  REMOTE=$(git rev-parse "$UPSTREAM")
+
+  if [ "$LOCAL" != "$REMOTE" ]; then
+    echo "Pulling latest version of badger-sett..."
+    git pull
+  else
+    echo "Local badger-sett repository is up-to-date."
+  fi
+}
+
 # fetch the latest version of the chosen branch of Privacy Badger
 if [ -e "$PB_DIR" ] ; then
   echo "Updating Privacy Badger..."
@@ -28,21 +46,7 @@ cd "$DIR"
 # If we are planning to push the new results, update the repository now to avoid
 # merge conflicts later
 if [ "$GIT_PUSH" = "1" ] ; then
-  echo "Updating Badger Sett..."
-
-  git fetch
-
-  # figure out whether we need to pull
-  UPSTREAM=${1:-'@{u}'}
-  LOCAL=$(git rev-parse @)
-  REMOTE=$(git rev-parse "$UPSTREAM")
-
-  if [ "$LOCAL" != "$REMOTE" ]; then
-    echo "Pulling latest version of badger-sett..."
-    git pull
-  else
-    echo "Local badger-sett repository is up-to-date."
-  fi
+	update_badger_sett_repo
 fi
 
 # build the new docker image
@@ -104,6 +108,8 @@ VERSION=$(python3 -c "import json; print(json.load(open('results.json'))['versio
 echo "Scan successful. Seed data version: $VERSION"
 
 if [ "$GIT_PUSH" = "1" ] ; then
+  update_badger_sett_repo
+
   echo "Updating public repository."
 
   # Commit updated list to github
