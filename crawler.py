@@ -8,10 +8,10 @@ import copy
 import json
 import logging
 import os
+import pathlib
 import sys
 import tempfile
 import time
-import pathlib
 
 from datetime import datetime, timedelta
 from shutil import copytree
@@ -194,16 +194,16 @@ class Crawler:
 
         browser_version = self.driver.capabilities["browserVersion"]
 
-        # returns most recent commit hash
+        # gathers up git info for logging
         def bundle_git_info(path):
-            git_info = []
+            git_info = {}
             git_dir = pathlib.Path(path) / '.git'
             with (git_dir / 'HEAD').open('r') as head:
                 ref = head.readline().split(' ')[-1].strip()
-                git_info.append(ref.split('/')[2])
+                git_info['branch'] = ref.split('/')[2]
 
             with (git_dir / ref).open('r') as git_hash:
-                git_info.append(git_hash.readline().strip())
+                git_info['commit_hash'] = git_hash.readline().strip()
 
             return git_info
 
@@ -223,8 +223,8 @@ class Crawler:
                 "\tdomains to crawl: %d\n"
                 "\tTLDs to exclude: %s"
             ),
-            git_data[0],
-            git_data[1],
+            git_data['branch'],
+            git_data['commit_hash'],
             self.timeout,
             self.wait_time,
             self.browser,
