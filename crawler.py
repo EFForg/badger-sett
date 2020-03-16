@@ -198,12 +198,18 @@ class Crawler:
         def bundle_git_info(path):
             git_info = {}
             git_dir = pathlib.Path(path) / '.git'
-            with (git_dir / 'HEAD').open('r') as head:
-                ref = head.readline().split(' ')[-1].strip()
-                git_info['branch'] = ref.split('/')[2]
 
-            with (git_dir / ref).open('r') as git_hash:
-                git_info['commit_hash'] = git_hash.readline().strip()
+            try:
+                with (git_dir / 'HEAD').open('r') as head:
+                    ref = head.readline().split(' ')[-1].strip()
+                    git_info['branch'] = ref.split('/')[2]
+
+                with (git_dir / ref).open('r') as git_hash:
+                    git_info['commit_hash'] = git_hash.readline().strip()
+            except FileNotFoundError as err:
+                self.logger.info('error during git info retrieval : %s ',err)
+                git_info['branch'] = 'unable to retrieve git info: please check that this is a git directory'
+                git_info['commit_hash'] = 'unable to retrive git info: please check that this is a git directory'
 
             return git_info
 
