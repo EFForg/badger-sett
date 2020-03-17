@@ -195,8 +195,12 @@ class Crawler:
         browser_version = self.driver.capabilities["browserVersion"]
 
         # gathers up git info for logging
-        def bundle_git_info(path):
-            git_info = {}
+        def get_git_info(path):
+            git_info = {
+                'branch': None,
+                'commit_hash': None
+            }
+
             git_dir = pathlib.Path(path) / '.git'
 
             try:
@@ -206,14 +210,16 @@ class Crawler:
 
                 with (git_dir / ref).open('r') as git_hash:
                     git_info['commit_hash'] = git_hash.readline().strip()
+
             except FileNotFoundError as err:
-                self.logger.info('error during git info retrieval : %s ',err)
-                git_info['branch'] = 'unable to retrieve git info: please check that this is a git directory'
-                git_info['commit_hash'] = 'unable to retrive git info: please check that this is a git directory'
+                self.logger.warning(
+                    "Unable to retrieve git repository info "
+                    "for Privacy Badger:\n"
+                    "\t%s", err)
 
             return git_info
 
-        git_data = bundle_git_info(self.pb_path)
+        git_data = get_git_info(self.pb_path)
 
         self.logger.info(
             (
