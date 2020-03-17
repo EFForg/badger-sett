@@ -104,31 +104,6 @@ var badptr = ctypes.cast(zero, ctypes.PointerType(ctypes.int32_t));
 var crash = badptr.contents;""")
 
 
-def get_domain_list(n_sites, exclude_option):
-    """Get the top n sites from the tranco list"""
-    tranco_domains = Tranco(cache=False).list(TRANCO_VERSION).top()
-    extract = TLDExtract(cache_file=False)
-    domains = []
-
-    if not n_sites:
-        n_sites = DEFAULT_NUM_SITES
-
-    # if the exclude TLD option is passed in, remove those TLDs
-    if exclude_option:
-        excluded_tlds = exclude_option.split(",")
-        # check for first occurring domains in list that don't have excluded TLD
-        for domain in tranco_domains:
-            if extract(domain).suffix not in excluded_tlds:
-                domains.append(domain)
-            # return list of acceptable domains if it's the correct length
-            if len(domains) == n_sites:
-                return domains
-    # if no exclude option is passed in, just return top n domains from list
-    else:
-        domains = tranco_domains[0 : n_sites]
-    return domains
-
-
 def size_of(data):
     """Get the size (in bytes) of the serialized data structure"""
     return len(json.dumps(data))
@@ -434,6 +409,34 @@ class Crawler:
         time.sleep(self.wait_time)
         return url
 
+    def get_domain_list(self):
+        """Get the top n sites from the Tranco list"""
+        domains = []
+
+        self.logger.info("Fetching TLD definitions ...")
+        extract = TLDExtract(cache_file=False)
+
+        self.logger.info("Fetching Tranco list ...")
+        tranco_domains = Tranco(cache=False).list(TRANCO_VERSION).top()
+
+        n_sites = self.n_sites if self.n_sites else DEFAULT_NUM_SITES
+
+        # if the exclude TLD option is passed in, remove those TLDs
+        if self.exclude:
+            excluded_tlds = self.exclude.split(",")
+            # check for first occurring domains in list that don't have excluded TLD
+            for domain in tranco_domains:
+                if extract(domain).suffix not in excluded_tlds:
+                    domains.append(domain)
+                # return list of acceptable domains if it's the correct length
+                if len(domains) == n_sites:
+                    return domains
+        # if no exclude option is passed in, just return top n domains from list
+        else:
+            domains = tranco_domains[0:n_sites]
+
+        return domains
+
     def start_browser(self):
         self.start_driver()
         self.clear_data()
@@ -477,7 +480,7 @@ class Crawler:
         action_map and snitch_map that the Badger learned.
         """
 
-        domains = get_domain_list(self.n_sites, self.exclude)
+        domains = self.get_domain_list()
 
         # list of domains we actually visited
         visited = []
@@ -680,7 +683,7 @@ chrome.runtime.sendMessage({
         if self.domain_list:
             domains = self.domain_list
         else:
-            domains = get_domain_list(self.n_sites, self.exclude)
+            domains = self.get_domain_list()
 
         # list of domains we actually visited
         visited = []
