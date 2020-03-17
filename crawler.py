@@ -8,6 +8,7 @@ import copy
 import json
 import logging
 import os
+import pathlib
 import sys
 import tempfile
 import time
@@ -108,7 +109,7 @@ def get_domain_list(n_sites, exclude_option):
     tranco_domains = Tranco(cache=False).list(TRANCO_VERSION).top()
     extract = TLDExtract(cache_file=False)
     domains = []
-    
+
     if not n_sites:
         n_sites = DEFAULT_NUM_SITES
 
@@ -186,21 +187,60 @@ class Crawler:
 
         self.storage_objects = ['snitch_map', 'action_map']
 
+        # create an XVFB virtual display (to avoid opening an actual browser)
+        self.vdisplay = Xvfb(width=1280, height=720)
+        self.vdisplay.start()
+        self.start_browser()
+
+        browser_version = self.driver.capabilities["browserVersion"]
+
+        # gathers up git info for logging
+        def get_git_info(path):
+            git_info = {
+                'branch': None,
+                'commit_hash': None
+            }
+
+            git_dir = pathlib.Path(path) / '.git'
+
+            try:
+                with (git_dir / 'HEAD').open('r') as head:
+                    ref = head.readline().split(' ')[-1].strip()
+                    git_info['branch'] = ref.split('/')[2]
+
+                with (git_dir / ref).open('r') as git_hash:
+                    git_info['commit_hash'] = git_hash.readline().strip()
+
+            except FileNotFoundError as err:
+                self.logger.warning(
+                    "Unable to retrieve git repository info "
+                    "for Privacy Badger:\n"
+                    "\t%s", err)
+
+            return git_info
+
+        git_data = get_git_info(self.pb_path)
+
         self.logger.info(
             (
                 "Starting new crawl:\n"
+                "\tBadger branch: %s\n"
+                "\tBadger hash: %s\n"
                 "\ttimeout: %ss\n"
                 "\twait time: %ss\n"
-                "\tbrowser: %s\n"
+                "\tbrowser: %s (v. %s)\n"
                 "\tFirefox ETP: %s\n"
                 "\tsurvey mode: %s\n"
                 "\tTranco version: %s\n"
                 "\tdomains to crawl: %d\n"
                 "\tTLDs to exclude: %s"
             ),
+            git_data['branch'],
+            git_data['commit_hash'],
             self.timeout,
             self.wait_time,
             self.browser,
+            browser_version,
             self.firefox_tracking_protection,
             args.survey,
             TRANCO_VERSION,
@@ -439,11 +479,6 @@ class Crawler:
 
         domains = get_domain_list(self.n_sites, self.exclude)
 
-        # create an XVFB virtual display (to avoid opening an actual browser)
-        self.vdisplay = Xvfb(width=1280, height=720)
-        self.vdisplay.start()
-        self.start_browser()
-
         # list of domains we actually visited
         visited = []
         old_snitches = {}
@@ -646,11 +681,6 @@ chrome.runtime.sendMessage({
             domains = self.domain_list
         else:
             domains = get_domain_list(self.n_sites, self.exclude)
-
-        # create an XVFB virtual display (to avoid opening an actual browser)
-        self.vdisplay = Xvfb(width=1280, height=720)
-        self.vdisplay.start()
-        self.start_browser()
 
         # list of domains we actually visited
         visited = []
