@@ -517,6 +517,7 @@ class Crawler:
                     if self.last_data != clean_data:
                         self.clear_data()
                         self.load_user_data(clean_data)
+                        self.last_data = clean_data
 
                 # load the next domain
                 self.logger.info("Visiting %d: %s", i + 1, domain)
