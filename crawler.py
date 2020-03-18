@@ -384,7 +384,17 @@ class Crawler:
         recover gracefully. So we kill the tab and make a new one.
         TODO: find actual bug ticket
         """
-        self.driver.close()  # kill the broken site
+
+        # guard against stuff like
+        # WebDriverException: Message: unknown error: failed to close window in 20 seconds
+        try:
+            self.driver.close()  # kill the broken site
+        except WebDriverException as e:
+            self.logger.warning("Error closing timed out window:\n\t%s", e.msg)
+            if should_restart(e):
+                self.restart_browser()
+            return
+
         self.driver.switch_to_window(self.driver.window_handles.pop())
         before = set(self.driver.window_handles)
         self.driver.execute_script('window.open()')
@@ -508,22 +518,19 @@ class Crawler:
                         self.clear_data()
                         self.load_user_data(clean_data)
 
+                # load the next domain
                 self.logger.info("Visiting %d: %s", i + 1, domain)
                 url = self.get_domain(domain)
                 visited.append(url)
             except TimeoutException:
                 self.logger.warning("Timeout on %s", domain)
-                # TODO: how to get rid of this nested try?
-                try:
-                    self.timeout_workaround()
-                except WebDriverException as e:
-                    if should_restart(e):
-                        self.restart_browser()
+                self.timeout_workaround()
             except WebDriverException as e:
                 self.logger.error("%s %s: %s", domain, type(e).__name__, e.msg)
                 if should_restart(e):
                     self.restart_browser()
             finally:
+                # log snitch_map changes
                 self.load_extension_page(OPTIONS)
                 snitches = self.driver.execute_script(
                     "return chrome.extension.getBackgroundPage()."
@@ -713,12 +720,7 @@ chrome.runtime.sendMessage({
                 visited.append(url)
             except TimeoutException:
                 self.logger.warning("Timeout on %s", domain)
-                # TODO: how to get rid of this nested try?
-                try:
-                    self.timeout_workaround()
-                except WebDriverException as e:
-                    if should_restart(e):
-                        self.restart_browser()
+                self.timeout_workaround()
             except WebDriverException as e:
                 self.logger.error("%s %s: %s", domain, type(e).__name__, e.msg)
                 if should_restart(e):
