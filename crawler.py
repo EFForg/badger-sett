@@ -160,11 +160,13 @@ class Crawler:
             sh.setFormatter(log_fmt)
             self.logger.addHandler(sh)
 
+        self.last_data = None
         self.storage_objects = ['snitch_map', 'action_map']
 
         # create an XVFB virtual display (to avoid opening an actual browser)
         self.vdisplay = Xvfb(width=1280, height=720)
         self.vdisplay.start()
+
         self.start_browser()
 
         browser_version = self.driver.capabilities["browserVersion"]
@@ -441,7 +443,7 @@ class Crawler:
         self.start_driver()
         self.clear_data()
 
-    def restart_browser(self, data):
+    def restart_browser(self):
         self.logger.info("Restarting browser ...")
 
         # It's ugly, but this section needs to be ABSOLUTELY crash-proof.
@@ -458,7 +460,10 @@ class Crawler:
 
             try:
                 self.start_browser()
-                self.load_user_data(data)
+                if self.last_data:
+                    self.load_user_data(self.last_data)
+                else:
+                    self.logger.warning("No data to load on restart!")
                 self.logger.info("Successfully restarted")
                 break
             except Exception as e:
@@ -491,16 +496,15 @@ class Crawler:
                 # This script could fail during the data dump (trying to get
                 # the options page), the data cleaning, or while trying to load
                 # the next domain.
-                last_data = self.dump_data()
+                self.last_data = self.dump_data()
 
                 # try to fix misattribution errors
                 if i >= 2:
                     clean_data = self.cleanup(
                         domains[i - 2],
-                        domains[i - 1],
-                        last_data
+                        domains[i - 1]
                     )
-                    if last_data != clean_data:
+                    if self.last_data != clean_data:
                         self.clear_data()
                         self.load_user_data(clean_data)
 
@@ -514,11 +518,11 @@ class Crawler:
                     self.timeout_workaround()
                 except WebDriverException as e:
                     if should_restart(e):
-                        self.restart_browser(last_data)
+                        self.restart_browser()
             except WebDriverException as e:
                 self.logger.error("%s %s: %s", domain, type(e).__name__, e.msg)
                 if should_restart(e):
-                    self.restart_browser(last_data)
+                    self.restart_browser()
             finally:
                 self.load_extension_page(OPTIONS)
                 snitches = self.driver.execute_script(
@@ -548,12 +552,12 @@ class Crawler:
 
         self.save(data)
 
-    def cleanup(self, d1, d2, data):
+    def cleanup(self, d1, d2):
         """
         Remove from snitch map any domains that appear to have been added as a
         result of bugs.
         """
-        new_data = copy.deepcopy(data)
+        new_data = copy.deepcopy(self.last_data)
         snitch_map = new_data['snitch_map']
         action_map = new_data['action_map']
 
@@ -687,7 +691,6 @@ chrome.runtime.sendMessage({
 
         # list of domains we actually visited
         visited = []
-        last_data = None
         first_i = 0
 
         i = None
@@ -696,14 +699,14 @@ chrome.runtime.sendMessage({
             # any other error
             try:
                 # save the state of privacy badger before we do anything else
-                last_data = self.dump_data()
+                self.last_data = self.dump_data()
 
                 # If the localstorage data is getting too big, dump and restart
-                if size_of(last_data) > self.max_data_size:
-                    self.save(last_data, 'results-%d-%d.json' % (first_i, i))
+                if size_of(self.last_data) > self.max_data_size:
+                    self.save(self.last_data, 'results-%d-%d.json' % (first_i, i))
                     first_i = i + 1
-                    last_data = {}
-                    self.restart_browser(last_data)
+                    self.last_data = {}
+                    self.restart_browser()
 
                 self.logger.info("Visiting %d: %s", i + 1, domain)
                 url = self.get_domain(domain)
@@ -715,11 +718,11 @@ chrome.runtime.sendMessage({
                     self.timeout_workaround()
                 except WebDriverException as e:
                     if should_restart(e):
-                        self.restart_browser(last_data)
+                        self.restart_browser()
             except WebDriverException as e:
                 self.logger.error("%s %s: %s", domain, type(e).__name__, e.msg)
                 if should_restart(e):
-                    self.restart_browser(last_data)
+                    self.restart_browser()
             except KeyboardInterrupt:
                 self.logger.warning(
                     "Keyboard interrupt. Ending scan after %d sites.", i + 1)
@@ -732,12 +735,12 @@ chrome.runtime.sendMessage({
         try:
             data = self.dump_data()
         except WebDriverException:
-            if last_data:
+            if self.last_data:
                 self.logger.error(
                     "Could not get badger storage. Using cached data ...")
-                data = last_data
+                data = self.last_data
             else:
-                self.logger.error('Could not export data, exiting')
+                self.logger.error("Could not export data, exiting")
                 sys.exit(1)
 
         self.driver.quit()
