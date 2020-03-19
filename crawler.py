@@ -169,9 +169,7 @@ class Crawler:
 
         self.start_browser()
 
-        browser_version = self.driver.capabilities["browserVersion"]
-
-        # gathers up git info for logging
+        # collect Privacy Badger git info for logging
         def get_git_info(path):
             git_info = {
                 'branch': None,
@@ -217,7 +215,7 @@ class Crawler:
             self.timeout,
             self.wait_time,
             self.browser,
-            browser_version,
+            self.driver.capabilities["browserVersion"] if "browserVersion" in self.driver.capabilities else "???",
             self.firefox_tracking_protection,
             args.survey,
             TRANCO_VERSION,
