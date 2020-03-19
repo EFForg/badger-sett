@@ -331,7 +331,6 @@ class Crawler:
             except TimeoutException:
                 self.logger.warning("Timed out loading %s", page)
                 self.timeout_workaround()
-                time.sleep(2)
             except UnexpectedAlertPresentException:
                 self.driver.switch_to_alert().dismiss()
             except WebDriverException as err:
