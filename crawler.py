@@ -14,6 +14,7 @@ import tempfile
 import time
 
 from datetime import datetime, timedelta
+from pprint import pformat
 from shutil import copytree
 
 from selenium import webdriver
@@ -198,29 +199,28 @@ class Crawler:
 
         self.logger.info(
             (
-                "Starting new crawl:\n"
-                "\tBadger branch: %s\n"
-                "\tBadger hash: %s\n"
-                "\ttimeout: %ss\n"
-                "\twait time: %ss\n"
-                "\tbrowser: %s (v. %s)\n"
-                "\tFirefox ETP: %s\n"
-                "\tsurvey mode: %s\n"
-                "\tTranco version: %s\n"
-                "\tdomains to crawl: %d\n"
-                "\tTLDs to exclude: %s"
+                "Starting new crawl:\n\n"
+                "  Badger branch: %s\n"
+                "  Badger hash: %s\n"
+                "  timeout: %ss\n"
+                "  wait time: %ss\n"
+                "  survey mode: %s\n"
+                "  Tranco version: %s\n"
+                "  domains to crawl: %d\n"
+                "  TLDs to exclude: %s\n"
+                "  Firefox ETP: %s\n"
+                "  driver capabilities:\n\n%s\n"
             ),
             git_data['branch'],
             git_data['commit_hash'],
             self.timeout,
             self.wait_time,
-            self.browser,
-            self.driver.capabilities["browserVersion"] if "browserVersion" in self.driver.capabilities else "???",
-            self.firefox_tracking_protection,
             args.survey,
             TRANCO_VERSION,
             self.n_sites,
-            self.exclude
+            self.exclude,
+            self.firefox_tracking_protection,
+            pformat(self.driver.capabilities)
         )
 
     def start_driver(self):
