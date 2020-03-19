@@ -164,10 +164,6 @@ class Crawler:
         self.last_data = None
         self.storage_objects = ['snitch_map', 'action_map']
 
-        # create an XVFB virtual display (to avoid opening an actual browser)
-        self.vdisplay = Xvfb(width=1280, height=720)
-        self.vdisplay.start()
-
         self.start_browser()
 
         # collect Privacy Badger git info for logging
@@ -553,7 +549,6 @@ class Crawler:
             sys.exit(1)
 
         self.driver.quit()
-        self.vdisplay.stop()
 
         self.save(data)
 
@@ -744,7 +739,6 @@ chrome.runtime.sendMessage({
                 sys.exit(1)
 
         self.driver.quit()
-        self.vdisplay.stop()
 
         self.save(data, 'results-%d-%d.json' % (first_i, i))
         self.save(self.merge_saved_data())
@@ -753,9 +747,11 @@ chrome.runtime.sendMessage({
 if __name__ == '__main__':
     args = ap.parse_args()
 
-    if args.survey:
-        crawler = SurveyCrawler(args)
-    else:
-        crawler = Crawler(args)
+    # create an XVFB virtual display (to avoid opening an actual browser)
+    with Xvfb(width=1280, height=720):
+        if args.survey:
+            crawler = SurveyCrawler(args)
+        else:
+            crawler = Crawler(args)
 
-    crawler.crawl()
+        crawler.crawl()
