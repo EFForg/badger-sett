@@ -187,7 +187,7 @@ class Crawler:
                 self.logger.warning(
                     "Unable to retrieve git repository info "
                     "for Privacy Badger:\n"
-                    "\t%s", err)
+                    "%s", err)
 
             return git_info
 
@@ -257,8 +257,8 @@ class Crawler:
                 except ConnectionResetError as e:
                     self.logger.warning((
                         "Chrome WebDriver initialization failed:\n"
-                        "\t%s\n"
-                        "\tRetrying ..."), str(e))
+                        "%s\n"
+                        "Retrying ..."), str(e))
                     time.sleep(2)
                 else:
                     break
@@ -330,7 +330,7 @@ class Crawler:
             except UnexpectedAlertPresentException:
                 self.driver.switch_to_alert().dismiss()
             except WebDriverException as err:
-                self.logger.warning("Error loading %s:\n\t%s", page, err.msg)
+                self.logger.warning("Error loading %s:\n%s", page, err.msg)
         else:
             raise WebDriverException("Failed to load " + page)
 
@@ -383,7 +383,7 @@ class Crawler:
         try:
             self.driver.close()  # kill the broken site
         except WebDriverException as e:
-            self.logger.warning("Error closing timed out window:\n\t%s", e.msg)
+            self.logger.warning("Error closing timed out window:\n%s", e.msg)
             if should_restart(e):
                 self.restart_browser()
             return
