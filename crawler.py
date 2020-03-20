@@ -390,7 +390,19 @@ class Crawler:
 
         self.driver.switch_to_window(self.driver.window_handles.pop())
         before = set(self.driver.window_handles)
-        self.driver.execute_script('window.open()')
+
+        # open a new window
+        if self.driver.current_url.startswith("moz-extension://"):
+            # work around https://bugzilla.mozilla.org/show_bug.cgi?id=1491443
+            self.driver.execute_script(
+                "delete window.__new_window_created;"
+                "chrome.windows.create({}, function () {"
+                "window.__new_window_created = true;"
+                "});"
+            )
+            wait_for_script(self.driver, "return window.__new_window_created")
+        else:
+            self.driver.execute_script('window.open()')
 
         new_window = (set(self.driver.window_handles) ^ before).pop()
         self.driver.switch_to_window(new_window)
@@ -517,7 +529,7 @@ class Crawler:
                 url = self.get_domain(domain)
                 visited.append(url)
             except TimeoutException:
-                self.logger.warning("Timeout on %s", domain)
+                self.logger.warning("Timed out loading %s", domain)
                 self.timeout_workaround()
             except WebDriverException as e:
                 self.logger.error("%s %s: %s", domain, type(e).__name__, e.msg)
