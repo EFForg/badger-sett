@@ -26,7 +26,8 @@ from selenium.common.exceptions import (
     UnexpectedAlertPresentException,
     WebDriverException,
 )
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from tldextract import TLDExtract
 from tranco import Tranco
 from xvfbwrapper import Xvfb
@@ -243,7 +244,7 @@ class Crawler:
             with open(manifest_path, "w") as f:
                 json.dump(manifest, f)
 
-            opts = Options()
+            opts = ChromeOptions()
             opts.add_argument('--no-sandbox')
             opts.add_argument("--load-extension=" + new_extension_path)
 
@@ -282,11 +283,16 @@ class Crawler:
             elif self.firefox_tracking_protection == "strict":
                 profile.set_preference("browser.contentblocking.category", "strict")
 
+            opts = FirefoxOptions()
+            #opts.log.level = "trace"
+
             # this is kind of a hack; eventually the functionality to install
             # an extension should be part of Selenium. See
             # https://github.com/SeleniumHQ/selenium/issues/4215
             self.driver = webdriver.Firefox(firefox_profile=profile,
-                                            firefox_binary=self.firefox_path)
+                                            firefox_binary=self.firefox_path,
+                                            options=opts,
+                                            service_log_path=os.path.devnull)
             command = 'addonInstall'
             info = ('POST', '/session/$sessionId/moz/addon/install')
             self.driver.command_executor._commands[command] = info # pylint:disable=protected-access
