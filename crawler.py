@@ -3,12 +3,13 @@
 # adapted from https://github.com/cowlicks/badger-claw
 
 import argparse
-import glob
 import copy
+import glob
 import json
 import logging
 import os
 import pathlib
+import random
 import sys
 import tempfile
 import time
@@ -63,7 +64,7 @@ ap.add_argument('--exclude', default=None,
 ap.add_argument('--timeout', type=float, default=30,
                 help='Amount of time to allow each site to load, in seconds')
 ap.add_argument('--wait-time', type=float, default=5, help=(
-    'Amount of time to wait on each site after it loads, in seconds'
+    "Amount of time to wait on each site after it loads, in seconds"
 ))
 ap.add_argument('--log-stdout', action='store_true', default=False,
                 help='If set, log to stdout as well as log.txt')
@@ -327,8 +328,6 @@ class Crawler:
             except TimeoutException:
                 self.logger.warning("Timed out loading %s", page)
                 self.timeout_workaround()
-            except UnexpectedAlertPresentException:
-                self.driver.switch_to_alert().dismiss()
             except WebDriverException as err:
                 self.logger.warning("Error loading %s:\n%s", page, err.msg)
         else:
@@ -409,9 +408,12 @@ class Crawler:
 
     def get_domain(self, domain):
         """
-        Try to load a domain over https, and fall back to http if the initial
-        load times out. Then sleep `wait_time` seconds on the site to wait for
-        AJAX calls to complete.
+        Try to load a domain over https.
+
+        Fall back to http if the initial load times out.
+
+        Then spend `self.wait_time` seconds on the site randomly scrolling
+        to wait for and to trigger dynamic loading.
         """
         try:
             url = "https://%s/" % domain
@@ -423,7 +425,21 @@ class Crawler:
             self.logger.warning("Trying %s ...", url)
             self.driver.get(url)
 
-        time.sleep(self.wait_time)
+        # split self.wait_time into INTERVAL_SEC intervals
+        INTERVAL_SEC = 0.1
+        for _ in range(int(self.wait_time / INTERVAL_SEC)):
+            time.sleep(INTERVAL_SEC)
+
+            # scroll a bit during every interval
+            # dismiss any modal dialogs (alerts)
+            while True:
+                try:
+                    self.driver.execute_script('window.scrollBy(0, %f)' % (
+                        abs(random.normalvariate(50, 25))))
+                    break
+                except UnexpectedAlertPresentException:
+                    self.driver.switch_to_alert().dismiss()
+
         return url
 
     def get_domain_list(self):
