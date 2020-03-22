@@ -431,6 +431,12 @@ class Crawler:
             self.logger.warning("Trying %s ...", url)
             self.driver.get(url)
 
+        # detect chrome error pages
+        # self.driver.current_url has the URL we tried, not the error page URL
+        actual_page_url = self.driver.execute_script("return document.location.href")
+        if actual_page_url.startswith("chrome-error://"):
+            raise WebDriverException("Reached error page: " + actual_page_url)
+
         # split self.wait_time into INTERVAL_SEC intervals
         INTERVAL_SEC = 0.1
         for _ in range(int(self.wait_time / INTERVAL_SEC)):
