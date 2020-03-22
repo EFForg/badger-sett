@@ -399,13 +399,10 @@ class Crawler:
         # open a new window
         if self.driver.current_url.startswith("moz-extension://"):
             # work around https://bugzilla.mozilla.org/show_bug.cgi?id=1491443
-            self.driver.execute_script(
-                "delete window.__new_window_created;"
-                "chrome.windows.create({}, function () {"
-                "window.__new_window_created = true;"
-                "});"
-            )
-            wait_for_script(self.driver, "return window.__new_window_created")
+            self.driver.execute_async_script(
+                "(function (done) {"
+                "  chrome.windows.create({}, done);"
+                "}(arguments[0]));")
         else:
             self.driver.execute_script('window.open()')
 
