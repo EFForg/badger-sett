@@ -10,6 +10,7 @@ import logging
 import os
 import pathlib
 import random
+import re
 import sys
 import tempfile
 import time
@@ -433,7 +434,12 @@ class Crawler:
         # self.driver.current_url has the URL we tried, not the error page URL
         actual_page_url = self.driver.execute_script("return document.location.href")
         if actual_page_url.startswith("chrome-error://"):
-            raise WebDriverException("Reached error page: " + actual_page_url)
+            error_text = self.driver.find_element_by_tag_name("body").text
+            try:
+                error_code = re.search('(ERR_.+)', error_text).group(1)
+            except AttributeError:
+                error_code = error_text
+            raise WebDriverException("Reached error page: " + error_code)
 
         # split self.wait_time into INTERVAL_SEC intervals
         INTERVAL_SEC = 0.1
