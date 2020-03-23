@@ -117,7 +117,8 @@ def should_restart(e):
     return (
         isinstance(e, (NoSuchWindowException, SessionNotCreatedException)) or
         "response from marionette" in e.msg or
-        "unknown error: failed to close window in 20 seconds" in e.msg
+        "unknown error: failed to close window in 20 seconds" in e.msg or
+        "unknown error: session deleted because of page crash" in e.msg
     )
 
 
