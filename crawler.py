@@ -590,9 +590,12 @@ class Crawler:
                     self.logger.info("New domains in snitch_map: %s", diff)
                 old_snitches = snitches
 
+        num_total = len(domains)
+        num_successes = len(visited)
+        num_errors = num_total - num_successes
         self.logger.info(
-            "Finished scan. Visited %d sites and errored on %d",
-            len(visited), len(domains) - len(visited)
+            "Finished scan. Visited %d sites and errored on %d (%.1f%%)",
+            num_successes, num_errors, (num_errors / num_total * 100)
         )
 
         try:
