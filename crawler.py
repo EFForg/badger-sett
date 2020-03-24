@@ -411,6 +411,26 @@ class Crawler:
         new_window = (set(self.driver.window_handles) ^ before).pop()
         self.driver.switch_to_window(new_window)
 
+    def raise_on_chrome_error_pages(self):
+        """
+        Chrome doesn't automatically raise WebDriverExceptions on error pages.
+        This makes Chrome behave more like Firefox.
+        """
+        if self.browser != CHROME:
+            return
+
+        # self.driver.current_url has the URL we tried, not the error page URL
+        actual_page_url = self.driver.execute_script("return document.location.href")
+        if not actual_page_url.startswith("chrome-error://"):
+            return
+
+        error_text = self.driver.find_element_by_tag_name("body").text
+        try:
+            error_code = re.search('(ERR_.+)', error_text).group(1)
+        except AttributeError:
+            error_code = error_text
+        raise WebDriverException("Reached error page: " + error_code)
+
     def get_domain(self, domain):
         """
         Try to load a domain over https.
@@ -430,16 +450,7 @@ class Crawler:
             self.logger.warning("Trying %s ...", url)
             self.driver.get(url)
 
-        # detect chrome error pages
-        # self.driver.current_url has the URL we tried, not the error page URL
-        actual_page_url = self.driver.execute_script("return document.location.href")
-        if actual_page_url.startswith("chrome-error://"):
-            error_text = self.driver.find_element_by_tag_name("body").text
-            try:
-                error_code = re.search('(ERR_.+)', error_text).group(1)
-            except AttributeError:
-                error_code = error_text
-            raise WebDriverException("Reached error page: " + error_code)
+        self.raise_on_chrome_error_pages()
 
         # split self.wait_time into INTERVAL_SEC intervals
         INTERVAL_SEC = 0.1
