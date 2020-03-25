@@ -429,7 +429,11 @@ class Crawler:
             return
 
         # self.driver.current_url has the URL we tried, not the error page URL
-        actual_page_url = self.driver.execute_script("return document.location.href")
+        try:
+            actual_page_url = self.driver.execute_script("return document.location.href")
+        except UnexpectedAlertPresentException:
+            self.driver.switch_to_alert().dismiss()
+            actual_page_url = self.driver.execute_script("return document.location.href")
         if not actual_page_url.startswith("chrome-error://"):
             return
 
