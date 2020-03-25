@@ -21,6 +21,7 @@ from shutil import copytree
 
 from selenium import webdriver
 from selenium.common.exceptions import (
+    NoAlertPresentException,
     NoSuchWindowException,
     SessionNotCreatedException,
     TimeoutException,
@@ -130,6 +131,13 @@ def wait_for_script(
 ):
     return webdriver.support.ui.WebDriverWait(driver, timeout).until(
         lambda driver: driver.execute_script(script), message)
+
+
+def dismiss_alert(driver):
+    try:
+        driver.switch_to_alert().dismiss()
+    except NoAlertPresentException:
+        pass
 
 
 class Crawler:
@@ -338,9 +346,15 @@ class Crawler:
 
         for _ in range(tries):
             try:
-                self.driver.get(ext_url)
-                # wait for extension page to be ready
-                wait_for_script(self.driver, "return chrome.extension")
+                # handle alerts w/o using up any tries
+                while True:
+                    try:
+                        self.driver.get(ext_url)
+                        # wait for extension page to be ready
+                        wait_for_script(self.driver, "return chrome.extension")
+                        break
+                    except UnexpectedAlertPresentException:
+                        dismiss_alert(self.driver)
                 break
             except TimeoutException:
                 self.logger.warning("Timed out loading %s", page)
@@ -428,12 +442,15 @@ class Crawler:
         if self.browser != CHROME:
             return
 
-        # self.driver.current_url has the URL we tried, not the error page URL
-        try:
-            actual_page_url = self.driver.execute_script("return document.location.href")
-        except UnexpectedAlertPresentException:
-            self.driver.switch_to_alert().dismiss()
-            actual_page_url = self.driver.execute_script("return document.location.href")
+        # handle alerts
+        while True:
+            try:
+                # self.driver.current_url has the URL we tried, not the error page URL
+                actual_page_url = self.driver.execute_script("return document.location.href")
+                break
+            except UnexpectedAlertPresentException:
+                dismiss_alert(self.driver)
+
         if not actual_page_url.startswith("chrome-error://"):
             return
 
@@ -478,7 +495,7 @@ class Crawler:
                         abs(random.normalvariate(50, 25))))
                     break
                 except UnexpectedAlertPresentException:
-                    self.driver.switch_to_alert().dismiss()
+                    dismiss_alert(self.driver)
 
         return url
 
