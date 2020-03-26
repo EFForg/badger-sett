@@ -472,7 +472,13 @@ class Crawler:
         """
         try:
             url = "https://%s/" % domain
-            self.driver.get(url)
+            # handle alerts
+            while True:
+                try:
+                    self.driver.get(url)
+                    break
+                except UnexpectedAlertPresentException:
+                    dismiss_alert(self.driver)
         except TimeoutException:
             self.logger.warning("Timeout on %s", url)
             self.timeout_workaround()
