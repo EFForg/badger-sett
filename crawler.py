@@ -76,10 +76,9 @@ ap.add_argument('--log-stdout', action='store_true', default=False,
 ap.add_argument('--survey', action='store_true', default=False,
                 help="If set, don't block anything or store action_map data")
 ap.add_argument('--domain-list', default=None,
-                help="If set, load domains from this file instead of the "
-                "Tranco List (survey mode only)")
+                help="If set, load domains from this file instead of the Tranco List")
 ap.add_argument('--max-data-size', type=int, default=2e6,
-                help='Maximum size of serialized localstorage data')
+                help='Maximum size of serialized localstorage data (survey mode only)')
 
 # Arguments below should never have to be used within the docker container.
 ap.add_argument('--out-path', default='./',
@@ -151,6 +150,7 @@ class Crawler:
         self.wait_time = args.wait_time
         self.out_path = args.out_path
         self.pb_path = args.pb_path
+        self.domain_list = args.domain_list
         self.chromedriver_path = args.chromedriver_path
         self.firefox_path = args.firefox_path
         self.firefox_tracking_protection = args.firefox_tracking_protection
@@ -214,7 +214,7 @@ class Crawler:
                 "  timeout: %ss\n"
                 "  wait time: %ss\n"
                 "  survey mode: %s\n"
-                "  Tranco version: %s\n"
+                "  domain list: %s\n"
                 "  domains to crawl: %d\n"
                 "  TLDs to exclude: %s\n"
                 "  Firefox ETP: %s\n"
@@ -225,7 +225,7 @@ class Crawler:
             self.timeout,
             self.wait_time,
             args.survey,
-            TRANCO_VERSION,
+            self.domain_list if self.domain_list else "Tranco " + TRANCO_VERSION,
             self.n_sites,
             self.exclude,
             self.firefox_tracking_protection,
@@ -502,30 +502,37 @@ class Crawler:
     def get_domain_list(self):
         """Get the top n sites from the Tranco list"""
         domains = []
-
-        self.logger.info("Fetching TLD definitions ...")
-        extract = TLDExtract(cache_file=False)
-
-        self.logger.info("Fetching Tranco list ...")
-        tranco_domains = Tranco(cache=False).list(TRANCO_VERSION).top()
-
         n_sites = self.n_sites if self.n_sites else DEFAULT_NUM_SITES
+
+        if self.domain_list:
+            # read in domains from file
+            with open(self.domain_list) as f:
+                for l in f:
+                    domains.append(l.strip())
+        else:
+            self.logger.info("Fetching Tranco list ...")
+            domains = Tranco(cache=False).list(TRANCO_VERSION).top()
 
         # if the exclude TLD option is passed in, remove those TLDs
         if self.exclude:
+            filtered_domains = []
             excluded_tlds = self.exclude.split(",")
-            # check for first occurring domains in list that don't have excluded TLD
-            for domain in tranco_domains:
-                if extract(domain).suffix not in excluded_tlds:
-                    domains.append(domain)
-                # return list of acceptable domains if it's the correct length
-                if len(domains) == n_sites:
-                    return domains
-        # if no exclude option is passed in, just return top n domains from list
-        else:
-            domains = tranco_domains[0:n_sites]
 
-        return domains
+            self.logger.info("Fetching TLD definitions ...")
+            extract = TLDExtract(cache_file=False)
+
+            # check for first occurring domains in list that don't have excluded TLD
+            for domain in domains:
+                if extract(domain).suffix not in excluded_tlds:
+                    filtered_domains.append(domain)
+                # return list of acceptable domains if it's the correct length
+                if len(filtered_domains) == n_sites:
+                    return filtered_domains
+
+            return filtered_domains
+
+        # if no exclude option is passed in, just return top n domains from list
+        return domains[:n_sites]
 
     def start_browser(self):
         self.start_driver()
@@ -721,16 +728,6 @@ class SurveyCrawler(Crawler):
         self.max_data_size = args.max_data_size
         self.storage_objects = ['snitch_map']
 
-        if args.domain_list:
-            self.domain_list = []
-            with open(args.domain_list) as f:
-                for l in f:
-                    self.domain_list.append(l.strip())
-            if self.n_sites > 0:
-                self.domain_list = self.domain_list[:self.n_sites]
-        else:
-            self.domain_list = None
-
     def set_passive_mode(self):
         self.load_extension_page(OPTIONS)
         script = '''
@@ -769,13 +766,10 @@ chrome.runtime.sendMessage({
         """
         Visit the top `n_sites` websites in the Tranco List, in order, in
         a virtual browser with Privacy Badger installed. Afterwards, save the
-        and snitch_map that the Badger learned.
+        snitch_map that the Badger learned.
         """
 
-        if self.domain_list:
-            domains = self.domain_list
-        else:
-            domains = self.get_domain_list()
+        domains = self.get_domain_list()
 
         # list of domains we actually visited
         visited = []
