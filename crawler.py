@@ -455,10 +455,13 @@ class Crawler:
             return
 
         error_text = self.driver.find_element_by_tag_name("body").text
-        try:
-            error_code = re.search('(ERR_.+)', error_text).group(1)
-        except AttributeError:
-            error_code = error_text
+        # for example: ERR_NAME_NOT_RESOLVED
+        matches = re.search('(ERR_.+)', error_text)
+        if not matches:
+            # for example: HTTP ERROR 404
+            # TODO these don't seem to be caught by Firefox
+            matches = re.search('(HTTP ERROR \\d+)', error_text)
+        error_code = matches.group(1) if matches else error_text
         raise WebDriverException("Reached error page: " + error_code)
 
     def get_domain(self, domain):
@@ -618,7 +621,7 @@ class Crawler:
                 self.logger.warning("Timed out loading %s", domain)
                 self.timeout_workaround()
             except WebDriverException as e:
-                self.logger.error("%s %s: %s", domain, type(e).__name__, e.msg)
+                self.logger.error("%s on %s: %s", type(e).__name__, domain, e.msg)
                 if should_restart(e):
                     self.restart_browser()
             finally:
@@ -644,9 +647,9 @@ class Crawler:
         try:
             self.logger.info("Getting data from browser storage ...")
             data = self.dump_data()
-        except WebDriverException:
+        except WebDriverException as e:
             # If we can't load the background page here, just quit :(
-            self.logger.error("Could not get Badger storage")
+            self.logger.error("Could not get Badger storage:\n%s", e.msg)
             sys.exit(1)
 
         self.driver.quit()
@@ -800,10 +803,10 @@ chrome.runtime.sendMessage({
                 url = self.get_domain(domain)
                 visited.append(url)
             except TimeoutException:
-                self.logger.warning("Timeout on %s", domain)
+                self.logger.warning("Timed out loading %s", domain)
                 self.timeout_workaround()
             except WebDriverException as e:
-                self.logger.error("%s %s: %s", domain, type(e).__name__, e.msg)
+                self.logger.error("%s on %s: %s", type(e).__name__, domain, e.msg)
                 if should_restart(e):
                     self.restart_browser()
             except KeyboardInterrupt:
@@ -817,13 +820,14 @@ chrome.runtime.sendMessage({
 
         try:
             data = self.dump_data()
-        except WebDriverException:
+        except WebDriverException as e:
             if self.last_data:
                 self.logger.error(
-                    "Could not get badger storage. Using cached data ...")
+                    "Could not get Badger storage:\n"
+                    "%s\nUsing cached data ...", e.msg)
                 data = self.last_data
             else:
-                self.logger.error("Could not export data, exiting")
+                self.logger.error("Could not export data:\n%s", e.msg)
                 sys.exit(1)
 
         self.driver.quit()
