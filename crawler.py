@@ -67,7 +67,7 @@ ap.add_argument('--exclude', default=None,
                 help='Exclude a TLD or comma-separated TLDs from the scan')
 ap.add_argument('--timeout', type=float, default=30,
                 help='Amount of time to allow each site to load, in seconds')
-ap.add_argument('--wait-time', type=float, default=3, help=(
+ap.add_argument('--wait-time', type=float, default=5, help=(
     "Amount of time to wait on each site after it loads, in seconds"
 ))
 ap.add_argument('--log-stdout', action='store_true', default=False,
