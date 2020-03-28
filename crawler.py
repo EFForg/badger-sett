@@ -75,7 +75,7 @@ ap.add_argument('--log-stdout', action='store_true', default=False,
 ap.add_argument('--survey', action='store_true', default=False,
                 help="If set, don't block anything or store action_map data")
 ap.add_argument('--domain-list', default=None,
-                help="If set, load domains from this file instead of the Tranco List")
+                help="If set, load domains from this file instead of the Tranco list")
 ap.add_argument('--max-data-size', type=int, default=2e6,
                 help='Maximum size of serialized localstorage data (survey mode only)')
 
@@ -568,7 +568,7 @@ class Crawler:
 
     def crawl(self):
         """
-        Visit the top `n_sites` websites in the Tranco List, in order, in
+        Visit the top `n_sites` websites in the Tranco list, in order, in
         a virtual browser with Privacy Badger installed. Afterwards, save the
         action_map and snitch_map that the Badger learned.
         """
@@ -757,7 +757,7 @@ chrome.runtime.sendMessage({
 
     def crawl(self):
         """
-        Visit the top `n_sites` websites in the Tranco List, in order, in
+        Visit the top `n_sites` websites in the Tranco list, in order, in
         a virtual browser with Privacy Badger installed. Afterwards, save the
         snitch_map that the Badger learned.
         """
