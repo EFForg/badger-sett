@@ -9,7 +9,6 @@ import json
 import logging
 import os
 import pathlib
-import random
 import re
 import sys
 import tempfile
@@ -470,8 +469,8 @@ class Crawler:
 
         Fall back to http if the initial load times out.
 
-        Then spend `self.wait_time` seconds on the site randomly scrolling
-        to wait for and to trigger dynamic loading.
+        Then spend `self.wait_time` seconds on the site waiting
+        for dynamic loading to complete.
         """
         try:
             url = "https://%s/" % domain
@@ -490,22 +489,7 @@ class Crawler:
             self.driver.get(url)
 
         self.raise_on_chrome_error_pages()
-
-        # split self.wait_time into INTERVAL_SEC intervals
-        INTERVAL_SEC = 0.1
-        for _ in range(int(self.wait_time / INTERVAL_SEC)):
-            time.sleep(INTERVAL_SEC)
-
-            # scroll a bit during every interval
-            # dismiss any modal dialogs (alerts)
-            while True:
-                try:
-                    self.driver.execute_script('window.scrollBy(0, %f)' % (
-                        abs(random.normalvariate(50, 25))))
-                    break
-                except UnexpectedAlertPresentException:
-                    dismiss_alert(self.driver)
-
+        time.sleep(self.wait_time)
         return url
 
     def get_domain_list(self):
