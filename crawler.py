@@ -433,6 +433,14 @@ class Crawler:
         new_window = (set(self.driver.window_handles) ^ before).pop()
         self.driver.switch_to_window(new_window)
 
+    def raise_on_cloudflare(self):
+        """
+        Errors out on Cloudflare security check pages.
+        If we run into a lot of these, we may have a problem.
+        """
+        if self.driver.title == "Attention Required! | Cloudflare":
+            raise WebDriverException("Reached Cloudflare security page")
+
     def raise_on_chrome_error_pages(self):
         """
         Chrome doesn't automatically raise WebDriverExceptions on error pages.
@@ -489,6 +497,7 @@ class Crawler:
             self.driver.get(url)
 
         self.raise_on_chrome_error_pages()
+        self.raise_on_cloudflare()
         time.sleep(self.wait_time)
         return url
 
