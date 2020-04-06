@@ -432,9 +432,12 @@ class Crawler:
         Errors out on security check pages.
         If we run into a lot of these, we may have a problem.
         """
-        if self.driver.title == "Attention Required! | Cloudflare":
+        page_title = self.driver.title
+
+        if page_title == "Attention Required! | Cloudflare":
             raise WebDriverException("Reached Cloudflare security page")
-        if self.driver.title == "You have been blocked":
+
+        if page_title == "You have been blocked":
             if "https://ct.captcha-delivery.com/c.js" in self.driver.page_source:
                 raise WebDriverException("Reached DataDome security page")
 
