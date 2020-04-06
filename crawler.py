@@ -303,21 +303,15 @@ class Crawler:
             caps = DesiredCapabilities.FIREFOX.copy()
             caps['unhandledPromptBehavior'] = "ignore";
 
-            # this is kind of a hack; eventually the functionality to install
-            # an extension should be part of Selenium. See
-            # https://github.com/SeleniumHQ/selenium/issues/4215
             self.driver = webdriver.Firefox(firefox_profile=profile,
                                             firefox_binary=self.firefox_path,
                                             options=opts,
                                             desired_capabilities=caps,
                                             service_log_path=os.path.devnull)
-            command = 'addonInstall'
-            info = ('POST', '/session/$sessionId/moz/addon/install')
-            self.driver.command_executor._commands[command] = info # pylint:disable=protected-access
-            path = os.path.join(self.pb_path, 'src')
-            self.driver.execute(command, params={'path': path,
-                                                 'temporary': True})
-            time.sleep(2)
+
+            # load Privacy Badger
+            unpacked_addon_path = os.path.join(self.pb_path, 'src')
+            self.driver.install_addon(unpacked_addon_path, temporary=True)
 
         # apply timeout settings
         self.driver.set_page_load_timeout(self.timeout)
