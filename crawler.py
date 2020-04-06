@@ -3,6 +3,7 @@
 # adapted from https://github.com/cowlicks/badger-claw
 
 import argparse
+import contextlib
 import copy
 import glob
 import json
@@ -92,6 +93,9 @@ ap.add_argument('--firefox-path', default=FF_BIN_PATH,
 ap.add_argument('--firefox-tracking-protection',
     choices=("off", "standard", "strict"), default="off",
     help="Re-enable or set to strict Enhanced Tracking Protection in Firefox")
+
+ap.add_argument('--no-xvfb', action='store_true', default=False,
+                help="Set to disable the virtual display")
 
 
 # Force a 'Failed to decode response from marionette' crash.
@@ -833,7 +837,7 @@ if __name__ == '__main__':
     args = ap.parse_args()
 
     # create an XVFB virtual display (to avoid opening an actual browser)
-    with Xvfb(width=1280, height=720):
+    with Xvfb(width=1280, height=720) if not args.no_xvfb else contextlib.suppress():
         if args.survey:
             crawler = SurveyCrawler(args)
         else:
