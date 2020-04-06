@@ -433,13 +433,16 @@ class Crawler:
         new_window = (set(self.driver.window_handles) ^ before).pop()
         self.driver.switch_to_window(new_window)
 
-    def raise_on_cloudflare(self):
+    def raise_on_security_pages(self):
         """
-        Errors out on Cloudflare security check pages.
+        Errors out on security check pages.
         If we run into a lot of these, we may have a problem.
         """
         if self.driver.title == "Attention Required! | Cloudflare":
             raise WebDriverException("Reached Cloudflare security page")
+        if self.driver.title == "You have been blocked":
+            if "https://ct.captcha-delivery.com/c.js" in self.driver.page_source:
+                raise WebDriverException("Reached DataDome security page")
 
     def raise_on_chrome_error_pages(self):
         """
@@ -497,7 +500,7 @@ class Crawler:
             self.driver.get(url)
 
         self.raise_on_chrome_error_pages()
-        self.raise_on_cloudflare()
+        self.raise_on_security_pages()
         time.sleep(self.wait_time)
         return url
 
