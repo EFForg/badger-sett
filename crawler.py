@@ -719,6 +719,19 @@ class Crawler:
     def save(self, data, name='results.json'):
         data['version'] = self.version
 
+        # remove unnecessary properties to save space
+        if 'action_map' in self.storage_objects:
+            for domain in data['action_map']:
+                # user actions are never set
+                del data['action_map'][domain]['userAction']
+
+                # if DNT compliance wasn't seen
+                if not data['action_map'][domain]['dnt']:
+                    # no need to store DNT compliance
+                    del data['action_map'][domain]['dnt']
+                    # next update time is ignored during import unless DNT is set
+                    del data['action_map'][domain]['nextUpdateTime']
+
         self.logger.info("Saving seed data version %s ...", self.version)
         # save the snitch_map in a human-readable JSON file
         with open(os.path.join(self.out_path, name), 'w') as f:
@@ -745,6 +758,7 @@ chrome.runtime.sendMessage({
 
     def start_browser(self):
         self.start_driver()
+        # TODO should we clear data here?
         # don't block anything, just listen and log
         self.set_passive_mode()
 
