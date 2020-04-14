@@ -30,19 +30,19 @@ update_badger_sett_repo() {
 # fetch the latest version of the chosen branch of Privacy Badger
 if [ -e "$PB_DIR" ] ; then
   echo "Updating Privacy Badger..."
-  cd "$PB_DIR"
+  cd "$PB_DIR" || exit
   git fetch
   git checkout "$PB_BRANCH"
   git pull
 else
   echo "Cloning Privacy Badger..."
   git clone https://github.com/efforg/privacybadger "$PB_DIR"
-  cd "$PB_DIR"
+  cd "$PB_DIR" || exit
   git checkout "$PB_BRANCH"
 fi
 
 # change to the badger-sett repository
-cd "$DIR"
+cd "$DIR" || exit
 
 # If we are planning to push the new results, update the repository now to avoid
 # merge conflicts later
@@ -52,7 +52,7 @@ fi
 
 # pull the latest version of the selenium image so we're up-to-date
 echo "Pulling latest browser..."
-docker pull selenium/standalone-$BROWSER
+docker pull selenium/standalone-"$BROWSER"
 
 # build the new docker image
 echo "Building Docker container..."
