@@ -16,9 +16,8 @@ update_badger_sett_repo() {
   git fetch
 
   # figure out whether we need to pull
-  UPSTREAM=${1:-'@{u}'}
   LOCAL=$(git rev-parse @)
-  REMOTE=$(git rev-parse "$UPSTREAM")
+  REMOTE=$(git rev-parse "@{u}")
 
   if [ "$LOCAL" != "$REMOTE" ]; then
     echo "Pulling latest version of badger-sett..."
