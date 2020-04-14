@@ -8,6 +8,8 @@ PB_BRANCH=${PB_BRANCH:-master}
 BROWSER=${BROWSER:-chrome}
 USER=$(whoami)
 
+# make sure we're on the latest version of badger-sett
+# this function is only called when the script is invoked with GIT_PUSH=1
 update_badger_sett_repo() {
   echo "Updating Badger Sett..."
 
@@ -49,16 +51,22 @@ if [ "$GIT_PUSH" = "1" ] ; then
 	update_badger_sett_repo
 fi
 
+# pull the latest version of the selenium image so we're up-to-date
+echo "Pulling latest browser..."
+docker pull selenium/standalone-$BROWSER
+
 # build the new docker image
 echo "Building Docker container..."
 
 # pass in the current user's uid and gid so that the scan can be run with the
 # same bits in the container (this prevents permissions issues in the out/ folder)
-if ! docker build --build-arg BROWSER="$BROWSER" \
+if ! docker build \
+    --build-arg BROWSER="$BROWSER" \
     --build-arg VALIDATE="$GIT_PUSH" \
     --build-arg UID="$(id -u "$USER")" \
     --build-arg GID="$(id -g "$USER")" \
-    --build-arg UNAME="$USER" -t badger-sett . ; then
+    --build-arg UNAME="$USER" \
+    -t badger-sett . ; then
   echo "Docker build failed."
   exit 1;
 fi
@@ -79,8 +87,10 @@ if [ "$RUN_BY_CRON" != "1" ] ; then
 fi
 
 # Run the scan, passing any extra command line arguments to crawler.py
-# Run in Firefox:
-if ! docker run $FLAGS \
+# the --rm tag automatically removes containers & images after the run
+# first -v maps the local DOCKER_OUT dir to the /home/USER/out dir in the container
+# second -v gives docker access to /dev/shm so selenium has enough memory
+if ! docker run --rm $FLAGS \
     -v "$DOCKER_OUT:/home/$USER/out:z" \
     -v /dev/shm:/dev/shm \
     badger-sett --browser "$BROWSER" "$@" ; then
@@ -88,14 +98,6 @@ if ! docker run $FLAGS \
   echo "Scan failed. See log.txt for details."
   exit 1;
 fi
-
-# Run in Chrome (seccomp doesn't work in jessie):
-#docker run -t -i \
-  #-v $DOCKER_OUT:/home/$USER/out:z \
-  #-v /dev/shm:/dev/shm \
-  #--device /dev/dri \
-  #--security-opt seccomp=./chrome-seccomp.json \
-  #badger-sett "$@"
 
 # back up old results
 cp results.json results-prev.json
