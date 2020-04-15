@@ -33,6 +33,7 @@ ENV USER=$UNAME
 ENV HOME=/home/$USER
 ENV OUTPATH=$HOME/out/
 ENV PBPATH=$HOME/privacybadger/
+ENV EXTENSIONS=$HOME/parallel-extensions/
 
 WORKDIR $HOME
 
@@ -43,6 +44,7 @@ COPY crawler.py validate.py docker-entry.sh $HOME/
 COPY domain-lists $HOME/domain-lists
 COPY results.json $HOME/old-results.json
 COPY privacybadger $PBPATH
+COPY parallel-extensions $EXTENSIONS
 
 USER root
 RUN chown -R $USER:$USER $PBPATH
