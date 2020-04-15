@@ -267,6 +267,9 @@ class Crawler:
             opts.add_argument('--no-sandbox')
             opts.add_argument("--load-extension=" + new_extension_path)
 
+            if self.load_extension:
+                opts.add_extension(self.load_extension)
+
             prefs = {"profile.block_third_party_cookies": False}
             opts.add_experimental_option("prefs", prefs)
             opts.add_argument('--dns-prefetch-disable')
