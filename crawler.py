@@ -267,6 +267,7 @@ class Crawler:
             opts.add_argument('--no-sandbox')
             opts.add_argument("--load-extension=" + new_extension_path)
 
+            # loads parallel extension to run alongside pb
             if self.load_extension:
                 opts.add_extension(self.load_extension)
 
@@ -324,6 +325,10 @@ class Crawler:
             # load Privacy Badger
             unpacked_addon_path = os.path.join(self.pb_path, 'src')
             self.driver.install_addon(unpacked_addon_path, temporary=True)
+
+            # loads parallel extension to run alongside pb
+            if self.load_extension:
+                self.driver.install_addon(self.load_extension)
 
         # apply timeout settings
         self.driver.set_page_load_timeout(self.timeout)
