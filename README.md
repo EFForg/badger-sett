@@ -67,6 +67,13 @@ See the following eff.org blog post for more information: [Giving Privacy Badger
    $ ./runscan.sh --exclude org,net
    ```
 
+   You can load another extension to run in parallel to Privacy Badger during a scan.
+   Use the `--load-extension` flag and pass along the filepath for the `.crx` or `.xpi`
+   file that you want to load. For example:
+   ```
+   $ ./runscan.sh --load-extension parallel-extensions/ublock.crx
+   ```
+
 3. Monitor the scan
 
    To have the scan print verbose output about which sites it's visiting, use
