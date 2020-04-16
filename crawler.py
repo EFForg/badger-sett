@@ -729,8 +729,6 @@ class Crawler:
                 if not data['action_map'][domain]['dnt']:
                     # no need to store DNT compliance
                     del data['action_map'][domain]['dnt']
-                    # next update time is ignored during import unless DNT is set
-                    del data['action_map'][domain]['nextUpdateTime']
 
         self.logger.info("Saving seed data version %s ...", self.version)
         # save the snitch_map in a human-readable JSON file
