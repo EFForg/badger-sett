@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import json
 import sys
-import os
 
 from collections import defaultdict
 
@@ -21,7 +20,6 @@ else:
     sys.exit(1)
 
 if old_path:
-    assert os.path.isfile(old_path)
     with open(old_path) as f:
         old_js = json.load(f)
 else:
@@ -30,7 +28,6 @@ else:
         "snitch_map": {},
     }
 
-assert os.path.isfile(new_path)
 with open(new_path) as f:
     new_js = json.load(f)
 
