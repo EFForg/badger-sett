@@ -328,7 +328,9 @@ class Crawler:
 
             # loads parallel extension to run alongside pb
             if self.load_extension:
-                self.driver.install_addon(self.load_extension)
+                # make the path to the firefox extension absolute
+                parallel_extension_url = os.path.abspath(self.load_extension)
+                self.driver.install_addon(parallel_extension_url)
 
         # apply timeout settings
         self.driver.set_page_load_timeout(self.timeout)
