@@ -70,6 +70,8 @@ ap.add_argument('--timeout', type=float, default=30,
 ap.add_argument('--wait-time', type=float, default=5, help=(
     "Amount of time to wait on each site after it loads, in seconds"
 ))
+ap.add_argument('--click-around', default=False, action='store_true',
+                help='browser will click around to first party links on each visited domain')
 ap.add_argument('--log-stdout', action='store_true', default=False,
                 help='If set, log to stdout as well as log.txt')
 ap.add_argument('--load-extension', default=None,
@@ -154,6 +156,7 @@ class Crawler:
         self.exclude = args.exclude
         self.timeout = args.timeout
         self.wait_time = args.wait_time
+        self.click_around = args.click_around
         self.out_path = args.out_path
         self.pb_path = args.pb_path
         self.domain_list = args.domain_list
@@ -224,6 +227,7 @@ class Crawler:
                 "  domain list: %s\n"
                 "  domains to crawl: %d\n"
                 "  TLDs to exclude: %s\n"
+                "  click on domain links: %s\n"
                 "  parallel extension: %s\n"
                 "  Firefox ETP: %s\n"
                 "  driver capabilities:\n\n%s\n"
@@ -236,6 +240,7 @@ class Crawler:
             self.domain_list if self.domain_list else "Tranco " + TRANCO_VERSION,
             self.n_sites,
             self.exclude,
+            self.click_around,
             self.load_extension,
             self.firefox_tracking_protection,
             pformat(self.driver.capabilities)
