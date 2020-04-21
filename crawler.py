@@ -123,7 +123,8 @@ def should_restart(e):
         isinstance(e, (NoSuchWindowException, SessionNotCreatedException)) or
         "response from marionette" in e.msg or
         "unknown error: failed to close window in 20 seconds" in e.msg or
-        "unknown error: session deleted because of page crash" in e.msg
+        "unknown error: session deleted because of page crash" in e.msg or
+        "TypeError: this.curBrowser.contentBrowser is null" in e.msg
     )
 
 
