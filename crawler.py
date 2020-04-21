@@ -72,6 +72,8 @@ ap.add_argument('--wait-time', type=float, default=5, help=(
 ))
 ap.add_argument('--log-stdout', action='store_true', default=False,
                 help='If set, log to stdout as well as log.txt')
+ap.add_argument('--load-extension', default=None,
+                help='If set, load arbitrary extension to run in parallel to PB')
 
 ap.add_argument('--survey', action='store_true', default=False,
                 help="If set, don't block anything or store action_map data")
@@ -158,6 +160,7 @@ class Crawler:
         self.chromedriver_path = args.chromedriver_path
         self.firefox_path = args.firefox_path
         self.firefox_tracking_protection = args.firefox_tracking_protection
+        self.load_extension = args.load_extension
 
         # version is based on when the crawl started
         self.version = time.strftime('%Y.%-m.%-d', time.localtime())
@@ -221,6 +224,7 @@ class Crawler:
                 "  domain list: %s\n"
                 "  domains to crawl: %d\n"
                 "  TLDs to exclude: %s\n"
+                "  parallel extension: %s\n"
                 "  Firefox ETP: %s\n"
                 "  driver capabilities:\n\n%s\n"
             ),
@@ -232,6 +236,7 @@ class Crawler:
             self.domain_list if self.domain_list else "Tranco " + TRANCO_VERSION,
             self.n_sites,
             self.exclude,
+            self.load_extension,
             self.firefox_tracking_protection,
             pformat(self.driver.capabilities)
         )
@@ -262,6 +267,10 @@ class Crawler:
             opts = ChromeOptions()
             opts.add_argument('--no-sandbox')
             opts.add_argument("--load-extension=" + new_extension_path)
+
+            # loads parallel extension to run alongside pb
+            if self.load_extension:
+                opts.add_extension(self.load_extension)
 
             prefs = {"profile.block_third_party_cookies": False}
             opts.add_experimental_option("prefs", prefs)
@@ -317,6 +326,12 @@ class Crawler:
             # load Privacy Badger
             unpacked_addon_path = os.path.join(self.pb_path, 'src')
             self.driver.install_addon(unpacked_addon_path, temporary=True)
+
+            # loads parallel extension to run alongside pb
+            if self.load_extension:
+                # make the path to the firefox extension absolute
+                parallel_extension_url = os.path.abspath(self.load_extension)
+                self.driver.install_addon(parallel_extension_url)
 
         # apply timeout settings
         self.driver.set_page_load_timeout(self.timeout)
