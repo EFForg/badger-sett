@@ -431,8 +431,7 @@ class Crawler:
                 self.restart_browser()
             return
 
-        self.driver.switch_to_window(self.driver.window_handles.pop())
-        before = set(self.driver.window_handles)
+        self.driver.switch_to_window(self.driver.window_handles[0])
 
         # open a new window
         if self.driver.current_url.startswith("moz-extension://"):
@@ -447,8 +446,7 @@ class Crawler:
         else:
             self.driver.execute_script('window.open()')
 
-        new_window = (set(self.driver.window_handles) ^ before).pop()
-        self.driver.switch_to_window(new_window)
+        self.driver.switch_to_window(self.driver.window_handles[-1])
 
     def raise_on_security_pages(self):
         """
