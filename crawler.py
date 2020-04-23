@@ -514,6 +514,11 @@ class Crawler:
             while True:
                 try:
                     self.driver.get(url)
+
+                    # handle click_around option if that's set
+                    if self.click_around:
+                        self.handle_clicking(url)
+
                     break
                 except UnexpectedAlertPresentException:
                     dismiss_alert(self.driver)
@@ -760,6 +765,23 @@ class Crawler:
             json.dump(
                 data, f, indent=2, sort_keys=True, separators=(',', ': '))
         self.logger.info("Saved data to %s", name)
+
+    def handle_clicking(self, domain):
+        # fetch the clickable elements on given domain
+        clickables = self.driver.find_elements_by_tag_name('a') + self.driver.find_elements_by_tag_name('button')
+
+        # strip the domain down so we can catch first party subdomains too
+        pattern = re.compile(r"https?://(www\.)?")
+        stripped_domain = pattern.sub('', domain).strip().strip('/')
+
+        # iterate through each found first party clickable on domain, try to interact with it
+        for clickable in clickables:
+            try:
+                if stripped_domain in clickable.get_attribute('href'):
+                    clickable.click()
+            except:
+                continue
+        return
 
 
 class SurveyCrawler(Crawler):
