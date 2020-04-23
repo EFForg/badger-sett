@@ -85,8 +85,8 @@ ap.add_argument('--max-data-size', type=int, default=2e6,
 # Arguments below should never have to be used within the docker container.
 ap.add_argument('--out-path', default='./',
                 help='Path at which to save output')
-ap.add_argument('--pb-path', default='./privacybadger/src',
-                help='Path to the Privacy Badger binary or source directory')
+ap.add_argument('--pb-path', default='./privacybadger',
+                help='Path to the Privacy Badger source checkout')
 ap.add_argument('--chromedriver-path', default=CHROMEDRIVER_PATH,
                 help='Path to the chromedriver binary')
 ap.add_argument('--firefox-path', default=FF_BIN_PATH,
