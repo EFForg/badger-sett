@@ -779,9 +779,9 @@ class Crawler:
             try:
                 if stripped_domain in clickable.get_attribute('href'):
                     clickable.click()
-            except:
+            except: # noqa pylint: disable=bare-except
                 continue
-        return
+        return self.logger.info('successfully clicked around on %s', domain)
 
 
 class SurveyCrawler(Crawler):
