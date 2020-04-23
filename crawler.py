@@ -341,6 +341,8 @@ class Crawler:
         self.load_extension_page(OPTIONS)
         wait_for_script(self.driver, (
             "return chrome.extension.getBackgroundPage().badger.INITIALIZED"
+            # TODO below no longer necessary after
+            # https://github.com/EFForg/privacybadger/pull/2438
             " && Object.keys("
             "  chrome.extension.getBackgroundPage()"
             "  .badger.storage.getBadgerStorageObject('action_map').getItemClones()"
