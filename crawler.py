@@ -376,8 +376,8 @@ class Crawler:
                 self.timeout_workaround()
             except WebDriverException as err:
                 self.logger.warning("Error loading %s:\n%s", page, err.msg)
-                if err.msg == "Browsing context has been discarded":
-                    self.timeout_workaround()
+                if should_restart(err):
+                    self.restart_browser()
         else:
             raise WebDriverException("Failed to load " + page)
 
