@@ -277,6 +277,7 @@ class Crawler:
             opts.add_argument('--dns-prefetch-disable')
 
             caps = DesiredCapabilities.CHROME.copy()
+            caps['acceptInsecureCerts'] = True;
             caps['unhandledPromptBehavior'] = "ignore";
 
             for _ in range(5):
