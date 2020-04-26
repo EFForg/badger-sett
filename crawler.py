@@ -18,6 +18,7 @@ import time
 from datetime import datetime, timedelta
 from pprint import pformat
 from shutil import copytree
+from urllib3.exceptions import ProtocolError
 
 from selenium import webdriver
 from selenium.common.exceptions import (
@@ -372,6 +373,9 @@ class Crawler:
                     except UnexpectedAlertPresentException:
                         dismiss_alert(self.driver)
                 break
+            except ProtocolError as e:
+                self.logger.warning("Error loading %s:\n%s", page, str(e))
+                self.restart_browser()
             except TimeoutException:
                 self.logger.warning("Timed out loading %s", page)
                 self.timeout_workaround()
@@ -628,6 +632,9 @@ class Crawler:
                 self.logger.info("Visiting %d: %s", i + 1, domain)
                 url = self.get_domain(domain)
                 visited.append(url)
+            except ProtocolError as e:
+                self.logger.warning("Error loading %s:\n%s", domain, str(e))
+                self.restart_browser()
             except TimeoutException:
                 self.logger.warning("Timed out loading %s", domain)
                 self.timeout_workaround()
@@ -830,6 +837,9 @@ chrome.runtime.sendMessage({
                 self.logger.info("Visiting %d: %s", i + 1, domain)
                 url = self.get_domain(domain)
                 visited.append(url)
+            except ProtocolError as e:
+                self.logger.warning("Error loading %s:\n%s", domain, str(e))
+                self.restart_browser()
             except TimeoutException:
                 self.logger.warning("Timed out loading %s", domain)
                 self.timeout_workaround()
