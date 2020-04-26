@@ -499,32 +499,24 @@ class Crawler:
 
     def get_domain(self, domain):
         """
-        Try to load a domain over https.
-
-        Fall back to http if the initial load times out.
-
-        Then spend `self.wait_time` seconds on the site waiting
-        for dynamic loading to complete.
+        Visit a domain, then spend `self.wait_time` seconds on the site
+        waiting for dynamic loading to complete.
         """
-        try:
-            url = "https://%s/" % domain
-            # handle alerts
-            while True:
-                try:
-                    self.driver.get(url)
-                    break
-                except UnexpectedAlertPresentException:
-                    dismiss_alert(self.driver)
-        except TimeoutException:
-            self.logger.warning("Timeout on %s", url)
-            self.timeout_workaround()
-            url = "http://%s/" % domain
-            self.logger.warning("Trying %s ...", url)
-            self.driver.get(url)
+
+        url = "http://%s/" % domain
+
+        # handle alerts
+        while True:
+            try:
+                self.driver.get(url)
+                break
+            except UnexpectedAlertPresentException:
+                dismiss_alert(self.driver)
 
         self.raise_on_chrome_error_pages()
         self.raise_on_security_pages()
         time.sleep(self.wait_time)
+
         return url
 
     def get_domain_list(self):
