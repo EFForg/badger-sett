@@ -743,14 +743,19 @@ class Crawler:
 
         # remove unnecessary properties to save space
         if 'action_map' in self.storage_objects:
-            for domain in data['action_map']:
-                # user actions are never set
-                del data['action_map'][domain]['userAction']
-
+            for domain_data in data['action_map'].values():
                 # if DNT compliance wasn't seen
-                if not data['action_map'][domain]['dnt']:
+                if not domain_data['dnt']:
                     # no need to store DNT compliance
-                    del data['action_map'][domain]['dnt']
+                    del domain_data['dnt']
+
+                # if we haven't yet checked for DNT compliance
+                if domain_data['nextUpdateTime'] == 0:
+                    # no need to store the earliest next check date
+                    del domain_data['nextUpdateTime']
+
+                # user actions are never set
+                del domain_data['userAction']
 
         self.logger.info("Saving seed data version %s ...", self.version)
         # save the snitch_map in a human-readable JSON file
