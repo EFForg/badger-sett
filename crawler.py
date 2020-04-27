@@ -278,7 +278,7 @@ class Crawler:
             opts.add_argument('--dns-prefetch-disable')
 
             caps = DesiredCapabilities.CHROME.copy()
-            caps['acceptInsecureCerts'] = True;
+            caps['acceptInsecureCerts'] = False;
             caps['unhandledPromptBehavior'] = "ignore";
 
             for _ in range(5):
@@ -317,6 +317,7 @@ class Crawler:
             #opts.log.level = "trace"
 
             caps = DesiredCapabilities.FIREFOX.copy()
+            caps['acceptInsecureCerts'] = False;
             caps['unhandledPromptBehavior'] = "ignore";
 
             self.driver = webdriver.Firefox(firefox_profile=profile,
