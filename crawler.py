@@ -127,14 +127,12 @@ def should_restart(e):
         "response from marionette" in e.msg or
         "unknown error: failed to close window in 20 seconds" in e.msg or
         "unknown error: session deleted because of page crash" in e.msg or
-        "TypeError: this.curBrowser.contentBrowser is null" in e.msg
+        e.msg == "TypeError: this.curBrowser.contentBrowser is null"
     )
 
 
-def wait_for_script(
-        driver, script, timeout=20,
-        message="Timed out waiting for execute_script to eval to True"
-):
+def wait_for_script(driver, script, timeout=30, message=(
+        "Timed out waiting for execute_script to eval to True")):
     return webdriver.support.ui.WebDriverWait(driver, timeout).until(
         lambda driver: driver.execute_script(script), message)
 
