@@ -493,14 +493,23 @@ class Crawler:
             return
 
         error_text = self.driver.find_element_by_tag_name("body").text
+        error_code = error_text
+
         # for example: ERR_NAME_NOT_RESOLVED
         matches = re.search('(ERR_.+)', error_text)
         if not matches:
             # for example: HTTP ERROR 404
             # TODO these don't seem to be caught by Firefox
             matches = re.search('(HTTP ERROR \\d+)', error_text)
-        error_code = matches.group(1) if matches else error_text
-        raise WebDriverException("Reached error page: " + error_code)
+        if matches:
+            error_code = matches.group(1)
+
+        if error_code:
+            msg = "Reached error page: " + error_code
+        else:
+            msg = "Reached unknown error page (basic auth prompt?)"
+
+        raise WebDriverException(msg)
 
     def get_domain(self, domain):
         """
