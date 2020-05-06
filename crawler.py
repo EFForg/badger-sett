@@ -439,6 +439,14 @@ class Crawler:
                 self.restart_browser()
             return
 
+        # otherwise we get the following exception
+        # when we try to switch windows below
+        # selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
+        # TODO when does this happen? do we still need the timeout workaround?
+        if not self.driver.window_handles:
+            self.logger.warning("Closed all windows somehow, restarting ...")
+            self.restart_browser()
+
         self.driver.switch_to_window(self.driver.window_handles[0])
 
         # open a new window
