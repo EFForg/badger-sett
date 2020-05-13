@@ -667,7 +667,7 @@ class Crawler:
                 )
                 diff = set(snitches) - set(old_snitches)
                 if diff:
-                    self.logger.info("New domains in snitch_map: %s", diff)
+                    self.logger.info("New domains in snitch_map: %s", ', '.join(sorted(diff)))
                 old_snitches = snitches
 
         num_total = len(domains)
