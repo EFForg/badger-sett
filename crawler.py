@@ -29,7 +29,6 @@ from selenium.common.exceptions import (
     UnexpectedAlertPresentException,
     WebDriverException,
 )
-from selenium.webdriver import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from tldextract import TLDExtract
@@ -275,15 +274,13 @@ class Crawler:
             opts.add_experimental_option("prefs", prefs)
             opts.add_argument('--dns-prefetch-disable')
 
-            caps = DesiredCapabilities.CHROME.copy()
-            caps['acceptInsecureCerts'] = False;
-            caps['unhandledPromptBehavior'] = "ignore";
+            opts.set_capability("acceptInsecureCerts", False);
+            opts.set_capability("unhandledPromptBehavior", "ignore");
 
             for _ in range(5):
                 try:
                     self.driver = webdriver.Chrome(self.chromedriver_path,
-                                                   chrome_options=opts,
-                                                   desired_capabilities=caps)
+                                                   chrome_options=opts)
                 except ConnectionResetError as e:
                     self.logger.warning((
                         "Chrome WebDriver initialization failed:\n"
@@ -314,14 +311,12 @@ class Crawler:
             opts = FirefoxOptions()
             #opts.log.level = "trace"
 
-            caps = DesiredCapabilities.FIREFOX.copy()
-            caps['acceptInsecureCerts'] = False;
-            caps['unhandledPromptBehavior'] = "ignore";
+            opts.set_capability("acceptInsecureCerts", False);
+            opts.set_capability("unhandledPromptBehavior", "ignore");
 
             self.driver = webdriver.Firefox(firefox_profile=profile,
                                             firefox_binary=self.firefox_path,
                                             options=opts,
-                                            desired_capabilities=caps,
                                             service_log_path=os.path.devnull)
 
             # load Privacy Badger
