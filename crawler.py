@@ -517,7 +517,7 @@ class Crawler:
 
                     # handle click_around option if that's set
                     if self.click_around:
-                        self.handle_clicking(url)
+                        self.handle_clicking(domain)
 
                     break
                 except UnexpectedAlertPresentException:
@@ -768,18 +768,17 @@ class Crawler:
 
     def handle_clicking(self, domain):
         # fetch the clickable elements on given domain
-        clickables = self.driver.find_elements_by_tag_name('a') + self.driver.find_elements_by_tag_name('button')
-
-        # strip the domain down so we can catch first party subdomains too
-        pattern = re.compile(r"https?://(www\.)?")
-        stripped_domain = pattern.sub('', domain).strip().strip('/')
+        clickables = self.driver.find_elements_by_tag_name('a')
 
         # iterate through each found first party clickable on domain, try to interact with it
         for clickable in clickables:
+            href = clickable.get_attribute('href')
             try:
-                if stripped_domain in clickable.get_attribute('href'):
+                # verify that the clickable is first party
+                if (domain in href) and (len(href) > len(domain) + 13):
                     clickable.click()
-            except: # noqa pylint: disable=bare-except
+                    self.logger.info('while visiting %s, clicked on internal link: %s', domain, href)
+            except Exception:
                 continue
         return self.logger.info('successfully clicked around on %s', domain)
 
