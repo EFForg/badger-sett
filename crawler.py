@@ -22,6 +22,7 @@ from urllib3.exceptions import ProtocolError
 
 from selenium import webdriver
 from selenium.common.exceptions import (
+    InvalidSessionIdException,
     NoAlertPresentException,
     NoSuchWindowException,
     SessionNotCreatedException,
@@ -434,12 +435,19 @@ class Crawler:
                 self.restart_browser()
             return
 
-        # otherwise we get the following exception
-        # when we try to switch windows below
-        # selenium.common.exceptions.InvalidSessionIdException: Message: invalid session id
-        # TODO when does this happen? do we still need the timeout workaround?
-        if not self.driver.window_handles:
-            self.logger.warning("Closed all windows somehow, restarting ...")
+        # guard against implicit session deletion
+        # TODO when does this happen?
+        # when we time out waiting on chrome.extension? ... when does that happen?
+        # TODO do we still need the timeout workaround?
+        try:
+            if not self.driver.window_handles:
+                # TODO we probably never get here
+                # TODO because looking up window handles
+                # TODO after all have been closed raises InvalidSessionIdException
+                self.logger.warning("Closed all windows somehow, restarting ...")
+                self.restart_browser()
+        except InvalidSessionIdException:
+            self.logger.warning("Invalid session, restarting ...")
             self.restart_browser()
 
         self.driver.switch_to_window(self.driver.window_handles[0])
