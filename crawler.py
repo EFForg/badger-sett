@@ -371,12 +371,9 @@ class Crawler:
             except ProtocolError as e:
                 self.logger.warning("Error loading %s:\n%s", page, str(e))
                 self.restart_browser()
-            except TimeoutException as e:
+            except TimeoutException:
                 self.logger.warning("Timed out loading %s", page)
-                if "Timed out receiving message from renderer" in str(e):
-                    self.restart_browser()
-                else:
-                    self.timeout_workaround()
+                self.timeout_workaround()
             except WebDriverException as err:
                 self.logger.warning("Error loading %s:\n%s", page, err.msg)
                 if should_restart(err):
@@ -635,13 +632,10 @@ class Crawler:
                 "badger.storage.snitch_map._store;"
             )
         # TODO have all execute_script calls go through this guard
-        except TimeoutException as e:
-            if "Timed out receiving message from renderer" in str(e):
-                self.restart_browser()
-            else:
-                # TODO retrying
-                self.logger.warning("Timed out getting snitch_map")
-                return old_snitches
+        except TimeoutException:
+            # TODO retrying
+            self.logger.warning("Timed out getting snitch_map")
+            return old_snitches
         else:
             diff = set(snitches) - set(old_snitches)
             if diff:
@@ -689,12 +683,9 @@ class Crawler:
             except ProtocolError as e:
                 self.logger.warning("Error loading %s:\n%s", domain, str(e))
                 self.restart_browser()
-            except TimeoutException as e:
+            except TimeoutException:
                 self.logger.warning("Timed out loading %s", domain)
-                if "Timed out receiving message from renderer" in str(e):
-                    self.restart_browser()
-                else:
-                    self.timeout_workaround()
+                self.timeout_workaround()
             except WebDriverException as e:
                 self.logger.error("%s on %s: %s", type(e).__name__, domain, e.msg)
                 if should_restart(e):
@@ -888,12 +879,9 @@ chrome.runtime.sendMessage({
             except ProtocolError as e:
                 self.logger.warning("Error loading %s:\n%s", domain, str(e))
                 self.restart_browser()
-            except TimeoutException as e:
+            except TimeoutException:
                 self.logger.warning("Timed out loading %s", domain)
-                if "Timed out receiving message from renderer" in str(e):
-                    self.restart_browser()
-                else:
-                    self.timeout_workaround()
+                self.timeout_workaround()
             except WebDriverException as e:
                 self.logger.error("%s on %s: %s", type(e).__name__, domain, e.msg)
                 if should_restart(e):
