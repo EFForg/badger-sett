@@ -422,8 +422,9 @@ class Crawler:
         """
         Selenium has a bug where a tab that raises a timeout exception can't
         recover gracefully. So we kill the tab and make a new one.
-        TODO: find actual bug ticket
         """
+        # TODO find actual bug ticket
+        # TODO do we still need this workaround?
 
         # guard against stuff like
         # WebDriverException: Message: unknown error: failed to close window in 20 seconds
@@ -438,7 +439,6 @@ class Crawler:
         # guard against implicit session deletion
         # TODO when does this happen?
         # when we time out waiting on chrome.extension? ... when does that happen?
-        # TODO do we still need the timeout workaround?
         try:
             if not self.driver.window_handles:
                 # TODO we probably never get here
@@ -457,7 +457,13 @@ class Crawler:
             self.restart_browser()
             return
 
-        self.driver.switch_to_window(self.driver.window_handles[0])
+        try:
+            self.driver.switch_to_window(self.driver.window_handles[0])
+        except WebDriverException as e:
+            self.logger.warning(
+                "Failed to switch windows (%s), restarting ...", e.msg)
+            self.restart_browser()
+            return
 
         # open a new window
         if self.driver.current_url.startswith("moz-extension://"):
