@@ -219,8 +219,7 @@ class Crawler:
 
         git_data = get_git_info(self.pb_path)
 
-        self.logger.info(
-            (
+        self.logger.info((
                 "Starting new crawl:\n\n"
                 "  Badger branch: %s\n"
                 "  Badger hash: %s\n"
@@ -349,10 +348,8 @@ class Crawler:
 
         # wait for Badger to finish initializing
         self.load_extension_page(OPTIONS)
-        wait_for_script(self.driver, (
-            "return chrome.extension.getBackgroundPage()"
-            ".badger.INITIALIZED"
-        ))
+        wait_for_script(self.driver,
+            "return chrome.extension.getBackgroundPage().badger.INITIALIZED")
 
     def load_extension_page(self, page, tries=3):
         """
@@ -833,12 +830,6 @@ class Crawler:
 
 
 class SurveyCrawler(Crawler):
-    def __init__(self, args):
-        super(SurveyCrawler, self).__init__(args)
-
-        self.max_data_size = args.max_data_size
-        self.storage_objects = ['snitch_map']
-
     def set_passive_mode(self):
         self.load_extension_page(OPTIONS)
         script = '''
@@ -854,26 +845,6 @@ chrome.runtime.sendMessage({
         # TODO should we enable local learning?
         # don't block anything, just listen and log
         self.set_passive_mode()
-
-    def merge_saved_data(self):
-        paths = glob.glob(os.path.join(self.out_path, 'results-*.json'))
-        snitch_map = {}
-        for p in paths:
-            with open(p) as f:
-                sm = json.load(f)['snitch_map']
-            for tracker, snitches in sm.items():
-                if tracker not in snitch_map:
-                    snitch_map[tracker] = snitches
-                    continue
-
-                for snitch, data in snitches.items():
-                    if snitch == 'length':
-                        snitch_map[tracker]['length'] = \
-                            int(snitch_map[tracker]['length']) + int(data)
-                        continue
-                    snitch_map[tracker][snitch] = data
-
-        return {'version': self.version, 'snitch_map': snitch_map}
 
     def crawl(self):
         """
@@ -893,16 +864,6 @@ chrome.runtime.sendMessage({
             # If we can't load the options page for some reason, treat it like
             # any other error
             try:
-                # save the state of privacy badger before we do anything else
-                self.last_data = self.dump_data()
-
-                # If the localstorage data is getting too big, dump and restart
-                if size_of(self.last_data) > self.max_data_size:
-                    self.save(self.last_data, 'results-%d-%d.json' % (first_i, i))
-                    first_i = i + 1
-                    self.last_data = {}
-                    self.restart_browser()
-
                 self.logger.info("Visiting %d: %s", i + 1, domain)
                 url = self.get_domain(domain)
                 visited.append(url)
@@ -923,24 +884,8 @@ chrome.runtime.sendMessage({
 
         self.logger.info("Finished scan. Visited %d sites and errored on %d",
                          len(visited), i + 1 - len(visited))
-        self.logger.info("Getting data from browser storage ...")
-
-        try:
-            data = self.dump_data()
-        except WebDriverException as e:
-            if self.last_data:
-                self.logger.error(
-                    "Could not get Badger storage:\n"
-                    "%s\nUsing cached data ...", e.msg)
-                data = self.last_data
-            else:
-                self.logger.error("Could not export data:\n%s", e.msg)
-                sys.exit(1)
 
         self.driver.quit()
-
-        self.save(data, 'results-%d-%d.json' % (first_i, i))
-        self.save(self.merge_saved_data())
 
 
 if __name__ == '__main__':
