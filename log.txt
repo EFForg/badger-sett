@@ -1,11 +1,11 @@
-2020-09-19 16:00:37,425 Starting new crawl:
+2020-09-20 16:00:36,357 Starting new crawl:
 
   Badger branch: master
   Badger hash: 2586ea261817a544f26d8b4c352e703c997a5c4a
   timeout: 30.0s
   wait time: 5.0s
   survey mode: False
-  domain list: Tranco 2020-09-17
+  domain list: Tranco 2020-09-18
   domains to crawl: 5000
   TLDs to exclude: mil,gov
   parallel extension: None
@@ -17,8 +17,8 @@
  'browserVersion': '85.0.4183.83',
  'chrome': {'chromedriverVersion': '85.0.4183.83 '
                                    '(94abc2237ae0c9a4cb5f035431c8adfb94324633-refs/branch-heads/4183@{#1658})',
-            'userDataDir': '/tmp/.com.google.Chrome.I68gDv'},
- 'goog:chromeOptions': {'debuggerAddress': 'localhost:41183'},
+            'userDataDir': '/tmp/.com.google.Chrome.nmZDbX'},
+ 'goog:chromeOptions': {'debuggerAddress': 'localhost:33636'},
  'networkConnectionEnabled': False,
  'pageLoadStrategy': 'normal',
  'platformName': 'linux',
@@ -29,749 +29,1109 @@
  'unhandledPromptBehavior': 'ignore',
  'webauthn:virtualAuthenticators': True}
 
-2020-09-19 16:00:37,425 Fetching Tranco list ...
-2020-09-19 16:00:43,510 Fetching TLD definitions ...
-2020-09-19 16:00:44,907 Visiting 1: google.com
-2020-09-19 16:00:55,359 Visiting 2: facebook.com
-2020-09-19 16:01:10,395 New domains in snitch_map: atdmt.com
-2020-09-19 16:01:11,887 Visiting 3: youtube.com
-2020-09-19 16:01:34,507 New domains in snitch_map: doubleclick.net
-2020-09-19 16:01:35,390 Visiting 4: microsoft.com
-2020-09-19 16:01:48,704 New domains in snitch_map: adnxs.com, clicktale.net, demdex.net
-2020-09-19 16:01:49,628 Visiting 5: twitter.com
-2020-09-19 16:02:02,544 New domains in snitch_map: app.link
-2020-09-19 16:02:03,304 Visiting 6: tmall.com
-2020-09-19 16:02:22,480 Visiting 7: instagram.com
-2020-09-19 16:02:35,249 New domains in snitch_map: facebook.com
-2020-09-19 16:02:36,137 Visiting 8: netflix.com
-2020-09-19 16:02:52,440 Visiting 9: linkedin.com
-2020-09-19 16:03:02,452 New domains in snitch_map: google-analytics.com, google.com, scorecardresearch.com
-2020-09-19 16:03:03,385 Visiting 10: baidu.com
-2020-09-19 16:03:24,490 Visiting 11: windowsupdate.com
-2020-09-19 16:03:26,912 WebDriverException on windowsupdate.com: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 16:00:36,357 Fetching Tranco list ...
+2020-09-20 16:00:41,692 Fetching TLD definitions ...
+2020-09-20 16:00:43,519 Visiting 1: google.com
+2020-09-20 16:00:54,070 Visiting 2: facebook.com
+2020-09-20 16:01:08,443 New domains in snitch_map: atdmt.com
+2020-09-20 16:01:09,719 Visiting 3: youtube.com
+2020-09-20 16:01:27,655 New domains in snitch_map: doubleclick.net
+2020-09-20 16:01:28,562 Visiting 4: microsoft.com
+2020-09-20 16:01:44,672 New domains in snitch_map: adnxs.com, clicktale.net, demdex.net
+2020-09-20 16:01:45,780 Visiting 5: twitter.com
+2020-09-20 16:01:58,797 New domains in snitch_map: app.link
+2020-09-20 16:02:01,282 Visiting 6: tmall.com
+2020-09-20 16:02:22,263 Visiting 7: instagram.com
+2020-09-20 16:02:33,565 New domains in snitch_map: facebook.com
+2020-09-20 16:02:34,540 Visiting 8: netflix.com
+2020-09-20 16:02:49,665 Visiting 9: linkedin.com
+2020-09-20 16:03:01,155 New domains in snitch_map: google-analytics.com, google.com, scorecardresearch.com
+2020-09-20 16:03:01,643 Visiting 10: baidu.com
+2020-09-20 16:03:18,735 Visiting 11: windowsupdate.com
+2020-09-20 16:03:21,859 WebDriverException on windowsupdate.com: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 16:03:29,423 Visiting 12: qq.com
-2020-09-19 16:03:59,432 Timed out loading qq.com
-2020-09-19 16:04:01,998 Visiting 13: wikipedia.org
-2020-09-19 16:04:14,082 Visiting 14: apple.com
-2020-09-19 16:04:26,109 Visiting 15: live.com
-2020-09-19 16:04:38,386 Visiting 16: sohu.com
-2020-09-19 16:05:08,424 Timed out loading sohu.com
-2020-09-19 16:05:13,948 New domains in snitch_map: ad-plus.cn, baidu.com, optaim.com
-2020-09-19 16:05:15,383 Visiting 17: yahoo.com
-2020-09-19 16:05:44,511 New domains in snitch_map: adsrvr.org, advertising.com, bidswitch.net, casalemedia.com, emxdgt.com, insightexpressai.com, mathtag.com, mfadsrvr.com, openx.net, pubmatic.com, rubiconproject.com, semasio.net
-2020-09-19 16:05:45,897 Visiting 18: amazon.com
-2020-09-19 16:06:08,879 New domains in snitch_map: adform.net, agkn.com, amazon-adsystem.com, associates-amazon.com, exelator.com, myvisualiq.net, tapad.com, twitter.com, yahoo.com, zeotap.com
-2020-09-19 16:06:10,520 Likely bug: domain yahoo.com tracking on amazon.com
-2020-09-19 16:06:10,520 Deleting domain yahoo.com from action and snitch maps
-2020-09-19 16:06:14,432 Visiting 19: doubleclick.net
-2020-09-19 16:06:28,391 Visiting 20: taobao.com
-2020-09-19 16:06:53,177 Visiting 21: googletagmanager.com
-2020-09-19 16:07:02,141 Visiting 22: adobe.com
-2020-09-19 16:07:20,577 New domains in snitch_map: adsymptotic.com, bidr.io, bing.com, company-target.com, contentsquare.net, everesttech.net, flashtalking.com, linkedin.com
-2020-09-19 16:07:21,946 Visiting 23: youtu.be
-2020-09-19 16:07:54,680 Visiting 24: pinterest.com
-2020-09-19 16:08:20,835 New domains in snitch_map: unsplash.com
-2020-09-19 16:08:22,688 Visiting 25: 360.cn
-2020-09-19 16:08:48,549 Visiting 26: vimeo.com
-2020-09-19 16:09:00,844 Visiting 27: jd.com
-2020-09-19 16:09:27,506 Visiting 28: reddit.com
-2020-09-19 16:10:04,692 New domains in snitch_map: aaxads.com, quantserve.com
-2020-09-19 16:10:06,143 Visiting 29: wordpress.com
-2020-09-19 16:10:20,580 Visiting 30: office.com
-2020-09-19 16:10:36,862 Visiting 31: weibo.com
-2020-09-19 16:11:04,406 Visiting 32: bing.com
-2020-09-19 16:11:15,877 Visiting 33: zoom.us
-2020-09-19 16:11:37,301 Visiting 34: sina.com.cn
-2020-09-19 16:12:07,540 Timed out loading sina.com.cn
-2020-09-19 16:12:11,144 New domains in snitch_map: iscrv.com
-2020-09-19 16:12:12,571 Visiting 35: goo.gl
-2020-09-19 16:12:29,284 Visiting 36: github.com
-2020-09-19 16:12:43,390 Visiting 37: googleusercontent.com
-2020-09-19 16:12:46,254 WebDriverException on googleusercontent.com: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 16:03:24,463 Visiting 12: qq.com
+2020-09-20 16:03:54,471 Timed out loading qq.com
+2020-09-20 16:03:58,379 Visiting 13: wikipedia.org
+2020-09-20 16:04:11,102 Visiting 14: apple.com
+2020-09-20 16:04:25,087 Visiting 15: live.com
+2020-09-20 16:04:37,891 Visiting 16: sohu.com
+2020-09-20 16:05:11,725 Timed out loading sohu.com
+2020-09-20 16:05:16,555 New domains in snitch_map: baidu.com, optaim.com
+2020-09-20 16:05:18,064 Visiting 17: yahoo.com
+2020-09-20 16:05:45,911 New domains in snitch_map: adsrvr.org, advertising.com, bidswitch.net, casalemedia.com, emxdgt.com, mathtag.com, mfadsrvr.com, openx.net, rubiconproject.com
+2020-09-20 16:05:47,525 Visiting 18: amazon.com
+2020-09-20 16:06:13,905 New domains in snitch_map: agkn.com, amazon-adsystem.com, associates-amazon.com, myvisualiq.net, twitter.com, yahoo.com, zeotap.com
+2020-09-20 16:06:15,459 Likely bug: domain yahoo.com tracking on amazon.com
+2020-09-20 16:06:15,460 Deleting domain yahoo.com from action and snitch maps
+2020-09-20 16:06:20,186 Visiting 19: doubleclick.net
+2020-09-20 16:06:33,727 Visiting 20: taobao.com
+2020-09-20 16:06:57,175 Visiting 21: googletagmanager.com
+2020-09-20 16:07:06,640 Visiting 22: adobe.com
+2020-09-20 16:07:28,605 New domains in snitch_map: bidr.io, bing.com, company-target.com, contentsquare.net, everesttech.net, flashtalking.com, linkedin.com
+2020-09-20 16:07:29,969 Visiting 23: youtu.be
+2020-09-20 16:07:57,060 Visiting 24: pinterest.com
+2020-09-20 16:08:24,279 New domains in snitch_map: unsplash.com
+2020-09-20 16:08:26,474 Visiting 25: 360.cn
+2020-09-20 16:08:53,109 Visiting 26: vimeo.com
+2020-09-20 16:09:05,763 Visiting 27: jd.com
+2020-09-20 16:09:35,795 Timed out loading jd.com
+2020-09-20 16:09:39,769 Visiting 28: reddit.com
+2020-09-20 16:10:19,110 New domains in snitch_map: aaxads.com, quantserve.com
+2020-09-20 16:10:19,959 Visiting 29: office.com
+2020-09-20 16:10:36,852 Visiting 30: wordpress.com
+2020-09-20 16:10:56,543 Visiting 31: weibo.com
+2020-09-20 16:11:22,121 Visiting 32: bing.com
+2020-09-20 16:11:32,629 Visiting 33: zoom.us
+2020-09-20 16:11:54,729 Visiting 34: sina.com.cn
+2020-09-20 16:12:57,280 New domains in snitch_map: 71360.com, baidustatic.com, iscrv.com, mmstat.com, u7u9.com
+2020-09-20 16:12:58,911 Visiting 35: goo.gl
+2020-09-20 16:13:14,550 Visiting 36: github.com
+2020-09-20 16:13:29,536 Visiting 37: googleusercontent.com
+2020-09-20 16:13:32,068 WebDriverException on googleusercontent.com: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 16:12:49,269 Visiting 38: microsoftonline.com
-2020-09-19 16:13:19,287 Timed out loading microsoftonline.com
-2020-09-19 16:13:21,880 Visiting 39: amazonaws.com
-2020-09-19 16:13:51,912 Timed out loading amazonaws.com
-2020-09-19 16:13:57,172 New domains in snitch_map: omtrdc.net
-2020-09-19 16:13:58,486 Visiting 40: bit.ly
-2020-09-19 16:14:11,444 New domains in snitch_map: zippyfrog.co
-2020-09-19 16:14:12,328 Visiting 41: blogspot.com
-2020-09-19 16:14:23,405 Visiting 42: vk.com
-2020-09-19 16:14:40,561 New domains in snitch_map: tns-counter.ru
-2020-09-19 16:14:42,091 Visiting 43: wordpress.org
-2020-09-19 16:14:53,432 Visiting 44: xinhuanet.com
-2020-09-19 16:15:25,992 New domains in snitch_map: news.cn
-2020-09-19 16:15:27,453 Visiting 45: fbcdn.net
-2020-09-19 16:15:42,879 Visiting 46: tumblr.com
-2020-09-19 16:15:59,424 New domains in snitch_map: yahoo.com
-2020-09-19 16:16:00,979 Visiting 47: mozilla.org
-2020-09-19 16:16:13,045 Visiting 48: godaddy.com
-2020-09-19 16:16:25,160 New domains in snitch_map: pinterest.com, reddit.com, rlcdn.com, tvsquared.com
-2020-09-19 16:16:26,563 Visiting 49: msn.com
-2020-09-19 16:16:59,343 New domains in snitch_map: 3lift.com, bttrack.com, creativecdn.com, d21uzv52i0cqie.cloudfront.net, eyeota.net, geistm.com, media.net, outbrain.com, powerlinks.com, sharethrough.com, taboola.com, zemanta.com
-2020-09-19 16:17:00,846 Visiting 50: google-analytics.com
-2020-09-19 16:17:13,330 Visiting 51: nytimes.com
-2020-09-19 16:17:37,210 Visiting 52: skype.com
-2020-09-19 16:17:52,606 Visiting 53: flickr.com
-2020-09-19 16:18:11,000 New domains in snitch_map: 2o7.net, hexagon-analytics.com, siftscience.com
-2020-09-19 16:18:12,562 Visiting 54: okezone.com
-2020-09-19 16:18:41,989 New domains in snitch_map: 360yield.com, alexametrics.com, rctiplus.com, sindonews.com, smartadserver.com, stickyadstv.com
-2020-09-19 16:18:43,543 Visiting 55: whatsapp.com
-2020-09-19 16:18:55,245 Visiting 56: dropbox.com
-2020-09-19 16:19:38,704 New domains in snitch_map: bizible.com, bizibly.com, criteo.com, serving-sys.com, stackadapt.com, yahoo.co.jp
-2020-09-19 16:19:39,971 Visiting 57: gravatar.com
-2020-09-19 16:19:52,020 Visiting 58: soundcloud.com
-2020-09-19 16:20:11,482 Visiting 59: ytimg.com
-2020-09-19 16:20:14,068 WebDriverException on ytimg.com: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 16:13:35,375 Visiting 38: microsoftonline.com
+2020-09-20 16:14:05,425 Timed out loading microsoftonline.com
+2020-09-20 16:14:09,261 Visiting 39: bit.ly
+2020-09-20 16:14:25,640 New domains in snitch_map: zippyfrog.co
+2020-09-20 16:14:26,984 Visiting 40: amazonaws.com
+2020-09-20 16:14:57,010 Timed out loading amazonaws.com
+2020-09-20 16:15:02,095 New domains in snitch_map: adsymptotic.com, omtrdc.net
+2020-09-20 16:15:03,677 Visiting 41: blogspot.com
+2020-09-20 16:15:16,278 Visiting 42: vk.com
+2020-09-20 16:15:31,999 New domains in snitch_map: tns-counter.ru
+2020-09-20 16:15:33,699 Visiting 43: wordpress.org
+2020-09-20 16:15:45,553 Visiting 44: xinhuanet.com
+2020-09-20 16:16:18,266 New domains in snitch_map: news.cn
+2020-09-20 16:16:19,928 Visiting 45: fbcdn.net
+2020-09-20 16:16:37,365 Visiting 46: tumblr.com
+2020-09-20 16:16:56,711 New domains in snitch_map: yahoo.com
+2020-09-20 16:16:58,234 Visiting 47: mozilla.org
+2020-09-20 16:17:10,479 Visiting 48: godaddy.com
+2020-09-20 16:17:21,777 New domains in snitch_map: krxd.net, pinterest.com, reddit.com, rlcdn.com, tapad.com, tvsquared.com
+2020-09-20 16:17:23,174 Visiting 49: msn.com
+2020-09-20 16:17:46,781 New domains in snitch_map: 3lift.com, outbrain.com, sharethrough.com
+2020-09-20 16:17:48,073 Visiting 50: google-analytics.com
+2020-09-20 16:18:01,497 Visiting 51: nytimes.com
+2020-09-20 16:18:29,603 Visiting 52: skype.com
+2020-09-20 16:18:42,710 Visiting 53: flickr.com
+2020-09-20 16:19:04,720 New domains in snitch_map: 2o7.net, hexagon-analytics.com, siftscience.com
+2020-09-20 16:19:05,962 Visiting 54: okezone.com
+2020-09-20 16:19:37,864 New domains in snitch_map: 360yield.com, alexametrics.com, pubmatic.com, rctiplus.com, sindonews.com, smartadserver.com, stickyadstv.com
+2020-09-20 16:19:39,755 Visiting 55: whatsapp.com
+2020-09-20 16:19:52,838 Visiting 56: gravatar.com
+2020-09-20 16:20:05,387 Visiting 57: dropbox.com
+2020-09-20 16:20:44,285 New domains in snitch_map: bizible.com, bizibly.com, criteo.com, serving-sys.com, stackadapt.com, yahoo.co.jp
+2020-09-20 16:20:45,231 Visiting 58: soundcloud.com
+2020-09-20 16:21:03,536 Visiting 59: ytimg.com
+2020-09-20 16:21:05,907 WebDriverException on ytimg.com: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 16:20:17,302 Visiting 60: europa.eu
-2020-09-19 16:20:28,318 Visiting 61: alipay.com
-2020-09-19 16:20:48,853 Visiting 62: myshopify.com
-2020-09-19 16:20:58,168 Visiting 63: csdn.net
-2020-09-19 16:21:27,656 Visiting 64: yahoo.co.jp
-2020-09-19 16:21:50,492 New domains in snitch_map: impact-ad.jp, imrworldwide.com
-2020-09-19 16:21:51,561 Visiting 65: cnn.com
-2020-09-19 16:22:33,924 New domains in snitch_map: bounceexchange.com, bouncex.net, chartbeat.net, ml314.com, rkdms.com
-2020-09-19 16:22:35,321 Visiting 66: t.co
-2020-09-19 16:22:45,662 Visiting 67: ebay.com
-2020-09-19 16:23:04,445 Visiting 68: apache.org
-2020-09-19 16:23:18,592 New domains in snitch_map: youtube.com
-2020-09-19 16:23:19,586 Visiting 69: twitch.tv
-2020-09-19 16:23:58,693 Visiting 70: office365.com
-2020-09-19 16:24:15,348 Visiting 71: w3.org
-2020-09-19 16:24:26,170 Visiting 72: macromedia.com
-2020-09-19 16:24:56,187 Timed out loading macromedia.com
-2020-09-19 16:24:59,584 Visiting 73: theguardian.com
-2020-09-19 16:25:28,226 Visiting 74: medium.com
-2020-09-19 16:25:47,068 Visiting 75: googlevideo.com
-2020-09-19 16:25:58,540 Visiting 76: bongacams.com
-2020-09-19 16:26:22,138 New domains in snitch_map: bcicdn.com
-2020-09-19 16:26:23,705 Visiting 77: spotify.com
-2020-09-19 16:26:41,568 New domains in snitch_map: sc-static.net, snapchat.com
-2020-09-19 16:26:42,993 Visiting 78: google.com.hk
-2020-09-19 16:26:54,621 Visiting 79: naver.com
-2020-09-19 16:27:09,871 Visiting 80: imdb.com
-2020-09-19 16:27:31,261 Visiting 81: sourceforge.net
-2020-09-19 16:27:44,868 New domains in snitch_map: adroll.com, contextweb.com, crsspxl.com, mediawallahscript.com, pro-market.net, slashdotmedia.com, xspadvertising.com
-2020-09-19 16:27:46,127 Visiting 82: zhanqi.tv
-2020-09-19 16:28:20,710 Visiting 83: bbc.co.uk
-2020-09-19 16:28:44,164 New domains in snitch_map: edigitalsurvey.com, effectivemeasure.net
-2020-09-19 16:28:45,622 Visiting 84: forbes.com
-2020-09-19 16:29:13,391 New domains in snitch_map: districtm.io, dotomi.com, moatads.com, tinypass.com, turn.com, w55c.net
-2020-09-19 16:29:14,515 Visiting 85: paypal.com
-2020-09-19 16:29:27,005 Visiting 86: panda.tv
-2020-09-19 16:29:44,263 WebDriverException on panda.tv: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 16:21:08,841 Visiting 60: europa.eu
+2020-09-20 16:21:20,970 Visiting 61: alipay.com
+2020-09-20 16:21:47,744 Visiting 62: myshopify.com
+2020-09-20 16:21:57,146 Visiting 63: csdn.net
+2020-09-20 16:22:23,490 Visiting 64: yahoo.co.jp
+2020-09-20 16:22:47,390 New domains in snitch_map: impact-ad.jp, imrworldwide.com
+2020-09-20 16:22:48,723 Visiting 65: cnn.com
+2020-09-20 16:23:34,064 New domains in snitch_map: bounceexchange.com, bouncex.net, bttrack.com, chartbeat.net, creativecdn.com, eqads.com, exelator.com, eyeota.net, geistm.com, ml314.com, perf-serving.com, powerlinks.com, rkdms.com, zemanta.com
+2020-09-20 16:23:35,662 Visiting 66: t.co
+2020-09-20 16:23:45,815 Visiting 67: ebay.com
+2020-09-20 16:24:03,040 Visiting 68: apache.org
+2020-09-20 16:24:16,101 New domains in snitch_map: youtube.com
+2020-09-20 16:24:17,676 Visiting 69: twitch.tv
+2020-09-20 16:24:47,680 Timed out loading twitch.tv
+2020-09-20 16:24:52,387 Visiting 70: office365.com
+2020-09-20 16:25:07,162 Visiting 71: w3.org
+2020-09-20 16:25:19,811 Visiting 72: macromedia.com
+2020-09-20 16:25:49,836 Timed out loading macromedia.com
+2020-09-20 16:25:53,640 Visiting 73: theguardian.com
+2020-09-20 16:26:19,007 Visiting 74: googlevideo.com
+2020-09-20 16:26:31,289 Visiting 75: medium.com
+2020-09-20 16:26:47,523 Visiting 76: google.com.hk
+2020-09-20 16:26:58,960 Visiting 77: spotify.com
+2020-09-20 16:27:16,104 New domains in snitch_map: sc-static.net, snapchat.com
+2020-09-20 16:27:17,841 Visiting 78: bongacams.com
+2020-09-20 16:27:39,025 New domains in snitch_map: bcicdn.com
+2020-09-20 16:27:40,728 Visiting 79: naver.com
+2020-09-20 16:27:57,685 Visiting 80: imdb.com
+2020-09-20 16:28:16,531 Visiting 81: sourceforge.net
+2020-09-20 16:28:28,566 New domains in snitch_map: adroll.com, contextweb.com, crsspxl.com, mediawallahscript.com, pro-market.net, slashdotmedia.com, taboola.com, xspadvertising.com
+2020-09-20 16:28:30,064 Visiting 82: zhanqi.tv
+2020-09-20 16:28:56,281 Visiting 83: bbc.co.uk
+2020-09-20 16:29:22,378 New domains in snitch_map: edigitalsurvey.com, effectivemeasure.net
+2020-09-20 16:29:23,716 Visiting 84: forbes.com
+2020-09-20 16:29:55,005 New domains in snitch_map: districtm.io, dotomi.com, media.net, tinypass.com, turn.com, w55c.net
+2020-09-20 16:29:56,610 Visiting 85: paypal.com
+2020-09-20 16:30:08,007 Visiting 86: panda.tv
+2020-09-20 16:30:24,662 WebDriverException on panda.tv: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 16:29:47,913 Visiting 87: aliexpress.com
-2020-09-19 16:30:15,756 New domains in snitch_map: tmall.ru
-2020-09-19 16:30:17,523 Visiting 88: archive.org
-2020-09-19 16:30:31,810 Visiting 89: bbc.com
-2020-09-19 16:30:48,089 New domains in snitch_map: optimizely.com
-2020-09-19 16:30:48,999 Visiting 90: googleadservices.com
-2020-09-19 16:30:57,989 Visiting 91: cloudflare.com
-2020-09-19 16:31:21,855 Visiting 92: googlesyndication.com
-2020-09-19 16:31:34,142 Visiting 93: github.io
-2020-09-19 16:31:49,266 Visiting 94: google.co.in
-2020-09-19 16:32:00,393 Visiting 95: yandex.ru
-2020-09-19 16:32:26,764 Visiting 96: amazon.in
-2020-09-19 16:32:48,304 Visiting 97: stackoverflow.com
-2020-09-19 16:33:01,568 Visiting 98: weebly.com
-2020-09-19 16:33:21,190 Visiting 99: china.com.cn
-2020-09-19 16:33:44,295 New domains in snitch_map: knet.cn, webterren.com
-2020-09-19 16:33:45,811 Visiting 100: digicert.com
-2020-09-19 16:34:11,825 New domains in snitch_map: salesforceliveagent.com
-2020-09-19 16:34:12,973 Visiting 101: virginmedia.com
-2020-09-19 16:34:36,037 New domains in snitch_map: liveperson.net
-2020-09-19 16:34:37,624 Visiting 102: tianya.cn
-2020-09-19 16:34:46,125 WebDriverException on tianya.cn: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 16:30:27,753 Visiting 87: aliexpress.com
+2020-09-20 16:30:53,950 New domains in snitch_map: tmall.ru
+2020-09-20 16:30:55,334 Visiting 88: archive.org
+2020-09-20 16:31:10,168 Visiting 89: bbc.com
+2020-09-20 16:31:26,682 New domains in snitch_map: optimizely.com
+2020-09-20 16:31:28,267 Visiting 90: cloudflare.com
+2020-09-20 16:31:52,454 Visiting 91: googleadservices.com
+2020-09-20 16:32:01,225 Visiting 92: googlesyndication.com
+2020-09-20 16:32:13,994 Visiting 93: github.io
+2020-09-20 16:32:30,574 Visiting 94: google.co.in
+2020-09-20 16:32:42,530 Visiting 95: yandex.ru
+2020-09-20 16:32:59,461 Visiting 96: amazon.in
+2020-09-20 16:33:23,740 Visiting 97: weebly.com
+2020-09-20 16:33:44,215 Visiting 98: stackoverflow.com
+2020-09-20 16:33:57,655 Visiting 99: china.com.cn
+2020-09-20 16:34:25,466 New domains in snitch_map: knet.cn, webterren.com
+2020-09-20 16:34:26,352 Visiting 100: digicert.com
+2020-09-20 16:34:50,793 New domains in snitch_map: salesforceliveagent.com, tremorhub.com
+2020-09-20 16:34:52,273 Visiting 101: virginmedia.com
+2020-09-20 16:35:14,030 New domains in snitch_map: liveperson.net
+2020-09-20 16:35:15,577 Visiting 102: tianya.cn
+2020-09-20 16:35:22,757 WebDriverException on tianya.cn: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 16:34:49,688 Visiting 103: amazon.co.jp
-2020-09-19 16:35:05,255 Visiting 104: creativecommons.org
-2020-09-19 16:35:22,337 Visiting 105: who.int
-2020-09-19 16:35:41,770 New domains in snitch_map: addthis.com
-2020-09-19 16:35:42,652 Visiting 106: wixsite.com
-2020-09-19 16:35:45,079 WebDriverException on wixsite.com: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 16:35:26,131 Visiting 103: amazon.co.jp
+2020-09-20 16:35:47,662 Visiting 104: creativecommons.org
+2020-09-20 16:36:05,766 Visiting 105: who.int
+2020-09-20 16:36:26,132 New domains in snitch_map: addthis.com
+2020-09-20 16:36:27,789 Visiting 106: wixsite.com
+2020-09-20 16:36:30,286 WebDriverException on wixsite.com: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 16:35:48,533 Visiting 107: windows.net
-2020-09-19 16:36:02,259 Visiting 108: issuu.com
-2020-09-19 16:36:15,277 Visiting 109: tribunnews.com
-2020-09-19 16:36:36,288 New domains in snitch_map: ivideosmart.com, kompas.com, spotxchange.com, webvisor.org, yandex.ru
-2020-09-19 16:36:38,084 Visiting 110: washingtonpost.com
-2020-09-19 16:37:10,889 Visiting 111: imgur.com
-2020-09-19 16:37:36,056 New domains in snitch_map: adition.com, adotmob.com, adswizz.com, digitru.st, id5-sync.com, sitescout.com, tidaltv.com, yieldoptimizer.com
-2020-09-19 16:37:37,693 Visiting 112: etsy.com
-2020-09-19 16:37:59,983 Visiting 113: ggpht.com
-2020-09-19 16:38:02,459 WebDriverException on ggpht.com: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 16:36:33,553 Visiting 107: windows.net
+2020-09-20 16:36:46,908 Visiting 108: issuu.com
+2020-09-20 16:37:01,545 Visiting 109: washingtonpost.com
+2020-09-20 16:37:33,461 Visiting 110: tribunnews.com
+2020-09-20 16:37:52,962 New domains in snitch_map: ivideosmart.com, kompas.com, spotxchange.com, webvisor.org, yandex.ru
+2020-09-20 16:37:54,865 Visiting 111: imgur.com
+2020-09-20 16:38:26,945 New domains in snitch_map: adform.net, adition.com, adotmob.com, digitru.st, id5-sync.com, sitescout.com, tidaltv.com, yieldlab.net
+2020-09-20 16:38:28,563 Visiting 112: etsy.com
+2020-09-20 16:38:50,164 Visiting 113: livejasmin.com
+2020-09-20 16:39:28,072 New domains in snitch_map: dditscdn.com
+2020-09-20 16:39:29,821 Visiting 114: ggpht.com
+2020-09-20 16:39:32,455 WebDriverException on ggpht.com: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 16:38:05,677 Visiting 114: livejasmin.com
-2020-09-19 16:38:42,008 New domains in snitch_map: dditscdn.com
-2020-09-19 16:38:43,614 Visiting 115: chaturbate.com
-2020-09-19 16:39:20,323 New domains in snitch_map: exoticads.com, nr-data.net
-2020-09-19 16:39:21,743 Visiting 116: oracle.com
-2020-09-19 16:39:39,172 New domains in snitch_map: oracleimg.com
-2020-09-19 16:39:40,745 Visiting 117: mail.ru
-2020-09-19 16:40:06,379 New domains in snitch_map: relap.io, yadro.ru, yastatic.net
-2020-09-19 16:40:07,895 Visiting 118: slideshare.net
-2020-09-19 16:40:23,650 Visiting 119: amazon.co.uk
-2020-09-19 16:40:43,516 Visiting 120: reuters.com
-2020-09-19 16:41:10,821 New domains in snitch_map: globalwebindex.net, postrelease.com, wsod.com
-2020-09-19 16:41:12,306 Visiting 121: php.net
-2020-09-19 16:41:27,161 Visiting 122: gvt2.com
-2020-09-19 16:41:29,844 WebDriverException on gvt2.com: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 16:39:35,824 Visiting 115: chaturbate.com
+2020-09-20 16:40:07,057 Timed out loading chaturbate.com
+2020-09-20 16:40:09,224 New domains in snitch_map: exoticads.com
+2020-09-20 16:40:10,848 Visiting 116: oracle.com
+2020-09-20 16:40:28,710 New domains in snitch_map: oracleimg.com
+2020-09-20 16:40:30,486 Visiting 117: mail.ru
+2020-09-20 16:40:53,148 New domains in snitch_map: relap.io, yadro.ru
+2020-09-20 16:40:54,704 Visiting 118: slideshare.net
+2020-09-20 16:41:09,961 Visiting 119: amazon.co.uk
+2020-09-20 16:41:32,266 Visiting 120: reuters.com
+2020-09-20 16:41:59,768 New domains in snitch_map: globalwebindex.net, postrelease.com, wsod.com
+2020-09-20 16:42:01,276 Visiting 121: php.net
+2020-09-20 16:42:13,462 Visiting 122: gvt2.com
+2020-09-20 16:42:16,157 WebDriverException on gvt2.com: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 16:41:33,398 Visiting 123: wix.com
-2020-09-19 16:41:44,595 New domains in snitch_map: editorx.com
-2020-09-19 16:41:46,303 Visiting 124: app-measurement.com
-2020-09-19 16:41:55,258 Visiting 125: wsj.com
-2020-09-19 16:42:15,968 New domains in snitch_map: cxense.com
-2020-09-19 16:42:17,390 Visiting 126: icloud.com
-2020-09-19 16:42:38,588 Visiting 127: akadns.net
-2020-09-19 16:42:41,071 WebDriverException on akadns.net: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 16:42:19,691 Visiting 123: wix.com
+2020-09-20 16:42:49,713 Timed out loading wix.com
+2020-09-20 16:42:56,172 New domains in snitch_map: editorx.com
+2020-09-20 16:42:57,931 Visiting 124: wsj.com
+2020-09-20 16:43:18,364 New domains in snitch_map: cxense.com
+2020-09-20 16:43:19,933 Visiting 125: app-measurement.com
+2020-09-20 16:43:28,026 Visiting 126: icloud.com
+2020-09-20 16:43:50,993 Visiting 127: akadns.net
+2020-09-20 16:43:53,447 WebDriverException on akadns.net: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 16:42:44,507 Visiting 128: akamaiedge.net
-2020-09-19 16:42:46,923 WebDriverException on akamaiedge.net: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 16:43:56,628 Visiting 128: akamaiedge.net
+2020-09-20 16:43:59,122 WebDriverException on akamaiedge.net: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 16:42:49,259 Visiting 129: pornhub.com
-2020-09-19 16:43:03,408 New domains in snitch_map: adtng.com, trafficjunky.net
-2020-09-19 16:43:05,141 Visiting 130: tinyurl.com
-2020-09-19 16:43:17,380 New domains in snitch_map: deployads.com
-2020-09-19 16:43:18,941 Visiting 131: google.de
-2020-09-19 16:43:32,125 Visiting 132: huanqiu.com
-2020-09-19 16:44:02,139 Timed out loading huanqiu.com
-2020-09-19 16:44:05,997 Visiting 133: wikimedia.org
-2020-09-19 16:44:15,752 Visiting 134: 1688.com
-2020-09-19 16:44:42,031 Visiting 135: alibaba.com
-2020-09-19 16:45:25,563 Visiting 136: aparat.com
-2020-09-19 16:45:40,858 New domains in snitch_map: sabavision.com
-2020-09-19 16:45:41,886 Visiting 137: wp.com
-2020-09-19 16:45:56,483 Visiting 138: google.cn
-2020-09-19 16:46:06,287 Visiting 139: bloomberg.com
-2020-09-19 16:46:48,400 New domains in snitch_map: liadm.com, media6degrees.com, parsely.com
-2020-09-19 16:46:49,956 Visiting 140: google.co.jp
-2020-09-19 16:47:02,408 Visiting 141: businessinsider.com
-2020-09-19 16:47:26,948 New domains in snitch_map: revjet.com, skimresources.com, sp-prod.net
-2020-09-19 16:47:28,556 Visiting 142: cnet.com
-2020-09-19 16:47:44,344 New domains in snitch_map: sonobi.com, tealiumiq.com
-2020-09-19 16:47:45,851 Visiting 143: sogou.com
-2020-09-19 16:48:02,557 Visiting 144: yy.com
-2020-09-19 16:48:31,763 New domains in snitch_map: hiido.com, yystatic.com
-2020-09-19 16:48:33,563 Visiting 145: instructure.com
-2020-09-19 16:48:56,429 New domains in snitch_map: visualwebsiteoptimizer.com
-2020-09-19 16:48:58,497 Visiting 146: sciencedirect.com
-2020-09-19 16:49:14,283 Visiting 147: opera.com
-2020-09-19 16:49:33,178 Visiting 148: youtube-nocookie.com
-2020-09-19 16:49:43,355 Visiting 149: 163.com
-2020-09-19 16:50:13,413 Timed out loading 163.com
-2020-09-19 16:50:17,516 Visiting 150: ok.ru
-2020-09-19 16:51:03,078 Timed out loading skin/options.html
-2020-09-19 16:51:07,688 Visiting 151: google.com.br
-2020-09-19 16:51:19,723 Visiting 152: harvard.edu
-2020-09-19 16:51:37,440 Visiting 153: gnu.org
-2020-09-19 16:51:48,443 Visiting 154: mit.edu
-2020-09-19 16:52:04,184 Visiting 155: outlook.com
-2020-09-19 16:52:18,627 Visiting 156: dailymail.co.uk
-2020-09-19 16:53:06,805 New domains in snitch_map: and.co.uk, anm.co.uk, dmgmediaprivacy.co.uk, kargo.com, newzit.com, omnitagjs.com, tremorhub.com
-2020-09-19 16:53:08,563 Visiting 157: booking.com
-2020-09-19 16:53:39,306 Visiting 158: so.com
-2020-09-19 16:54:11,848 New domains in snitch_map: 360.cn, mediav.com, qhupdate.com
-2020-09-19 16:54:13,593 Visiting 159: ibm.com
-2020-09-19 16:54:43,710 New domains in snitch_map: coremetrics.com, idio.co
-2020-09-19 16:54:45,129 Visiting 160: 17ok.com
-2020-09-19 16:55:00,894 Visiting 161: amazon.de
-2020-09-19 16:55:24,309 Visiting 162: espn.com
-2020-09-19 16:56:16,721 New domains in snitch_map: adobe.com
-2020-09-19 16:56:18,502 Visiting 163: researchgate.net
-2020-09-19 16:56:32,316 Visiting 164: samsung.com
-2020-09-19 16:56:57,273 New domains in snitch_map: iadvize.com
-2020-09-19 16:56:58,945 Visiting 165: go.com
-2020-09-19 16:57:14,693 New domains in snitch_map: di-dtaectolog-us-prod-1.appspot.com, researchnow.com
-2020-09-19 16:57:16,349 Visiting 166: stanford.edu
-2020-09-19 16:57:32,821 Visiting 167: google.co.uk
-2020-09-19 16:57:46,996 Visiting 168: forms.gle
-2020-09-19 16:57:57,557 Visiting 169: bitly.com
-2020-09-19 16:58:15,445 Visiting 170: rakuten.co.jp
-2020-09-19 16:59:01,184 New domains in snitch_map: linksynergy.com, trafficgate.net, xlisting.jp
-2020-09-19 16:59:03,003 Visiting 171: list-manage.com
-2020-09-19 16:59:13,509 Visiting 172: hp.com
-2020-09-19 16:59:33,396 Visiting 173: blogger.com
-2020-09-19 16:59:46,111 Visiting 174: wiley.com
-2020-09-19 17:00:05,043 Visiting 175: windows.com
-2020-09-19 17:00:33,447 Visiting 176: facebook.net
-2020-09-19 17:00:35,791 WebDriverException on facebook.net: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 16:44:02,724 Visiting 129: pornhub.com
+2020-09-20 16:44:18,305 New domains in snitch_map: adtng.com, trafficjunky.net
+2020-09-20 16:44:19,826 Visiting 130: google.de
+2020-09-20 16:44:31,639 Visiting 131: tinyurl.com
+2020-09-20 16:44:41,621 New domains in snitch_map: deployads.com
+2020-09-20 16:44:43,309 Visiting 132: huanqiu.com
+2020-09-20 16:45:13,340 Timed out loading huanqiu.com
+2020-09-20 16:45:15,897 New domains in snitch_map: ad-survey.com
+2020-09-20 16:45:17,187 Visiting 133: wikimedia.org
+2020-09-20 16:45:27,224 Visiting 134: 1688.com
+2020-09-20 16:45:55,923 Visiting 135: alibaba.com
+2020-09-20 16:46:32,613 Visiting 136: google.cn
+2020-09-20 16:46:40,791 Visiting 137: aparat.com
+2020-09-20 16:46:56,988 New domains in snitch_map: sabavision.com
+2020-09-20 16:46:58,053 Visiting 138: wp.com
+2020-09-20 16:47:11,235 Visiting 139: bloomberg.com
+2020-09-20 16:47:53,620 New domains in snitch_map: liadm.com, media6degrees.com, moatads.com, parsely.com
+2020-09-20 16:47:55,220 Visiting 140: google.co.jp
+2020-09-20 16:48:07,453 Visiting 141: businessinsider.com
+2020-09-20 16:48:30,026 New domains in snitch_map: revjet.com, skimresources.com, sp-prod.net
+2020-09-20 16:48:31,664 Visiting 142: sogou.com
+2020-09-20 16:48:44,805 New domains in snitch_map: qq.com
+2020-09-20 16:48:46,266 Visiting 143: cnet.com
+2020-09-20 16:49:00,278 New domains in snitch_map: sonobi.com, tealiumiq.com
+2020-09-20 16:49:02,341 Visiting 144: instructure.com
+2020-09-20 16:49:28,925 New domains in snitch_map: visualwebsiteoptimizer.com
+2020-09-20 16:49:30,317 Visiting 145: yy.com
+2020-09-20 16:50:03,606 New domains in snitch_map: hiido.com, yystatic.com
+2020-09-20 16:50:05,349 Visiting 146: sciencedirect.com
+2020-09-20 16:50:19,564 Visiting 147: opera.com
+2020-09-20 16:50:35,820 Visiting 148: youtube-nocookie.com
+2020-09-20 16:50:44,809 Visiting 149: 163.com
+2020-09-20 16:51:14,867 Timed out loading 163.com
+2020-09-20 16:51:18,789 Visiting 150: google.com.br
+2020-09-20 16:51:32,189 Visiting 151: harvard.edu
+2020-09-20 16:51:46,894 New domains in snitch_map: nr-data.net
+2020-09-20 16:51:48,419 Visiting 152: gnu.org
+2020-09-20 16:51:59,956 Visiting 153: ok.ru
+2020-09-20 16:52:20,392 Visiting 154: mit.edu
+2020-09-20 16:52:32,438 Visiting 155: outlook.com
+2020-09-20 16:52:47,572 Visiting 156: dailymail.co.uk
+2020-09-20 16:53:29,373 New domains in snitch_map: and.co.uk, anm.co.uk, dmgmediaprivacy.co.uk, kargo.com, newzit.com, omnitagjs.com
+2020-09-20 16:53:30,974 Visiting 157: so.com
+2020-09-20 16:53:48,144 New domains in snitch_map: 360.cn, mediav.com, qhupdate.com
+2020-09-20 16:53:49,850 Visiting 158: booking.com
+2020-09-20 16:54:15,237 Visiting 159: ibm.com
+2020-09-20 16:54:41,164 New domains in snitch_map: coremetrics.com, idio.co
+2020-09-20 16:54:43,060 Visiting 160: 17ok.com
+2020-09-20 16:54:56,421 Visiting 161: espn.com
+2020-09-20 16:55:44,024 New domains in snitch_map: adobe.com
+2020-09-20 16:55:45,902 Visiting 162: amazon.de
+2020-09-20 16:56:07,556 Visiting 163: researchgate.net
+2020-09-20 16:56:21,714 Visiting 164: go.com
+2020-09-20 16:56:35,836 New domains in snitch_map: di-dtaectolog-us-prod-1.appspot.com, researchnow.com
+2020-09-20 16:56:37,362 Visiting 165: stanford.edu
+2020-09-20 16:56:52,762 Visiting 166: samsung.com
+2020-09-20 16:57:22,711 New domains in snitch_map: iadvize.com
+2020-09-20 16:57:24,318 Visiting 167: forms.gle
+2020-09-20 16:57:33,662 Visiting 168: google.co.uk
+2020-09-20 16:57:44,883 Visiting 169: bitly.com
+2020-09-20 16:57:58,658 Visiting 170: rakuten.co.jp
+2020-09-20 16:58:37,817 New domains in snitch_map: linksynergy.com, trafficgate.net, xlisting.jp
+2020-09-20 16:58:39,253 Visiting 171: list-manage.com
+2020-09-20 16:58:49,085 Visiting 172: hp.com
+2020-09-20 16:59:07,631 Visiting 173: blogger.com
+2020-09-20 16:59:20,532 Visiting 174: wiley.com
+2020-09-20 16:59:38,088 Visiting 175: windows.com
+2020-09-20 17:00:04,035 Visiting 176: telegraph.co.uk
+2020-09-20 17:00:39,892 New domains in snitch_map: infinity-tracking.net, petametrics.com, quora.com, the-ozone-project.com
+2020-09-20 17:00:41,484 Visiting 177: facebook.net
+2020-09-20 17:00:44,226 WebDriverException on facebook.net: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 17:00:39,303 Visiting 177: telegraph.co.uk
-2020-09-19 17:01:15,407 New domains in snitch_map: infinity-tracking.net, petametrics.com, quora.com
-2020-09-19 17:01:17,195 Visiting 178: aol.com
-2020-09-19 17:01:58,710 New domains in snitch_map: spot.im
-2020-09-19 17:02:00,502 Visiting 179: usatoday.com
-2020-09-19 17:02:24,375 New domains in snitch_map: colossusssp.com, igodigital.com, intentiq.com, rfihub.com, serverbid.com
-2020-09-19 17:02:26,237 Visiting 180: msedge.net
-2020-09-19 17:02:56,296 Timed out loading msedge.net
-2020-09-19 17:03:01,266 Visiting 181: jrj.com.cn
-2020-09-19 17:03:33,060 Visiting 182: mama.cn
-2020-09-19 17:03:57,646 Visiting 183: ntp.org
-2020-09-19 17:04:08,076 Visiting 184: cnbc.com
-2020-09-19 17:04:29,049 New domains in snitch_map: nbcuni.com
-2020-09-19 17:04:30,825 Visiting 185: fb.com
-2020-09-19 17:04:48,699 Visiting 186: surveymonkey.com
-2020-09-19 17:05:12,779 New domains in snitch_map: hubspot.com
-2020-09-19 17:05:14,369 Visiting 187: nginx.org
-2020-09-19 17:05:25,210 Visiting 188: cpanel.net
-2020-09-19 17:05:38,520 New domains in snitch_map: pardot.com
-2020-09-19 17:05:40,300 Visiting 189: fandom.com
-2020-09-19 17:05:57,305 New domains in snitch_map: ad.gt
-2020-09-19 17:05:59,114 Visiting 190: eventbrite.com
-2020-09-19 17:06:25,925 Visiting 191: indiatimes.com
-2020-09-19 17:06:46,234 Visiting 192: myspace.com
-2020-09-19 17:06:47,706 WebDriverException on myspace.com: Reached error page: HTTP ERROR 410
-2020-09-19 17:06:51,256 Visiting 193: kompas.com
-2020-09-19 17:07:08,254 New domains in snitch_map: jxtrackers.azurewebsites.net
-2020-09-19 17:07:09,867 Visiting 194: huffingtonpost.com
-2020-09-19 17:07:44,337 New domains in snitch_map: vidible.tv
-2020-09-19 17:07:46,276 Visiting 195: dailymotion.com
-2020-09-19 17:08:03,238 New domains in snitch_map: dmxleo.com
-2020-09-19 17:08:04,948 Visiting 196: canva.com
-2020-09-19 17:08:19,814 Visiting 197: google.fr
-2020-09-19 17:08:32,716 Visiting 198: nature.com
-2020-09-19 17:08:47,853 Visiting 199: google.es
-2020-09-19 17:09:00,705 Visiting 200: aliyun.com
-2020-09-19 17:09:22,974 New domains in snitch_map: dc-storm.com, eloqua.com
-2020-09-19 17:09:24,574 Visiting 201: cloudfront.net
-2020-09-19 17:09:27,418 WebDriverException on cloudfront.net: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 17:00:47,473 Visiting 178: aol.com
+2020-09-20 17:01:25,724 New domains in snitch_map: semasio.net, spot.im
+2020-09-20 17:01:27,486 Visiting 179: usatoday.com
+2020-09-20 17:01:49,097 New domains in snitch_map: colossusssp.com, igodigital.com, intentiq.com, rfihub.com, serverbid.com, summerhamster.com
+2020-09-20 17:01:51,008 Visiting 180: msedge.net
+2020-09-20 17:02:21,035 Timed out loading msedge.net
+2020-09-20 17:02:24,915 Visiting 181: jrj.com.cn
+2020-09-20 17:02:58,120 New domains in snitch_map: cnzz.com
+2020-09-20 17:02:59,701 Visiting 182: mama.cn
+2020-09-20 17:03:25,725 Visiting 183: ntp.org
+2020-09-20 17:03:35,074 Visiting 184: cnbc.com
+2020-09-20 17:03:55,727 New domains in snitch_map: nbcuni.com
+2020-09-20 17:03:57,451 Visiting 185: fb.com
+2020-09-20 17:04:10,094 Visiting 186: surveymonkey.com
+2020-09-20 17:04:30,822 New domains in snitch_map: hubspot.com
+2020-09-20 17:04:32,662 Visiting 187: nginx.org
+2020-09-20 17:04:43,019 Visiting 188: cpanel.net
+2020-09-20 17:04:56,346 New domains in snitch_map: pardot.com
+2020-09-20 17:04:57,879 Visiting 189: fandom.com
+2020-09-20 17:05:15,584 New domains in snitch_map: ad.gt
+2020-09-20 17:05:17,336 Visiting 190: eventbrite.com
+2020-09-20 17:05:40,704 Visiting 191: kompas.com
+2020-09-20 17:05:57,410 New domains in snitch_map: appier.net, jxtrackers.azurewebsites.net
+2020-09-20 17:05:59,140 Visiting 192: indiatimes.com
+2020-09-20 17:06:18,145 Visiting 193: myspace.com
+2020-09-20 17:06:19,053 WebDriverException on myspace.com: Reached error page: HTTP ERROR 410
+2020-09-20 17:06:20,938 Visiting 194: canva.com
+2020-09-20 17:06:36,449 Visiting 195: dailymotion.com
+2020-09-20 17:06:53,511 New domains in snitch_map: dmxleo.com
+2020-09-20 17:06:55,199 Visiting 196: huffingtonpost.com
+2020-09-20 17:07:29,103 New domains in snitch_map: vidible.tv
+2020-09-20 17:07:30,429 Visiting 197: google.fr
+2020-09-20 17:07:42,433 Visiting 198: nature.com
+2020-09-20 17:07:57,104 Visiting 199: google.es
+2020-09-20 17:08:10,545 Visiting 200: cloudfront.net
+2020-09-20 17:08:13,011 WebDriverException on cloudfront.net: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 17:09:31,000 Visiting 202: behance.net
-2020-09-19 17:10:07,980 Visiting 203: apple-dns.net
-2020-09-19 17:10:09,776 WebDriverException on apple-dns.net: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 17:08:15,211 Visiting 201: behance.net
+2020-09-20 17:08:51,117 Visiting 202: apple-dns.net
+2020-09-20 17:08:53,452 WebDriverException on apple-dns.net: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 17:10:13,569 Visiting 204: youku.com
-2020-09-19 17:10:48,665 Visiting 205: office.net
-2020-09-19 17:10:51,188 WebDriverException on office.net: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 17:08:55,800 Visiting 203: xvideos.com
+2020-09-20 17:09:11,801 Visiting 204: aliyun.com
+2020-09-20 17:09:34,110 New domains in snitch_map: dc-storm.com, eloqua.com
+2020-09-20 17:09:35,787 Visiting 205: youku.com
+2020-09-20 17:10:10,798 Visiting 206: office.net
+2020-09-20 17:10:12,715 WebDriverException on office.net: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 17:10:54,954 Visiting 206: xvideos.com
-2020-09-19 17:11:10,584 Visiting 207: hao123.com
-2020-09-19 17:11:41,683 Visiting 208: nflxso.net
-2020-09-19 17:11:44,164 WebDriverException on nflxso.net: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 17:10:16,138 Visiting 207: ettoday.net
+2020-09-20 17:10:50,721 New domains in snitch_map: ad-score.com, dable.io, daum.net, toast.com, tynt.com
+2020-09-20 17:10:52,518 Visiting 208: hao123.com
+2020-09-20 17:11:24,229 Visiting 209: nflxso.net
+2020-09-20 17:11:26,499 WebDriverException on nflxso.net: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 17:11:47,907 Visiting 209: addthis.com
-2020-09-19 17:12:04,641 New domains in snitch_map: choozle.com, oracle.com
-2020-09-19 17:12:06,276 Visiting 210: ettoday.net
-2020-09-19 17:12:41,607 New domains in snitch_map: appier.net, dable.io, daum.net, toast.com, tynt.com
-2020-09-19 17:12:43,071 Visiting 211: time.com
-2020-09-19 17:13:00,993 New domains in snitch_map: krxd.net
-2020-09-19 17:13:02,565 Visiting 212: pixnet.net
-2020-09-19 17:13:27,092 New domains in snitch_map: pixnet.cc
-2020-09-19 17:13:28,771 Visiting 213: gvt1.com
-2020-09-19 17:13:31,091 WebDriverException on gvt1.com: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 17:11:30,264 Visiting 210: gvt1.com
+2020-09-20 17:11:32,927 WebDriverException on gvt1.com: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 17:13:34,945 Visiting 214: roblox.com
-2020-09-19 17:13:53,697 Visiting 215: hicloud.com
-2020-09-19 17:14:23,717 Timed out loading hicloud.com
-2020-09-19 17:14:28,217 Visiting 216: un.org
-2020-09-19 17:14:43,769 Visiting 217: npr.org
-2020-09-19 17:15:01,060 New domains in snitch_map: stripe.com
-2020-09-19 17:15:02,625 Visiting 218: google.it
-2020-09-19 17:15:16,359 Visiting 219: walmart.com
-2020-09-19 17:15:38,641 New domains in snitch_map: tribalfusion.com
-2020-09-19 17:15:40,529 Visiting 220: freepik.com
-2020-09-19 17:16:10,833 New domains in snitch_map: statcounter.com
-2020-09-19 17:16:12,559 Visiting 221: babytree.com
-2020-09-19 17:16:36,267 New domains in snitch_map: kexin001.com
-2020-09-19 17:16:38,014 Visiting 222: indeed.com
-2020-09-19 17:16:55,158 Visiting 223: foxnews.com
-2020-09-19 17:17:30,016 New domains in snitch_map: omny.fm, taplytics.com
-2020-09-19 17:17:31,637 Visiting 224: springer.com
-2020-09-19 17:17:47,385 New domains in snitch_map: baynote.net, webtrekk.net
-2020-09-19 17:17:49,113 Visiting 225: udemy.com
-2020-09-19 17:18:08,295 New domains in snitch_map: atp.io, pointmediatracker.com, rmtag.com, sift.com
-2020-09-19 17:18:09,932 Visiting 226: t.me
-2020-09-19 17:18:24,255 Visiting 227: grid.id
-2020-09-19 17:18:45,047 New domains in snitch_map: jixie.io
-2020-09-19 17:18:46,851 Visiting 228: google.ru
-2020-09-19 17:19:00,948 Visiting 229: wendyssubway.com
-2020-09-19 17:19:12,885 Visiting 230: www.gov.uk
-2020-09-19 17:19:25,273 Visiting 231: ted.com
-2020-09-19 17:19:45,436 Visiting 232: cpanel.com
-2020-09-19 17:19:59,795 Visiting 233: sharepoint.com
-2020-09-19 17:20:18,567 Visiting 234: wired.com
-2020-09-19 17:21:05,080 New domains in snitch_map: allure.com, architecturaldigest.com, bonappetit.com, cntraveler.com, condenastdigital.com, deepintent.com, epicurious.com, glamour.com, gq.com, lennyletter.com, medtargetsystem.com, newyorker.com, pitchfork.com, self.com, teenvogue.com, them.us, vanityfair.com, vogue.com
-2020-09-19 17:21:06,802 Visiting 235: aaplimg.com
-2020-09-19 17:21:21,575 Visiting 236: bilibili.com
-2020-09-19 17:21:48,414 Visiting 237: akamai.net
-2020-09-19 17:21:50,366 WebDriverException on akamai.net: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 17:11:36,262 Visiting 211: addthis.com
+2020-09-20 17:11:51,938 New domains in snitch_map: choozle.com, oracle.com
+2020-09-20 17:11:53,323 Visiting 212: time.com
+2020-09-20 17:12:16,164 Visiting 213: pixnet.net
+2020-09-20 17:12:47,387 New domains in snitch_map: pixnet.cc
+2020-09-20 17:12:49,377 Visiting 214: indeed.com
+2020-09-20 17:13:04,971 Visiting 215: roblox.com
+2020-09-20 17:13:22,595 Visiting 216: udemy.com
+2020-09-20 17:13:40,058 New domains in snitch_map: atp.io, pointmediatracker.com, rmtag.com, sift.com
+2020-09-20 17:13:41,671 Visiting 217: un.org
+2020-09-20 17:13:56,614 Visiting 218: walmart.com
+2020-09-20 17:14:18,367 New domains in snitch_map: tribalfusion.com
+2020-09-20 17:14:20,011 Visiting 219: npr.org
+2020-09-20 17:14:36,409 New domains in snitch_map: stripe.com
+2020-09-20 17:14:37,645 Visiting 220: hicloud.com
+2020-09-20 17:15:07,664 Timed out loading hicloud.com
+2020-09-20 17:15:12,059 Visiting 221: babytree.com
+2020-09-20 17:15:42,063 Timed out loading babytree.com
+2020-09-20 17:15:46,212 Visiting 222: google.it
+2020-09-20 17:15:58,444 Visiting 223: freepik.com
+2020-09-20 17:16:24,548 New domains in snitch_map: statcounter.com
+2020-09-20 17:16:25,738 Visiting 224: springer.com
+2020-09-20 17:16:43,299 New domains in snitch_map: baynote.net, webtrekk.net
+2020-09-20 17:16:44,716 Visiting 225: foxnews.com
+2020-09-20 17:17:09,096 New domains in snitch_map: omny.fm, taplytics.com
+2020-09-20 17:17:10,890 Visiting 226: t.me
+2020-09-20 17:17:25,044 Visiting 227: google.ru
+2020-09-20 17:17:38,628 Visiting 228: wendyssubway.com
+2020-09-20 17:17:50,757 Visiting 229: www.gov.uk
+2020-09-20 17:18:03,164 Visiting 230: ted.com
+2020-09-20 17:18:23,197 Visiting 231: grid.id
+2020-09-20 17:18:44,807 New domains in snitch_map: jixie.io
+2020-09-20 17:18:46,523 Visiting 232: cpanel.com
+2020-09-20 17:19:00,694 Visiting 233: sharepoint.com
+2020-09-20 17:19:20,901 Visiting 234: aaplimg.com
+2020-09-20 17:19:36,678 Visiting 235: wired.com
+2020-09-20 17:20:21,548 New domains in snitch_map: allure.com, architecturaldigest.com, bonappetit.com, cntraveler.com, condenastdigital.com, deepintent.com, epicurious.com, glamour.com, gq.com, lennyletter.com, medtargetsystem.com, newyorker.com, pitchfork.com, self.com, teenvogue.com, them.us, vanityfair.com, vogue.com
+2020-09-20 17:20:23,383 Visiting 236: bilibili.com
+2020-09-20 17:20:44,661 Visiting 237: flipkart.com
+2020-09-20 17:21:03,539 Visiting 238: mysql.com
+2020-09-20 17:21:16,895 New domains in snitch_map: atgsvcs.com, custhelp.com, rightnowtech.com, rnengage.com
+2020-09-20 17:21:18,517 Visiting 239: akamai.net
+2020-09-20 17:21:21,179 WebDriverException on akamai.net: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 17:21:53,023 Visiting 238: mysql.com
-2020-09-19 17:22:05,309 New domains in snitch_map: atgsvcs.com, custhelp.com, rightnowtech.com, rnengage.com
-2020-09-19 17:22:07,282 Visiting 239: yelp.com
-2020-09-19 17:22:29,321 Visiting 240: nginx.com
-2020-09-19 17:22:44,540 New domains in snitch_map: f5.com
-2020-09-19 17:22:46,239 Visiting 241: cnblogs.com
-2020-09-19 17:23:00,703 Visiting 242: hugedomains.com
-2020-09-19 17:23:14,248 Visiting 243: scribd.com
-2020-09-19 17:23:35,472 Visiting 244: flipkart.com
-2020-09-19 17:23:56,578 Visiting 245: detik.com
-2020-09-19 17:24:18,463 Visiting 246: salesforce.com
-2020-09-19 17:24:44,480 Visiting 247: scorecardresearch.com
-2020-09-19 17:24:54,577 Visiting 248: doi.org
-2020-09-19 17:25:04,746 Visiting 249: opendns.com
-2020-09-19 17:25:20,345 New domains in snitch_map: 6sc.co, bizographics.com, leadspace.com, siteimproveanalytics.io
-2020-09-19 17:25:22,493 Visiting 250: thestartmagazine.com
-2020-09-19 17:25:40,402 Visiting 251: goodreads.com
-2020-09-19 17:25:58,085 Visiting 252: force.com
-2020-09-19 17:26:18,602 Visiting 253: adnxs.com
-2020-09-19 17:26:21,287 WebDriverException on adnxs.com: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 17:21:24,261 Visiting 240: yelp.com
+2020-09-20 17:21:47,709 Visiting 241: nginx.com
+2020-09-20 17:22:03,630 New domains in snitch_map: f5.com
+2020-09-20 17:22:05,192 Visiting 242: cnblogs.com
+2020-09-20 17:22:22,495 Visiting 243: scribd.com
+2020-09-20 17:22:38,736 Visiting 244: hugedomains.com
+2020-09-20 17:22:51,954 Visiting 245: detik.com
+2020-09-20 17:23:16,074 Visiting 246: salesforce.com
+2020-09-20 17:23:38,690 Visiting 247: scorecardresearch.com
+2020-09-20 17:23:49,443 Visiting 248: doi.org
+2020-09-20 17:24:00,282 Visiting 249: zendesk.com
+2020-09-20 17:24:11,662 Visiting 250: thestartmagazine.com
+2020-09-20 17:24:31,938 Visiting 251: opendns.com
+2020-09-20 17:24:48,677 New domains in snitch_map: 6sc.co, bizographics.com, leadspace.com, siteimproveanalytics.io
+2020-09-20 17:24:50,630 Visiting 252: goodreads.com
+2020-09-20 17:25:07,264 Visiting 253: force.com
+2020-09-20 17:25:27,904 Visiting 254: adnxs.com
+2020-09-20 17:25:30,303 WebDriverException on adnxs.com: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 17:26:25,585 Visiting 254: zendesk.com
-2020-09-19 17:26:37,148 Visiting 255: gmail.com
-2020-09-19 17:26:51,506 Visiting 256: debian.org
-2020-09-19 17:27:01,857 Visiting 257: independent.co.uk
-2020-09-19 17:27:28,803 Visiting 258: intel.com
-2020-09-19 17:27:41,608 New domains in snitch_map: onrcx.com, researchintel.com
-2020-09-19 17:27:43,443 Visiting 259: wikihow.com
-2020-09-19 17:28:01,746 Visiting 260: free.fr
-2020-09-19 17:28:32,801 New domains in snitch_map: proxad.net
-2020-09-19 17:28:34,730 Visiting 261: shutterstock.com
-2020-09-19 17:29:07,319 New domains in snitch_map: 7eer.net, adgeek.net, c3tag.com, ojrq.net, vk.com
-2020-09-19 17:29:09,393 Visiting 262: tripadvisor.com
-2020-09-19 17:29:26,780 New domains in snitch_map: clicktripz.com, survata.com
-2020-09-19 17:29:28,553 Visiting 263: soso.com
-2020-09-19 17:29:39,989 New domains in snitch_map: sogou.com
-2020-09-19 17:29:41,864 Visiting 264: themeforest.net
-2020-09-19 17:30:06,827 Visiting 265: wetransfer.com
-2020-09-19 17:30:21,481 Visiting 266: google.ca
-2020-09-19 17:30:34,610 Visiting 267: beian.gov.cn
-2020-09-19 17:30:37,201 WebDriverException on beian.gov.cn: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 17:25:34,008 Visiting 255: gmail.com
+2020-09-20 17:25:47,990 Visiting 256: debian.org
+2020-09-20 17:25:59,189 Visiting 257: independent.co.uk
+2020-09-20 17:26:29,280 Visiting 258: intel.com
+2020-09-20 17:26:40,426 New domains in snitch_map: onrcx.com, researchintel.com
+2020-09-20 17:26:41,971 Visiting 259: soso.com
+2020-09-20 17:26:52,326 New domains in snitch_map: sogou.com
+2020-09-20 17:26:54,224 Visiting 260: wikihow.com
+2020-09-20 17:27:14,078 Visiting 261: free.fr
+2020-09-20 17:27:27,232 Visiting 262: shutterstock.com
+2020-09-20 17:28:00,865 New domains in snitch_map: 7eer.net, adgeek.net, c3tag.com, vk.com
+2020-09-20 17:28:02,914 Visiting 263: tripadvisor.com
+2020-09-20 17:28:18,333 New domains in snitch_map: clicktripz.com
+2020-09-20 17:28:20,263 Visiting 264: wetransfer.com
+2020-09-20 17:28:35,231 Visiting 265: themeforest.net
+2020-09-20 17:28:58,623 Visiting 266: google.ca
+2020-09-20 17:29:12,084 Visiting 267: beian.gov.cn
+2020-09-20 17:29:13,839 WebDriverException on beian.gov.cn: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 17:30:40,951 Visiting 268: android.com
-2020-09-19 17:30:54,277 Visiting 269: techcrunch.com
-2020-09-19 17:31:33,437 Visiting 270: akamaized.net
-2020-09-19 17:31:36,256 WebDriverException on akamaized.net: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 17:29:16,479 Visiting 268: android.com
+2020-09-20 17:29:30,932 Visiting 269: techcrunch.com
+2020-09-20 17:30:08,519 Visiting 270: akamaized.net
+2020-09-20 17:30:11,257 WebDriverException on akamaized.net: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 17:31:40,076 Visiting 271: amazon-adsystem.com
-2020-09-19 17:31:42,467 WebDriverException on amazon-adsystem.com: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 17:30:14,785 Visiting 271: squarespace.com
+2020-09-20 17:30:36,386 New domains in snitch_map: syuh.net
+2020-09-20 17:30:37,687 Visiting 272: amazon-adsystem.com
+2020-09-20 17:30:39,326 WebDriverException on amazon-adsystem.com: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 17:31:46,225 Visiting 272: squarespace.com
-2020-09-19 17:32:06,957 New domains in snitch_map: syuh.net
-2020-09-19 17:32:08,874 Visiting 273: mailchimp.com
-2020-09-19 17:32:29,980 Visiting 274: daum.net
-2020-09-19 17:32:50,622 New domains in snitch_map: kakao.com
-2020-09-19 17:32:52,448 Visiting 275: google.com.sg
-2020-09-19 17:33:05,295 Visiting 276: speedtest.net
-2020-09-19 17:33:25,947 New domains in snitch_map: zdbb.net
-2020-09-19 17:33:27,979 Visiting 277: googletagservices.com
-2020-09-19 17:33:31,223 WebDriverException on googletagservices.com: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 17:30:42,262 Visiting 273: daum.net
+2020-09-20 17:30:59,276 New domains in snitch_map: kakao.com
+2020-09-20 17:31:00,992 Visiting 274: google.com.sg
+2020-09-20 17:31:15,192 Visiting 275: mailchimp.com
+2020-09-20 17:31:35,140 Visiting 276: speedtest.net
+2020-09-20 17:31:53,387 New domains in snitch_map: zdbb.net
+2020-09-20 17:31:55,065 Visiting 277: berkeley.edu
+2020-09-20 17:32:10,484 Visiting 278: stackexchange.com
+2020-09-20 17:32:24,721 Visiting 279: googletagservices.com
+2020-09-20 17:32:27,507 WebDriverException on googletagservices.com: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 17:33:35,509 Visiting 278: berkeley.edu
-2020-09-19 17:33:49,720 Visiting 279: stackexchange.com
-2020-09-19 17:34:02,247 Visiting 280: mediafire.com
-2020-09-19 17:34:27,245 New domains in snitch_map: maxmind.com
-2020-09-19 17:34:28,988 Visiting 281: chase.com
-2020-09-19 17:34:48,796 Visiting 282: msftncsi.com
-2020-09-19 17:34:51,898 WebDriverException on msftncsi.com: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 17:32:31,564 Visiting 280: mediafire.com
+2020-09-20 17:32:55,089 New domains in snitch_map: maxmind.com
+2020-09-20 17:32:56,891 Visiting 281: msftncsi.com
+2020-09-20 17:32:59,847 WebDriverException on msftncsi.com: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 17:34:56,240 Visiting 283: addtoany.com
-2020-09-19 17:35:07,324 Visiting 284: livejournal.com
-2020-09-19 17:35:36,404 New domains in snitch_map: adfox.ru, rambler.ru, top100.ru
-2020-09-19 17:35:38,155 Visiting 285: zillow.com
-2020-09-19 17:35:54,544 Visiting 286: line.me
-2020-09-19 17:36:08,589 Visiting 287: unsplash.com
-2020-09-19 17:36:26,127 New domains in snitch_map: adzerk.net, trkn.us
-2020-09-19 17:36:28,173 Visiting 288: craigslist.org
-2020-09-19 17:36:40,769 Visiting 289: ikea.com
-2020-09-19 17:36:55,498 Visiting 290: latimes.com
-2020-09-19 17:37:20,219 New domains in snitch_map: matheranalytics.com
-2020-09-19 17:37:21,956 Visiting 291: weather.com
-2020-09-19 17:37:39,499 Visiting 292: tokopedia.com
-2020-09-19 17:38:18,849 Visiting 293: crashlytics.com
-2020-09-19 17:38:37,609 Visiting 294: okta.com
-2020-09-19 17:38:57,352 Visiting 295: statcounter.com
-2020-09-19 17:39:10,670 Visiting 296: tiktok.com
-2020-09-19 17:39:32,933 New domains in snitch_map: byteoversea.com
-2020-09-19 17:39:34,981 Visiting 297: taboola.com
-2020-09-19 17:39:55,645 New domains in snitch_map: mktoresp.com
-2020-09-19 17:39:57,563 Visiting 298: google.com.tw
-2020-09-19 17:40:10,621 Visiting 299: grammarly.com
-2020-09-19 17:40:35,916 Visiting 300: healthline.com
-2020-09-19 17:40:52,355 New domains in snitch_map: cohesionapps.com
-2020-09-19 17:40:54,282 Visiting 301: xhamster.com
-2020-09-19 17:41:11,406 Visiting 302: gome.com.cn
-2020-09-19 17:41:24,496 WebDriverException on gome.com.cn: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 17:33:03,183 Visiting 282: chase.com
+2020-09-20 17:33:23,905 Visiting 283: addtoany.com
+2020-09-20 17:33:35,312 Visiting 284: livejournal.com
+2020-09-20 17:34:08,788 New domains in snitch_map: adfox.ru, rambler.ru, top100.ru
+2020-09-20 17:34:10,865 Visiting 285: zillow.com
+2020-09-20 17:34:26,511 Visiting 286: line.me
+2020-09-20 17:34:38,828 Visiting 287: unsplash.com
+2020-09-20 17:34:55,751 New domains in snitch_map: adzerk.net, trkn.us
+2020-09-20 17:34:57,489 Visiting 288: craigslist.org
+2020-09-20 17:35:09,942 Visiting 289: latimes.com
+2020-09-20 17:35:34,884 New domains in snitch_map: matheranalytics.com
+2020-09-20 17:35:36,598 Visiting 290: ikea.com
+2020-09-20 17:35:48,820 Visiting 291: tokopedia.com
+2020-09-20 17:36:24,250 Visiting 292: weather.com
+2020-09-20 17:36:40,952 Visiting 293: taboola.com
+2020-09-20 17:37:00,012 New domains in snitch_map: mktoresp.com
+2020-09-20 17:37:01,767 Visiting 294: okta.com
+2020-09-20 17:37:20,609 Visiting 295: tiktok.com
+2020-09-20 17:37:39,970 New domains in snitch_map: byteoversea.com
+2020-09-20 17:37:41,778 Visiting 296: statcounter.com
+2020-09-20 17:37:54,069 Visiting 297: crashlytics.com
+2020-09-20 17:38:15,300 Visiting 298: google.com.tw
+2020-09-20 17:38:29,190 Visiting 299: grammarly.com
+2020-09-20 17:38:50,584 Visiting 300: healthline.com
+2020-09-20 17:39:05,853 New domains in snitch_map: cohesionapps.com
+2020-09-20 17:39:07,580 Visiting 301: zoho.com
+2020-09-20 17:39:21,173 New domains in snitch_map: pagesense.io, zoho.in
+2020-09-20 17:39:22,391 Visiting 302: xhamster.com
+2020-09-20 17:39:39,903 Visiting 303: twimg.com
+2020-09-20 17:39:42,358 WebDriverException on twimg.com: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 17:41:28,801 Visiting 303: haosou.com
-2020-09-19 17:41:43,151 Visiting 304: twimg.com
-2020-09-19 17:41:44,785 WebDriverException on twimg.com: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 17:39:46,015 Visiting 304: gome.com.cn
+2020-09-20 17:39:59,496 WebDriverException on gome.com.cn: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 17:41:48,271 Visiting 305: duckduckgo.com
-2020-09-19 17:42:01,680 Visiting 306: onlinesbi.com
-2020-09-19 17:42:22,478 Visiting 307: webmd.com
-2020-09-19 17:42:43,349 New domains in snitch_map: ibclick.stream
-2020-09-19 17:42:45,209 Visiting 308: quora.com
-2020-09-19 17:43:00,467 Visiting 309: kickstarter.com
-2020-09-19 17:43:30,945 Visiting 310: amzn.to
-2020-09-19 17:43:53,366 Visiting 311: cisco.com
-2020-09-19 17:44:14,755 Visiting 312: theverge.com
-2020-09-19 17:44:32,974 New domains in snitch_map: permutive.app, samba.tv, voxmedia.com
-2020-09-19 17:44:34,463 Visiting 313: 6.cn
-2020-09-19 17:44:57,304 New domains in snitch_map: xiu123.cn
-2020-09-19 17:44:59,461 Visiting 314: adsrvr.org
-2020-09-19 17:45:11,533 Visiting 315: webex.com
-2020-09-19 17:45:42,661 New domains in snitch_map: brightcove.com, cisco.com
-2020-09-19 17:45:44,443 Visiting 316: zoho.com
-2020-09-19 17:45:59,953 New domains in snitch_map: pagesense.io, zoho.in
-2020-09-19 17:46:00,995 Visiting 317: jimdo.com
-2020-09-19 17:46:11,472 Visiting 318: digg.com
-2020-09-19 17:46:29,412 Visiting 319: nationalgeographic.com
-2020-09-19 17:47:10,004 New domains in snitch_map: blueconic.net, fox.com, monetate.net
-2020-09-19 17:47:11,848 Visiting 320: deviantart.com
-2020-09-19 17:47:36,643 New domains in snitch_map: wix.com
-2020-09-19 17:47:38,114 Visiting 321: akamaihd.net
-2020-09-19 17:47:40,370 WebDriverException on akamaihd.net: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 17:40:03,001 Visiting 305: duckduckgo.com
+2020-09-20 17:40:14,483 Visiting 306: webmd.com
+2020-09-20 17:40:35,527 New domains in snitch_map: ibclick.stream
+2020-09-20 17:40:36,558 Visiting 307: onlinesbi.com
+2020-09-20 17:40:52,041 WebDriverException on onlinesbi.com: Reached error page: ERR_EMPTY_RESPONSE
+2020-09-20 17:40:54,753 Visiting 308: quora.com
+2020-09-20 17:41:09,194 Visiting 309: kickstarter.com
+2020-09-20 17:41:40,523 Visiting 310: haosou.com
+2020-09-20 17:41:55,777 Visiting 311: amzn.to
+2020-09-20 17:42:18,080 Visiting 312: cisco.com
+2020-09-20 17:42:37,174 Visiting 313: webex.com
+2020-09-20 17:43:06,044 New domains in snitch_map: cisco.com
+2020-09-20 17:43:07,121 Likely bug: domain cisco.com tracking on webex.com
+2020-09-20 17:43:07,121 Deleting domain cisco.com from action and snitch maps
+2020-09-20 17:43:11,298 Visiting 314: adsrvr.org
+2020-09-20 17:43:22,105 Visiting 315: theverge.com
+2020-09-20 17:43:38,761 New domains in snitch_map: permutive.app, samba.tv, voxmedia.com
+2020-09-20 17:43:40,291 Visiting 316: 6.cn
+2020-09-20 17:44:01,637 New domains in snitch_map: xiu123.cn
+2020-09-20 17:44:03,223 Visiting 317: jimdo.com
+2020-09-20 17:44:14,817 Visiting 318: digg.com
+2020-09-20 17:44:37,513 Visiting 319: nationalgeographic.com
+2020-09-20 17:45:16,621 New domains in snitch_map: blueconic.net, fox.com, monetate.net
+2020-09-20 17:45:18,439 Visiting 320: deviantart.com
+2020-09-20 17:45:39,736 New domains in snitch_map: wix.com
+2020-09-20 17:45:41,269 Visiting 321: pixabay.com
+2020-09-20 17:45:53,830 Visiting 322: akamaihd.net
+2020-09-20 17:45:55,566 WebDriverException on akamaihd.net: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 17:47:44,360 Visiting 322: pixabay.com
-2020-09-19 17:47:57,480 Visiting 323: tradingview.com
-2020-09-19 17:48:29,853 Visiting 324: ft.com
-2020-09-19 17:48:48,117 Visiting 325: amazon.ca
-2020-09-19 17:49:10,089 Visiting 326: ietf.org
-2020-09-19 17:49:22,767 Visiting 327: sitemaps.org
-2020-09-19 17:49:33,897 Visiting 328: cornell.edu
-2020-09-19 17:49:54,112 Visiting 329: theatlantic.com
-2020-09-19 17:50:10,434 New domains in snitch_map: teads.tv
-2020-09-19 17:50:12,326 Visiting 330: youm7.com
-2020-09-19 17:50:50,761 New domains in snitch_map: adhaven.com, lkqd.net
-2020-09-19 17:50:52,632 Visiting 331: w3schools.com
-2020-09-19 17:51:11,469 New domains in snitch_map: 33across.com, connectad.io
-2020-09-19 17:51:13,623 Visiting 332: buzzfeed.com
-2020-09-19 17:51:37,504 Visiting 333: washington.edu
-2020-09-19 17:51:53,036 Visiting 334: zhihu.com
-2020-09-19 17:52:13,815 Visiting 335: giphy.com
-2020-09-19 17:52:46,069 Visiting 336: appsflyer.com
-2020-09-19 17:53:09,100 New domains in snitch_map: marketo.com, onelink.me, zoominfo.com
-2020-09-19 17:53:11,185 Visiting 337: shopify.com
-2020-09-19 17:53:30,105 New domains in snitch_map: provenpixel.com
-2020-09-19 17:53:31,857 Visiting 338: google.com.mx
-2020-09-19 17:53:45,891 Visiting 339: dell.com
-2020-09-19 17:54:04,312 New domains in snitch_map: sundaysky.com
-2020-09-19 17:54:05,603 Visiting 340: eastday.com
-2020-09-19 17:54:25,081 Visiting 341: rubiconproject.com
-2020-09-19 17:54:38,049 Visiting 342: cbsnews.com
-2020-09-19 17:55:01,381 Visiting 343: about.com
-2020-09-19 17:55:17,062 Visiting 344: 2mdn.net
-2020-09-19 17:55:19,729 WebDriverException on 2mdn.net: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 17:45:58,317 Visiting 323: ft.com
+2020-09-20 17:46:15,057 Visiting 324: amazon.ca
+2020-09-20 17:46:38,508 Visiting 325: tradingview.com
+2020-09-20 17:47:06,559 Visiting 326: ietf.org
+2020-09-20 17:47:19,861 Visiting 327: sitemaps.org
+2020-09-20 17:47:30,463 Visiting 328: cornell.edu
+2020-09-20 17:47:49,062 Visiting 329: w3schools.com
+2020-09-20 17:48:08,237 New domains in snitch_map: 33across.com, connectad.io
+2020-09-20 17:48:10,085 Visiting 330: theatlantic.com
+2020-09-20 17:48:27,575 Visiting 331: buzzfeed.com
+2020-09-20 17:48:55,324 Visiting 332: zhihu.com
+2020-09-20 17:49:13,359 Visiting 333: washington.edu
+2020-09-20 17:49:27,724 Visiting 334: shopify.com
+2020-09-20 17:49:46,297 New domains in snitch_map: provenpixel.com
+2020-09-20 17:49:47,192 Visiting 335: google.com.mx
+2020-09-20 17:49:58,672 Visiting 336: youm7.com
+2020-09-20 17:50:32,252 New domains in snitch_map: adhaven.com, lkqd.net
+2020-09-20 17:50:34,107 Visiting 337: appsflyer.com
+2020-09-20 17:50:57,409 New domains in snitch_map: marketo.com, onelink.me, zoominfo.com
+2020-09-20 17:50:58,948 Visiting 338: dell.com
+2020-09-20 17:51:20,333 New domains in snitch_map: sundaysky.com
+2020-09-20 17:51:21,970 Visiting 339: giphy.com
+2020-09-20 17:51:55,281 Visiting 340: eastday.com
+2020-09-20 17:52:12,148 Visiting 341: cbsnews.com
+2020-09-20 17:52:34,078 Visiting 342: rubiconproject.com
+2020-09-20 17:52:48,600 Visiting 343: about.com
+2020-09-20 17:53:03,739 Visiting 344: 2mdn.net
+2020-09-20 17:53:06,379 WebDriverException on 2mdn.net: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 17:55:23,659 Visiting 345: arnebrachhold.de
-2020-09-19 17:55:35,058 Visiting 346: telegram.org
-2020-09-19 17:55:47,369 Visiting 347: wa.me
-2020-09-19 17:55:59,576 Visiting 348: savefrom.net
-2020-09-19 17:56:10,994 Visiting 349: tandfonline.com
-2020-09-19 17:56:30,810 New domains in snitch_map: taylorandfrancis.com
-2020-09-19 17:56:32,840 Visiting 350: akismet.com
-2020-09-19 17:56:42,876 New domains in snitch_map: wp.com
-2020-09-19 17:56:43,913 Visiting 351: liputan6.com
-2020-09-19 17:57:05,837 New domains in snitch_map: newshub.id
-2020-09-19 17:57:07,615 Visiting 352: coursera.org
-2020-09-19 17:57:31,241 New domains in snitch_map: mapixl.com
-2020-09-19 17:57:33,164 Visiting 353: google.com.vn
-2020-09-19 17:57:47,321 Visiting 354: stumbleupon.com
-2020-09-19 17:57:59,402 Visiting 355: criteo.com
-2020-09-19 17:58:16,991 Visiting 356: symantec.com
-2020-09-19 17:58:36,158 Visiting 357: academia.edu
-2020-09-19 17:58:52,394 Visiting 358: rednet.cn
-2020-09-19 17:59:16,249 New domains in snitch_map: cnzz.com
-2020-09-19 17:59:18,057 Visiting 359: cambridge.org
-2020-09-19 17:59:32,334 Visiting 360: marriott.com
-2020-09-19 18:00:05,625 New domains in snitch_map: btttag.com, glassboxdigital.io, sojern.com
-2020-09-19 18:00:07,644 Visiting 361: marketwatch.com
-2020-09-19 18:00:49,989 New domains in snitch_map: bluekai.com, dowjoneson.com, newscgp.com, tiqcdn.com, zergnet.com
-2020-09-19 18:00:51,672 Visiting 362: digikala.com
-2020-09-19 18:02:04,449 New domains in snitch_map: enamad.ir, samandehi.ir, xtremepush.com
-2020-09-19 18:02:06,414 Visiting 363: whatsapp.net
-2020-09-19 18:02:20,527 Visiting 364: disqus.com
-2020-09-19 18:02:36,417 Visiting 365: investopedia.com
-2020-09-19 18:02:51,733 New domains in snitch_map: tradingview.com, zendesk.com
-2020-09-19 18:02:53,664 Visiting 366: launchpad.net
-2020-09-19 18:03:06,602 Visiting 367: typepad.com
-2020-09-19 18:03:20,073 Visiting 368: slack.com
-2020-09-19 18:03:43,188 New domains in snitch_map: spiceworks.com, techtarget.com
-2020-09-19 18:03:45,158 Visiting 369: demdex.net
-2020-09-19 18:03:47,106 WebDriverException on demdex.net: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 17:53:09,453 Visiting 345: arnebrachhold.de
+2020-09-20 17:53:20,775 Visiting 346: telegram.org
+2020-09-20 17:53:31,456 Visiting 347: wa.me
+2020-09-20 17:53:42,747 Visiting 348: tandfonline.com
+2020-09-20 17:54:01,976 New domains in snitch_map: taylorandfrancis.com
+2020-09-20 17:54:03,377 Visiting 349: liputan6.com
+2020-09-20 17:54:22,511 New domains in snitch_map: newshub.id
+2020-09-20 17:54:23,488 Visiting 350: akismet.com
+2020-09-20 17:54:32,923 New domains in snitch_map: wp.com
+2020-09-20 17:54:34,411 Visiting 351: savefrom.net
+2020-09-20 17:54:44,294 Visiting 352: stumbleupon.com
+2020-09-20 17:54:54,729 Visiting 353: google.com.vn
+2020-09-20 17:55:07,226 Visiting 354: coursera.org
+2020-09-20 17:55:29,968 New domains in snitch_map: mapixl.com
+2020-09-20 17:55:31,478 Visiting 355: criteo.com
+2020-09-20 17:55:51,469 Visiting 356: rednet.cn
+2020-09-20 17:56:16,164 New domains in snitch_map: onlyred.net
+2020-09-20 17:56:18,057 Visiting 357: academia.edu
+2020-09-20 17:56:31,447 Visiting 358: symantec.com
+2020-09-20 17:56:47,910 Visiting 359: marketwatch.com
+2020-09-20 17:57:21,225 New domains in snitch_map: bluekai.com, dowjoneson.com, newscgp.com, tiqcdn.com, zergnet.com
+2020-09-20 17:57:22,970 Visiting 360: cambridge.org
+2020-09-20 17:57:37,749 Visiting 361: marriott.com
+2020-09-20 17:58:11,534 Visiting 362: digikala.com
+2020-09-20 17:59:22,323 New domains in snitch_map: enamad.ir, samandehi.ir, xtremepush.com
+2020-09-20 17:59:23,496 Visiting 363: whatsapp.net
+2020-09-20 17:59:34,295 Visiting 364: disqus.com
+2020-09-20 17:59:45,578 Visiting 365: investopedia.com
+2020-09-20 17:59:58,291 New domains in snitch_map: tradingview.com
+2020-09-20 17:59:59,898 Visiting 366: launchpad.net
+2020-09-20 18:00:13,749 Visiting 367: padlet.com
+2020-09-20 18:00:25,328 New domains in snitch_map: padlet.net
+2020-09-20 18:00:27,074 Visiting 368: slack.com
+2020-09-20 18:00:51,846 New domains in snitch_map: spiceworks.com, techtarget.com
+2020-09-20 18:00:53,348 Visiting 369: typepad.com
+2020-09-20 18:01:05,829 Visiting 370: bestbuy.com
+2020-09-20 18:01:35,833 Timed out loading bestbuy.com
+2020-09-20 18:01:40,639 Visiting 371: pubmatic.com
+2020-09-20 18:01:57,485 Visiting 372: iqiyi.com
+2020-09-20 18:02:24,946 New domains in snitch_map: qy.net
+2020-09-20 18:02:26,548 Visiting 373: demdex.net
+2020-09-20 18:02:29,157 WebDriverException on demdex.net: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 18:03:50,339 Visiting 370: pubmatic.com
-2020-09-19 18:04:06,311 Visiting 371: avito.ru
-2020-09-19 18:04:17,854 Visiting 372: iqiyi.com
-2020-09-19 18:04:51,679 New domains in snitch_map: qy.net
-2020-09-19 18:04:53,635 Visiting 373: padlet.com
-2020-09-19 18:05:05,169 New domains in snitch_map: padlet.net
-2020-09-19 18:05:06,843 Visiting 374: uol.com.br
-2020-09-19 18:05:37,038 New domains in snitch_map: dynad.net, tailtarget.com
-2020-09-19 18:05:39,085 Visiting 375: primevideo.com
-2020-09-19 18:05:53,261 Visiting 376: azureedge.net
-2020-09-19 18:05:55,893 WebDriverException on azureedge.net: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 18:02:32,651 Visiting 374: primevideo.com
+2020-09-20 18:02:46,650 Visiting 375: avito.ru
+2020-09-20 18:02:57,818 Visiting 376: uol.com.br
+2020-09-20 18:03:27,103 New domains in snitch_map: dynad.net, tailtarget.com
+2020-09-20 18:03:28,803 Visiting 377: usnews.com
+2020-09-20 18:03:53,807 Visiting 378: princeton.edu
+2020-09-20 18:04:11,180 Visiting 379: azureedge.net
+2020-09-20 18:04:12,826 WebDriverException on azureedge.net: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 18:05:59,945 Visiting 377: princeton.edu
-2020-09-19 18:06:16,376 Visiting 378: usnews.com
-2020-09-19 18:06:45,525 Visiting 379: bestbuy.com
-2020-09-19 18:07:15,547 Timed out loading bestbuy.com
-2020-09-19 18:07:21,382 Visiting 380: box.com
-2020-09-19 18:07:46,467 Visiting 381: tiktokv.com
-2020-09-19 18:08:13,416 Visiting 382: google.com.tr
-2020-09-19 18:08:26,071 Visiting 383: ampproject.org
-2020-09-19 18:08:40,062 Visiting 384: ilovepdf.com
-2020-09-19 18:08:52,330 Visiting 385: tiktokcdn.com
-2020-09-19 18:08:54,615 WebDriverException on tiktokcdn.com: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 18:04:14,931 Visiting 380: tiktokv.com
+2020-09-20 18:04:40,354 Visiting 381: google.com.tr
+2020-09-20 18:04:53,428 Visiting 382: ampproject.org
+2020-09-20 18:05:07,487 Visiting 383: tiktokcdn.com
+2020-09-20 18:05:09,371 WebDriverException on tiktokcdn.com: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 18:08:57,000 Visiting 386: discord.com
-2020-09-19 18:09:16,175 Visiting 387: huffpost.com
-2020-09-19 18:09:48,815 Visiting 388: feedburner.com
-2020-09-19 18:10:04,997 Visiting 389: msftconnecttest.com
-2020-09-19 18:10:06,675 WebDriverException on msftconnecttest.com: Reached error page: ERR_EMPTY_RESPONSE
-2020-09-19 18:10:10,565 Visiting 390: fc2.com
-2020-09-19 18:10:23,692 Visiting 391: webs.com
-2020-09-19 18:10:40,021 Visiting 392: evernote.com
-2020-09-19 18:10:54,297 Visiting 393: prnewswire.com
-2020-09-19 18:11:14,105 New domains in snitch_map: c212.net
-2020-09-19 18:11:15,263 Visiting 394: mailchi.mp
-2020-09-19 18:11:43,037 Visiting 395: pki.goog
-2020-09-19 18:11:56,041 Visiting 396: advertising.com
-2020-09-19 18:12:09,669 Visiting 397: hola.org
-2020-09-19 18:12:28,149 New domains in snitch_map: 2checkout.com, avangate.com
-2020-09-19 18:12:29,429 Visiting 398: mashable.com
-2020-09-19 18:12:48,878 New domains in snitch_map: keywee.co
-2020-09-19 18:12:50,034 Visiting 399: globo.com
-2020-09-19 18:13:14,222 Visiting 400: alicdn.com
-2020-09-19 18:13:44,262 Timed out loading alicdn.com
-2020-09-19 18:13:49,290 Visiting 401: economist.com
-2020-09-19 18:14:11,214 New domains in snitch_map: iteratehq.com
-2020-09-19 18:14:13,371 Visiting 402: pinimg.com
-2020-09-19 18:14:37,626 Visiting 403: airbnb.com
-2020-09-19 18:14:54,315 New domains in snitch_map: musthird.com
-2020-09-19 18:14:56,382 Visiting 404: investing.com
-2020-09-19 18:15:19,420 Visiting 405: bandcamp.com
-2020-09-19 18:15:42,375 Visiting 406: steamcommunity.com
-2020-09-19 18:15:59,204 Visiting 407: steampowered.com
-2020-09-19 18:16:18,528 Visiting 408: worldometers.info
-2020-09-19 18:16:41,598 Visiting 409: homedepot.com
-2020-09-19 18:17:15,881 New domains in snitch_map: px-cloud.net, quantummetric.com
-2020-09-19 18:17:17,521 Visiting 410: wellsfargo.com
-2020-09-19 18:17:39,923 Visiting 411: sciencemag.org
-2020-09-19 18:18:03,614 Visiting 412: nbcnews.com
-2020-09-19 18:18:37,871 New domains in snitch_map: tvpixel.com
-2020-09-19 18:18:40,097 Visiting 413: hubspot.com
-2020-09-19 18:19:00,745 Visiting 414: avast.com
-2020-09-19 18:19:23,924 Visiting 415: change.org
-2020-09-19 18:19:50,918 Visiting 416: bet9ja.com
-2020-09-19 18:20:03,627 New domains in snitch_map: sportradarserving.com
-2020-09-19 18:20:05,378 Visiting 417: youronlinechoices.com
-2020-09-19 18:20:16,489 Visiting 418: moatads.com
-2020-09-19 18:20:37,220 Visiting 419: teamviewer.com
-2020-09-19 18:21:01,111 New domains in snitch_map: hushly.com, marketlinc.com
-2020-09-19 18:21:03,214 Visiting 420: ebay.de
-2020-09-19 18:21:22,822 Visiting 421: pbs.org
-2020-09-19 18:21:42,312 Visiting 422: trello.com
-2020-09-19 18:21:57,749 New domains in snitch_map: castle.io, d2t77mnxyo7adj.cloudfront.net
-2020-09-19 18:21:59,550 Visiting 423: nflximg.com
-2020-09-19 18:22:29,599 Timed out loading nflximg.com
-2020-09-19 18:22:33,839 Visiting 424: casalemedia.com
-2020-09-19 18:22:44,161 Visiting 425: plesk.com
-2020-09-19 18:23:11,725 Visiting 426: lazada.sg
-2020-09-19 18:23:36,166 Visiting 427: arcgis.com
-2020-09-19 18:23:53,474 Visiting 428: mozilla.com
-2020-09-19 18:24:06,895 Visiting 429: jquery.com
-2020-09-19 18:24:20,246 Visiting 430: hulu.com
-2020-09-19 18:24:42,483 Visiting 431: accuweather.com
-2020-09-19 18:25:13,778 Visiting 432: 51.la
-2020-09-19 18:25:43,817 Timed out loading 51.la
-2020-09-19 18:25:49,001 Visiting 433: tistory.com
-2020-09-19 18:26:09,306 Visiting 434: constantcontact.com
-2020-09-19 18:26:30,870 Visiting 435: target.com
-2020-09-19 18:26:59,578 Visiting 436: columbia.edu
-2020-09-19 18:27:23,313 Visiting 437: eepurl.com
-2020-09-19 18:27:33,962 Visiting 438: ups.com
-2020-09-19 18:28:01,925 New domains in snitch_map: inq.com
-2020-09-19 18:28:03,542 Visiting 439: oup.com
-2020-09-19 18:28:17,417 Visiting 440: engadget.com
-2020-09-19 18:28:35,802 New domains in snitch_map: fout.jp, owneriq.net
-2020-09-19 18:28:38,193 Visiting 441: umich.edu
-2020-09-19 18:28:59,627 Visiting 442: nypost.com
-2020-09-19 18:29:35,965 Visiting 443: ebay.co.uk
-2020-09-19 18:29:58,728 Visiting 444: rt.com
-2020-09-19 18:30:17,318 Visiting 445: openx.net
-2020-09-19 18:30:20,772 WebDriverException on openx.net: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 18:05:12,858 Visiting 384: ilovepdf.com
+2020-09-20 18:05:23,677 Visiting 385: box.com
+2020-09-20 18:05:44,357 Visiting 386: discord.com
+2020-09-20 18:06:04,147 Visiting 387: huffpost.com
+2020-09-20 18:06:33,561 Visiting 388: feedburner.com
+2020-09-20 18:06:48,706 Visiting 389: fc2.com
+2020-09-20 18:07:00,562 Visiting 390: pki.goog
+2020-09-20 18:07:13,036 Visiting 391: msftconnecttest.com
+2020-09-20 18:07:14,944 WebDriverException on msftconnecttest.com: Reached error page: ERR_EMPTY_RESPONSE
+2020-09-20 18:07:18,416 Visiting 392: webs.com
+2020-09-20 18:07:35,207 Visiting 393: mailchi.mp
+2020-09-20 18:08:03,312 Visiting 394: prnewswire.com
+2020-09-20 18:08:21,738 New domains in snitch_map: c212.net
+2020-09-20 18:08:23,280 Visiting 395: advertising.com
+2020-09-20 18:08:38,447 Visiting 396: hola.org
+2020-09-20 18:08:54,112 New domains in snitch_map: 2checkout.com, avangate.com
+2020-09-20 18:08:55,841 Visiting 397: mashable.com
+2020-09-20 18:09:13,740 New domains in snitch_map: keywee.co
+2020-09-20 18:09:15,283 Visiting 398: economist.com
+2020-09-20 18:09:34,540 New domains in snitch_map: iteratehq.com
+2020-09-20 18:09:36,289 Visiting 399: evernote.com
+2020-09-20 18:09:49,877 Visiting 400: alicdn.com
+2020-09-20 18:10:19,908 Timed out loading alicdn.com
+2020-09-20 18:10:24,204 Visiting 401: pinimg.com
+2020-09-20 18:10:49,328 Visiting 402: globo.com
+2020-09-20 18:11:10,493 Visiting 403: bandcamp.com
+2020-09-20 18:11:31,663 Visiting 404: investing.com
+2020-09-20 18:11:55,383 Visiting 405: steamcommunity.com
+2020-09-20 18:12:12,424 Visiting 406: steampowered.com
+2020-09-20 18:12:33,377 Visiting 407: wellsfargo.com
+2020-09-20 18:12:54,818 Visiting 408: worldometers.info
+2020-09-20 18:13:17,032 Visiting 409: airbnb.com
+2020-09-20 18:13:32,095 New domains in snitch_map: musthird.com
+2020-09-20 18:13:33,976 Visiting 410: homedepot.com
+2020-09-20 18:14:07,326 New domains in snitch_map: btttag.com, px-cloud.net, quantummetric.com
+2020-09-20 18:14:08,811 Visiting 411: sciencemag.org
+2020-09-20 18:14:31,267 Visiting 412: hubspot.com
+2020-09-20 18:14:52,141 Visiting 413: nbcnews.com
+2020-09-20 18:15:26,397 New domains in snitch_map: tvpixel.com
+2020-09-20 18:15:28,088 Visiting 414: bet9ja.com
+2020-09-20 18:15:40,957 New domains in snitch_map: sportradarserving.com
+2020-09-20 18:15:42,648 Visiting 415: avast.com
+2020-09-20 18:16:06,230 Visiting 416: change.org
+2020-09-20 18:16:37,547 Visiting 417: youronlinechoices.com
+2020-09-20 18:16:49,008 Visiting 418: moatads.com
+2020-09-20 18:17:07,984 Visiting 419: ebay.de
+2020-09-20 18:17:26,124 Visiting 420: teamviewer.com
+2020-09-20 18:17:51,729 New domains in snitch_map: hushly.com, marketlinc.com
+2020-09-20 18:17:53,270 Visiting 421: pbs.org
+2020-09-20 18:18:12,179 Visiting 422: trello.com
+2020-09-20 18:18:28,711 New domains in snitch_map: castle.io, d2t77mnxyo7adj.cloudfront.net
+2020-09-20 18:18:30,497 Visiting 423: nflximg.com
+2020-09-20 18:19:00,517 Timed out loading nflximg.com
+2020-09-20 18:19:03,196 Visiting 424: casalemedia.com
+2020-09-20 18:19:13,430 Visiting 425: plesk.com
+2020-09-20 18:19:45,635 Visiting 426: arcgis.com
+2020-09-20 18:20:02,498 Visiting 427: lazada.sg
+2020-09-20 18:20:29,183 Visiting 428: mozilla.com
+2020-09-20 18:20:41,297 Visiting 429: constantcontact.com
+2020-09-20 18:21:00,503 Visiting 430: jquery.com
+2020-09-20 18:21:13,559 Visiting 431: hulu.com
+2020-09-20 18:21:31,764 Visiting 432: target.com
+2020-09-20 18:22:00,737 Visiting 433: 51.la
+2020-09-20 18:22:30,779 Timed out loading 51.la
+2020-09-20 18:22:35,812 Visiting 434: accuweather.com
+2020-09-20 18:23:09,527 Visiting 435: tistory.com
+2020-09-20 18:23:26,538 Visiting 436: columbia.edu
+2020-09-20 18:23:51,149 Visiting 437: oup.com
+2020-09-20 18:24:04,034 Visiting 438: eepurl.com
+2020-09-20 18:24:14,754 Visiting 439: engadget.com
+2020-09-20 18:24:33,302 Visiting 440: umich.edu
+2020-09-20 18:24:55,964 Visiting 441: ebay.co.uk
+2020-09-20 18:25:18,072 Visiting 442: nypost.com
+2020-09-20 18:25:53,572 Visiting 443: openx.net
+2020-09-20 18:25:56,460 WebDriverException on openx.net: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 18:30:25,822 Visiting 446: aboutads.info
-2020-09-19 18:30:40,134 Visiting 447: amazon.fr
-2020-09-19 18:31:03,884 Visiting 448: outbrain.com
-2020-09-19 18:31:20,501 Visiting 449: unesco.org
-2020-09-19 18:31:40,689 Visiting 450: edgekey.net
-2020-09-19 18:31:43,844 WebDriverException on edgekey.net: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 18:26:00,619 Visiting 444: aboutads.info
+2020-09-20 18:26:14,043 Visiting 445: rt.com
+2020-09-20 18:26:31,710 Visiting 446: unesco.org
+2020-09-20 18:26:50,503 Visiting 447: outbrain.com
+2020-09-20 18:27:06,576 Visiting 448: ups.com
+2020-09-20 18:27:35,329 New domains in snitch_map: inq.com
+2020-09-20 18:27:37,171 Visiting 449: amazon.fr
+2020-09-20 18:28:03,230 Visiting 450: edgekey.net
+2020-09-20 18:28:06,036 WebDriverException on edgekey.net: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 18:31:48,822 Visiting 451: setn.com
-2020-09-19 18:32:19,108 Visiting 452: tripod.com
-2020-09-19 18:32:34,132 Visiting 453: rlcdn.com
-2020-09-19 18:32:36,612 WebDriverException on rlcdn.com: unknown error: net::ERR_NAME_NOT_RESOLVED
+2020-09-20 18:28:10,645 Visiting 451: setn.com
+2020-09-20 18:28:45,924 Visiting 452: tripod.com
+2020-09-20 18:28:58,166 New domains in snitch_map: owneriq.net
+2020-09-20 18:29:00,200 Visiting 453: google.co.th
+2020-09-20 18:29:12,851 Visiting 454: huawei.com
+2020-09-20 18:29:26,657 New domains in snitch_map: ati-host.net
+2020-09-20 18:29:28,487 Visiting 455: rlcdn.com
+2020-09-20 18:29:29,891 WebDriverException on rlcdn.com: unknown error: net::ERR_NAME_NOT_RESOLVED
   (Session info: chrome=85.0.4183.83)
-2020-09-19 18:32:40,872 Visiting 454: google.co.th
-2020-09-19 18:32:55,053 Visiting 455: huawei.com
-2020-09-19 18:33:10,784 New domains in snitch_map: ati-host.net
-2020-09-19 18:33:12,947 Visiting 456: vice.com
-2020-09-19 18:33:35,853 Visiting 457: google.com.sa
-2020-09-19 18:33:48,530 Visiting 458: patreon.com
-2020-09-19 18:34:19,930 Visiting 459: breitbart.com
-2020-09-19 18:34:47,087 New domains in snitch_map: disqus.com
-2020-09-19 18:34:48,941 Visiting 460: psu.edu
-2020-09-19 18:35:12,222 Visiting 461: geocities.com
-2020-09-19 18:35:49,892 Visiting 462: zdnet.com
-2020-09-19 18:36:19,525 New domains in snitch_map: lightboxcdn.com, summerhamster.com, viglink.com
-2020-09-19 18:36:21,475 Visiting 463: gofundme.com
-2020-09-19 18:36:32,521 Visiting 464: yale.edu
-2020-09-19 18:36:48,558 Visiting 465: sagepub.com
-2020-09-19 18:37:04,143 Visiting 466: varzesh3.com
-2020-09-19 18:37:39,540 New domains in snitch_map: mediaad.org, yektanet.com
-2020-09-19 18:37:41,535 Visiting 467: meetup.com
-2020-09-19 18:38:04,310 Visiting 468: hbr.org
-2020-09-19 18:38:33,455 New domains in snitch_map: gigya.com, richrelevance.com
-2020-09-19 18:38:35,551 Visiting 469: bukalapak.com
-2020-09-19 18:39:03,427 Visiting 470: guardian.co.uk
-2020-09-19 18:39:32,978 Visiting 471: abc.net.au
-2020-09-19 18:39:55,085 Visiting 472: google.com.ar
-2020-09-19 18:40:08,895 Visiting 473: trustpilot.com
-2020-09-19 18:40:26,278 Visiting 474: patch.com
-2020-09-19 18:40:48,676 Visiting 475: sun.com
-2020-09-19 18:41:07,307 Visiting 476: sindonews.com
-2020-09-19 18:41:27,091 Visiting 477: mayoclinic.org
-2020-09-19 18:41:49,013 Visiting 478: google.com.eg
-2020-09-19 18:42:02,448 Visiting 479: metropoles.com
-2020-09-19 18:42:25,543 New domains in snitch_map: denakop.com, webspectator.com
-2020-09-19 18:42:27,405 Visiting 480: britannica.com
-2020-09-19 18:42:47,094 New domains in snitch_map: eb.com
-2020-09-19 18:42:49,212 Visiting 481: nvidia.com
-2020-09-19 18:43:09,322 Visiting 482: allaboutcookies.org
-2020-09-19 18:43:22,659 Visiting 483: cbc.ca
-2020-09-19 18:43:55,825 New domains in snitch_map: viafoura.co
-2020-09-19 18:43:58,146 Visiting 484: statista.com
-2020-09-19 18:44:21,330 New domains in snitch_map: adscale.de, m6r.eu, yieldlab.net
-2020-09-19 18:44:23,130 Visiting 485: aliexpress.ru
-2020-09-19 18:45:00,719 New domains in snitch_map: adriver.ru, betweendigital.com, mail.ru, mts.ru, rutarget.ru
-2020-09-19 18:45:03,436 Visiting 486: gotowebinar.com
-2020-09-19 18:45:24,454 New domains in snitch_map: boldchat.com
-2020-09-19 18:45:26,401 Visiting 487: upenn.edu
-2020-09-19 18:45:41,588 Visiting 488: smallpdf.com
-2020-09-19 18:45:56,806 Visiting 489: bidswitch.net
-2020-09-19 18:46:17,464 Visiting 490: nike.com
-2020-09-19 18:46:53,752 Visiting 491: sciencedaily.com
-2020-09-19 18:47:06,772 New domains in snitch_map: flowtype.press, trendmd.com
-2020-09-19 18:47:08,756 Visiting 492: elsevier.com
-2020-09-19 18:47:25,416 Visiting 493: amazon.es
-2020-09-19 18:47:47,637 Visiting 494: redhat.com
-2020-09-19 18:48:13,934 New domains in snitch_map: trustarc.com
-2020-09-19 18:48:16,284 Visiting 495: photobucket.com
-2020-09-19 18:48:46,295 Timed out loading photobucket.com
-2020-09-19 18:48:51,274 Visiting 496: fiverr.com
-2020-09-19 18:49:20,120 Visiting 497: networkadvertising.org
-2020-09-19 18:49:37,387 Visiting 498: amazon.it
-2020-09-19 18:50:00,779 Visiting 499: www.gov.cn
-2020-09-19 18:50:30,788 Timed out loading www.gov.cn
-2020-09-19 18:50:33,719 New domains in snitch_map: gridsumdissector.com
-2020-09-19 18:50:35,829 Visiting 500: google.pl
-2020-09-19 18:50:49,310 Visiting 501: vox.com
-2020-09-19 18:51:15,144 Visiting 502: momoshop.com.tw
+2020-09-20 18:29:33,259 Visiting 456: google.com.sa
+2020-09-20 18:29:44,181 Visiting 457: vice.com
+2020-09-20 18:30:06,604 Visiting 458: breitbart.com
+2020-09-20 18:30:30,208 New domains in snitch_map: disqus.com
+2020-09-20 18:30:32,120 Visiting 459: patreon.com
+2020-09-20 18:31:00,776 Visiting 460: psu.edu
+2020-09-20 18:31:22,649 Visiting 461: geocities.com
+2020-09-20 18:31:48,696 Visiting 462: zdnet.com
+2020-09-20 18:32:14,045 New domains in snitch_map: viglink.com
+2020-09-20 18:32:15,851 Visiting 463: varzesh3.com
+2020-09-20 18:32:53,566 New domains in snitch_map: mediaad.org, yektanet.com
+2020-09-20 18:32:55,364 Visiting 464: gofundme.com
+2020-09-20 18:33:06,074 Visiting 465: sagepub.com
+2020-09-20 18:33:24,142 Visiting 466: yale.edu
+2020-09-20 18:33:39,243 Visiting 467: meetup.com
+2020-09-20 18:34:06,373 Visiting 468: bukalapak.com
+2020-09-20 18:34:35,172 Visiting 469: hbr.org
+2020-09-20 18:35:06,369 New domains in snitch_map: gigya.com, richrelevance.com
+2020-09-20 18:35:08,121 Visiting 470: guardian.co.uk
+2020-09-20 18:35:34,059 Visiting 471: google.com.ar
+2020-09-20 18:35:46,605 Visiting 472: abc.net.au
+2020-09-20 18:36:08,261 Visiting 473: trustpilot.com
+2020-09-20 18:36:27,747 Visiting 474: nvidia.com
+2020-09-20 18:36:48,005 Visiting 475: sun.com
+2020-09-20 18:37:06,872 Visiting 476: metropoles.com
+2020-09-20 18:37:26,933 New domains in snitch_map: denakop.com, webspectator.com
+2020-09-20 18:37:28,902 Visiting 477: mayoclinic.org
+2020-09-20 18:37:48,756 Visiting 478: google.com.eg
+2020-09-20 18:38:01,548 Visiting 479: patch.com
+2020-09-20 18:38:25,859 Visiting 480: britannica.com
+2020-09-20 18:38:44,490 New domains in snitch_map: eb.com
+2020-09-20 18:38:45,630 Visiting 481: allaboutcookies.org
+2020-09-20 18:38:57,534 Visiting 482: statista.com
+2020-09-20 18:39:22,408 New domains in snitch_map: adscale.de, m6r.eu
+2020-09-20 18:39:24,402 Visiting 483: cbc.ca
+2020-09-20 18:39:51,617 New domains in snitch_map: viafoura.co
+2020-09-20 18:39:52,770 Visiting 484: sindonews.com
+2020-09-20 18:40:39,637 Visiting 485: upenn.edu
+2020-09-20 18:40:54,345 Visiting 486: smallpdf.com
+2020-09-20 18:41:06,635 Visiting 487: aliexpress.ru
+2020-09-20 18:41:44,613 New domains in snitch_map: adriver.ru, betweendigital.com, mail.ru, mts.ru, rutarget.ru
+2020-09-20 18:41:46,672 Visiting 488: bidswitch.net
+2020-09-20 18:42:06,496 Visiting 489: nike.com
+2020-09-20 18:42:40,842 Visiting 490: gotowebinar.com
+2020-09-20 18:43:01,139 Visiting 491: sciencedaily.com
+2020-09-20 18:43:14,670 New domains in snitch_map: flowtype.press, trendmd.com
+2020-09-20 18:43:16,681 Visiting 492: elsevier.com
+2020-09-20 18:43:32,612 Visiting 493: redhat.com
+2020-09-20 18:43:57,961 New domains in snitch_map: trustarc.com
+2020-09-20 18:43:59,868 Visiting 494: photobucket.com
+2020-09-20 18:44:16,522 Visiting 495: fiverr.com
+2020-09-20 18:44:39,759 Visiting 496: amazon.es
+2020-09-20 18:45:02,073 Visiting 497: networkadvertising.org
+2020-09-20 18:45:20,572 Visiting 498: google.pl
+2020-09-20 18:45:34,592 Visiting 499: google.co.id
+2020-09-20 18:45:48,475 Visiting 500: vox.com
+2020-09-20 18:46:11,917 Visiting 501: momoshop.com.tw
+2020-09-20 18:46:27,646 Visiting 502: www.gov.cn
+2020-09-20 18:46:57,654 Timed out loading www.gov.cn
+2020-09-20 18:47:00,667 New domains in snitch_map: gridsumdissector.com
+2020-09-20 18:47:02,473 Visiting 503: getpocket.com
+2020-09-20 18:47:17,668 Visiting 504: amazon.it
+2020-09-20 18:47:39,273 Visiting 505: ask.com
+2020-09-20 18:47:59,859 New domains in snitch_map: bfmio.com, digitaloceanspaces.com, rtk.io, technoratimedia.com
+2020-09-20 18:48:01,893 Visiting 506: business.site
+2020-09-20 18:48:19,042 Visiting 507: dribbble.com
+2020-09-20 18:48:38,739 Visiting 508: wayfair.com
+2020-09-20 18:49:01,327 Visiting 509: xnxx.com
+2020-09-20 18:49:18,436 Visiting 510: redd.it
+2020-09-20 18:50:01,016 Visiting 511: hdfcbank.com
+2020-09-20 18:50:30,138 New domains in snitch_map: senseforth.com
+2020-09-20 18:50:32,384 Visiting 512: vkontakte.ru
+2020-09-20 18:50:50,153 Visiting 513: hootsuite.com
+2020-09-20 18:51:08,605 New domains in snitch_map: sessioncam.com
+2020-09-20 18:51:09,691 Visiting 514: quizlet.com
+2020-09-20 18:51:29,811 Visiting 515: gizmodo.com
+2020-09-20 18:52:11,089 New domains in snitch_map: akamaihd.net, connatix.com
+2020-09-20 18:52:12,888 Visiting 516: worldbank.org
+2020-09-20 18:52:47,113 Visiting 517: newyorker.com
+2020-09-20 18:53:20,328 New domains in snitch_map: wired.com, wnyc.org
+2020-09-20 18:53:22,400 Visiting 518: suara.com
+2020-09-20 18:53:44,239 New domains in snitch_map: alibaba.com, alicdn.com, lazada.co.id
+2020-09-20 18:53:46,339 Visiting 519: example.com
+2020-09-20 18:53:54,263 Visiting 520: everesttech.net
+2020-09-20 18:54:24,306 Timed out loading everesttech.net
+2020-09-20 18:54:28,851 Visiting 521: psychologytoday.com
+2020-09-20 18:54:46,709 Visiting 522: usps.com
+2020-09-20 18:55:04,454 Visiting 523: live.net
+2020-09-20 18:55:06,625 WebDriverException on live.net: unknown error: net::ERR_NAME_NOT_RESOLVED
+  (Session info: chrome=85.0.4183.83)
+2020-09-20 18:55:09,415 Visiting 524: talktalk.co.uk
+2020-09-20 18:55:32,837 Visiting 525: chinadaily.com.cn
+2020-09-20 18:56:05,931 Visiting 526: fedex.com
+2020-09-20 18:56:24,812 Visiting 527: google.com.au
+2020-09-20 18:56:37,017 Visiting 528: iso.org
+2020-09-20 18:56:54,609 Visiting 529: ieee.org
+2020-09-20 18:57:11,175 Visiting 530: namnak.com
+2020-09-20 18:57:25,705 Visiting 531: businesswire.com
+2020-09-20 18:57:45,263 Visiting 532: fastcompany.com
+2020-09-20 18:58:21,354 New domains in snitch_map: lightboxcdn.com
+2020-09-20 18:58:23,900 Visiting 533: 51sole.com
+2020-09-20 18:58:33,863 Visiting 534: merriam-webster.com
+2020-09-20 18:58:57,445 New domains in snitch_map: heapanalytics.com
+2020-09-20 18:58:59,649 Visiting 535: inc.com
+2020-09-20 18:59:27,771 Visiting 536: khanacademy.org
+2020-09-20 18:59:52,631 Visiting 537: mathtag.com
+2020-09-20 19:00:09,821 Visiting 538: oreilly.com
+2020-09-20 19:00:22,133 New domains in snitch_map: oreillystatic.com
+2020-09-20 19:00:23,957 Visiting 539: ox.ac.uk
+2020-09-20 19:00:38,687 Visiting 540: umn.edu
+2020-09-20 19:00:58,323 Visiting 541: cnzz.com
+2020-09-20 19:01:28,332 Timed out loading cnzz.com
+2020-09-20 19:01:32,915 Visiting 542: wpengine.com
+2020-09-20 19:01:53,734 New domains in snitch_map: livechatinc.com, salesloft.com, terminus.services
+2020-09-20 19:01:56,038 Visiting 543: bluekai.com
+2020-09-20 19:02:16,109 Visiting 544: dw.com
+2020-09-20 19:02:34,317 New domains in snitch_map: ebu.io, teads.tv, xiti.com
+2020-09-20 19:02:36,248 Visiting 545: amazon.cn
+2020-09-20 19:02:58,205 Visiting 546: fortune.com
+2020-09-20 19:03:28,013 Visiting 547: softonic.com
+2020-09-20 19:03:50,121 New domains in snitch_map: e-planning.net, richaudience.com
+2020-09-20 19:03:51,989 Visiting 548: blackboard.com
+2020-09-20 19:04:06,410 New domains in snitch_map: atlassian.net
+2020-09-20 19:04:07,462 Visiting 549: cdninstagram.com
+2020-09-20 19:04:09,049 WebDriverException on cdninstagram.com: unknown error: net::ERR_NAME_NOT_RESOLVED
+  (Session info: chrome=85.0.4183.83)
+2020-09-20 19:04:12,668 Visiting 550: wisc.edu
+2020-09-20 19:04:24,949 Visiting 551: ltn.com.tw
+2020-09-20 19:04:46,160 New domains in snitch_map: asianmedia.com, onevision.com.tw
+2020-09-20 19:04:48,005 Visiting 552: messenger.com
+2020-09-20 19:05:02,982 Visiting 553: chouftv.ma
+2020-09-20 19:05:29,041 Visiting 554: letsencrypt.org
+2020-09-20 19:05:43,004 Visiting 555: snapchat.com
+2020-09-20 19:05:57,088 Visiting 556: ndtv.com
+2020-09-20 19:06:37,904 Visiting 557: typeform.com
+2020-09-20 19:07:03,117 New domains in snitch_map: akamaized.net
+2020-09-20 19:07:05,374 Visiting 558: wikia.com
+2020-09-20 19:07:23,580 Visiting 559: plos.org
+2020-09-20 19:07:39,897 Visiting 560: yimg.com
+2020-09-20 19:07:49,758 Visiting 561: att.com
+2020-09-20 19:08:17,767 Visiting 562: iqoption.com
+2020-09-20 19:08:54,056 New domains in snitch_map: cdnpub.info
+2020-09-20 19:08:55,896 Visiting 563: ameblo.jp
+2020-09-20 19:09:11,865 New domains in snitch_map: ameba.jp
+2020-09-20 19:09:13,829 Visiting 564: wiktionary.org
+2020-09-20 19:09:25,604 Visiting 565: entrepreneur.com
+2020-09-20 19:09:49,221 New domains in snitch_map: stack-sonar.com
+2020-09-20 19:09:50,987 Visiting 566: quantserve.com
+2020-09-20 19:09:52,551 WebDriverException on quantserve.com: unknown error: net::ERR_NAME_NOT_RESOLVED
+  (Session info: chrome=85.0.4183.83)
+2020-09-20 19:09:54,924 Visiting 567: azure.com
+2020-09-20 19:10:15,245 Visiting 568: jianshu.com
+2020-09-20 19:10:34,923 Visiting 569: jhu.edu
+2020-09-20 19:10:53,686 Visiting 570: agkn.com
+2020-09-20 19:10:56,264 WebDriverException on agkn.com: unknown error: net::ERR_NAME_NOT_RESOLVED
+  (Session info: chrome=85.0.4183.83)
+2020-09-20 19:11:00,169 Visiting 571: gmw.cn
+2020-09-20 19:11:17,531 New domains in snitch_map: aliyun.com
+2020-09-20 19:11:19,470 Visiting 572: uci.edu
+2020-09-20 19:11:37,034 Visiting 573: us.com
+2020-09-20 19:11:48,610 Visiting 574: ucla.edu
+2020-09-20 19:12:02,333 Visiting 575: chicagotribune.com
+2020-09-20 19:12:23,067 Visiting 576: scientificamerican.com
+2020-09-20 19:12:44,138 New domains in snitch_map: pages04.net
+2020-09-20 19:12:46,038 Visiting 577: theconversation.com
+2020-09-20 19:13:04,684 Visiting 578: deloitte.com
+2020-09-20 19:13:27,508 Visiting 579: pikiran-rakyat.com
+2020-09-20 19:13:49,041 Visiting 580: utexas.edu
+2020-09-20 19:14:04,681 Visiting 581: spiegel.de
+2020-09-20 19:14:19,927 New domains in snitch_map: ioam.de
+2020-09-20 19:14:22,160 Visiting 582: heavy.com
+2020-09-20 19:14:32,633 Visiting 583: elegantthemes.com
+2020-09-20 19:14:46,891 Visiting 584: feedly.com
+2020-09-20 19:15:20,729 Visiting 585: sfgate.com
+2020-09-20 19:16:02,394 New domains in snitch_map: reson8.com
+2020-09-20 19:16:04,409 Visiting 586: python.org
+2020-09-20 19:16:17,862 Visiting 587: comodoca.com
+2020-09-20 19:16:33,645 Visiting 588: eikegolehem.com
+2020-09-20 19:16:43,447 Visiting 589: rambler.ru
+2020-09-20 19:17:19,123 New domains in snitch_map: 1dmp.io, adhigh.net, aidata.io, buzzoola.com, digitaltarget.ru, shopnetic.com
+2020-09-20 19:17:20,397 Visiting 590: y2mate.com
+2020-09-20 19:17:31,728 Visiting 591: 360.com
+2020-09-20 19:17:46,217 New domains in snitch_map: so.com
+2020-09-20 19:17:48,092 Visiting 592: cmu.edu
+2020-09-20 19:18:09,828 Visiting 593: zaloapp.com
+2020-09-20 19:18:25,499 Visiting 594: asos.com
+2020-09-20 19:18:48,904 Visiting 595: canada.ca
+2020-09-20 19:19:01,947 Visiting 596: playstation.com
+2020-09-20 19:19:24,869 Visiting 597: realtor.com
+2020-09-20 19:19:45,423 New domains in snitch_map: smadex.com
+2020-09-20 19:19:47,198 Visiting 598: adsafeprotected.com
+2020-09-20 19:20:17,274 Timed out loading adsafeprotected.com
+2020-09-20 19:20:21,922 Visiting 599: cam.ac.uk
+2020-09-20 19:20:42,986 Visiting 600: deepl.com
+2020-09-20 19:21:00,686 Visiting 601: krxd.net
+2020-09-20 19:21:02,431 WebDriverException on krxd.net: unknown error: net::ERR_NAME_NOT_RESOLVED
+  (Session info: chrome=85.0.4183.83)
+2020-09-20 19:21:05,211 Visiting 602: newsweek.com
+2020-09-20 19:21:20,908 New domains in snitch_map: mookie1.com
+2020-09-20 19:21:22,988 Visiting 603: slate.com
+2020-09-20 19:21:47,129 Visiting 604: uk.com
+2020-09-20 19:22:02,925 Visiting 605: ubuntu.com
+2020-09-20 19:22:16,762 Visiting 606: indiegogo.com
+2020-09-20 19:22:37,512 Visiting 607: pexels.com
+2020-09-20 19:22:55,590 Visiting 608: newrelic.com
+2020-09-20 19:23:25,573 Visiting 609: arxiv.org
+2020-09-20 19:23:38,023 Visiting 610: lenovo.com
+2020-09-20 19:23:58,656 New domains in snitch_map: fyrsbckgi-c.global.ssl.fastly.net, micpn.com, ojrq.net, vzew.net
+2020-09-20 19:24:00,886 Visiting 611: discordapp.com
+2020-09-20 19:24:19,094 Visiting 612: zerodha.com
+2020-09-20 19:24:31,421 Visiting 613: elpais.com
+2020-09-20 19:25:01,430 Timed out loading elpais.com
+2020-09-20 19:25:07,894 Visiting 614: xfinity.com
+2020-09-20 19:25:37,407 Visiting 615: qualtrics.com
+2020-09-20 19:26:08,106 Visiting 616: intuit.com
+2020-09-20 19:26:31,600 New domains in snitch_map: eum-appdynamics.com
+2020-09-20 19:26:33,501 Visiting 617: timeanddate.com
+2020-09-20 19:26:47,750 Visiting 618: telewebion.com
+2020-09-20 19:27:01,434 New domains in snitch_map: televebion.net
+2020-09-20 19:27:03,477 Visiting 619: bmj.com
+2020-09-20 19:27:21,149 Visiting 620: verisign.com
+2020-09-20 19:27:37,966 Visiting 621: gosuslugi.ru
+2020-09-20 19:27:54,317 Visiting 622: epicgames.com
+2020-09-20 19:28:31,873 Visiting 623: hilton.com
+2020-09-20 19:29:15,260 New domains in snitch_map: huluqa.com, koddi.com, pbbl.co, rakuten.com
+2020-09-20 19:29:17,734 Visiting 624: over-blog.com
+2020-09-20 19:29:38,513 New domains in snitch_map: estat.com, tradelab.fr
+2020-09-20 19:29:40,555 Visiting 625: uchicago.edu
+2020-09-20 19:29:59,208 Visiting 626: adform.net
+2020-09-20 19:30:00,987 WebDriverException on adform.net: unknown error: net::ERR_NAME_NOT_RESOLVED
+  (Session info: chrome=85.0.4183.83)
+2020-09-20 19:30:03,825 Visiting 627: hotstar.com
+2020-09-20 19:30:22,840 Visiting 628: bootstrapcdn.com
+2020-09-20 19:30:38,179 Visiting 629: manoramaonline.com
+2020-09-20 19:30:56,901 New domains in snitch_map: mmonline.io
+2020-09-20 19:30:58,322 Visiting 630: hotjar.com
+2020-09-20 19:31:27,666 Visiting 631: afternic.com
+2020-09-20 19:31:45,325 New domains in snitch_map: newrelic.com, secureserver.net
+2020-09-20 19:31:47,391 Visiting 632: oecd.org
+2020-09-20 19:32:07,838 Visiting 633: bbb.org
+2020-09-20 19:32:33,438 New domains in snitch_map: aj1015.online
+2020-09-20 19:32:34,406 Visiting 634: mirror.co.uk
+2020-09-20 19:33:10,912 Visiting 635: asus.com
+2020-09-20 19:33:28,028 Visiting 636: zol.com.cn
+2020-09-20 19:33:54,423 New domains in snitch_map: miaozhen.com, w8.com.cn
+2020-09-20 19:33:56,445 Visiting 637: aboutcookies.org
+2020-09-20 19:34:11,043 Visiting 638: howstuffworks.com
+2020-09-20 19:34:24,620 New domains in snitch_map: ib-ibi.com
+2020-09-20 19:34:26,481 Visiting 639: nicovideo.jp
+2020-09-20 19:34:48,432 Visiting 640: shaparak.ir
+2020-09-20 19:35:18,470 Timed out loading shaparak.ir
+2020-09-20 19:35:23,108 Visiting 641: mgid.com
+2020-09-20 19:35:51,103 Visiting 642: qz.com
+2020-09-20 19:36:09,729 Visiting 643: uiuc.edu
+2020-09-20 19:36:30,708 Visiting 644: fb.me
+2020-09-20 19:36:48,356 Visiting 645: biomedcentral.com
+2020-09-20 19:37:04,949 New domains in snitch_map: edge-cdn.net
+2020-09-20 19:37:06,563 Visiting 646: arstechnica.com
+2020-09-20 19:37:26,527 Visiting 647: weforum.org
+2020-09-20 19:37:48,149 Visiting 648: sfx.ms
+2020-09-20 19:37:50,899 WebDriverException on sfx.ms: unknown error: net::ERR_NAME_NOT_RESOLVED
+  (Session info: chrome=85.0.4183.83)
+2020-09-20 19:37:55,350 Visiting 649: byteoversea.com
+2020-09-20 19:37:57,451 WebDriverException on byteoversea.com: unknown error: net::ERR_NAME_NOT_RESOLVED
+  (Session info: chrome=85.0.4183.83)
+2020-09-20 19:38:01,464 Visiting 650: sberbank.ru
+2020-09-20 19:38:16,315 New domains in snitch_map: statad.ru
+2020-09-20 19:38:18,553 Visiting 651: thesun.co.uk
+2020-09-20 19:38:49,917 Visiting 652: criteo.net
+2020-09-20 19:39:08,784 Visiting 653: bet365.com
+2020-09-20 19:39:38,790 Timed out loading bet365.com
+2020-09-20 19:39:58,824 Error closing timed out window:
+unknown error: failed to close window in 20 seconds
+  (Session info: chrome=85.0.4183.83)
+2020-09-20 19:39:58,824 Restarting browser ...
+2020-09-20 19:40:20,146 Successfully restarted
+2020-09-20 19:40:21,482 Visiting 654: tencent.com
+2020-09-20 19:40:30,460 Visiting 655: purdue.edu
+2020-09-20 19:40:50,512 Visiting 656: visualstudio.com
+2020-09-20 19:41:02,841 Visiting 657: medicalnewstoday.com
+2020-09-20 19:41:18,528 Visiting 658: pcmag.com
+2020-09-20 19:41:47,796 Visiting 659: cbslocal.com
+2020-09-20 19:42:05,781 New domains in snitch_map: scribblelive.com
+2020-09-20 19:42:08,550 Visiting 660: nba.com
+2020-09-20 19:42:38,580 Timed out loading nba.com
+2020-09-20 19:42:44,684 Visiting 661: turn.com
+2020-09-20 19:42:54,099 Visiting 662: chron.com
+2020-09-20 19:43:27,674 Visiting 663: norton.com
+2020-09-20 19:43:49,169 New domains in snitch_map: ow5a.net
+2020-09-20 19:43:50,718 Visiting 664: tapad.com
+2020-09-20 19:44:12,358 Visiting 665: unity3d.com
+2020-09-20 19:44:28,894 Visiting 666: ladbible.com
+2020-09-20 19:45:06,135 Visiting 667: parallels.com
+2020-09-20 19:45:22,798 Visiting 668: kakao.com
+2020-09-20 19:45:37,328 Visiting 669: mercadolivre.com.br
+2020-09-20 19:45:52,396 Visiting 670: douban.com
+2020-09-20 19:46:13,343 Visiting 671: icicibank.com
+2020-09-20 19:46:38,254 New domains in snitch_map: nanorep.co
+2020-09-20 19:46:39,929 Visiting 672: altervista.org
+2020-09-20 19:46:54,816 Visiting 673: merdeka.com
+2020-09-20 19:47:15,717 Visiting 674: op.gg
+2020-09-20 19:47:40,189 New domains in snitch_map: naver.com, riotgames.com
+2020-09-20 19:47:41,208 Visiting 675: bizjournals.com
+2020-09-20 19:47:59,121 New domains in snitch_map: aamsitecertifier.com
+2020-09-20 19:48:00,156 Visiting 676: capitalone.com
+2020-09-20 19:48:30,004 Visiting 677: gamepedia.com
+2020-09-20 19:48:48,241 New domains in snitch_map: wikia-services.com
+2020-09-20 19:48:49,895 Visiting 678: idntimes.com
+2020-09-20 19:49:12,484 New domains in snitch_map: popin.cc
+2020-09-20 19:49:14,231 Visiting 679: appcenter.ms
+2020-09-20 19:49:27,028 New domains in snitch_map: microsoft.com
+2020-09-20 19:49:28,780 Visiting 680: ign.com
+2020-09-20 19:49:56,664 Visiting 681: dictionary.com
+2020-09-20 19:50:17,290 Visiting 682: toutiao.com
+2020-09-20 19:50:47,328 Timed out loading toutiao.com
+2020-09-20 19:50:50,620 Visiting 683: glassdoor.com
+2020-09-20 19:51:20,827 Visiting 684: apa.org
+2020-09-20 19:51:34,144 Visiting 685: kumparan.com
+2020-09-20 19:52:04,679 Visiting 686: si.edu
+2020-09-20 19:52:23,371 New domains in snitch_map: smithsonian.museum
+2020-09-20 19:52:25,196 Visiting 687: crwdcntrl.net
+2020-09-20 19:52:55,223 Timed out loading crwdcntrl.net
+2020-09-20 19:52:59,674 Visiting 688: blogspot.co.uk
+2020-09-20 19:53:12,112 Visiting 689: autodesk.com
+2020-09-20 19:53:46,612 Visiting 690: digitaltrends.com
+2020-09-20 19:54:16,857 Visiting 691: mlb.com
+2020-09-20 19:54:57,820 Visiting 692: thesaurus.com
+2020-09-20 19:55:17,121 Visiting 693: fao.org
+2020-09-20 19:55:45,506 Visiting 694: zend.com
+2020-09-20 19:56:02,541 New domains in snitch_map: b0e8.com, typekit.net
+2020-09-20 19:56:04,299 Visiting 695: mercadolibre.com.ar
+2020-09-20 19:56:20,156 Visiting 696: chess.com
+2020-09-20 19:56:33,760 Visiting 697: techradar.com
+2020-09-20 19:57:04,785 New domains in snitch_map: adkernel.com, cpx.to, justpremium.com, servebom.com, undertone.com
+2020-09-20 19:57:06,343 Visiting 698: gstatic.com
+2020-09-20 19:57:15,654 Visiting 699: geeksforgeeks.org
+2020-09-20 19:57:45,365 New domains in snitch_map: adpushup.com, fwmrm.net, gumgum.com, servenobid.com
+2020-09-20 19:57:47,293 Visiting 700: fbsbx.com
+2020-09-20 19:57:57,375 Visiting 701: netscape.com
+2020-09-20 19:58:33,507 Visiting 702: bankofamerica.com
+2020-09-20 19:58:52,442 Visiting 703: thepiratebay.org
+2020-09-20 19:59:04,650 Visiting 704: patria.org.ve
+2020-09-20 19:59:16,495 Visiting 705: namu.wiki
+2020-09-20 19:59:27,051 Visiting 706: umeng.com
+2020-09-20 19:59:48,443 Visiting 707: sahibinden.com
+2020-09-20 20:00:04,661 New domains in snitch_map: shbdn.com
+2020-09-20 20:00:06,300 Visiting 708: americanexpress.com
+2020-09-20 20:00:22,549 Visiting 709: politico.com
+2020-09-20 20:00:50,805 Visiting 710: orange.fr
+2020-09-20 20:01:19,351 New domains in snitch_map: maxymiser.net, orangeads.fr, smart-traffik.com
+2020-09-20 20:01:21,175 Visiting 711: cctv.com
+2020-09-20 20:01:47,897 New domains in snitch_map: bjcathay.com, cntv.cn
+2020-09-20 20:01:49,992 Visiting 712: news.com.au
+2020-09-20 20:02:09,103 Visiting 713: icio.us
+2020-09-20 20:02:19,230 Visiting 714: nyu.edu
+2020-09-20 20:02:35,727 Visiting 715: fastly.net
+2020-09-20 20:03:15,130 Visiting 716: reverso.net
+2020-09-20 20:03:31,012 Visiting 717: smh.com.au
+2020-09-20 20:03:55,619 Visiting 718: istockphoto.com
+2020-09-20 20:04:14,848 Visiting 719: abs-cbn.com
+2020-09-20 20:04:39,351 New domains in snitch_map: sphereup.com
+2020-09-20 20:04:41,112 Visiting 720: ow.ly
+2020-09-20 20:04:57,839 Visiting 721: nydailynews.com
+2020-09-20 20:05:24,529 Visiting 722: inquirer.net
+2020-09-20 20:06:01,829 New domains in snitch_map: innity.com, izooto.com, onthe.io
+2020-09-20 20:06:03,644 Visiting 723: trafficmanager.net
+2020-09-20 20:06:05,016 WebDriverException on trafficmanager.net: unknown error: net::ERR_NAME_NOT_RESOLVED
+  (Session info: chrome=85.0.4183.83)
+2020-09-20 20:06:08,809 Visiting 724: sectigo.com
+2020-09-20 20:06:22,225 Visiting 725: cnnic.cn
+2020-09-20 20:06:52,260 Timed out loading cnnic.cn
+2020-09-20 20:06:57,434 Visiting 726: usc.edu
+2020-09-20 20:07:12,080 Visiting 727: openstreetmap.org
+2020-09-20 20:07:26,395 Visiting 728: appspot.com
+2020-09-20 20:07:40,746 Visiting 729: spotxchange.com
+2020-09-20 20:08:02,212 Visiting 730: bitnami.com
+2020-09-20 20:08:17,588 Visiting 731: barnesandnoble.com
+2020-09-20 20:08:58,819 New domains in snitch_map: bn-web.com
+2020-09-20 20:09:00,741 Visiting 732: google.co.kr
+2020-09-20 20:09:13,492 Visiting 733: genius.com
+2020-09-20 20:09:29,137 Visiting 734: exelator.com
+2020-09-20 20:09:59,192 Timed out loading exelator.com
+2020-09-20 20:10:04,064 Visiting 735: telegram.me
+2020-09-20 20:10:16,394 Visiting 736: moneycontrol.com
+2020-09-20 20:10:55,223 Visiting 737: joomla.org
+2020-09-20 20:11:12,782 Visiting 738: ning.com
+2020-09-20 20:11:30,999 Visiting 739: fontawesome.com
+2020-09-20 20:11:57,344 Visiting 740: xing.com
+2020-09-20 20:12:14,709 Visiting 741: livescience.com
+2020-09-20 20:12:49,312 Visiting 742: dropcatch.com
+2020-09-20 20:13:03,290 Visiting 743: upwork.com
+2020-09-20 20:13:26,302 Visiting 744: prezi.com
+2020-09-20 20:13:45,413 Visiting 745: allegro.pl
+2020-09-20 20:14:10,778 New domains in snitch_map: gemius.pl
+2020-09-20 20:14:12,554 Visiting 746: mercadolibre.com.mx
+2020-09-20 20:14:24,870 New domains in snitch_map: metroscubicos.com
+2020-09-20 20:14:26,478 Visiting 747: sakura.ne.jp
+2020-09-20 20:14:44,368 New domains in snitch_map: chatdealer.jp, usonar.jp
+2020-09-20 20:14:46,004 Visiting 748: pnas.org
+2020-09-20 20:14:58,813 New domains in snitch_map: highwire.org
+2020-09-20 20:15:00,575 Visiting 749: uber.com
+2020-09-20 20:15:18,941 Visiting 750: googleblog.com
+2020-09-20 20:15:34,573 Visiting 751: dedecms.com
+2020-09-20 20:16:02,072 Visiting 752: duke.edu
+2020-09-20 20:16:14,944 Visiting 753: google.gr
+2020-09-20 20:16:28,142 Visiting 754: foursquare.com
+2020-09-20 20:16:47,121 Visiting 755: 3lift.com
+2020-09-20 20:17:14,274 Visiting 756: instructables.com
+2020-09-20 20:17:27,449 Visiting 757: zalo.me
+2020-09-20 20:17:41,714 Visiting 758: youdao.com
+2020-09-20 20:17:52,902 Visiting 759: apnews.com
+2020-09-20 20:18:10,970 Visiting 760: ebay-kleinanzeigen.de
+2020-09-20 20:18:19,608 Visiting 761: venturebeat.com
+2020-09-20 20:18:46,110 New domains in snitch_map: anyclip.com, springserve.com
+2020-09-20 20:18:48,079 Visiting 762: fidelity.com
+2020-09-20 20:19:11,430 New domains in snitch_map: online-metrix.net
+2020-09-20 20:19:12,678 Visiting 763: marca.com
