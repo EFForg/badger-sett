@@ -492,11 +492,13 @@ class Crawler:
         if page_title == "Attention Required! | Cloudflare":
             raise WebDriverException("Reached Cloudflare security page")
 
+        # TODO this seems to be out of date
         if page_title == "You have been blocked":
             if "https://ct.captcha-delivery.com/c.js" in self.driver.page_source:
                 raise WebDriverException("Reached DataDome security page")
 
     def raise_on_chrome_error_pages(self):
+        # TODO update for changes in Chrome 85? now Chrome raises in many cases
         """
         Chrome doesn't automatically raise WebDriverExceptions on error pages.
         This makes Chrome behave more like Firefox.
