@@ -24,6 +24,7 @@ from selenium import webdriver
 from selenium.common.exceptions import (
     InvalidSessionIdException,
     NoAlertPresentException,
+    NoSuchElementException,
     NoSuchWindowException,
     SessionNotCreatedException,
     TimeoutException,
@@ -593,7 +594,16 @@ class Crawler:
 
     def start_browser(self):
         self.start_driver()
+
         self.clear_data()
+
+        # enable local learning
+        self.load_extension_page(OPTIONS)
+        wait_for_script(self.driver, "return window.OPTIONS_INITIALIZED")
+        try:
+            self.driver.find_element_by_id('local-learning-checkbox').click()
+        except NoSuchElementException:
+            self.logger.warning("Learning checkbox not found, learning NOT enabled!")
 
     def restart_browser(self):
         self.logger.info("Restarting browser ...")
@@ -829,6 +839,7 @@ chrome.runtime.sendMessage({
     def start_browser(self):
         self.start_driver()
         # TODO should we clear data here?
+        # TODO should we enable local learning?
         # don't block anything, just listen and log
         self.set_passive_mode()
 
