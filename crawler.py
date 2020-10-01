@@ -321,12 +321,13 @@ class Crawler:
                                             service_log_path=os.path.devnull)
 
             # load Privacy Badger
-            unpacked_addon_path = os.path.join(self.pb_path, 'src')
+            # Firefox requires absolute paths
+            unpacked_addon_path = os.path.abspath(
+                os.path.join(self.pb_path, 'src'))
             self.driver.install_addon(unpacked_addon_path, temporary=True)
 
             # loads parallel extension to run alongside pb
             if self.load_extension:
-                # make the path to the firefox extension absolute
                 parallel_extension_url = os.path.abspath(self.load_extension)
                 self.driver.install_addon(parallel_extension_url)
 
