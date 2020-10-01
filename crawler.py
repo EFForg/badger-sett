@@ -208,6 +208,11 @@ class Crawler:
                     "for Privacy Badger:\n"
                     "%s", err)
 
+            except IndexError:
+                # TODO better handle when Privacy Badger is not on a branch
+                git_info['branch'] = None
+                git_info['commit_hash'] = '???'
+
             return git_info
 
         git_data = get_git_info(self.pb_path)
