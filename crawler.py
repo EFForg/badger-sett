@@ -337,13 +337,8 @@ class Crawler:
         # wait for Badger to finish initializing
         self.load_extension_page(OPTIONS)
         wait_for_script(self.driver, (
-            "return chrome.extension.getBackgroundPage().badger.INITIALIZED"
-            # TODO below no longer necessary after
-            # https://github.com/EFForg/privacybadger/pull/2438
-            " && Object.keys("
-            "  chrome.extension.getBackgroundPage()"
-            "  .badger.storage.getBadgerStorageObject('action_map').getItemClones()"
-            ").length > 1"
+            "return chrome.extension.getBackgroundPage()"
+            ".badger.INITIALIZED"
         ))
 
     def load_extension_page(self, page, tries=3):
