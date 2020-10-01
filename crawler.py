@@ -53,6 +53,7 @@ FIREFOX = 'firefox'
 
 DEFAULT_NUM_SITES = 2000
 RESTART_RETRIES = 5
+MAX_ALERTS = 10
 
 # day before yesterday, as yesterday's list is sometimes not yet available
 TRANCO_VERSION = (datetime.utcnow() - timedelta(days=2)).strftime('%Y-%m-%d')
@@ -546,11 +547,15 @@ class Crawler:
         url = "http://%s/" % domain
 
         # handle alerts
+        num_tries = 0
         while True:
+            num_tries += 1
             try:
                 self.driver.get(url)
                 break
             except UnexpectedAlertPresentException:
+                if num_tries > MAX_ALERTS:
+                    raise WebDriverException("Too many alerts on " + domain)
                 dismiss_alert(self.driver)
 
         self.raise_on_chrome_error_pages()
