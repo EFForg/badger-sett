@@ -271,16 +271,21 @@ class Crawler:
                 json.dump(manifest, f)
 
             opts = ChromeOptions()
-            opts.add_argument('--no-sandbox')
             opts.add_argument("--load-extension=" + new_extension_path)
 
             # loads parallel extension to run alongside pb
             if self.load_extension:
                 opts.add_extension(self.load_extension)
 
-            prefs = {"profile.block_third_party_cookies": False}
-            opts.add_experimental_option("prefs", prefs)
-            opts.add_argument('--dns-prefetch-disable')
+            opts.add_argument("--disable-crash-reporter")
+            opts.add_argument("--disable-dev-shm-usage")
+            opts.add_argument("--disable-gpu")
+            opts.add_argument("--dns-prefetch-disable")
+            opts.add_argument("--no-sandbox")
+
+            opts.add_experimental_option("prefs", {
+                "profile.block_third_party_cookies": False
+            })
 
             opts.set_capability("acceptInsecureCerts", False);
             opts.set_capability("unhandledPromptBehavior", "ignore");
