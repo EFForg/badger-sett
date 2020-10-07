@@ -4,13 +4,10 @@
   and numerous entrances. Setts incorporate larger chambers used for sleeping or
   rearing young.
 
-This script is designed to raise young [Privacy Badgers](https://github.com/EFForg/privacybadger) by teaching them a little
-about the trackers on popular sites, thus preparing them to fight trackers out
-in the wild. `crawler.py` visits the top 2,000 sites of the [Tranco List](https://tranco-list.eu)
-with a fresh version of Privacy Badger installed and saves the `action_map` and
-`snitch_map` it learns in `results.json`.
+This script is designed to raise young [Privacy Badgers](https://github.com/EFForg/privacybadger) by teaching them
+about the trackers on popular sites. Every day, [`crawler.py`](./crawler.py) visits thousands of the top sites from the [Tranco List](https://tranco-list.eu) with the latest version of Privacy Badger, and saves its findings in `results.json`.
 
-See the following eff.org blog post for more information: [Giving Privacy Badger a Jump Start](https://www.eff.org/deeplinks/2018/08/giving-privacy-badger-jump-start).
+See the following EFF.org blog post for more information: [Giving Privacy Badger a Jump Start](https://www.eff.org/deeplinks/2018/08/giving-privacy-badger-jump-start).
 
 ## Setup
 
