@@ -277,6 +277,7 @@ class Crawler:
             if self.load_extension:
                 opts.add_extension(self.load_extension)
 
+            opts.add_argument("--disable-blink-features=AutomationControlled")
             opts.add_argument("--disable-crash-reporter")
             opts.add_argument("--disable-dev-shm-usage")
             opts.add_argument("--disable-gpu")
@@ -307,6 +308,8 @@ class Crawler:
             profile = webdriver.FirefoxProfile()
             profile.set_preference('extensions.webextensions.uuids',
                                    '{"%s": "%s"}' % (FF_EXT_ID, FF_UUID))
+
+            profile.set_preference("dom.webdriver.enabled", False)
 
             if self.firefox_tracking_protection == "off":
                 # disable all content blocking/Tracking Protection features
