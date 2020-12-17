@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
+
 import json
+import re
 import sys
 
 from collections import defaultdict
@@ -57,6 +59,7 @@ print("New action map has %d new domains and dropped %d old domains" %
 colorama.init()
 C_GREEN = colorama.Style.BRIGHT + colorama.Fore.GREEN
 C_RED = colorama.Style.BRIGHT + colorama.Fore.RED
+C_YELLOW = colorama.Style.BRIGHT + colorama.Fore.YELLOW
 C_RESET = colorama.Style.RESET_ALL
 
 extract = tldextract.TLDExtract(cache_file=False)
@@ -124,6 +127,53 @@ for base in sorted(no_longer_blocked):
             if y in old_js['snitch_map']:
                 out = out + " on " + ", ".join(old_js['snitch_map'][y])
             print(out.format(y))
+
+# look for common "roots" (base minus PSL TLD)
+MIN_SHARED_ROOTS = 3
+print_mdfp_header = True
+for base in sorted(new_js['snitch_map'].keys()):
+    sites = new_js['snitch_map'][base]
+
+    # include the tracker base, sans common resource domain strings
+    stripped_base = base
+    for s in ("static", "cdn", "media", "assets", "images", "img", "storage", "files"):
+        stripped_base = stripped_base.replace("-" + s, "").replace(s + "-", "").replace(s, "")
+    site_roots = [extract(site).domain for site in sites + [stripped_base]]
+
+    uniq_site_roots = set(site_roots)
+
+    # +1 for the tracker
+    if len(sites) + 1 - len(uniq_site_roots) < MIN_SHARED_ROOTS - 1:
+        continue
+
+    if print_mdfp_header:
+        print("\n{}??{} MDFP candidates:\n".format(C_YELLOW, C_RESET))
+        print_mdfp_header = False
+
+    shared_roots = [
+        root for root in uniq_site_roots if site_roots.count(root) > 1
+    ]
+
+    # highlight common roots
+    def highlight(string, root):
+        return "{}".join(
+            # split preserving separator
+            re.split('('+root+')', string)
+        ).format(C_YELLOW, C_RESET)
+    formatted_sites = []
+    for site in sites:
+        for root in shared_roots:
+            if root in site:
+                site = highlight(site, root)
+                break
+        formatted_sites.append(site)
+    formatted_base = base
+    for root in shared_roots:
+        if root in base:
+            formatted_base = highlight(base, root)
+            break
+
+    print(" ", formatted_base, "on", ", ".join(formatted_sites))
 
 print("")
 
