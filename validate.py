@@ -107,8 +107,9 @@ for base in sorted(newly_blocked):
             print(out.format(y))
 
 no_longer_blocked = blocked_bases_old - blocked_bases_new
-print("\n{}--{} No longer blocked domains ({}):\n".format(
-    C_RED, C_RESET, len(no_longer_blocked)))
+if no_longer_blocked:
+    print("\n{}--{} No longer blocked domains ({}):\n".format(
+        C_RED, C_RESET, len(no_longer_blocked)))
 for base in sorted(no_longer_blocked):
     subdomains = blocked_old[base]
     out = "  {}{}{}".format(C_RED, base, C_RESET)
