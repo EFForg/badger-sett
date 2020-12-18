@@ -142,17 +142,22 @@ for base in sorted(new_js['snitch_map'].keys()):
 
     uniq_site_roots = set(site_roots)
 
-    # +1 for the tracker
-    if len(sites) + 1 - len(uniq_site_roots) < MIN_SHARED_ROOTS - 1:
+    # short-circuit when trivially no common roots
+    # +1 because we include the tracker base
+    if len(sites) + 1 == len(uniq_site_roots):
+        continue
+
+    shared_roots = [
+        root for root in uniq_site_roots
+        if site_roots.count(root) >= MIN_SHARED_ROOTS
+    ]
+
+    if not shared_roots:
         continue
 
     if print_mdfp_header:
         print("\n{}??{} MDFP candidates:\n".format(C_YELLOW, C_RESET))
         print_mdfp_header = False
-
-    shared_roots = [
-        root for root in uniq_site_roots if site_roots.count(root) > 1
-    ]
 
     # highlight common roots
     def highlight(string, root):
