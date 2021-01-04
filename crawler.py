@@ -247,6 +247,21 @@ class Crawler:
             pformat(self.driver.capabilities)
         )
 
+    def handle_alerts_and(self, fun):
+        num_tries = 0
+
+        while True:
+            num_tries += 1
+            try:
+                res = fun()
+                break
+            except UnexpectedAlertPresentException:
+                if num_tries > MAX_ALERTS:
+                    raise WebDriverException("Too many alerts")
+                dismiss_alert(self.driver)
+
+        return res
+
     def start_driver(self):
         """Start a new Selenium web driver and install the bundled
         extension."""
@@ -363,21 +378,19 @@ class Crawler:
         BACKGROUND or OPTIONS.
         """
         if self.browser == CHROME:
-            ext_url = (CHROME_URL_FMT + page) % CHROME_EXT_ID
+            EXT_URL = (CHROME_URL_FMT + page) % CHROME_EXT_ID
         elif self.browser == FIREFOX:
-            ext_url = (FF_URL_FMT + page) % FF_UUID
+            EXT_URL = (FF_URL_FMT + page) % FF_UUID
+
+        def _load_ext_page():
+            self.driver.get(EXT_URL)
+
+            # wait for extension page to be ready
+            wait_for_script(self.driver, "return chrome.extension")
 
         for _ in range(tries):
             try:
-                # handle alerts w/o using up any tries
-                while True:
-                    try:
-                        self.driver.get(ext_url)
-                        # wait for extension page to be ready
-                        wait_for_script(self.driver, "return chrome.extension")
-                        break
-                    except UnexpectedAlertPresentException:
-                        dismiss_alert(self.driver)
+                self.handle_alerts_and(_load_ext_page)
                 break
             except ProtocolError as e:
                 self.logger.warning("Error loading %s:\n%s", page, str(e))
@@ -515,14 +528,9 @@ class Crawler:
         if self.browser != CHROME:
             return
 
-        # handle alerts
-        while True:
-            try:
-                # self.driver.current_url has the URL we tried, not the error page URL
-                actual_page_url = self.driver.execute_script("return document.location.href")
-                break
-            except UnexpectedAlertPresentException:
-                dismiss_alert(self.driver)
+        # self.driver.current_url has the URL we tried, not the error page URL
+        actual_page_url = self.handle_alerts_and(
+            lambda: self.driver.execute_script("return document.location.href"))
 
         if not actual_page_url.startswith("chrome-error://"):
             return
@@ -554,17 +562,7 @@ class Crawler:
 
         url = "http://%s/" % domain
 
-        # handle alerts
-        num_tries = 0
-        while True:
-            num_tries += 1
-            try:
-                self.driver.get(url)
-                break
-            except UnexpectedAlertPresentException:
-                if num_tries > MAX_ALERTS:
-                    raise WebDriverException("Too many alerts on " + domain)
-                dismiss_alert(self.driver)
+        self.handle_alerts_and(lambda: self.driver.get(url))
 
         self.raise_on_chrome_error_pages()
         self.raise_on_security_pages()
