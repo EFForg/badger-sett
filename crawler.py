@@ -78,6 +78,9 @@ ap.add_argument('--log-stdout', action='store_true', default=False,
 ap.add_argument('--load-extension', default=None,
                 help='If set, load arbitrary extension to run in parallel to PB')
 
+ap.add_argument('--load-data', metavar='BADGER_DATA_JSON', action='append', default=[],
+                help="If set, load tracker data from specified Badger data JSON file(s)")
+
 ap.add_argument('--survey', action='store_true', default=False,
                 help="If set, don't block anything or store action_map data")
 ap.add_argument('--domain-list', default=None,
@@ -246,6 +249,12 @@ class Crawler:
             self.firefox_tracking_protection,
             pformat(self.driver.capabilities)
         )
+
+        # load tracker data from one or more Badger data JSON files
+        for data_json in args.load_data:
+            with open(data_json, "r") as f:
+                data = json.load(f)
+                self.load_user_data(data)
 
     def handle_alerts_and(self, fun):
         num_tries = 0
