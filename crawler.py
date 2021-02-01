@@ -691,7 +691,10 @@ class Crawler:
         action_map and snitch_map that the Badger learned.
         """
 
-        domains = self.get_domain_list()
+        if self.n_sites == 0:
+            domains = []
+        else:
+            domains = self.get_domain_list()
 
         # list of domains we actually visited
         visited = []
@@ -733,12 +736,13 @@ class Crawler:
                 old_snitches = self.print_snitch_map_changes(old_snitches)
 
         num_total = len(domains)
-        num_successes = len(visited)
-        num_errors = num_total - num_successes
-        self.logger.info(
-            "Finished scan. Visited %d sites and errored on %d (%.1f%%)",
-            num_successes, num_errors, (num_errors / num_total * 100)
-        )
+        if num_total:
+            num_successes = len(visited)
+            num_errors = num_total - num_successes
+            self.logger.info(
+                "Finished scan. Visited %d sites and errored on %d (%.1f%%)",
+                num_successes, num_errors, (num_errors / num_total * 100)
+            )
 
         try:
             self.logger.info("Getting data from browser storage ...")
