@@ -826,12 +826,12 @@ class Crawler:
         if 'action_map' in self.storage_objects:
             for domain_data in data['action_map'].values():
                 # if DNT compliance wasn't seen
-                if not domain_data['dnt']:
+                if 'dnt' in domain_data and not domain_data['dnt']:
                     # no need to store DNT compliance
                     del domain_data['dnt']
 
                 # if we haven't yet checked for DNT compliance
-                if domain_data['nextUpdateTime'] == 0:
+                if 'nextUpdateTime' in domain_data and domain_data['nextUpdateTime'] == 0:
                     # no need to store the earliest next check date
                     del domain_data['nextUpdateTime']
 
