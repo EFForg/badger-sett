@@ -10,6 +10,7 @@ import json
 import logging
 import os
 import pathlib
+import random
 import re
 import sys
 import tempfile
@@ -22,11 +23,13 @@ from urllib3.exceptions import ProtocolError
 
 from selenium import webdriver
 from selenium.common.exceptions import (
+    ElementClickInterceptedException,
     InvalidSessionIdException,
     NoAlertPresentException,
     NoSuchElementException,
     NoSuchWindowException,
     SessionNotCreatedException,
+    StaleElementReferenceException,
     TimeoutException,
     UnexpectedAlertPresentException,
     WebDriverException,
@@ -187,6 +190,8 @@ class Crawler:
 
         self.last_data = None
         self.storage_objects = ['snitch_map', 'action_map']
+
+        self.tld_extract = TLDExtract(cache_file=False)
 
         self.start_browser()
 
@@ -563,6 +568,52 @@ class Crawler:
 
         raise WebDriverException(msg)
 
+    def click_internal_link(self):
+        links = []
+        current_url = self.driver.current_url
+        parsed_url = self.tld_extract(current_url)
+        full_site_domain = parsed_url.subdomain + parsed_url.domain + parsed_url.suffix
+
+        # gather candidate links
+        for el in self.driver.find_elements_by_tag_name('a'):
+            try:
+                if not el.is_displayed():
+                    continue
+                href = el.get_property('href')
+            except StaleElementReferenceException:
+                continue
+            # only http(s) links that point somewhere
+            if not href or not href.startswith("http") or href == current_url or href + '#' == current_url:
+                continue
+            # remove duplicates
+            if href in [link[0] for link in links]:
+                continue
+            parsed_href = self.tld_extract(href)
+            if parsed_href.subdomain + parsed_href.domain + parsed_href.suffix == full_site_domain:
+                links.append((href, el))
+
+        if not links:
+            self.logger.warning("No links to click")
+            return
+
+        # sort by link length (try to prioritize article links)
+        links.sort(key=lambda item: (-len(item[0]), item[0]))
+        # take top ten
+        links = links[:10]
+
+        link_href, link_el = random.choice(links)
+        self.logger.info("Clicking on %s", link_href)
+        try:
+            try:
+                link_el.click()
+            except ElementClickInterceptedException:
+                self.driver.execute_script("arguments[0].click()", link_el)
+        except WebDriverException as e:
+            self.logger.error(
+                "Failed to visit link (%s): %s", type(e).__name__, e.msg)
+
+        time.sleep(self.wait_time)
+
     def get_domain(self, domain):
         """
         Visit a domain, then spend `self.wait_time` seconds on the site
@@ -575,7 +626,10 @@ class Crawler:
 
         self.raise_on_chrome_error_pages()
         self.raise_on_security_pages()
+
         time.sleep(self.wait_time)
+
+        self.click_internal_link()
 
         return url
 
@@ -599,11 +653,10 @@ class Crawler:
             excluded_tlds = self.exclude.split(",")
 
             self.logger.info("Fetching TLD definitions ...")
-            extract = TLDExtract(cache_file=False)
 
             # check for first occurring domains in list that don't have excluded TLD
             for domain in domains:
-                if extract(domain).suffix not in excluded_tlds:
+                if self.tld_extract(domain).suffix not in excluded_tlds:
                     filtered_domains.append(domain)
                 # return list of acceptable domains if it's the correct length
                 if len(filtered_domains) == n_sites:
@@ -776,8 +829,7 @@ class Crawler:
             self.logger.info(str(snitch_map['']))
             del snitch_map['']
 
-        extract = TLDExtract()
-        d1_base = extract(d1).registered_domain
+        d1_base = self.tld_extract(d1).registered_domain
 
         # handle the domain-attribution bug (Privacy Badger issue #1997).
         # If a domain we visited was recorded as a tracker on the domain we
