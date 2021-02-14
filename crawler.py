@@ -604,7 +604,6 @@ class Crawler:
                 links.append((href, el))
 
         if not links:
-            self.logger.warning("No links to click")
             return
 
         # sort by link length (try to prioritize article links)
