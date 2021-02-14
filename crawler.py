@@ -324,8 +324,7 @@ class Crawler:
 
             for _ in range(5):
                 try:
-                    self.driver = webdriver.Chrome(self.chromedriver_path,
-                                                   chrome_options=opts)
+                    self.driver = webdriver.Chrome(self.chromedriver_path, options=opts)
                 except ConnectionResetError as e:
                     self.logger.warning((
                         "Chrome WebDriver initialization failed:\n"
@@ -498,7 +497,7 @@ class Crawler:
             return
 
         try:
-            self.driver.switch_to_window(self.driver.window_handles[0])
+            self.driver.switch_to.window(self.driver.window_handles[0])
         except WebDriverException as e:
             self.logger.warning(
                 "Failed to switch windows (%s), restarting ...", e.msg)
@@ -518,7 +517,7 @@ class Crawler:
         else:
             self.driver.execute_script('window.open()')
 
-        self.driver.switch_to_window(self.driver.window_handles[-1])
+        self.driver.switch_to.window(self.driver.window_handles[-1])
 
     def raise_on_security_pages(self):
         """
