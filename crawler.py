@@ -25,6 +25,7 @@ from urllib.parse import urljoin
 from selenium import webdriver
 from selenium.common.exceptions import (
     ElementClickInterceptedException,
+    ElementNotInteractableException,
     InvalidSessionIdException,
     NoAlertPresentException,
     NoSuchElementException,
@@ -616,7 +617,7 @@ class Crawler:
         try:
             try:
                 link_el.click()
-            except ElementClickInterceptedException:
+            except (ElementClickInterceptedException, ElementNotInteractableException):
                 self.driver.execute_script("arguments[0].click()", link_el)
         except WebDriverException as e:
             self.logger.error(
