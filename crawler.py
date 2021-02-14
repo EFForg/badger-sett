@@ -595,7 +595,7 @@ class Crawler:
                     continue
 
             # only keep http(s) links that point somewhere else within the site we are on
-            if not href or not href.startswith("http") or href == current_url or href + '#' == current_url:
+            if not href or not href.startswith("http") or href.startswith(current_url + '#'):
                 continue
 
             # remove duplicates
