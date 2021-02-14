@@ -20,6 +20,7 @@ from datetime import datetime, timedelta
 from pprint import pformat
 from shutil import copytree
 from urllib3.exceptions import ProtocolError
+from urllib.parse import urljoin
 
 from selenium import webdriver
 from selenium.common.exceptions import (
@@ -582,7 +583,16 @@ class Crawler:
                 href = el.get_property('href')
             except StaleElementReferenceException:
                 continue
-            # only http(s) links that point somewhere
+            if not isinstance(href, str):
+                # normalize SVG links (href is an SVGAnimatedString object)
+                if "baseVal" in href:
+                    href = href['baseVal']
+                    if href:
+                        href = urljoin(current_url, href)
+                else:
+                    self.logger.warning("Skipping unexpected href: %s", href)
+                    continue
+            # only keep http(s) links that point somewhere else within the site we are on
             if not href or not href.startswith("http") or href == current_url or href + '#' == current_url:
                 continue
             # remove duplicates
