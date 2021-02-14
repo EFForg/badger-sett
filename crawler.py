@@ -570,13 +570,12 @@ class Crawler:
 
         raise WebDriverException(msg)
 
-    def click_internal_link(self):
+    def gather_internal_links(self):
         links = []
         current_url = self.driver.current_url
         parsed_url = self.tld_extract(current_url)
         full_site_domain = parsed_url.subdomain + parsed_url.domain + parsed_url.suffix
 
-        # gather candidate links
         for el in self.driver.find_elements_by_tag_name('a'):
             try:
                 if not el.is_displayed():
@@ -584,6 +583,7 @@ class Crawler:
                 href = el.get_property('href')
             except StaleElementReferenceException:
                 continue
+
             if not isinstance(href, str):
                 # normalize SVG links (href is an SVGAnimatedString object)
                 if "baseVal" in href:
@@ -593,16 +593,23 @@ class Crawler:
                 else:
                     self.logger.warning("Skipping unexpected href: %s", href)
                     continue
+
             # only keep http(s) links that point somewhere else within the site we are on
             if not href or not href.startswith("http") or href == current_url or href + '#' == current_url:
                 continue
+
             # remove duplicates
             if href in [link[0] for link in links]:
                 continue
+
             parsed_href = self.tld_extract(href)
             if parsed_href.subdomain + parsed_href.domain + parsed_href.suffix == full_site_domain:
                 links.append((href, el))
 
+        return links
+
+    def click_internal_link(self):
+        links = self.gather_internal_links()
         if not links:
             return
 
