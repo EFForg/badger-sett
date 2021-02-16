@@ -730,28 +730,26 @@ class Crawler:
             self.logger.error("Could not restart browser")
             sys.exit(1)
 
-
-    def print_snitch_map_changes(self, old_snitches):
+    def get_snitch_map(self):
         self.load_extension_page(OPTIONS)
+        return self.driver.execute_script(
+            "return chrome.extension.getBackgroundPage()."
+            "badger.storage.snitch_map._store;"
+        )
 
+    def log_snitch_map_changes(self, old_snitches):
         try:
-            snitches = self.driver.execute_script(
-                "return chrome.extension.getBackgroundPage()."
-                "badger.storage.snitch_map._store;"
-            )
+            snitches = self.get_snitch_map()
         # TODO have all execute_script calls go through this guard
         except TimeoutException:
             # TODO retrying
             self.logger.warning("Timed out getting snitch_map")
             return old_snitches
-        else:
-            diff = set(snitches) - set(old_snitches)
-            if diff:
-                self.logger.info("New domains in snitch_map: %s", ', '.join(sorted(diff)))
-            old_snitches = snitches
 
-        return old_snitches
-
+        diff = set(snitches) - set(old_snitches)
+        if diff:
+            self.logger.info("New domains in snitch_map: %s", ', '.join(sorted(diff)))
+        return snitches
 
     def crawl(self):
         """
@@ -767,7 +765,7 @@ class Crawler:
 
         # list of domains we actually visited
         visited = []
-        old_snitches = {}
+        old_snitches = self.get_snitch_map()
 
         for i, domain in enumerate(domains):
             try:
@@ -802,7 +800,7 @@ class Crawler:
                 if should_restart(e):
                     self.restart_browser()
             finally:
-                old_snitches = self.print_snitch_map_changes(old_snitches)
+                old_snitches = self.log_snitch_map_changes(old_snitches)
 
         num_total = len(domains)
         if num_total:
