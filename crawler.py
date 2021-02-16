@@ -765,7 +765,10 @@ class Crawler:
 
         # list of domains we actually visited
         visited = []
+
         old_snitches = self.get_snitch_map()
+
+        random.shuffle(domains)
 
         for i, domain in enumerate(domains):
             try:
