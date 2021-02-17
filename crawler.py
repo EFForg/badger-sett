@@ -20,7 +20,7 @@ from datetime import datetime, timedelta
 from pprint import pformat
 from shutil import copytree
 from urllib3.exceptions import ProtocolError
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 from selenium import webdriver
 from selenium.common.exceptions import (
@@ -194,6 +194,16 @@ class Crawler:
         self.storage_objects = ['snitch_map', 'action_map']
 
         self.tld_extract = TLDExtract(cache_file=False)
+
+        # path components we care about when looking for links to click
+        self.wanted_paths = ["news", "article", "articles", "story", "video",
+                             "videos", "media", "artikel", "news-story",
+                             "noticias", "actualite", "actualites",
+                             "nachrichten", "nyheter", "noticia", "haber"]
+        start_year = datetime.today().year - 2
+        self.wanted_paths = self.wanted_paths + [
+            str(year) for year in range(start_year, start_year + 3)
+        ]
 
         self.start_browser()
 
@@ -595,6 +605,12 @@ class Crawler:
 
             # only keep http(s) links that point somewhere else within the site we are on
             if not href or not href.startswith("http") or href.startswith(current_url + '#'):
+                continue
+
+            # limit to news articles for now
+            href_path = urlparse(href).path
+            path_parts = filter(None, os.path.splitext(href_path)[0].split('/'))
+            if not any(x in self.wanted_paths for x in path_parts):
                 continue
 
             # remove duplicates
