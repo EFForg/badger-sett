@@ -676,7 +676,9 @@ class Crawler:
             # read in domains from file
             with open(self.domain_list) as f:
                 for l in f:
-                    domains.append(l.strip())
+                    domain = l.strip()
+                    if domain and domain[0] != '#':
+                        domains.append(domain)
         else:
             self.logger.info("Fetching Tranco list ...")
             domains = Tranco(cache=False).list(TRANCO_VERSION).top()
