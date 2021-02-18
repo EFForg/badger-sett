@@ -199,7 +199,8 @@ class Crawler:
         self.wanted_paths = ["news", "article", "articles", "story", "video",
                              "videos", "media", "artikel", "news-story",
                              "noticias", "actualite", "actualites",
-                             "nachrichten", "nyheter", "noticia", "haber"]
+                             "nachrichten", "nyheter", "noticia", "haber",
+                             "notizie"]
         start_year = datetime.today().year - 2
         self.wanted_paths = self.wanted_paths + [
             str(year) for year in range(start_year, start_year + 3)
@@ -607,10 +608,11 @@ class Crawler:
             if not href or not href.startswith("http") or href.startswith(current_url + '#'):
                 continue
 
+            hpath = urlparse(href).path
+            if hpath == "/" or hpath.endswith(".pdf"):
+                continue
             # limit to news articles for now
-            href_path = urlparse(href).path
-            path_parts = filter(None, os.path.splitext(href_path)[0].split('/'))
-            if not any(x in self.wanted_paths for x in path_parts):
+            if not any('/' + x + '/' in hpath and not hpath.endswith('/' + x + '/') for x in self.wanted_paths):
                 continue
 
             # remove duplicates
