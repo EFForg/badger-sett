@@ -609,7 +609,11 @@ class Crawler:
                 continue
 
             hpath = urlparse(href).path
-            if hpath == "/" or hpath.endswith(".pdf"):
+            if hpath == "/":
+                continue
+            # if there is a file extension, limit to allowed extensions
+            ext = os.path.splitext(hpath)[1]
+            if ext and ext not in ('.html', '.php', '.htm', '.aspx', '.shtml', '.jsp', '.asp'):
                 continue
             # limit to news articles for now
             if not any('/' + x + '/' in hpath and not hpath.endswith('/' + x + '/') for x in self.wanted_paths):
