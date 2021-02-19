@@ -202,9 +202,9 @@ class Crawler:
                              "nachrichten", "nyheter", "noticia", "haber",
                              "notizie"]
         start_year = datetime.today().year - 2
-        self.wanted_paths = self.wanted_paths + [
+        self.wanted_paths = [
             str(year) for year in range(start_year, start_year + 3)
-        ]
+        ] + self.wanted_paths
 
         self.start_browser()
 
