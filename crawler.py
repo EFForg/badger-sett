@@ -582,14 +582,14 @@ class Crawler:
 
     def gather_internal_links(self):
         links = []
-        current_url = self.driver.current_url
-        parsed_url = self.tld_extract(current_url)
-        full_site_domain = parsed_url.subdomain + parsed_url.domain + parsed_url.suffix
+        curl = self.driver.current_url
 
-        for el in self.driver.find_elements_by_tag_name('a'):
+        for i, el in enumerate(self.driver.find_elements_by_tag_name('a')):
+            # limit to checking 200 links
+            if i > 199:
+                break
+
             try:
-                if not el.is_displayed():
-                    continue
                 href = el.get_property('href')
             except StaleElementReferenceException:
                 continue
@@ -599,13 +599,13 @@ class Crawler:
                 if "baseVal" in href:
                     href = href['baseVal']
                     if href:
-                        href = urljoin(current_url, href)
+                        href = urljoin(curl, href)
                 else:
                     self.logger.warning("Skipping unexpected href: %s", href)
                     continue
 
             # only keep http(s) links that point somewhere else within the site we are on
-            if not href or not href.startswith("http") or href.startswith(current_url + '#'):
+            if not href or not href.startswith("http") or not href.startswith(curl) or href.startswith(curl + '#'):
                 continue
 
             hpath = urlparse(href).path
@@ -623,9 +623,11 @@ class Crawler:
             if href in [link[0] for link in links]:
                 continue
 
-            parsed_href = self.tld_extract(href)
-            if parsed_href.subdomain + parsed_href.domain + parsed_href.suffix == full_site_domain:
-                links.append((href, el))
+            links.append((href, el))
+
+            # limit to 30 valid links
+            if len(links) > 29:
+                break
 
         return links
 
