@@ -195,17 +195,6 @@ class Crawler:
 
         self.tld_extract = TLDExtract(cache_file=False)
 
-        # path components we care about when looking for links to click
-        self.wanted_paths = ["news", "article", "articles", "story", "video",
-                             "videos", "media", "artikel", "news-story",
-                             "noticias", "actualite", "actualites",
-                             "nachrichten", "nyheter", "noticia", "haber",
-                             "notizie"]
-        start_year = datetime.today().year - 2
-        self.wanted_paths = [
-            str(year) for year in range(start_year, start_year + 3)
-        ] + self.wanted_paths
-
         self.start_browser()
 
         # collect Privacy Badger git info for logging
@@ -584,6 +573,16 @@ class Crawler:
         links = []
         curl = self.driver.current_url
 
+        # path components we care about when looking for links to click
+        wanted_paths = ["news", "article", "articles", "story", "video",
+                        "videos", "media", "artikel", "news-story", "noticias",
+                        "actualite", "actualites", "nachrichten", "nyheter",
+                        "noticia", "haber", "notizie"]
+        start_year = datetime.today().year - 2
+        wanted_paths = [
+            str(year) for year in range(start_year, start_year + 3)
+        ] + wanted_paths
+
         for i, el in enumerate(self.driver.find_elements_by_tag_name('a')):
             # limit to checking 200 links
             if i > 199:
@@ -616,7 +615,7 @@ class Crawler:
             if ext and ext not in ('.html', '.php', '.htm', '.aspx', '.shtml', '.jsp', '.asp'):
                 continue
             # limit to news articles for now
-            if not any('/' + x + '/' in hpath and not hpath.endswith('/' + x + '/') for x in self.wanted_paths):
+            if not any('/' + x + '/' in hpath and not hpath.endswith('/' + x + '/') for x in wanted_paths):
                 continue
 
             # remove duplicates
