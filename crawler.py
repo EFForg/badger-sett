@@ -964,6 +964,7 @@ chrome.runtime.sendMessage({
         # don't block anything, just listen and log
         self.set_passive_mode()
 
+    # TODO use --load-data instead?
     def merge_saved_data(self):
         paths = glob.glob(os.path.join(self.out_path, 'results-*.json'))
         snitch_map = {}
