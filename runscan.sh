@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# stop on errors (nonzero exit codes), uninitialized vars
+set -eu
+
 # this line from
 # https://stackoverflow.com/questions/59895/getting-the-source-directory-of-a-bash-script-from-within
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -7,6 +10,7 @@ PB_DIR=$DIR/privacybadger
 PB_BRANCH=${PB_BRANCH:-master}
 BROWSER=${BROWSER:-chrome}
 USER=$(whoami)
+LOCKDIR=$DIR/.scan_in_progress
 
 # make sure we're on the latest version of badger-sett
 # this function is only called when the script is invoked with GIT_PUSH=1
@@ -26,6 +30,14 @@ update_badger_sett_repo() {
     echo "Local badger-sett repository is up-to-date."
   fi
 }
+
+# don't run if another instance is still running
+if ! mkdir "$LOCKDIR" 2>/dev/null; then
+	echo "Another Badger Sett instance is still running!"
+	exit 1
+fi
+
+trap 'rmdir $LOCKDIR' EXIT
 
 # fetch the latest version of the chosen branch of Privacy Badger
 if [ -e "$PB_DIR" ] ; then
