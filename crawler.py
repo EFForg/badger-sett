@@ -149,7 +149,7 @@ def wait_for_script(driver, script, timeout=30, message=(
 
 def dismiss_alert(driver):
     try:
-        driver.switch_to_alert().dismiss()
+        driver.switch_to.alert().dismiss()
     except NoAlertPresentException:
         pass
 
