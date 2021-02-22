@@ -650,8 +650,8 @@ class Crawler:
         except WebDriverException as e:
             self.logger.error(
                 "Failed to visit link (%s): %s", type(e).__name__, e.msg)
-
-        time.sleep(self.wait_time)
+        else:
+            time.sleep(self.wait_time)
 
     def get_domain(self, domain):
         """
