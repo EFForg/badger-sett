@@ -134,7 +134,11 @@ def size_of(data):
 # determine whether we need to restart the webdriver after an error
 def should_restart(e):
     return (
-        isinstance(e, (NoSuchWindowException, SessionNotCreatedException)) or
+        isinstance(e, (
+            InvalidSessionIdException,
+            NoSuchWindowException,
+            SessionNotCreatedException,
+        )) or
         "response from marionette" in e.msg or
         "unknown error: failed to close window in 20 seconds" in e.msg or
         "unknown error: session deleted because of page crash" in e.msg or
@@ -415,7 +419,7 @@ class Crawler:
                 self.logger.warning("Timed out loading %s", page)
                 self.timeout_workaround()
             except WebDriverException as err:
-                self.logger.warning("Error loading %s:\n%s", page, err.msg)
+                self.logger.warning("Error loading %s (%s): %s", page, type(err).__name__, err.msg)
                 if should_restart(err):
                     self.restart_browser()
         else:
