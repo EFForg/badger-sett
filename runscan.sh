@@ -127,7 +127,7 @@ if [ "$GIT_PUSH" = "1" ] ; then
 
   # Commit updated list to github
   git add results.json log.txt
-  git commit -m "Add data v$VERSION from $BROWSER"
+  git commit -m "Add data $VERSION ($PB_BRANCH $BROWSER)"
   git push
 fi
 
