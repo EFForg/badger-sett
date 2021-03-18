@@ -139,6 +139,7 @@ def should_restart(e):
             NoSuchWindowException,
             SessionNotCreatedException,
         )) or
+        e.msg == "chrome not reachable" or
         "response from marionette" in e.msg or
         "unknown error: failed to close window in 20 seconds" in e.msg or
         "unknown error: session deleted because of page crash" in e.msg or
@@ -475,7 +476,7 @@ class Crawler:
         try:
             self.driver.close()  # kill the broken site
         except WebDriverException as e:
-            self.logger.warning("Error closing timed out window:\n%s", e.msg)
+            self.logger.warning("Error closing timed out window (%s): %s", type(e).__name__, e.msg)
             if should_restart(e):
                 self.restart_browser()
             return
