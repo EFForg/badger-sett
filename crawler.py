@@ -519,7 +519,12 @@ class Crawler:
                 "  window.__new_window_created = true;"
                 "});"
             )
-            wait_for_script(self.driver, "return window.__new_window_created")
+            try:
+                wait_for_script(self.driver, "return window.__new_window_created")
+            except TimeoutException:
+                self.logger.warning("Timed out waiting for new window, restarting ...")
+                self.restart_browser()
+                return
         else:
             self.driver.execute_script('window.open()')
 
