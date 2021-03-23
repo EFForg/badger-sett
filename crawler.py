@@ -604,6 +604,9 @@ class Crawler:
             except StaleElementReferenceException:
                 continue
 
+            if not href:
+                continue
+
             if not isinstance(href, str):
                 # normalize SVG links (href is an SVGAnimatedString object)
                 if "baseVal" in href:
@@ -615,7 +618,7 @@ class Crawler:
                     continue
 
             # only keep http(s) links that point somewhere else within the site we are on
-            if not href or not href.startswith("http") or not href.startswith(curl) or href.startswith(curl + '#'):
+            if not href.startswith("http") or not href.startswith(curl) or href.startswith(curl + '#'):
                 continue
 
             hpath = urlparse(href).path
