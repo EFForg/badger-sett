@@ -525,6 +525,12 @@ class Crawler:
                 self.logger.warning("Timed out waiting for new window, restarting ...")
                 self.restart_browser()
                 return
+            except WebDriverException as e:
+                self.logger.warning(
+                    "Failed to open new window (%s: %s), restarting ...",
+                    type(e).__name__, e.msg)
+                self.restart_browser()
+                return
         else:
             self.driver.execute_script('window.open()')
 
