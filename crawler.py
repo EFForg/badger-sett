@@ -775,26 +775,11 @@ class Crawler:
             self.logger.error("Could not restart browser")
             sys.exit(1)
 
-    def get_snitch_map(self):
-        self.load_extension_page(OPTIONS)
-        return self.driver.execute_script(
-            "return chrome.extension.getBackgroundPage()."
-            "badger.storage.snitch_map._store;"
-        )
-
     def log_snitch_map_changes(self, old_snitches):
-        try:
-            snitches = self.get_snitch_map()
-        # TODO have all execute_script calls go through this guard
-        except TimeoutException:
-            # TODO retrying
-            self.logger.warning("Timed out getting snitch_map")
-            return old_snitches
-
+        snitches = self.last_data['snitch_map']
         diff = set(snitches) - set(old_snitches)
         if diff:
             self.logger.info("New domains in snitch_map: %s", ', '.join(sorted(diff)))
-        return snitches
 
     def crawl(self):
         """
@@ -810,8 +795,7 @@ class Crawler:
 
         # list of domains we actually visited
         visited = []
-
-        old_snitches = self.get_snitch_map()
+        old_snitches = self.dump_data()['snitch_map']
 
         random.shuffle(domains)
 
@@ -820,7 +804,10 @@ class Crawler:
                 # This script could fail during the data dump (trying to get
                 # the options page), the data cleaning, or while trying to load
                 # the next domain.
+                if self.last_data:
+                    old_snitches = self.last_data['snitch_map']
                 self.last_data = self.dump_data()
+                self.log_snitch_map_changes(old_snitches)
 
                 # try to fix misattribution errors
                 if i >= 2:
@@ -847,8 +834,6 @@ class Crawler:
                 self.logger.error("%s on %s: %s", type(e).__name__, domain, e.msg)
                 if should_restart(e):
                     self.restart_browser()
-            finally:
-                old_snitches = self.log_snitch_map_changes(old_snitches)
 
         num_total = len(domains)
         if num_total:
