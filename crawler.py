@@ -775,9 +775,8 @@ class Crawler:
             self.logger.error("Could not restart browser")
             sys.exit(1)
 
-    def log_snitch_map_changes(self, old_snitches):
-        snitches = self.last_data['snitch_map']
-        diff = set(snitches) - set(old_snitches)
+    def log_snitch_map_changes(self, old_snitches, new_snitches):
+        diff = set(new_snitches) - set(old_snitches)
         if diff:
             self.logger.info("New domains in snitch_map: %s", ', '.join(sorted(diff)))
 
@@ -801,13 +800,15 @@ class Crawler:
 
         for i, domain in enumerate(domains):
             try:
+                if self.last_data:
+                    old_snitches = self.last_data['snitch_map']
+
                 # This script could fail during the data dump (trying to get
                 # the options page), the data cleaning, or while trying to load
                 # the next domain.
-                if self.last_data:
-                    old_snitches = self.last_data['snitch_map']
                 self.last_data = self.dump_data()
-                self.log_snitch_map_changes(old_snitches)
+
+                self.log_snitch_map_changes(old_snitches, self.last_data['snitch_map'])
 
                 # try to fix misattribution errors
                 if i >= 2:
@@ -845,8 +846,10 @@ class Crawler:
             )
 
         try:
-            self.logger.info("Getting data from browser storage ...")
+            if self.last_data:
+                old_snitches = self.last_data['snitch_map']
             data = self.dump_data()
+            self.log_snitch_map_changes(old_snitches, data['snitch_map'])
         except WebDriverException as e:
             # If we can't load the background page here, just quit :(
             self.logger.error("Could not get Badger storage:\n%s", e.msg)
