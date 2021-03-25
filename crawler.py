@@ -489,16 +489,17 @@ class Crawler:
                 # TODO we probably never get here
                 # TODO because looking up window handles
                 # TODO after all have been closed raises InvalidSessionIdException
-                self.logger.warning("Closed all windows somehow, restarting ...")
+                self.logger.warning("Closed all windows somehow")
                 self.restart_browser()
                 return
         except InvalidSessionIdException:
-            self.logger.warning("Invalid session, restarting ...")
+            self.logger.warning("Invalid session")
             self.restart_browser()
             return
         except WebDriverException as e:
             self.logger.warning(
-                "Failed to get window handles (%s), restarting ...", e.msg)
+                "Failed to get window handles (%s): %s",
+                type(e).__name__, e.msg)
             self.restart_browser()
             return
 
@@ -506,7 +507,8 @@ class Crawler:
             self.driver.switch_to.window(self.driver.window_handles[0])
         except WebDriverException as e:
             self.logger.warning(
-                "Failed to switch windows (%s), restarting ...", e.msg)
+                "Failed to switch windows (%s): %s",
+                type(e).__name__, e.msg)
             self.restart_browser()
             return
 
@@ -522,13 +524,11 @@ class Crawler:
             try:
                 wait_for_script(self.driver, "return window.__new_window_created")
             except TimeoutException:
-                self.logger.warning("Timed out waiting for new window, restarting ...")
+                self.logger.warning("Timed out waiting for new window")
                 self.restart_browser()
                 return
             except WebDriverException as e:
-                self.logger.warning(
-                    "Failed to open new window (%s: %s), restarting ...",
-                    type(e).__name__, e.msg)
+                self.logger.warning("Failed to open new window (%s): %s", type(e).__name__, e.msg)
                 self.restart_browser()
                 return
         else:
@@ -852,7 +852,9 @@ class Crawler:
             self.log_snitch_map_changes(old_snitches, data['snitch_map'])
         except WebDriverException as e:
             # If we can't load the background page here, just quit :(
-            self.logger.error("Could not get Badger storage:\n%s", e.msg)
+            self.logger.error(
+                "Could not get Badger storage!\n"
+                "%s: %s", type(e).__name__, e.msg)
             sys.exit(1)
 
         self.driver.quit()
@@ -1048,7 +1050,8 @@ chrome.runtime.sendMessage({
             if self.last_data:
                 self.logger.error(
                     "Could not get Badger storage:\n"
-                    "%s\nUsing cached data ...", e.msg)
+                    "%s: %s\nUsing cached data ...",
+                    type(e).__name__, e.msg)
                 data = self.last_data
             else:
                 self.logger.error("Could not export data:\n%s", e.msg)
