@@ -98,7 +98,10 @@ for base in sorted(newly_blocked):
     subdomains = blocked_new[base]
     out = "  {}{}{}".format(C_GREEN, base, C_RESET)
     if base in new_js['snitch_map']:
-        out = out + " on " + ", ".join(new_js['snitch_map'][base])
+        sites = ", ".join(new_js['snitch_map'][base])
+        sites = sites.replace(".edu", "." + C_YELLOW + "edu" + C_RESET)
+        sites = sites.replace(".org", "." + C_YELLOW + "org" + C_RESET)
+        out = out + " on " + sites
     print(out)
     if len(subdomains) > 1 or subdomains[0] != base:
         for y in sorted(subdomains):
