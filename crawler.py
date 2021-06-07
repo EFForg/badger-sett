@@ -95,9 +95,9 @@ ap.add_argument('--max-data-size', type=int, default=2e6,
                 help='Maximum size of serialized localstorage data (survey mode only)')
 
 # Arguments below should never have to be used within the docker container.
-ap.add_argument('--out-path', default='./',
+ap.add_argument('--out-dir', '--out-path', dest='out_dir', default='./',
                 help='Path at which to save output')
-ap.add_argument('--pb-path', default='./privacybadger',
+ap.add_argument('--pb-dir', '--pb-path', dest='pb_dir', default='./privacybadger',
                 help='Path to the Privacy Badger source checkout')
 ap.add_argument('--chromedriver-path', default=CHROMEDRIVER_PATH,
                 help='Path to the chromedriver binary')
@@ -169,8 +169,8 @@ class Crawler:
         self.exclude = args.exclude
         self.timeout = args.timeout
         self.wait_time = args.wait_time
-        self.out_path = args.out_path
-        self.pb_path = args.pb_path
+        self.out_dir = args.out_dir
+        self.pb_dir = args.pb_dir
         self.domain_list = args.domain_list
         self.chromedriver_path = args.chromedriver_path
         self.firefox_path = args.firefox_path
@@ -186,7 +186,7 @@ class Crawler:
         log_fmt = logging.Formatter('%(asctime)s %(message)s')
 
         # by default, just log to file
-        fh = logging.FileHandler(os.path.join(self.out_path, 'log.txt'))
+        fh = logging.FileHandler(os.path.join(self.out_dir, 'log.txt'))
         fh.setFormatter(log_fmt)
         self.logger.addHandler(fh)
 
@@ -233,7 +233,7 @@ class Crawler:
 
             return git_info
 
-        git_data = get_git_info(self.pb_path)
+        git_data = get_git_info(self.pb_dir)
 
         self.logger.info(
             (
@@ -295,7 +295,7 @@ class Crawler:
             new_extension_path = os.path.join(self.tmp_dir.name, "src")
 
             # copy extension sources there
-            copytree(os.path.join(self.pb_path, 'src'), new_extension_path)
+            copytree(os.path.join(self.pb_dir, 'src'), new_extension_path)
 
             # update manifest.json
             manifest_path = os.path.join(new_extension_path, "manifest.json")
@@ -374,7 +374,7 @@ class Crawler:
             # load Privacy Badger
             # Firefox requires absolute paths
             unpacked_addon_path = os.path.abspath(
-                os.path.join(self.pb_path, 'src'))
+                os.path.join(self.pb_dir, 'src'))
             self.driver.install_addon(unpacked_addon_path, temporary=True)
 
             # loads parallel extension to run alongside pb
@@ -944,7 +944,7 @@ class Crawler:
 
         self.logger.info("Saving seed data version %s ...", self.version)
         # save the snitch_map in a human-readable JSON file
-        with open(os.path.join(self.out_path, name), 'w') as f:
+        with open(os.path.join(self.out_dir, name), 'w') as f:
             json.dump(
                 data, f, indent=2, sort_keys=True, separators=(',', ': '))
         self.logger.info("Saved data to %s", name)
@@ -975,7 +975,7 @@ chrome.runtime.sendMessage({
 
     # TODO use --load-data instead?
     def merge_saved_data(self):
-        paths = glob.glob(os.path.join(self.out_path, 'results-*.json'))
+        paths = glob.glob(os.path.join(self.out_dir, 'results-*.json'))
         snitch_map = {}
         for p in paths:
             with open(p) as f:
