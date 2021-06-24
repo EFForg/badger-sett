@@ -475,6 +475,12 @@ class Crawler:
         # WebDriverException: Message: unknown error: failed to close window in 20 seconds
         try:
             self.driver.close()  # kill the broken site
+        # recover when webdriver is no longer there
+        # probably because geckodriver hung and had to be terminated
+        except ConnectionRefusedError:
+            self.logger.warning("Failed to connect to driver!")
+            self.restart_browser()
+            return
         except WebDriverException as e:
             self.logger.warning("Error closing timed out window (%s): %s", type(e).__name__, e.msg)
             if should_restart(e):
