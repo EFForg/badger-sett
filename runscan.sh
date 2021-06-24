@@ -127,7 +127,8 @@ if [ "$GIT_PUSH" = "1" ] ; then
 
   # Commit updated list to github
   git add results.json log.txt
-  git commit -m "Add data $VERSION ($PB_BRANCH $BROWSER)"
+  NUM_SITES=$(grep '^  domains to crawl: [0-9]\+$' log.txt | grep -o '[0-9]\+$' | numfmt --to=si)
+  git commit -m "Add data $VERSION ($PB_BRANCH $BROWSER $NUM_SITES)"
   git push
 fi
 
