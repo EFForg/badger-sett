@@ -96,7 +96,11 @@ print("\n{}++{} Newly blocked domains ({}):\n".format(
     C_GREEN, C_RESET, len(newly_blocked)))
 for base in sorted(newly_blocked):
     subdomains = blocked_new[base]
-    out = "  {}{}{}".format(C_GREEN, base, C_RESET)
+    cookieblocked = ""
+    if base in new_js['action_map']:
+        if new_js['action_map'][base]['heuristicAction'] == "cookieblock":
+            cookieblocked = "{}❋{}".format(C_YELLOW, C_RESET)
+    out = "  {}{}{}{}".format(cookieblocked, C_GREEN, base, C_RESET)
     if base in new_js['snitch_map']:
         sites = ", ".join(new_js['snitch_map'][base])
         sites = sites.replace(".edu", "." + C_YELLOW + "edu" + C_RESET)
@@ -107,10 +111,13 @@ for base in sorted(newly_blocked):
         for y in sorted(subdomains):
             if y == base:
                 continue
-            out = "    • {}"
+            out = "    • {}{}"
             if y in new_js['snitch_map']:
                 out = out + " on " + ", ".join(new_js['snitch_map'][y])
-            print(out.format(y))
+            cookieblocked = ""
+            if new_js['action_map'][y]['heuristicAction'] == "cookieblock":
+                cookieblocked = "{}❋{}".format(C_YELLOW, C_RESET)
+            print(out.format(cookieblocked, y))
 
 no_longer_blocked = blocked_bases_old - blocked_bases_new
 if no_longer_blocked:
