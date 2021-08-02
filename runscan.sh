@@ -99,11 +99,11 @@ fi
 
 # Run the scan, passing any extra command line arguments to crawler.py
 # the --rm tag automatically removes containers & images after the run
-# first -v maps the local DOCKER_OUT dir to the /home/USER/out dir in the container
-# second -v gives docker access to /dev/shm so selenium has enough memory
+# the -v maps the local DOCKER_OUT dir to the /home/USER/out dir in the container
+# the --shm-size gives docker access to host's shared memory
 if ! docker run --rm $FLAGS \
     -v "$DOCKER_OUT:/home/$USER/out:z" \
-    -v /dev/shm:/dev/shm \
+    --shm-size="2g" \
     badger-sett --browser "$BROWSER" "$@" ; then
   mv "$DOCKER_OUT"/log.txt ./
   echo "Scan failed. See log.txt for details."
