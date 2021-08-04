@@ -284,6 +284,47 @@ class Crawler:
 
         return res
 
+    def get_firefox_profile(self):
+        profile = webdriver.FirefoxProfile()
+        profile.set_preference('extensions.webextensions.uuids',
+                               '{"%s": "%s"}' % (FF_EXT_ID, FF_UUID))
+
+        profile.set_preference("dom.webdriver.enabled", False)
+
+        # disable prefetching
+        profile.set_preference("network.dns.disablePrefetch", True)
+        profile.set_preference("network.prefetch-next", False)
+        # disable OpenH264 codec downloading
+        profile.set_preference("media.gmp-gmpopenh264.enabled", False)
+        profile.set_preference("media.gmp-manager.url", "")
+        # disable health reports
+        profile.set_preference("datareporting.healthreport.service.enabled", False)
+        profile.set_preference("datareporting.healthreport.uploadEnabled", False)
+        profile.set_preference("datareporting.policy.dataSubmissionEnabled", False)
+        # disable experiments
+        profile.set_preference("experiments.enabled", False)
+        profile.set_preference("experiments.supported", False)
+        profile.set_preference("experiments.manifest.uri", "")
+        # disable telemetry
+        profile.set_preference("toolkit.telemetry.enabled", False)
+        profile.set_preference("toolkit.telemetry.unified", False)
+        profile.set_preference("toolkit.telemetry.archive.enabled", False)
+
+        if self.firefox_tracking_protection == "off":
+            # disable all content blocking/Tracking Protection features
+            # https://wiki.mozilla.org/Security/Tracking_protection
+            profile.set_preference("privacy.trackingprotection.enabled", False)
+            profile.set_preference("privacy.trackingprotection.pbmode.enabled", False)
+            profile.set_preference("privacy.trackingprotection.cryptomining.enabled", False)
+            profile.set_preference("privacy.trackingprotection.fingerprinting.enabled", False)
+            profile.set_preference("privacy.trackingprotection.socialtracking.enabled", False)
+            # always allow third-party cookies
+            profile.set_preference("network.cookie.cookieBehavior", 0)
+        elif self.firefox_tracking_protection == "strict":
+            profile.set_preference("browser.contentblocking.category", "strict")
+
+        return profile
+
     def start_driver(self):
         """Start a new Selenium web driver and install the bundled
         extension."""
@@ -341,51 +382,13 @@ class Crawler:
                     break
 
         elif self.browser == FIREFOX:
-            profile = webdriver.FirefoxProfile()
-            profile.set_preference('extensions.webextensions.uuids',
-                                   '{"%s": "%s"}' % (FF_EXT_ID, FF_UUID))
-
-            profile.set_preference("dom.webdriver.enabled", False)
-
-            # disable prefetching
-            profile.set_preference("network.dns.disablePrefetch", True)
-            profile.set_preference("network.prefetch-next", False)
-            # disable OpenH264 codec downloading
-            profile.set_preference("media.gmp-gmpopenh264.enabled", False)
-            profile.set_preference("media.gmp-manager.url", "")
-            # disable health reports
-            profile.set_preference("datareporting.healthreport.service.enabled", False)
-            profile.set_preference("datareporting.healthreport.uploadEnabled", False)
-            profile.set_preference("datareporting.policy.dataSubmissionEnabled", False)
-            # disable experiments
-            profile.set_preference("experiments.enabled", False)
-            profile.set_preference("experiments.supported", False)
-            profile.set_preference("experiments.manifest.uri", "")
-            # disable telemetry
-            profile.set_preference("toolkit.telemetry.enabled", False)
-            profile.set_preference("toolkit.telemetry.unified", False)
-            profile.set_preference("toolkit.telemetry.archive.enabled", False)
-
-            if self.firefox_tracking_protection == "off":
-                # disable all content blocking/Tracking Protection features
-                # https://wiki.mozilla.org/Security/Tracking_protection
-                profile.set_preference("privacy.trackingprotection.enabled", False)
-                profile.set_preference("privacy.trackingprotection.pbmode.enabled", False)
-                profile.set_preference("privacy.trackingprotection.cryptomining.enabled", False)
-                profile.set_preference("privacy.trackingprotection.fingerprinting.enabled", False)
-                profile.set_preference("privacy.trackingprotection.socialtracking.enabled", False)
-                # always allow third-party cookies
-                profile.set_preference("network.cookie.cookieBehavior", 0)
-            elif self.firefox_tracking_protection == "strict":
-                profile.set_preference("browser.contentblocking.category", "strict")
-
             opts = FirefoxOptions()
             #opts.log.level = "trace"
 
             opts.set_capability("acceptInsecureCerts", False);
             opts.set_capability("unhandledPromptBehavior", "ignore");
 
-            self.driver = webdriver.Firefox(firefox_profile=profile,
+            self.driver = webdriver.Firefox(firefox_profile=self.get_firefox_profile(),
                                             firefox_binary=self.firefox_path,
                                             options=opts,
                                             service_log_path=os.path.devnull)
