@@ -347,6 +347,25 @@ class Crawler:
 
             profile.set_preference("dom.webdriver.enabled", False)
 
+            # disable prefetching
+            profile.set_preference("network.dns.disablePrefetch", True)
+            profile.set_preference("network.prefetch-next", False)
+            # disable OpenH264 codec downloading
+            profile.set_preference("media.gmp-gmpopenh264.enabled", False)
+            profile.set_preference("media.gmp-manager.url", "")
+            # disable health reports
+            profile.set_preference("datareporting.healthreport.service.enabled", False)
+            profile.set_preference("datareporting.healthreport.uploadEnabled", False)
+            profile.set_preference("datareporting.policy.dataSubmissionEnabled", False)
+            # disable experiments
+            profile.set_preference("experiments.enabled", False)
+            profile.set_preference("experiments.supported", False)
+            profile.set_preference("experiments.manifest.uri", "")
+            # disable telemetry
+            profile.set_preference("toolkit.telemetry.enabled", False)
+            profile.set_preference("toolkit.telemetry.unified", False)
+            profile.set_preference("toolkit.telemetry.archive.enabled", False)
+
             if self.firefox_tracking_protection == "off":
                 # disable all content blocking/Tracking Protection features
                 # https://wiki.mozilla.org/Security/Tracking_protection
