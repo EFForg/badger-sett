@@ -151,19 +151,18 @@ for base in sorted(new_js['snitch_map'].keys()):
         # guard against removing the entire root
         if stripped_base[0] == ".":
             stripped_base = base
-    site_roots = [extract(site).domain for site in sites + [stripped_base]]
-
-    uniq_site_roots = set(site_roots)
-
-    # short-circuit when trivially no common roots
-    # +1 because we include the tracker base
-    if len(sites) + 1 == len(uniq_site_roots):
-        continue
+    sbr = extract(stripped_base).domain
+    site_roots = [extract(site).domain for site in sites] + [sbr]
 
     shared_roots = [
-        root for root in uniq_site_roots
+        root for root in set(site_roots)
         if site_roots.count(root) >= MIN_SHARED_ROOTS
     ]
+    # also see if sbr is found inside MIN_SHARED_ROOTS site_roots
+    if sbr not in shared_roots:
+        num_substr_matches = len([True for site_root in site_roots if sbr in site_root])
+        if num_substr_matches >= MIN_SHARED_ROOTS:
+            shared_roots.append(sbr)
 
     if not shared_roots:
         continue
