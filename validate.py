@@ -148,6 +148,9 @@ for base in sorted(new_js['snitch_map'].keys()):
     stripped_base = base
     for s in ("static", "cdn", "media", "assets", "images", "img", "storage", "files"):
         stripped_base = stripped_base.replace("-" + s, "").replace(s + "-", "").replace(s, "")
+        # guard against removing the entire root
+        if stripped_base[0] == ".":
+            stripped_base = base
     site_roots = [extract(site).domain for site in sites + [stripped_base]]
 
     uniq_site_roots = set(site_roots)
