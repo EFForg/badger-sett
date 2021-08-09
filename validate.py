@@ -175,7 +175,7 @@ for base in sorted(new_js['snitch_map'].keys()):
     def highlight(string, root):
         return "{}".join(
             # split preserving separator
-            re.split('('+root+')', string)
+            re.split('('+root+')', string, 1)
         ).format(C_YELLOW, C_RESET)
     formatted_sites = []
     for site in sites:
