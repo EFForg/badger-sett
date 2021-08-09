@@ -145,13 +145,13 @@ for base in sorted(new_js['snitch_map'].keys()):
     sites = new_js['snitch_map'][base]
 
     # include the tracker base, sans common resource domain strings
-    stripped_base = base
-    for s in ("static", "cdn", "media", "assets", "images", "img", "storage", "files"):
-        stripped_base = stripped_base.replace("-" + s, "").replace(s + "-", "").replace(s, "")
+    tracker_root = extract(base).domain
+    sbr = tracker_root
+    for s in ("static", "cdn", "media", "assets", "images", "img", "storage", "files", "edge", "cache", "st"):
+        sbr = sbr.replace("-" + s, "").replace(s + "-", "").replace(s, "")
         # guard against removing the entire root
-        if stripped_base[0] == ".":
-            stripped_base = base
-    sbr = extract(stripped_base).domain
+        if not sbr:
+            sbr = tracker_root
     site_roots = [extract(site).domain for site in sites] + [sbr]
 
     shared_roots = [
