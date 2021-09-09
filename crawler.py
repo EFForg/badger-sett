@@ -533,6 +533,11 @@ class Crawler:
 
         try:
             self.driver.switch_to.window(self.driver.window_handles[0])
+        except IndexError:
+            self.logger.warning("Closed all windows somehow? (len(window_handles)=%s)",
+                len(self.driver.window_handles))
+            self.restart_browser()
+            return
         except WebDriverException as e:
             self.logger.warning(
                 "Failed to switch windows (%s): %s",
