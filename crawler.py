@@ -485,7 +485,7 @@ class Crawler:
             "badger.storage.clearTrackerData();"
         )
 
-    def timeout_workaround(self):
+    def timeout_workaround(self): # noqa:MC0001 TODO simplify
         """
         Selenium has a bug where a tab that raises a timeout exception can't
         recover gracefully. So we kill the tab and make a new one.
