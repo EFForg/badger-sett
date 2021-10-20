@@ -440,6 +440,8 @@ class Crawler:
             # wait for extension page to be ready
             wait_for_script(self.driver, "return chrome.extension")
 
+        num_timeouts = 0
+
         for _ in range(tries):
             try:
                 self.handle_alerts_and(_load_ext_page)
@@ -448,6 +450,7 @@ class Crawler:
                 self.logger.warning("Error loading %s:\n%s", page, str(e))
                 self.restart_browser()
             except TimeoutException:
+                num_timeouts += 1
                 self.logger.warning("Timed out loading %s", page)
                 self.timeout_workaround()
             except WebDriverException as err:
@@ -455,6 +458,8 @@ class Crawler:
                 if should_restart(err):
                     self.restart_browser()
         else:
+            if num_timeouts >= tries:
+                self.restart_browser()
             raise WebDriverException("Failed to load " + page)
 
     def load_user_data(self, data):
