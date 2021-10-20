@@ -136,6 +136,7 @@ def should_restart(e):
     ERROR_STRINGS = (
         "chrome not reachable",
         "response from marionette",
+        "tab crashed",
         "TypeError: this.curBrowser.contentBrowser is null",
         "unknown error: failed to close window in 20 seconds",
         "unknown error: session deleted because of page crash",
