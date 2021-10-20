@@ -133,18 +133,26 @@ def size_of(data):
 
 # determine whether we need to restart the webdriver after an error
 def should_restart(e):
-    return (
-        isinstance(e, (
-            InvalidSessionIdException,
-            NoSuchWindowException,
-            SessionNotCreatedException,
-        )) or
-        e.msg == "chrome not reachable" or
-        "response from marionette" in e.msg or
-        "unknown error: failed to close window in 20 seconds" in e.msg or
-        "unknown error: session deleted because of page crash" in e.msg or
-        e.msg == "TypeError: this.curBrowser.contentBrowser is null"
+    ERROR_STRINGS = (
+        "chrome not reachable",
+        "response from marionette",
+        "TypeError: this.curBrowser.contentBrowser is null",
+        "unknown error: failed to close window in 20 seconds",
+        "unknown error: session deleted because of page crash",
     )
+    EXCEPTION_TYPES = (
+        InvalidSessionIdException,
+        NoSuchWindowException,
+        SessionNotCreatedException,
+    )
+
+    if isinstance(e, EXCEPTION_TYPES):
+        return True
+
+    if any(txt in e.msg for txt in ERROR_STRINGS):
+        return True
+
+    return False
 
 
 def wait_for_script(driver, script, timeout=30, message=(
