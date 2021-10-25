@@ -846,6 +846,8 @@ class Crawler:
         random.shuffle(domains)
 
         for i, domain in enumerate(domains):
+            self.logger.info("Visiting %d: %s", i + 1, domain)
+
             try:
                 if self.last_data:
                     old_snitches = self.last_data['snitch_map']
@@ -868,8 +870,7 @@ class Crawler:
                         self.load_user_data(clean_data)
                         self.last_data = clean_data
 
-                # load the next domain
-                self.logger.info("Visiting %d: %s", i + 1, domain)
+                # visit the next domain
                 url = self.get_domain(domain)
                 visited.append(url)
             except ProtocolError as e:
@@ -1056,6 +1057,8 @@ chrome.runtime.sendMessage({
 
         i = None
         for i, domain in enumerate(domains):
+            self.logger.info("Visiting %d: %s", i + 1, domain)
+
             # If we can't load the options page for some reason, treat it like
             # any other error
             try:
@@ -1069,7 +1072,6 @@ chrome.runtime.sendMessage({
                     self.last_data = {}
                     self.restart_browser()
 
-                self.logger.info("Visiting %d: %s", i + 1, domain)
                 url = self.get_domain(domain)
                 visited.append(url)
             except ProtocolError as e:
