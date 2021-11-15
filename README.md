@@ -49,7 +49,7 @@ See the following EFF.org blog post for more information: [Giving Privacy Badger
    ```
    $ ./runscan.sh --n-sites 10
    ```
-   
+
    To exclude any sites with a given top level domain from the scan, pass in
    the `--exclude` argument followed by the TLD you want to exclude. For example,
    if you wanted to exclude all sites with a .gov TLD:
