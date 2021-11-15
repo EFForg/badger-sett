@@ -560,8 +560,15 @@ class Crawler:
             self.restart_browser()
             return
 
+        try:
+            current_url = self.driver.current_url
+        except NoSuchWindowException as e:
+            self.logger.warning("Failed to get current URL (NoSuchWindowException): %s", str(e))
+            self.restart_browser()
+            return
+
         # open a new window
-        if self.driver.current_url.startswith("moz-extension://"):
+        if current_url.startswith("moz-extension://"):
             # work around https://bugzilla.mozilla.org/show_bug.cgi?id=1491443
             try:
                 self.driver.execute_script(
