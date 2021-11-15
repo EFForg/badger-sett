@@ -562,14 +562,18 @@ class Crawler:
         # open a new window
         if self.driver.current_url.startswith("moz-extension://"):
             # work around https://bugzilla.mozilla.org/show_bug.cgi?id=1491443
-            self.driver.execute_script(
-                "delete window.__new_window_created;"
-                "chrome.windows.create({}, function () {"
-                "  window.__new_window_created = true;"
-                "});"
-            )
             try:
+                self.driver.execute_script(
+                    "delete window.__new_window_created;"
+                    "chrome.windows.create({}, function () {"
+                    "  window.__new_window_created = true;"
+                    "});"
+                )
                 wait_for_script(self.driver, "return window.__new_window_created")
+            except NoSuchWindowException as e:
+                self.logger.warning("Failed to open new window (NoSuchWindowException): %s", str(e))
+                self.restart_browser()
+                return
             except TimeoutException:
                 self.logger.warning("Timed out waiting for new window")
                 self.restart_browser()
