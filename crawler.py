@@ -222,11 +222,11 @@ class Crawler:
             git_dir = pathlib.Path(path) / '.git'
 
             try:
-                with (git_dir / 'HEAD').open('r') as head:
+                with (git_dir / 'HEAD').open('r', encoding='utf-8') as head:
                     ref = head.readline().split(' ')[-1].strip()
                     git_info['branch'] = ref.split('/')[2]
 
-                with (git_dir / ref).open('r') as git_hash:
+                with (git_dir / ref).open('r', encoding='utf-8') as git_hash:
                     git_info['commit_hash'] = git_hash.readline().strip()
 
             except FileNotFoundError as err:
@@ -274,7 +274,7 @@ class Crawler:
 
         # load tracker data from one or more Badger data JSON files
         for data_json in args.load_data:
-            with open(data_json, "r") as f:
+            with open(data_json, "r", encoding="utf-8") as f:
                 data = json.load(f)
                 self.load_user_data(data)
 
@@ -286,17 +286,17 @@ class Crawler:
             try:
                 res = fun()
                 break
-            except UnexpectedAlertPresentException:
+            except UnexpectedAlertPresentException as uape:
                 if num_tries > MAX_ALERTS:
-                    raise WebDriverException("Too many alerts")
+                    raise WebDriverException("Too many alerts") from uape
                 dismiss_alert(self.driver)
 
         return res
 
     def get_firefox_profile(self):
         profile = webdriver.FirefoxProfile()
-        profile.set_preference('extensions.webextensions.uuids',
-                               '{"%s": "%s"}' % (FF_EXT_ID, FF_UUID))
+        profile.set_preference(
+            'extensions.webextensions.uuids', f'{{"{FF_EXT_ID}": "{FF_UUID}"}}')
 
         profile.set_preference("dom.webdriver.enabled", False)
 
@@ -341,7 +341,8 @@ class Crawler:
             # make extension ID constant across runs
 
             # create temp directory
-            self.tmp_dir = tempfile.TemporaryDirectory()
+            # TODO does tmp_dir actually get cleaned up?
+            self.tmp_dir = tempfile.TemporaryDirectory() # pylint:disable=consider-using-with
             new_extension_path = os.path.join(self.tmp_dir.name, "src")
 
             # copy extension sources there
@@ -349,12 +350,12 @@ class Crawler:
 
             # update manifest.json
             manifest_path = os.path.join(new_extension_path, "manifest.json")
-            with open(manifest_path, "r") as f:
+            with open(manifest_path, "r", encoding="utf-8") as f:
                 manifest = json.load(f)
             # this key and the extension ID
             # must both be derived from the same private key
             manifest['key'] = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArMdgFkGsm7nOBr/9qkx8XEcmYSu1VkIXXK94oXLz1VKGB0o2MN+mXL/Dsllgkh61LZgK/gVuFFk89e/d6Vlsp9IpKLANuHgyS98FKx1+3sUoMujue+hyxulEGxXXJKXhk0kGxWdE0IDOamFYpF7Yk0K8Myd/JW1U2XOoOqJRZ7HR6is1W6iO/4IIL2/j3MUioVqu5ClT78+fE/Fn9b/DfzdX7RxMNza9UTiY+JCtkRTmm4ci4wtU1lxHuVmWiaS45xLbHphQr3fpemDlyTmaVoE59qG5SZZzvl6rwDah06dH01YGSzUF1ezM2IvY9ee1nMSHEadQRQ2sNduNZWC9gwIDAQAB" # noqa:E501 pylint:disable=line-too-long
-            with open(manifest_path, "w") as f:
+            with open(manifest_path, "w", encoding="utf-8") as f:
                 json.dump(manifest, f)
 
             opts = ChromeOptions()
@@ -465,14 +466,14 @@ class Crawler:
     def load_user_data(self, data):
         """Load saved user data into Privacy Badger after a restart"""
         self.load_extension_page(OPTIONS)
-        for obj in self.storage_objects:
+        for store_name in self.storage_objects:
             script = (
                 "(function (data) {"
                 "data = JSON.parse(data);"
                 "let bg = chrome.extension.getBackgroundPage();"
-                "bg.badger.storage.%s.merge(data.%s);"
+                f"bg.badger.storage.{store_name}.merge(data.{store_name});"
                 "}(arguments[0]));"
-            ) % (obj, obj)
+            )
             self.driver.execute_script(script, json.dumps(data))
 
         time.sleep(2)   # wait for localstorage to sync
@@ -483,12 +484,12 @@ class Crawler:
         self.load_extension_page(OPTIONS)
 
         data = {}
-        for obj in self.storage_objects:
+        for store_name in self.storage_objects:
             script = (
                 "return chrome.extension.getBackgroundPage()."
-                "badger.storage.%s.getItemClones()" % obj
+                f"badger.storage.{store_name}.getItemClones()"
             )
-            data[obj] = self.driver.execute_script(script)
+            data[store_name] = self.driver.execute_script(script)
         return data
 
     def clear_data(self):
@@ -730,7 +731,7 @@ class Crawler:
         waiting for dynamic loading to complete.
         """
 
-        url = "http://%s/" % domain
+        url = f"http://{domain}/"
 
         self.handle_alerts_and(lambda: self.driver.get(url))
 
@@ -750,9 +751,9 @@ class Crawler:
 
         if self.domain_list:
             # read in domains from file
-            with open(self.domain_list) as f:
-                for l in f:
-                    domain = l.strip()
+            with open(self.domain_list, encoding="utf-8") as f:
+                for line in f:
+                    domain = line.strip()
                     if domain and domain[0] != '#':
                         domains.append(domain)
         else:
@@ -996,7 +997,7 @@ class Crawler:
 
         self.logger.info("Saving seed data version %s ...", self.version)
         # save the snitch_map in a human-readable JSON file
-        with open(os.path.join(self.out_dir, name), 'w') as f:
+        with open(os.path.join(self.out_dir, name), 'w', encoding="utf-8") as f:
             json.dump(
                 data, f, indent=2, sort_keys=True, separators=(',', ': '))
         self.logger.info("Saved data to %s", name)
@@ -1004,7 +1005,7 @@ class Crawler:
 
 class SurveyCrawler(Crawler):
     def __init__(self, args):
-        super(SurveyCrawler, self).__init__(args)
+        super().__init__(args)
 
         self.max_data_size = args.max_data_size
         self.storage_objects = ['snitch_map']
@@ -1030,7 +1031,7 @@ chrome.runtime.sendMessage({
         paths = glob.glob(os.path.join(self.out_dir, 'results-*.json'))
         snitch_map = {}
         for p in paths:
-            with open(p) as f:
+            with open(p, encoding='utf-8') as f:
                 sm = json.load(f)['snitch_map']
             for tracker, snitches in sm.items():
                 if tracker not in snitch_map:
@@ -1071,7 +1072,7 @@ chrome.runtime.sendMessage({
 
                 # If the localstorage data is getting too big, dump and restart
                 if size_of(self.last_data) > self.max_data_size:
-                    self.save(self.last_data, 'results-%d-%d.json' % (first_i, i))
+                    self.save(self.last_data, f'results-{first_i}-{i}.json')
                     first_i = i + 1
                     self.last_data = {}
                     self.restart_browser()
@@ -1112,7 +1113,7 @@ chrome.runtime.sendMessage({
 
         self.driver.quit()
 
-        self.save(data, 'results-%d-%d.json' % (first_i, i))
+        self.save(data, f'results-{first_i}-{i}.json')
         self.save(self.merge_saved_data())
 
 

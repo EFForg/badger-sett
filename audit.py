@@ -11,7 +11,7 @@ def get_old_maps():
     for c in repo.iter_commits('master'):
         if re.match(r'Update seed data: \d+\.\d+\.\d+', c.message):
             repo.git.checkout(c.hexsha)
-            with open('results.json') as f:
+            with open('results.json', encoding='utf-8') as f:
                 js = json.load(f)
             if 'version' in js:
                 old_maps[js['version']] = js

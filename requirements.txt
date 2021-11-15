@@ -1,6 +1,6 @@
 colorama==0.3.9
 GitPython==2.1.11
-prospector==1.2.0
+prospector==1.5.1
 selenium==3.141.0
 tldextract==2.2.0
 tranco==0.3

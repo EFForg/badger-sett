@@ -18,11 +18,11 @@ elif len(sys.argv) == 2:
     old_path = None
     new_path = sys.argv[1]
 else:
-    print("Usage: {} [BADGER_JSON_OLD] BADGER_JSON_NEW".format(sys.argv[0]))
+    print(f"Usage: {sys.argv[0]} [BADGER_JSON_OLD] BADGER_JSON_NEW")
     sys.exit(1)
 
 if old_path:
-    with open(old_path) as f:
+    with open(old_path, encoding='utf-8') as f:
         old_js = json.load(f)
 else:
     old_js = {
@@ -30,7 +30,7 @@ else:
         "snitch_map": {},
     }
 
-with open(new_path) as f:
+with open(new_path, encoding='utf-8') as f:
     new_js = json.load(f)
 
 # make sure new JSON is not the same as old JSON
@@ -53,6 +53,7 @@ old_keys = set(old_js['action_map'].keys())
 new_keys = set(new_js['action_map'].keys())
 
 overlap = old_keys & new_keys
+# pylint: disable-next=consider-using-f-string
 print("New action map has %d new domains and dropped %d old domains" %
       (len(new_keys - overlap), len(old_keys - overlap)))
 
@@ -86,21 +87,21 @@ blocked_bases_old = set(blocked_old.keys())
 blocked_bases_new = set(blocked_new.keys())
 
 if blocked_bases_old:
+    # pylint: disable-next=consider-using-f-string
     print("\nCount of blocked base domains went from {} to {} ({:+0.2f}%)".format(
         len(blocked_bases_old), len(blocked_bases_new),
         (len(blocked_bases_new) - len(blocked_bases_old)) / len(blocked_bases_old) * 100
     ))
 
 newly_blocked = blocked_bases_new - blocked_bases_old
-print("\n{}++{} Newly blocked domains ({}):\n".format(
-    C_GREEN, C_RESET, len(newly_blocked)))
+print(f"\n{C_GREEN}++{C_RESET} Newly blocked domains ({len(newly_blocked)}):\n")
 for base in sorted(newly_blocked):
     subdomains = blocked_new[base]
     cookieblocked = ""
     if base in new_js['action_map']:
         if new_js['action_map'][base]['heuristicAction'] == "cookieblock":
-            cookieblocked = "{}❋{}".format(C_YELLOW, C_RESET)
-    out = "  {}{}{}{}".format(cookieblocked, C_GREEN, base, C_RESET)
+            cookieblocked = f"{C_YELLOW}❋{C_RESET}"
+    out = f"  {cookieblocked}{C_GREEN}{base}{C_RESET}"
     if base in new_js['snitch_map']:
         sites = ", ".join(new_js['snitch_map'][base])
         sites = sites.replace(".edu", "." + C_YELLOW + "edu" + C_RESET)
@@ -116,16 +117,15 @@ for base in sorted(newly_blocked):
                 out = out + " on " + ", ".join(new_js['snitch_map'][y])
             cookieblocked = ""
             if new_js['action_map'][y]['heuristicAction'] == "cookieblock":
-                cookieblocked = "{}❋{}".format(C_YELLOW, C_RESET)
+                cookieblocked = f"{C_YELLOW}❋{C_RESET}"
             print(out.format(cookieblocked, y))
 
 no_longer_blocked = blocked_bases_old - blocked_bases_new
 if no_longer_blocked:
-    print("\n{}--{} No longer blocked domains ({}):\n".format(
-        C_RED, C_RESET, len(no_longer_blocked)))
+    print(f"\n{C_RED}--{C_RESET} No longer blocked domains ({len(no_longer_blocked)}):\n")
 for base in sorted(no_longer_blocked):
     subdomains = blocked_old[base]
-    out = "  {}{}{}".format(C_RED, base, C_RESET)
+    out = f"  {C_RED}{base}{C_RESET}"
     if base in old_js['snitch_map']:
         out = out + " on " + ", ".join(old_js['snitch_map'][base])
     print(out)
@@ -168,7 +168,7 @@ for base in sorted(new_js['snitch_map'].keys()):
         continue
 
     if print_mdfp_header:
-        print("\n{}??{} MDFP candidates:\n".format(C_YELLOW, C_RESET))
+        print(f"\n{C_YELLOW}??{C_RESET} MDFP candidates:\n")
         print_mdfp_header = False
 
     # highlight common roots
