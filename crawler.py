@@ -9,9 +9,9 @@ import glob
 import json
 import logging
 import os
-import pathlib
 import random
 import re
+import subprocess
 import sys
 import tempfile
 import time
@@ -219,26 +219,16 @@ class Crawler:
                 'commit_hash': None
             }
 
-            git_dir = pathlib.Path(path) / '.git'
+            commit_hash = subprocess.check_output(
+                "git rev-parse HEAD".split(" "),
+                cwd=path, universal_newlines=True).strip()
+            git_info['commit_hash'] = commit_hash
 
-            try:
-                with (git_dir / 'HEAD').open('r', encoding='utf-8') as head:
-                    ref = head.readline().split(' ')[-1].strip()
-                    git_info['branch'] = ref.split('/')[2]
-
-                with (git_dir / ref).open('r', encoding='utf-8') as git_hash:
-                    git_info['commit_hash'] = git_hash.readline().strip()
-
-            except FileNotFoundError as err:
-                self.logger.warning(
-                    "Unable to retrieve git repository info "
-                    "for Privacy Badger:\n"
-                    "%s", err)
-
-            except IndexError:
-                # TODO better handle when Privacy Badger is not on a branch
-                git_info['branch'] = None
-                git_info['commit_hash'] = '???'
+            branch = subprocess.check_output(
+                "git rev-parse --abbrev-ref HEAD".split(" "),
+                cwd=path, universal_newlines=True).strip()
+            if branch != "HEAD":
+                git_info['branch'] = branch
 
             return git_info
 

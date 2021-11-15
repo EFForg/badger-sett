@@ -41,13 +41,13 @@ trap 'rmdir $LOCKDIR' EXIT
 
 # fetch the latest version of the chosen branch of Privacy Badger
 if [ -e "$PB_DIR" ] ; then
-  echo "Updating Privacy Badger..."
+  echo "Updating Privacy Badger in $PB_DIR ..."
   cd "$PB_DIR" || exit
   git fetch
   git checkout "$PB_BRANCH"
   git pull
 else
-  echo "Cloning Privacy Badger..."
+  echo "Cloning Privacy Badger into $PB_DIR ..."
   git clone https://github.com/efforg/privacybadger "$PB_DIR"
   cd "$PB_DIR" || exit
   git checkout "$PB_BRANCH"
