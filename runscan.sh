@@ -127,8 +127,24 @@ if [ "$GIT_PUSH" = "1" ] ; then
 
   # Commit updated list to github
   git add results.json log.txt
+
   NUM_SITES=$(grep '^  domains to crawl: [0-9]\+$' log.txt | grep -o '[0-9]\+$' | numfmt --to=si)
-  git commit -m "Add data $VERSION ($PB_BRANCH $BROWSER $NUM_SITES)"
+
+  # mark custom crawls with an asterisk
+  CUSTOM_CRAWL=
+  while test $# -gt 0
+  do
+	  case "$1" in
+		  --firefox-tracking-protection) CUSTOM_CRAWL="*"; break
+			  ;;
+		  --load-extension) CUSTOM_CRAWL="*"; break
+			  ;;
+		  *) ;;
+	  esac
+	  shift
+  done
+
+  git commit -m "Add data $VERSION${CUSTOM_CRAWL} ($PB_BRANCH $BROWSER $NUM_SITES)"
   git push
 fi
 
