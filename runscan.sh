@@ -134,7 +134,7 @@ if [ "$GIT_PUSH" = "1" ] ; then
   CUSTOM_CRAWL=
   while test $# -gt 0
   do
-	  case "$1" in
+	  case "${1%%=*}" in # %% trims starting from first = char
 		  --firefox-tracking-protection) CUSTOM_CRAWL="*"; break
 			  ;;
 		  --load-extension) CUSTOM_CRAWL="*"; break
