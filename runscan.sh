@@ -107,9 +107,6 @@ if ! docker run --rm $FLAGS \
   exit 1;
 fi
 
-# back up old results
-cp results.json results-prev.json
-
 # copy the updated results and log file out of the docker volume
 mv "$DOCKER_OUT"/results.json "$DOCKER_OUT"/log.txt ./
 
