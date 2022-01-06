@@ -1,14 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # run the scan
-if ! ./crawler.py --out-path "$OUTPATH" --pb-path "$PBPATH" "$@" ; then
+if ! ./crawler.py --out-dir "$OUTPATH" --pb-dir "$PBPATH" "$@" ; then
   exit 1
 fi
 
-if [ "$VALIDATE" != "1" ] ; then exit 0; fi
+[ "$VALIDATE" != "1" ] && exit 0
 
-# validate the output and print a summary of the changes
-if ! ./validate.py old-results.json "$OUTPATH"/results.json ; then
-  echo "results.json is invalid."
+# validate the output
+if ! ./validate.py "$OUTPATH"/results.json >/dev/null; then
+  echo "results.json is invalid"
   exit 1
 fi
