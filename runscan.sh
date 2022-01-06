@@ -1,7 +1,4 @@
-#!/bin/bash
-
-# stop on errors (nonzero exit codes), uninitialized vars
-set -eu
+#!/usr/bin/env bash
 
 # this line from
 # https://stackoverflow.com/questions/59895/getting-the-source-directory-of-a-bash-script-from-within
@@ -33,8 +30,8 @@ update_badger_sett_repo() {
 
 # don't run if another instance is still running
 if ! mkdir "$LOCKDIR" 2>/dev/null; then
-	echo "Another Badger Sett instance is still running!"
-	exit 1
+  echo "Another Badger Sett instance is still running!"
+  exit 1
 fi
 
 trap 'rmdir $LOCKDIR' EXIT
@@ -59,7 +56,7 @@ cd "$DIR" || exit
 # If we are planning to push the new results, update the repository now to avoid
 # merge conflicts later
 if [ "$GIT_PUSH" = "1" ] ; then
-	update_badger_sett_repo
+  update_badger_sett_repo
 fi
 
 # pull the latest version of the selenium image so we're up-to-date
@@ -134,14 +131,14 @@ if [ "$GIT_PUSH" = "1" ] ; then
   CUSTOM_CRAWL=
   while test $# -gt 0
   do
-	  case "${1%%=*}" in # %% trims starting from first = char
-		  --firefox-tracking-protection) CUSTOM_CRAWL="*"; break
-			  ;;
-		  --load-extension) CUSTOM_CRAWL="*"; break
-			  ;;
-		  *) ;;
-	  esac
-	  shift
+    case "${1%%=*}" in # %% trims starting from first = char
+      --firefox-tracking-protection) CUSTOM_CRAWL="*"; break
+        ;;
+      --load-extension) CUSTOM_CRAWL="*"; break
+        ;;
+      *) ;;
+    esac
+    shift
   done
 
   git commit -m "Add data $VERSION${CUSTOM_CRAWL} ($PB_BRANCH $BROWSER $NUM_SITES)"
