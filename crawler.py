@@ -162,9 +162,13 @@ def wait_for_script(driver, script, timeout=30, message=(
         lambda driver: driver.execute_script(script), message)
 
 
-def dismiss_alert(driver):
+def dismiss_alert(driver, accept=False):
     try:
-        driver.switch_to.alert.dismiss()
+        alert = driver.switch_to.alert
+        if accept:
+            alert.accept()
+        else:
+            alert.dismiss()
     except NoAlertPresentException:
         pass
 
@@ -279,7 +283,8 @@ class Crawler:
             except UnexpectedAlertPresentException as uape:
                 if num_tries > MAX_ALERTS:
                     raise WebDriverException("Too many alerts") from uape
-                dismiss_alert(self.driver)
+                # first dismiss, next time accept, then dismiss, ...
+                dismiss_alert(self.driver, not bool(num_tries % 2))
 
         return res
 
