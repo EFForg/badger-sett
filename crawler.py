@@ -212,6 +212,7 @@ class Crawler:
         self.last_data = None
         self.storage_objects = ['snitch_map', 'action_map']
 
+        self.logger.info("Fetching TLD definitions ...")
         self.tld_extract = TLDExtract(cache_file=False)
 
         self.start_browser()
@@ -766,8 +767,6 @@ class Crawler:
         if self.exclude:
             filtered_domains = []
             excluded_tlds = self.exclude.split(",")
-
-            self.logger.info("Fetching TLD definitions ...")
 
             # check for first occurring domains in list that don't have excluded TLD
             for domain in domains:
