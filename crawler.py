@@ -28,6 +28,7 @@ from selenium.common.exceptions import (
     ElementNotInteractableException,
     ElementNotVisibleException,
     InvalidSessionIdException,
+    JavascriptException,
     NoAlertPresentException,
     NoSuchElementException,
     NoSuchWindowException,
@@ -587,7 +588,12 @@ class Crawler:
                 self.restart_browser()
                 return
         else:
-            self.driver.execute_script('window.open()')
+            try:
+                self.driver.execute_script('window.open()')
+            except JavascriptException:
+                self.logger.warning("Failed to open new window with window.open()")
+                self.restart_browser()
+                return
 
         self.driver.switch_to.window(self.driver.window_handles[-1])
 
