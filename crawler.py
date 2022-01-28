@@ -19,7 +19,7 @@ import time
 from datetime import datetime, timedelta
 from pprint import pformat
 from shutil import copytree
-from urllib3.exceptions import ProtocolError
+from urllib3.exceptions import MaxRetryError, ProtocolError
 from urllib.parse import urljoin, urlparse
 
 from selenium import webdriver
@@ -444,7 +444,7 @@ class Crawler:
             try:
                 self.handle_alerts_and(_load_ext_page)
                 break
-            except ProtocolError as e:
+            except (MaxRetryError, ProtocolError) as e:
                 self.logger.warning("Error loading %s:\n%s", page, str(e))
                 self.restart_browser()
             except TimeoutException:
@@ -884,7 +884,7 @@ class Crawler:
                 self.logger.info("Visiting %d: %s", i + 1, domain)
                 url = self.get_domain(domain)
                 visited.append(url)
-            except ProtocolError as e:
+            except (MaxRetryError, ProtocolError) as e:
                 self.logger.warning("Error loading %s:\n%s", domain, str(e))
                 self.restart_browser()
             except TimeoutException:
@@ -1084,7 +1084,7 @@ chrome.runtime.sendMessage({
                 self.logger.info("Visiting %d: %s", i + 1, domain)
                 url = self.get_domain(domain)
                 visited.append(url)
-            except ProtocolError as e:
+            except (MaxRetryError, ProtocolError) as e:
                 self.logger.warning("Error loading %s:\n%s", domain, str(e))
                 self.restart_browser()
             except TimeoutException:
