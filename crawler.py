@@ -211,7 +211,7 @@ class Crawler:
             self.logger.addHandler(sh)
 
         self.last_data = None
-        self.storage_objects = ['snitch_map', 'action_map']
+        self.storage_objects = ['snitch_map', 'action_map', 'tracking_map']
 
         self.logger.info("Fetching TLD definitions ...")
         self.tld_extract = TLDExtract(cache_file=False)
