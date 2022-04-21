@@ -473,7 +473,16 @@ class Crawler:
         )
         self.driver.execute_script(script, json.dumps(data))
 
-        time.sleep(2)   # wait for localstorage to sync
+        # force Badger data to get written to disk
+        for store_name in self.storage_objects:
+            self.driver.execute_async_script((
+                "let done = arguments[arguments.length - 1],"
+                "  store_name = arguments[0];"
+                "chrome.runtime.sendMessage({"
+                "  type: 'syncStorage',"
+                "  storeName: store_name"
+                "}, done);"
+            ), store_name)
 
     def dump_data(self):
         """Extract the objects Privacy Badger learned during its training
