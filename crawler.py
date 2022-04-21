@@ -463,39 +463,47 @@ class Crawler:
     def load_user_data(self, data):
         """Load saved user data into Privacy Badger after a restart"""
         self.load_extension_page(OPTIONS)
-        for store_name in self.storage_objects:
-            script = (
-                "(function (data) {"
-                "data = JSON.parse(data);"
-                "let bg = chrome.extension.getBackgroundPage();"
-                f"bg.badger.storage.{store_name}.merge(data.{store_name});"
-                "}(arguments[0]));"
-            )
-            self.driver.execute_script(script, json.dumps(data))
+
+        script = (
+            "(function (data) {"
+            "  data = JSON.parse(data);"
+            "  let bg = chrome.extension.getBackgroundPage();"
+            "  bg.badger.mergeUserData(data);"
+            "}(arguments[0]));"
+        )
+        self.driver.execute_script(script, json.dumps(data))
 
         time.sleep(2)   # wait for localstorage to sync
 
     def dump_data(self):
         """Extract the objects Privacy Badger learned during its training
         run."""
-        self.load_extension_page(OPTIONS)
-
         data = {}
+        self.load_extension_page(OPTIONS)
         for store_name in self.storage_objects:
-            script = (
-                "return chrome.extension.getBackgroundPage()."
-                f"badger.storage.{store_name}.getItemClones()"
-            )
-            data[store_name] = self.driver.execute_script(script)
+            data[store_name] = self.driver.execute_async_script((
+                "let done = arguments[arguments.length - 1],"
+                "  store_name = arguments[0];"
+                "chrome.runtime.sendMessage({"
+                "  type: 'syncStorage',"
+                "  storeName: store_name"
+                "}, function () {"
+                "  chrome.storage.local.get([store_name], function (res) {"
+                "    done(res[store_name]);"
+                "  });"
+                "});"
+            ), store_name)
         return data
 
     def clear_data(self):
         """Clear the training data Privacy Badger starts with."""
         self.load_extension_page(OPTIONS)
-        self.driver.execute_script(
-            "chrome.extension.getBackgroundPage()."
-            "badger.storage.clearTrackerData();"
-        )
+        self.driver.execute_async_script((
+            "let done = arguments[arguments.length - 1];"
+            "chrome.runtime.sendMessage({"
+            "  type: 'removeAllData'"
+            "}, done);"
+        ))
 
     def timeout_workaround(self): # noqa:MC0001 TODO simplify
         """
