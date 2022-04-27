@@ -192,6 +192,25 @@ for base in sorted(new_js['snitch_map'].keys()):
 
     print(" ", formatted_base, "on", ", ".join(formatted_sites))
 
+# list cookieblocked canvas fingerprinters
+# https://github.com/EFForg/privacybadger/issues/1527
+if 'tracking_map' in new_js:
+    tm = new_js['tracking_map']
+    print_canvas_header = True
+
+    for domain in new_js['action_map'].keys():
+        if new_js['action_map'][domain]['heuristicAction'] != "cookieblock":
+            continue
+
+        base = extract(domain).registered_domain
+
+        if any(True for tracking in tm.get(base, {}).values() if "canvas" in tracking):
+            if print_canvas_header:
+                print(f"\n{C_YELLOW}??{C_RESET} Cookieblocked canvas fingerprinters:\n")
+                print_canvas_header = False
+
+            print(f"  {C_YELLOW}{domain}{C_RESET} on", ", ".join(tm[base].keys()))
+
 print("")
 
 sys.exit(0)
