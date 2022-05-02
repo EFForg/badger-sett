@@ -157,7 +157,7 @@ for base in sorted(new_js['snitch_map'].keys()):
     shared_roots = [
         root for root in set(site_roots)
         if site_roots.count(root) >= MIN_SHARED_ROOTS
-    ]
+    ] if len(site_roots) <= 12 else []
     # also see if sbr is found inside MIN_SHARED_ROOTS site_roots
     if sbr not in shared_roots:
         num_substr_matches = len([True for site_root in site_roots if sbr in site_root])
