@@ -178,19 +178,23 @@ for base in sorted(new_js['snitch_map'].keys()):
             re.split('('+root+')', string, 1)
         ).format(C_YELLOW, C_RESET)
     formatted_sites = []
+    num_other_sites = 0
     for site in sites:
         for root in shared_roots:
             if root in site:
                 site = highlight(site, root)
+                num_other_sites -= 1
+                formatted_sites.append(site)
                 break
-        formatted_sites.append(site)
+        num_other_sites += 1
     formatted_base = base
     for root in shared_roots:
         if root in base:
             formatted_base = highlight(base, root)
             break
 
-    print(" ", formatted_base, "on", ", ".join(formatted_sites))
+    other_sites = f", and {num_other_sites} other sites" if num_other_sites else ""
+    print(" ", formatted_base, "on", ", ".join(formatted_sites) + other_sites)
 
 # list cookieblocked canvas fingerprinters
 # https://github.com/EFForg/privacybadger/issues/1527
