@@ -54,7 +54,7 @@ new_keys = set(new_js['action_map'].keys())
 
 overlap = old_keys & new_keys
 # pylint: disable-next=consider-using-f-string
-print("New action map has %d new domains and dropped %d old domains" %
+print("New action map has %d new domains and dropped %d old domains\n" %
       (len(new_keys - overlap), len(old_keys - overlap)))
 
 colorama.init()
@@ -73,6 +73,9 @@ for domain in old_js['action_map'].keys():
         continue
 
     base = extract(domain).registered_domain
+    if not base:
+        print(f"[BADGER_JSON_OLD] Failed to extract base domain for {domain} ...")
+        base = domain
     blocked_old[base].append(domain)
 
 blocked_new = defaultdict(list)
@@ -81,6 +84,9 @@ for domain in new_js['action_map'].keys():
         continue
 
     base = extract(domain).registered_domain
+    if not base:
+        print(f"[BADGER_JSON_NEW] Failed to extract base domain for {domain} ...")
+        base = domain
     blocked_new[base].append(domain)
 
 blocked_bases_old = set(blocked_old.keys())
@@ -146,13 +152,21 @@ for base in sorted(new_js['snitch_map'].keys()):
 
     # include the tracker base, sans common resource domain strings
     tracker_root = extract(base).domain
+    if not tracker_root:
+        tracker_root = base.partition('.')[0]
     sbr = tracker_root
     for s in ("static", "cdn", "media", "assets", "images", "img", "storage", "files", "edge", "cache", "st"):
         sbr = sbr.replace("-" + s, "").replace(s + "-", "").replace(s, "")
         # guard against removing the entire root
         if not sbr:
             sbr = tracker_root
-    site_roots = [extract(site).domain for site in sites] + [sbr]
+    site_roots = []
+    for site in sites:
+        site_root = extract(site).domain
+        if not site_root:
+            site_root = site.partition('.')[0]
+        site_roots.append(site_root)
+    site_roots.append(sbr)
 
     shared_roots = [
         root for root in set(site_roots)
@@ -210,6 +224,8 @@ if 'tracking_map' in new_js:
             continue
 
         base = extract(domain).registered_domain
+        if not base:
+            base = domain
 
         if any(True for tracking in tm.get(base, {}).values() if "canvas" in tracking):
             if print_canvas_header:
