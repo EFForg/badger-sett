@@ -214,7 +214,7 @@ class Crawler:
         self.storage_objects = ['snitch_map', 'action_map', 'tracking_map']
 
         self.logger.info("Fetching TLD definitions ...")
-        self.tld_extract = TLDExtract(cache_file=False)
+        self.tld_extract = TLDExtract(cache_dir=False)
 
         self.start_browser()
 

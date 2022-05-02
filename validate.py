@@ -65,7 +65,7 @@ C_RED = colorama.Style.BRIGHT + colorama.Fore.RED
 C_YELLOW = colorama.Style.BRIGHT + colorama.Fore.YELLOW
 C_RESET = colorama.Style.RESET_ALL
 
-extract = tldextract.TLDExtract(cache_file=False)
+extract = tldextract.TLDExtract(cache_dir=False)
 
 BLOCKED = ("block", "cookieblock")
 
