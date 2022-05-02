@@ -1,3 +1,4 @@
 *.sw?
+__pycache__/
 parallel-extensions/*.crx
 parallel-extensions/*.xpi

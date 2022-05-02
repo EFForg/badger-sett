@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 
 import json
-import re
 import sys
 
 from collections import defaultdict
 
 import colorama
 import tldextract
+
+from lib.mdfp import flag_potential_mdfp_domains
+
 
 # ./validate.py old.json new.json
 if len(sys.argv) == 3:
@@ -144,74 +146,7 @@ for base in sorted(no_longer_blocked):
                 out = out + " on " + ", ".join(old_js['snitch_map'][y])
             print(out.format(y))
 
-# look for common "roots" (base minus PSL TLD)
-MIN_SHARED_ROOTS = 3
-print_mdfp_header = True
-for base in sorted(new_js['snitch_map'].keys()):
-    sites = new_js['snitch_map'][base]
-
-    # include the tracker base, sans common resource domain strings
-    tracker_root = extract(base).domain
-    if not tracker_root:
-        tracker_root = base.partition('.')[0]
-    sbr = tracker_root
-    for s in ("static", "cdn", "media", "assets", "images", "img", "storage", "files", "edge", "cache", "st"):
-        sbr = sbr.replace("-" + s, "").replace(s + "-", "").replace(s, "")
-        # guard against removing the entire root
-        if not sbr:
-            sbr = tracker_root
-    site_roots = []
-    for site in sites:
-        site_root = extract(site).domain
-        if not site_root:
-            site_root = site.partition('.')[0]
-        site_roots.append(site_root)
-    site_roots.append(sbr)
-
-    shared_roots = [
-        root for root in set(site_roots)
-        if site_roots.count(root) >= MIN_SHARED_ROOTS
-    ] if len(site_roots) <= 12 else []
-    # also see if sbr is found inside MIN_SHARED_ROOTS site_roots
-    if sbr not in shared_roots:
-        num_substr_matches = len([True for site_root in site_roots if sbr in site_root])
-        if num_substr_matches >= MIN_SHARED_ROOTS:
-            shared_roots.append(sbr)
-
-    # remove any one and two character roots
-    shared_roots = [s for s in shared_roots if len(s) > 2]
-
-    if not shared_roots:
-        continue
-
-    if print_mdfp_header:
-        print(f"\n{C_YELLOW}??{C_RESET} MDFP candidates:\n")
-        print_mdfp_header = False
-
-    # highlight common roots
-    def highlight(string, root):
-        return "{}".join(
-            # split preserving separator
-            re.split('('+root+')', string, 1)
-        ).format(C_YELLOW, C_RESET)
-    formatted_sites = []
-    num_other_sites = 0
-    for site in sites:
-        for root in shared_roots:
-            if root in site:
-                site = highlight(site, root)
-                num_other_sites -= 1
-                formatted_sites.append(site)
-                break
-        num_other_sites += 1
-    formatted_base = base
-    for root in shared_roots:
-        if root in base:
-            formatted_base = highlight(base, root)
-            break
-
-    other_sites = f", and {num_other_sites} other sites" if num_other_sites else ""
-    print(" ", formatted_base, "on", ", ".join(formatted_sites) + other_sites)
+flag_potential_mdfp_domains(new_js['snitch_map'], extract)
 
 # list cookieblocked canvas fingerprinters
 # https://github.com/EFForg/privacybadger/issues/1527
