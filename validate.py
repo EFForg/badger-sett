@@ -164,6 +164,9 @@ for base in sorted(new_js['snitch_map'].keys()):
         if num_substr_matches >= MIN_SHARED_ROOTS:
             shared_roots.append(sbr)
 
+    # remove any one and two character roots
+    shared_roots = [s for s in shared_roots if len(s) > 2]
+
     if not shared_roots:
         continue
 
