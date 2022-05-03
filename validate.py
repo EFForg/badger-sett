@@ -76,7 +76,6 @@ for domain in old_js['action_map'].keys():
 
     base = extract(domain).registered_domain
     if not base:
-        print(f"[BADGER_JSON_OLD] Failed to extract base domain for {domain} ...")
         base = domain
     blocked_old[base].append(domain)
 
@@ -87,7 +86,7 @@ for domain in new_js['action_map'].keys():
 
     base = extract(domain).registered_domain
     if not base:
-        print(f"[BADGER_JSON_NEW] Failed to extract base domain for {domain} ...")
+        print(f"Failed to extract base domain for {domain}")
         base = domain
     blocked_new[base].append(domain)
 
