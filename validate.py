@@ -113,6 +113,8 @@ for base in sorted(newly_blocked):
         sites = ", ".join(new_js['snitch_map'][base])
         sites = sites.replace(".edu", "." + C_YELLOW + "edu" + C_RESET)
         sites = sites.replace(".org", "." + C_YELLOW + "org" + C_RESET)
+        sites = sites.replace(".gov", "." + C_RED + "gov" + C_RESET)
+        sites = sites.replace(".mil", "." + C_RED + "mil" + C_RESET)
         out = out + " on " + sites
     print(out)
     if len(subdomains) > 1 or subdomains[0] != base:
