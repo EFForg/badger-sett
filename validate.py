@@ -65,7 +65,7 @@ C_RED = colorama.Style.BRIGHT + colorama.Fore.RED
 C_YELLOW = colorama.Style.BRIGHT + colorama.Fore.YELLOW
 C_RESET = colorama.Style.RESET_ALL
 
-extract = tldextract.TLDExtract(cache_dir=False)
+extract = tldextract.TLDExtract(cache_dir=False, include_psl_private_domains=True)
 
 BLOCKED = ("block", "cookieblock")
 
@@ -86,6 +86,8 @@ for domain in new_js['action_map'].keys():
 
     base = extract(domain).registered_domain
     if not base:
+        # IP address, a no-dots string (Privacy Badger bug), or
+        # https://github.com/john-kurkowski/tldextract/issues/178
         print(f"Failed to extract base domain for {domain}")
         base = domain
     blocked_new[base].append(domain)
