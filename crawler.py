@@ -74,7 +74,7 @@ ap.add_argument('--browser', choices=[FIREFOX, CHROME], default=CHROME,
 ap.add_argument('--n-sites', type=int, default=DEFAULT_NUM_SITES,
                 help='Number of websites to visit on the crawl')
 ap.add_argument('--exclude', default=None,
-                help='Exclude a TLD or comma-separated TLDs from the scan')
+                help='Exclude sites from scan whose domains end with one of the specified comma-separated suffixes')
 ap.add_argument('--timeout', type=float, default=30.0,
                 help='Amount of time to allow each site to load, in seconds')
 ap.add_argument('--wait-time', type=float, default=5.0, help=(
@@ -214,7 +214,7 @@ class Crawler:
         self.storage_objects = ['snitch_map', 'action_map', 'tracking_map']
 
         self.logger.info("Fetching TLD definitions ...")
-        self.tld_extract = TLDExtract(cache_dir=False)
+        self.tld_extract = TLDExtract(cache_dir=False, include_psl_private_domains=True)
 
         self.start_browser()
 
@@ -250,7 +250,7 @@ class Crawler:
                 "  survey mode: %s\n"
                 "  domain list: %s\n"
                 "  domains to crawl: %d\n"
-                "  TLDs to exclude: %s\n"
+                "  suffixes to exclude: %s\n"
                 "  parallel extension: %s\n"
                 "  Firefox ETP: %s\n"
                 "  driver capabilities:\n\n%s\n"
@@ -786,16 +786,14 @@ class Crawler:
             self.logger.info("Fetching Tranco list ...")
             domains = Tranco(cache=False).list(TRANCO_VERSION).top()
 
-        # if the exclude TLD option is passed in, remove those TLDs
         if self.exclude:
             filtered_domains = []
-            excluded_tlds = self.exclude.split(",")
 
-            # check for first occurring domains in list that don't have excluded TLD
+            # gather domains that don't end with any of the "exclude" suffixes
             for domain in domains:
-                if self.tld_extract(domain).suffix not in excluded_tlds:
+                if not any(domain.endswith(suffix) for suffix in self.exclude.split(",")):
                     filtered_domains.append(domain)
-                # return list of acceptable domains if it's the correct length
+                # return the list if we gathered enough
                 if len(filtered_domains) == n_sites:
                     return filtered_domains
 
@@ -957,17 +955,16 @@ class Crawler:
             self.logger.info(str(snitch_map['']))
             del snitch_map['']
 
+        # TODO once the need for this is gone, should be able to get rid of tldextract, in this script anyway
         d1_base = self.tld_extract(d1).registered_domain
+        if not d1_base:
+            d1_base = d1
 
         # handle the domain-attribution bug (Privacy Badger issue #1997).
         # If a domain we visited was recorded as a tracker on the domain we
         # visited immediately after it, it's probably a bug
         if d1_base in snitch_map and d2 in snitch_map[d1_base]:
-            self.logger.info(
-                "Likely bug: domain %s tracking on %s",
-                d1_base,
-                d2
-            )
+            self.logger.info("Likely bug: domain %s tracking on %s", d1_base, d2)
             snitch_map[d1_base].remove(d2)
 
             # if the bug caused d1 to be added to the action map, remove it
