@@ -44,10 +44,10 @@ See the following EFF.org blog post for more information: [Giving Privacy Badger
    You can also pass arguments to `crawler.py`, the python script that does the
    actual crawl. Any arguments passed to `runscan.sh` will be forwarded to
    `crawler.py`. To control the number of sites that the crawler visits, use the
-   `--n-sites` argument (the default is 2000). For example:
+   `--num-sites` argument (the default is 2000). For example:
 
    ```
-   $ ./runscan.sh --n-sites 10
+   $ ./runscan.sh --num-sites 10
    ```
 
    To exclude any sites with a given top level domain from the scan, pass in
