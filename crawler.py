@@ -75,6 +75,8 @@ ap.add_argument('--num-sites', '--n-sites', type=int, default=DEFAULT_NUM_SITES,
                 help='Number of websites to visit on the crawl')
 ap.add_argument('--exclude', default=None,
                 help='Exclude sites from scan whose domains end with one of the specified comma-separated suffixes')
+ap.add_argument('--no-blocking', action='store_true', default=False,
+                help="Disables blocking and snitch_map limits in Privacy Badger")
 ap.add_argument('--timeout', type=float, default=30.0,
                 help='Amount of time to allow each site to load, in seconds')
 ap.add_argument('--wait-time', type=float, default=5.0, help=(
@@ -179,17 +181,18 @@ class Crawler:
         assert args.browser in (CHROME, FIREFOX)
 
         self.browser = args.browser
-        self.num_sites = args.num_sites
-        self.exclude = args.exclude
-        self.timeout = args.timeout
-        self.wait_time = args.wait_time
-        self.out_dir = args.out_dir
-        self.pb_dir = args.pb_dir
-        self.domain_list = args.domain_list
         self.chromedriver_path = args.chromedriver_path
+        self.domain_list = args.domain_list
+        self.exclude = args.exclude
         self.firefox_path = args.firefox_path
         self.firefox_tracking_protection = args.firefox_tracking_protection
         self.load_extension = args.load_extension
+        self.no_blocking = args.no_blocking
+        self.num_sites = args.num_sites
+        self.out_dir = args.out_dir
+        self.pb_dir = args.pb_dir
+        self.timeout = args.timeout
+        self.wait_time = args.wait_time
 
         # version is based on when the crawl started
         self.version = time.strftime('%Y.%-m.%-d', time.localtime())
@@ -245,6 +248,7 @@ class Crawler:
                 "Starting new crawl:\n\n"
                 "  Badger branch: %s\n"
                 "  Badger hash: %s\n"
+                "  blocking: %s\n"
                 "  timeout: %ss\n"
                 "  wait time: %ss\n"
                 "  survey mode: %s\n"
@@ -257,6 +261,7 @@ class Crawler:
             ),
             git_data['branch'],
             git_data['commit_hash'],
+            "off" if self.no_blocking else "standard",
             self.timeout,
             self.wait_time,
             args.survey,
@@ -807,8 +812,18 @@ class Crawler:
 
         self.clear_data()
 
-        # enable local learning
         self.load_extension_page(OPTIONS)
+
+        if self.no_blocking:
+            # set blocking threshold to one more than the number of sites we want to visit
+            # then effectively we will never learn to block and remove any limits on snitch_map
+            self.driver.execute_script(
+                "chrome.runtime.sendMessage({"
+                "  type: 'setBlockThreshold',"
+                f"  value: {self.num_sites + 1}"
+                "})")
+
+        # enable local learning
         wait_for_script(self.driver, "return window.OPTIONS_INITIALIZED")
         try:
             self.driver.find_element_by_id('local-learning-checkbox').click()
