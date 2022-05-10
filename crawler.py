@@ -820,7 +820,7 @@ class Crawler:
             self.driver.execute_script(
                 "chrome.runtime.sendMessage({"
                 "  type: 'setBlockThreshold',"
-                "  value: Infinity"
+                "  value: Number.MAX_VALUE"
                 "})")
 
         # enable local learning
