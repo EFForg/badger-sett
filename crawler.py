@@ -815,12 +815,12 @@ class Crawler:
         self.load_extension_page(OPTIONS)
 
         if self.no_blocking:
-            # set blocking threshold to one more than the number of sites we want to visit
-            # then effectively we will never learn to block and remove any limits on snitch_map
+            # set blocking threshold to infinity,
+            # to never learn to block (and create unlimited snitch_map entries)
             self.driver.execute_script(
                 "chrome.runtime.sendMessage({"
                 "  type: 'setBlockThreshold',"
-                f"  value: {self.num_sites + 1}"
+                "  value: Infinity"
                 "})")
 
         # enable local learning
