@@ -71,7 +71,7 @@ ap = argparse.ArgumentParser(
 
 ap.add_argument('--browser', choices=[FIREFOX, CHROME], default=CHROME,
                 help='Browser to use for the scan')
-ap.add_argument('--n-sites', type=int, default=DEFAULT_NUM_SITES,
+ap.add_argument('--num-sites', '--n-sites', type=int, default=DEFAULT_NUM_SITES,
                 help='Number of websites to visit on the crawl')
 ap.add_argument('--exclude', default=None,
                 help='Exclude sites from scan whose domains end with one of the specified comma-separated suffixes')
@@ -179,7 +179,7 @@ class Crawler:
         assert args.browser in (CHROME, FIREFOX)
 
         self.browser = args.browser
-        self.n_sites = args.n_sites
+        self.num_sites = args.num_sites
         self.exclude = args.exclude
         self.timeout = args.timeout
         self.wait_time = args.wait_time
@@ -261,7 +261,7 @@ class Crawler:
             self.wait_time,
             args.survey,
             self.domain_list if self.domain_list else "Tranco " + TRANCO_VERSION,
-            self.n_sites,
+            self.num_sites,
             self.exclude,
             self.load_extension,
             self.firefox_tracking_protection,
@@ -773,7 +773,7 @@ class Crawler:
     def get_domain_list(self):
         """Get the top n sites from the Tranco list"""
         domains = []
-        n_sites = self.n_sites if self.n_sites else DEFAULT_NUM_SITES
+        num_sites = self.num_sites if self.num_sites else DEFAULT_NUM_SITES
 
         if self.domain_list:
             # read in domains from file
@@ -794,13 +794,13 @@ class Crawler:
                 if not any(domain.endswith(suffix) for suffix in self.exclude.split(",")):
                     filtered_domains.append(domain)
                 # return the list if we gathered enough
-                if len(filtered_domains) == n_sites:
+                if len(filtered_domains) == num_sites:
                     return filtered_domains
 
             return filtered_domains
 
         # if no exclude option is passed in, just return top n domains from list
-        return domains[:n_sites]
+        return domains[:num_sites]
 
     def start_browser(self):
         self.start_driver()
@@ -856,12 +856,12 @@ class Crawler:
 
     def crawl(self):
         """
-        Visit the top `n_sites` websites in the Tranco list, in order, in
+        Visit the top `num_sites` websites in the Tranco list, in order, in
         a virtual browser with Privacy Badger installed. Afterwards, save the
         action_map and snitch_map that the Badger learned.
         """
 
-        if self.n_sites == 0:
+        if self.num_sites == 0:
             domains = []
         else:
             domains = self.get_domain_list()
@@ -1069,7 +1069,7 @@ chrome.runtime.sendMessage({
 
     def crawl(self):
         """
-        Visit the top `n_sites` websites in the Tranco list, in order, in
+        Visit the top `num_sites` websites in the Tranco list, in order, in
         a virtual browser with Privacy Badger installed. Afterwards, save the
         snitch_map that the Badger learned.
         """
