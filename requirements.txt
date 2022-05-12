@@ -1,7 +1,7 @@
 colorama==0.3.9
 GitPython==2.1.11
 prospector==1.7.7
-selenium==3.141.0
+selenium==4.1.5
 tldextract==3.1.2
 tranco==0.3
 xvfbwrapper==0.2.9

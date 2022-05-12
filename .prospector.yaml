@@ -1,0 +1,8 @@
+pylint:
+  disable:
+    - invalid-name
+
+mccabe:
+  options:
+    # TODO remove
+    max-complexity: 21

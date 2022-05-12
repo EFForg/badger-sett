@@ -38,8 +38,11 @@ from selenium.common.exceptions import (
     UnexpectedAlertPresentException,
     WebDriverException,
 )
+from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.support.ui import WebDriverWait
 from tldextract import TLDExtract
 from tranco import Tranco
 from xvfbwrapper import Xvfb
@@ -161,7 +164,7 @@ def should_restart(e):
 
 def wait_for_script(driver, script, timeout=30, message=(
         "Timed out waiting for execute_script to eval to True")):
-    return webdriver.support.ui.WebDriverWait(driver, timeout).until(
+    return WebDriverWait(driver, timeout).until(
         lambda driver: driver.execute_script(script), message)
 
 
@@ -295,46 +298,52 @@ class Crawler:
 
         return res
 
-    def get_firefox_profile(self):
-        profile = webdriver.FirefoxProfile()
-        profile.set_preference(
+    def get_firefox_options(self):
+        opts = FirefoxOptions()
+        opts.binary_location = self.firefox_path
+        #opts.log.level = "trace"
+
+        opts.set_capability("acceptInsecureCerts", False);
+        opts.set_capability("unhandledPromptBehavior", "ignore");
+
+        opts.set_preference(
             'extensions.webextensions.uuids', f'{{"{FF_EXT_ID}": "{FF_UUID}"}}')
 
-        profile.set_preference("dom.webdriver.enabled", False)
+        opts.set_preference("dom.webdriver.enabled", False)
 
         # disable prefetching
-        profile.set_preference("network.dns.disablePrefetch", True)
-        profile.set_preference("network.prefetch-next", False)
+        opts.set_preference("network.dns.disablePrefetch", True)
+        opts.set_preference("network.prefetch-next", False)
         # disable OpenH264 codec downloading
-        profile.set_preference("media.gmp-gmpopenh264.enabled", False)
-        profile.set_preference("media.gmp-manager.url", "")
+        opts.set_preference("media.gmp-gmpopenh264.enabled", False)
+        opts.set_preference("media.gmp-manager.url", "")
         # disable health reports
-        profile.set_preference("datareporting.healthreport.service.enabled", False)
-        profile.set_preference("datareporting.healthreport.uploadEnabled", False)
-        profile.set_preference("datareporting.policy.dataSubmissionEnabled", False)
+        opts.set_preference("datareporting.healthreport.service.enabled", False)
+        opts.set_preference("datareporting.healthreport.uploadEnabled", False)
+        opts.set_preference("datareporting.policy.dataSubmissionEnabled", False)
         # disable experiments
-        profile.set_preference("experiments.enabled", False)
-        profile.set_preference("experiments.supported", False)
-        profile.set_preference("experiments.manifest.uri", "")
+        opts.set_preference("experiments.enabled", False)
+        opts.set_preference("experiments.supported", False)
+        opts.set_preference("experiments.manifest.uri", "")
         # disable telemetry
-        profile.set_preference("toolkit.telemetry.enabled", False)
-        profile.set_preference("toolkit.telemetry.unified", False)
-        profile.set_preference("toolkit.telemetry.archive.enabled", False)
+        opts.set_preference("toolkit.telemetry.enabled", False)
+        opts.set_preference("toolkit.telemetry.unified", False)
+        opts.set_preference("toolkit.telemetry.archive.enabled", False)
 
         if self.firefox_tracking_protection == "off":
             # disable all content blocking/Tracking Protection features
             # https://wiki.mozilla.org/Security/Tracking_protection
-            profile.set_preference("privacy.trackingprotection.enabled", False)
-            profile.set_preference("privacy.trackingprotection.pbmode.enabled", False)
-            profile.set_preference("privacy.trackingprotection.cryptomining.enabled", False)
-            profile.set_preference("privacy.trackingprotection.fingerprinting.enabled", False)
-            profile.set_preference("privacy.trackingprotection.socialtracking.enabled", False)
+            opts.set_preference("privacy.trackingprotection.enabled", False)
+            opts.set_preference("privacy.trackingprotection.pbmode.enabled", False)
+            opts.set_preference("privacy.trackingprotection.cryptomining.enabled", False)
+            opts.set_preference("privacy.trackingprotection.fingerprinting.enabled", False)
+            opts.set_preference("privacy.trackingprotection.socialtracking.enabled", False)
             # always allow third-party cookies
-            profile.set_preference("network.cookie.cookieBehavior", 0)
+            opts.set_preference("network.cookie.cookieBehavior", 0)
         elif self.firefox_tracking_protection == "strict":
-            profile.set_preference("browser.contentblocking.category", "strict")
+            opts.set_preference("browser.contentblocking.category", "strict")
 
-        return profile
+        return opts
 
     def start_driver(self):
         """Start a new Selenium web driver and install the bundled
@@ -394,16 +403,9 @@ class Crawler:
                     break
 
         elif self.browser == FIREFOX:
-            opts = FirefoxOptions()
-            #opts.log.level = "trace"
-
-            opts.set_capability("acceptInsecureCerts", False);
-            opts.set_capability("unhandledPromptBehavior", "ignore");
-
-            self.driver = webdriver.Firefox(firefox_profile=self.get_firefox_profile(),
-                                            firefox_binary=self.firefox_path,
-                                            options=opts,
-                                            service_log_path=os.path.devnull)
+            opts = self.get_firefox_options()
+            service = FirefoxService(log_path=os.path.devnull)
+            self.driver = webdriver.Firefox(options=opts, service=service)
 
             # load Privacy Badger
             # Firefox requires absolute paths
@@ -650,7 +652,7 @@ class Crawler:
         if not actual_page_url.startswith("chrome-error://"):
             return
 
-        error_text = self.driver.find_element_by_tag_name("body").text
+        error_text = self.driver.find_element(By.TAG_NAME, "body").text
         error_code = error_text
 
         # for example: ERR_NAME_NOT_RESOLVED
@@ -683,7 +685,7 @@ class Crawler:
             str(year) for year in range(start_year, start_year + 3)
         ] + wanted_paths
 
-        for i, el in enumerate(self.driver.find_elements_by_tag_name('a')):
+        for i, el in enumerate(self.driver.find_elements(By.TAG_NAME, 'a')):
             # limit to checking 200 links
             if i > 199:
                 break
@@ -826,7 +828,7 @@ class Crawler:
         # enable local learning
         wait_for_script(self.driver, "return window.OPTIONS_INITIALIZED")
         try:
-            self.driver.find_element_by_id('local-learning-checkbox').click()
+            self.driver.find_element(By.ID, 'local-learning-checkbox').click()
         except NoSuchElementException:
             self.logger.warning("Learning checkbox not found, learning NOT enabled!")
 
