@@ -456,7 +456,6 @@ class Crawler:
             except TimeoutException:
                 num_timeouts += 1
                 self.logger.warning("Timed out loading %s", page)
-                self.timeout_workaround()
             except WebDriverException as err:
                 self.logger.warning("Error loading %s (%s): %s", page, type(err).__name__, err.msg)
                 if should_restart(err):
@@ -519,69 +518,6 @@ class Crawler:
             "  type: 'removeAllData'"
             "}, done);"
         ))
-
-    def timeout_workaround(self):
-        """
-        Selenium has a bug where a tab that raises a timeout exception can't
-        recover gracefully. So we kill the tab and make a new one.
-        """
-        # TODO find actual bug ticket
-        # TODO do we still need this workaround?
-
-        # guard against stuff like
-        # WebDriverException: Message: unknown error: failed to close window in 20 seconds
-        try:
-            self.driver.close()  # kill the broken site
-        # recover when webdriver is no longer there
-        # probably because geckodriver hung and had to be terminated
-        except ConnectionRefusedError:
-            self.logger.warning("Failed to connect to driver!")
-            self.restart_browser()
-            return
-        except WebDriverException as e:
-            self.logger.warning("Error closing timed out window (%s): %s", type(e).__name__, e.msg)
-            if should_restart(e):
-                self.restart_browser()
-            return
-
-        # guard against implicit session deletion
-        # TODO when does this happen?
-        # when we time out waiting on chrome.extension? ... when does that happen?
-        try:
-            if not self.driver.window_handles:
-                # TODO we probably never get here
-                # TODO because looking up window handles
-                # TODO after all have been closed raises InvalidSessionIdException
-                self.logger.warning("Closed all windows somehow")
-                self.restart_browser()
-                return
-        except InvalidSessionIdException:
-            self.logger.warning("Invalid session")
-            self.restart_browser()
-            return
-        except WebDriverException as e:
-            self.logger.warning(
-                "Failed to get window handles (%s): %s",
-                type(e).__name__, e.msg)
-            self.restart_browser()
-            return
-
-        try:
-            self.driver.switch_to.window(self.driver.window_handles[0])
-        except IndexError:
-            self.logger.warning("Closed all windows somehow? (len(window_handles)=%s)",
-                len(self.driver.window_handles))
-            self.restart_browser()
-            return
-        except WebDriverException as e:
-            self.logger.warning(
-                "Failed to switch windows (%s): %s",
-                type(e).__name__, e.msg)
-            self.restart_browser()
-            return
-
-        # open a new window
-        self.driver.switch_to.new_window('tab')
 
     def raise_on_security_pages(self):
         """
@@ -883,7 +819,6 @@ class Crawler:
                 self.restart_browser()
             except TimeoutException:
                 self.logger.warning("Timed out loading %s", domain)
-                self.timeout_workaround()
             except WebDriverException as e:
                 self.logger.error("%s on %s: %s", type(e).__name__, domain, e.msg)
                 if should_restart(e):
@@ -1082,7 +1017,6 @@ chrome.runtime.sendMessage({
                 self.restart_browser()
             except TimeoutException:
                 self.logger.warning("Timed out loading %s", domain)
-                self.timeout_workaround()
             except WebDriverException as e:
                 self.logger.error("%s on %s: %s", type(e).__name__, domain, e.msg)
                 if should_restart(e):
