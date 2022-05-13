@@ -673,6 +673,14 @@ class Crawler:
 
         self.click_internal_link()
 
+        # if any new tabs/windows got opened, close them now
+        handles = self.driver.window_handles
+        if len(list(handles)) > 1:
+            for handle in handles[1:]:
+                self.driver.switch_to.window(handle)
+                self.driver.close()
+            self.driver.switch_to.window(handles[0])
+
         return url
 
     def get_domain_list(self):
