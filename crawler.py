@@ -39,6 +39,7 @@ from selenium.common.exceptions import (
 )
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.edge.options import Options as EdgeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.support.ui import WebDriverWait
@@ -59,6 +60,7 @@ OPTIONS = 'skin/options.html'
 
 CHROME = 'chrome'
 FIREFOX = 'firefox'
+EDGE = 'edge'
 
 DEFAULT_NUM_SITES = 2000
 RESTART_RETRIES = 5
@@ -71,7 +73,7 @@ TRANCO_VERSION = (datetime.utcnow() - timedelta(days=2)).strftime('%Y-%m-%d')
 ap = argparse.ArgumentParser(
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-ap.add_argument('--browser', choices=[FIREFOX, CHROME], default=CHROME,
+ap.add_argument('--browser', choices=[FIREFOX, CHROME, EDGE], default=CHROME,
                 help='Browser to use for the scan')
 ap.add_argument('--num-sites', '--n-sites', type=int, default=DEFAULT_NUM_SITES,
                 help='Number of websites to visit on the crawl')
@@ -180,8 +182,6 @@ def dismiss_alert(driver, accept=False):
 
 class Crawler:
     def __init__(self, args):
-        assert args.browser in (CHROME, FIREFOX)
-
         self.browser = args.browser
         self.chromedriver_path = args.chromedriver_path
         self.domain_list = args.domain_list
@@ -347,7 +347,7 @@ class Crawler:
     def start_driver(self):
         """Start a new Selenium web driver and install the bundled
         extension."""
-        if self.browser == CHROME:
+        if self.browser in (CHROME, EDGE):
             # make extension ID constant across runs
 
             # create temp directory
@@ -368,7 +368,7 @@ class Crawler:
             with open(manifest_path, "w", encoding="utf-8") as f:
                 json.dump(manifest, f)
 
-            opts = ChromeOptions()
+            opts = ChromeOptions() if self.browser == CHROME else EdgeOptions()
             opts.add_argument("--load-extension=" + new_extension_path)
 
             # loads parallel extension to run alongside pb
@@ -391,12 +391,15 @@ class Crawler:
 
             for _ in range(5):
                 try:
-                    self.driver = webdriver.Chrome(self.chromedriver_path, options=opts)
+                    if self.browser == CHROME:
+                        self.driver = webdriver.Chrome(self.chromedriver_path, options=opts)
+                    else:
+                        self.driver = webdriver.Edge(options=opts)
                 except ConnectionResetError as e:
                     self.logger.warning((
-                        "Chrome WebDriver initialization failed:\n"
+                        "%s WebDriver initialization failed:\n"
                         "%s\n"
-                        "Retrying ..."), str(e))
+                        "Retrying ..."), self.browser.capitalize(), str(e))
                     time.sleep(2)
                 else:
                     break
@@ -433,7 +436,7 @@ class Crawler:
         Load a page in the Privacy Badger extension. `page` should either be
         BACKGROUND or OPTIONS.
         """
-        if self.browser == CHROME:
+        if self.browser in (CHROME, EDGE):
             EXT_URL = (CHROME_URL_FMT + page) % CHROME_EXT_ID
         elif self.browser == FIREFOX:
             EXT_URL = (FF_URL_FMT + page) % FF_UUID
