@@ -28,7 +28,6 @@ from selenium.common.exceptions import (
     ElementNotInteractableException,
     ElementNotVisibleException,
     InvalidSessionIdException,
-    JavascriptException,
     NoAlertPresentException,
     NoSuchElementException,
     NoSuchWindowException,
@@ -521,7 +520,7 @@ class Crawler:
             "}, done);"
         ))
 
-    def timeout_workaround(self): # noqa:MC0001 TODO simplify
+    def timeout_workaround(self):
         """
         Selenium has a bug where a tab that raises a timeout exception can't
         recover gracefully. So we kill the tab and make a new one.
@@ -581,45 +580,8 @@ class Crawler:
             self.restart_browser()
             return
 
-        try:
-            current_url = self.driver.current_url
-        except NoSuchWindowException as e:
-            self.logger.warning("Failed to get current URL (NoSuchWindowException): %s", str(e))
-            self.restart_browser()
-            return
-
         # open a new window
-        if current_url.startswith("moz-extension://"):
-            # work around https://bugzilla.mozilla.org/show_bug.cgi?id=1491443
-            try:
-                self.driver.execute_script(
-                    "delete window.__new_window_created;"
-                    "chrome.windows.create({}, function () {"
-                    "  window.__new_window_created = true;"
-                    "});"
-                )
-                wait_for_script(self.driver, "return window.__new_window_created")
-            except NoSuchWindowException as e:
-                self.logger.warning("Failed to open new window (NoSuchWindowException): %s", str(e))
-                self.restart_browser()
-                return
-            except TimeoutException:
-                self.logger.warning("Timed out waiting for new window")
-                self.restart_browser()
-                return
-            except WebDriverException as e:
-                self.logger.warning("Failed to open new window (%s): %s", type(e).__name__, e.msg)
-                self.restart_browser()
-                return
-        else:
-            try:
-                self.driver.execute_script('window.open()')
-            except JavascriptException:
-                self.logger.warning("Failed to open new window with window.open()")
-                self.restart_browser()
-                return
-
-        self.driver.switch_to.window(self.driver.window_handles[-1])
+        self.driver.switch_to.new_window('tab')
 
     def raise_on_security_pages(self):
         """
