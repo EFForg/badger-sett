@@ -248,6 +248,7 @@ class Crawler:
         self.logger.info(
             (
                 "Starting new crawl:\n\n"
+                "  browser: %s\n"
                 "  Badger branch: %s\n"
                 "  Badger hash: %s\n"
                 "  blocking: %s\n"
@@ -258,9 +259,9 @@ class Crawler:
                 "  domains to crawl: %d\n"
                 "  suffixes to exclude: %s\n"
                 "  parallel extension: %s\n"
-                "  Firefox ETP: %s\n"
                 "  driver capabilities:\n\n%s\n"
             ),
+            f"Firefox (ETP {self.firefox_tracking_protection})" if self.browser == FIREFOX else self.browser.capitalize(),
             git_data['branch'],
             git_data['commit_hash'],
             "off" if self.no_blocking else "standard",
@@ -271,7 +272,6 @@ class Crawler:
             self.num_sites,
             self.exclude,
             self.load_extension,
-            self.firefox_tracking_protection,
             pformat(self.driver.capabilities)
         )
 
