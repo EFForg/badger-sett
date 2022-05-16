@@ -378,13 +378,6 @@ class Crawler:
             opts.add_argument("--disable-blink-features=AutomationControlled")
             opts.add_argument("--disable-crash-reporter")
             opts.add_argument("--disable-dev-shm-usage")
-            opts.add_argument("--disable-gpu")
-            opts.add_argument("--dns-prefetch-disable")
-            opts.add_argument("--no-sandbox")
-
-            opts.add_experimental_option("prefs", {
-                "profile.block_third_party_cookies": False
-            })
 
             opts.set_capability("acceptInsecureCerts", False);
             opts.set_capability("unhandledPromptBehavior", "ignore");
