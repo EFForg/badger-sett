@@ -377,7 +377,6 @@ class Crawler:
 
             opts.add_argument("--disable-blink-features=AutomationControlled")
             opts.add_argument("--disable-crash-reporter")
-            opts.add_argument("--disable-dev-shm-usage")
 
             opts.set_capability("acceptInsecureCerts", False);
             opts.set_capability("unhandledPromptBehavior", "ignore");
