@@ -11,8 +11,6 @@ ARG VALIDATE
 USER root
 
 RUN apt-get update; apt-get install -y python3-pip git
-RUN if [ "$BROWSER" = "chrome" ]; then \
-  apt-get install -y zip vim-common; fi
 
 RUN if [ $(getent group $GID) ]; then \
   old_group=$(getent group $GID | cut -d: -f1); \
