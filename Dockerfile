@@ -1,7 +1,7 @@
 ARG BROWSER
 
 FROM python:3.7
-FROM selenium/standalone-chrome:97.0.4692.99
+FROM selenium/standalone-chrome:99.0.4844.84
 
 ARG UID
 ARG GID
