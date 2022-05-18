@@ -54,7 +54,6 @@ CHROMEDRIVER_PATH = 'chromedriver'
 FF_URL_FMT = 'moz-extension://%s/'
 FF_EXT_ID = 'jid1-MnnxcxisBPnSXQ@jetpack'
 FF_UUID = 'd56a5b99-51b6-4e83-ab23-796216679614'
-FF_BIN_PATH = '/usr/bin/firefox'
 BACKGROUND = '_generated_background_page.html'
 OPTIONS = 'skin/options.html'
 
@@ -106,10 +105,10 @@ ap.add_argument('--out-dir', '--out-path', dest='out_dir', default='./',
                 help='Path at which to save output')
 ap.add_argument('--pb-dir', '--pb-path', dest='pb_dir', default='./privacybadger',
                 help='Path to the Privacy Badger source checkout')
+ap.add_argument('--browser-binary', default=None,
+                help="Path to the browser binary, for example /usr/bin/google-chrome-beta")
 ap.add_argument('--chromedriver-path', default=CHROMEDRIVER_PATH,
-                help='Path to the chromedriver binary')
-ap.add_argument('--firefox-path', default=FF_BIN_PATH,
-                help='Path to the firefox browser binary')
+                help="Path to the ChromeDriver binary")
 
 ap.add_argument('--firefox-tracking-protection',
     choices=("off", "standard", "strict"), default="off",
@@ -183,10 +182,10 @@ def dismiss_alert(driver, accept=False):
 class Crawler:
     def __init__(self, args):
         self.browser = args.browser
+        self.browser_binary = args.browser_binary
         self.chromedriver_path = args.chromedriver_path
         self.domain_list = args.domain_list
         self.exclude = args.exclude
-        self.firefox_path = args.firefox_path
         self.firefox_tracking_protection = args.firefox_tracking_protection
         self.load_extension = args.load_extension
         self.no_blocking = args.no_blocking
@@ -299,7 +298,10 @@ class Crawler:
 
     def get_firefox_options(self):
         opts = FirefoxOptions()
-        opts.binary_location = self.firefox_path
+
+        if self.browser_binary:
+            opts.binary_location = self.browser_binary
+
         #opts.log.level = "trace"
 
         opts.set_capability("acceptInsecureCerts", False);
@@ -369,6 +371,10 @@ class Crawler:
                 json.dump(manifest, f)
 
             opts = ChromeOptions() if self.browser == CHROME else EdgeOptions()
+
+            if self.browser_binary:
+                opts.binary_location = self.browser_binary
+
             opts.add_argument("--load-extension=" + new_extension_path)
 
             # loads parallel extension to run alongside pb
