@@ -51,17 +51,17 @@ See the following EFF.org blog post for more information: [Giving Privacy Badger
    ```
 
    To exclude any sites with a given top level domain from the scan, pass in
-   the `--exclude` argument followed by the TLD you want to exclude. For example,
-   if you wanted to exclude all sites with a .gov TLD:
+   the `--exclude` argument followed by the TLD suffix you want to exclude.
+   For example, if you wanted to exclude all sites with a .gov TLD:
 
    ```
-   $ ./runscan.sh --exclude gov
+   $ ./runscan.sh --exclude .gov
    ```
-   To exclude multiple TLD's from a scan, pass in each TLD separated by a comma,
+   To exclude multiple TLDs from a scan, pass in each TLD separated by a comma,
    with no space between. For example, if you wanted to exclude all sites with
-   .org and .net TLD:
+   .org and .net TLDs:
    ```
-   $ ./runscan.sh --exclude org,net
+   $ ./runscan.sh --exclude .org,.net
    ```
 
    You can load another extension to run in parallel to Privacy Badger during a scan.
