@@ -364,9 +364,15 @@ class Crawler:
             manifest_path = os.path.join(new_extension_path, "manifest.json")
             with open(manifest_path, "r", encoding="utf-8") as f:
                 manifest = json.load(f)
+
             # this key and the extension ID
             # must both be derived from the same private key
             manifest['key'] = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArMdgFkGsm7nOBr/9qkx8XEcmYSu1VkIXXK94oXLz1VKGB0o2MN+mXL/Dsllgkh61LZgK/gVuFFk89e/d6Vlsp9IpKLANuHgyS98FKx1+3sUoMujue+hyxulEGxXXJKXhk0kGxWdE0IDOamFYpF7Yk0K8Myd/JW1U2XOoOqJRZ7HR6is1W6iO/4IIL2/j3MUioVqu5ClT78+fE/Fn9b/DfzdX7RxMNza9UTiY+JCtkRTmm4ci4wtU1lxHuVmWiaS45xLbHphQr3fpemDlyTmaVoE59qG5SZZzvl6rwDah06dH01YGSzUF1ezM2IvY9ee1nMSHEadQRQ2sNduNZWC9gwIDAQAB" # noqa:E501 pylint:disable=line-too-long
+
+            # remove the 5MB limit on Chrome extension local storage
+            if 'unlimitedStorage' not in manifest['permissions']:
+                manifest['permissions'].append('unlimitedStorage')
+
             with open(manifest_path, "w", encoding="utf-8") as f:
                 json.dump(manifest, f)
 
