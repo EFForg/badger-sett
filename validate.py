@@ -51,6 +51,18 @@ if not new_js['action_map'].keys():
     print("Error: Action map empty.")
     sys.exit(1)
 
+colorama.init()
+C_GREEN = colorama.Style.BRIGHT + colorama.Fore.GREEN
+C_RED = colorama.Style.BRIGHT + colorama.Fore.RED
+C_YELLOW = colorama.Style.BRIGHT + colorama.Fore.YELLOW
+C_RESET = colorama.Style.RESET_ALL
+
+# warn when BADGER_JSON_NEW is close to or exceeds QUOTA_BYTES
+size_bytes = len(json.dumps(new_js))
+if size_bytes >= (5242880 / 100 * 80):
+    size_mb = round(size_bytes / 1024 / 1024, 2)
+    print(f"{C_RED}WARNING{C_RESET}: {new_path} serializes to {size_mb} MB\n")
+
 old_keys = set(old_js['action_map'].keys())
 new_keys = set(new_js['action_map'].keys())
 
@@ -58,12 +70,6 @@ overlap = old_keys & new_keys
 # pylint: disable-next=consider-using-f-string
 print("New action map has %d new domains and dropped %d old domains\n" %
       (len(new_keys - overlap), len(old_keys - overlap)))
-
-colorama.init()
-C_GREEN = colorama.Style.BRIGHT + colorama.Fore.GREEN
-C_RED = colorama.Style.BRIGHT + colorama.Fore.RED
-C_YELLOW = colorama.Style.BRIGHT + colorama.Fore.YELLOW
-C_RESET = colorama.Style.RESET_ALL
 
 extract = tldextract.TLDExtract(cache_dir=False, include_psl_private_domains=True)
 
