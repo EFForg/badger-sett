@@ -42,6 +42,7 @@ from selenium.webdriver.chrome.options import Options as ChromeOptions
 from selenium.webdriver.edge.options import Options as EdgeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from tldextract import TLDExtract
 from tranco import Tranco
@@ -649,10 +650,20 @@ class Crawler:
         link_href, link_el = random.choice(links)
         self.logger.info("Clicking on %s", link_href)
         try:
+            curl = self.driver.current_url
+            cwindows = self.driver.window_handles
+
             try:
                 link_el.click()
             except (ElementClickInterceptedException, ElementNotInteractableException, ElementNotVisibleException):
                 self.driver.execute_script("arguments[0].click()", link_el)
+
+            try:
+                WebDriverWait(self.driver, 15).until(EC.any_of(
+                    EC.url_changes(curl),
+                    EC.new_window_is_opened(cwindows)))
+            except TimeoutException:
+                pass
         except WebDriverException as e:
             self.logger.error(
                 "Failed to visit link (%s): %s", type(e).__name__, e.msg)
