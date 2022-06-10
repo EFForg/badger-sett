@@ -473,14 +473,11 @@ class Crawler:
         """Load saved user data into Privacy Badger after a restart"""
         self.load_extension_page()
 
-        script = (
+        self.driver.execute_script(
             "(function (data) {"
-            "  data = JSON.parse(data);"
             "  let bg = chrome.extension.getBackgroundPage();"
             "  bg.badger.mergeUserData(data);"
-            "}(arguments[0]));"
-        )
-        self.driver.execute_script(script, json.dumps(data))
+            "}(arguments[0]));", data)
 
         # force Badger data to get written to disk
         for store_name in self.storage_objects:
