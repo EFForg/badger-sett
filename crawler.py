@@ -49,13 +49,12 @@ from xvfbwrapper import Xvfb
 
 
 CHROME_EXT_ID = 'mcgekeccgjgcmhnhbabplanchdogjcnh'
-CHROME_URL_FMT = 'chrome-extension://%s/'
+CHROME_URL_PREFIX = 'chrome-extension://'
 CHROMEDRIVER_PATH = 'chromedriver'
-FF_URL_FMT = 'moz-extension://%s/'
+
 FF_EXT_ID = 'jid1-MnnxcxisBPnSXQ@jetpack'
 FF_UUID = 'd56a5b99-51b6-4e83-ab23-796216679614'
-BACKGROUND = '_generated_background_page.html'
-OPTIONS = 'skin/options.html'
+FF_URL_PREFIX = 'moz-extension://'
 
 CHROME = 'chrome'
 FIREFOX = 'firefox'
@@ -429,25 +428,22 @@ class Crawler:
         self.driver.set_script_timeout(self.timeout)
 
         # wait for Badger to finish initializing
-        self.load_extension_page(OPTIONS)
+        self.load_extension_page()
         wait_for_script(self.driver, (
             "return chrome.extension.getBackgroundPage()"
             ".badger.INITIALIZED"
         ))
 
-    def load_extension_page(self, page, tries=3):
-        """
-        Load a page in the Privacy Badger extension. `page` should either be
-        BACKGROUND or OPTIONS.
-        """
+    def load_extension_page(self, tries=3):
+        """Loads Privacy Badger's options page."""
+
         if self.browser in (CHROME, EDGE):
-            EXT_URL = (CHROME_URL_FMT + page) % CHROME_EXT_ID
+            url = f'{CHROME_URL_PREFIX}{CHROME_EXT_ID}/skin/options.html'
         elif self.browser == FIREFOX:
-            EXT_URL = (FF_URL_FMT + page) % FF_UUID
+            url = f'{FF_URL_PREFIX}{FF_UUID}/skin/options.html'
 
         def _load_ext_page():
-            self.driver.get(EXT_URL)
-
+            self.driver.get(url)
             # wait for extension page to be ready
             wait_for_script(self.driver, "return chrome.extension")
 
@@ -458,23 +454,23 @@ class Crawler:
                 self.handle_alerts_and(_load_ext_page)
                 break
             except (MaxRetryError, ProtocolError) as e:
-                self.logger.warning("Error loading %s:\n%s", page, str(e))
+                self.logger.warning("Error loading extension page:\n%s", str(e))
                 self.restart_browser()
             except TimeoutException:
                 num_timeouts += 1
-                self.logger.warning("Timed out loading %s", page)
+                self.logger.warning("Timed out loading extension page")
             except WebDriverException as err:
-                self.logger.warning("Error loading %s (%s): %s", page, type(err).__name__, err.msg)
+                self.logger.warning("Error loading extension page (%s): %s", type(err).__name__, err.msg)
                 if should_restart(err):
                     self.restart_browser()
         else:
             if num_timeouts >= tries:
                 self.restart_browser()
-            raise WebDriverException("Failed to load " + page)
+            raise WebDriverException("Failed to load extension page")
 
     def load_user_data(self, data):
         """Load saved user data into Privacy Badger after a restart"""
-        self.load_extension_page(OPTIONS)
+        self.load_extension_page()
 
         script = (
             "(function (data) {"
@@ -500,7 +496,7 @@ class Crawler:
         """Extract the objects Privacy Badger learned during its training
         run."""
         data = {}
-        self.load_extension_page(OPTIONS)
+        self.load_extension_page()
         for store_name in self.storage_objects:
             data[store_name] = self.driver.execute_async_script((
                 "let done = arguments[arguments.length - 1],"
@@ -518,7 +514,7 @@ class Crawler:
 
     def clear_data(self):
         """Clear the training data Privacy Badger starts with."""
-        self.load_extension_page(OPTIONS)
+        self.load_extension_page()
         self.driver.execute_async_script((
             "let done = arguments[arguments.length - 1];"
             "chrome.runtime.sendMessage({"
@@ -727,7 +723,7 @@ class Crawler:
 
         self.clear_data()
 
-        self.load_extension_page(OPTIONS)
+        self.load_extension_page()
 
         if self.no_blocking:
             # set blocking threshold to infinity,
@@ -854,7 +850,7 @@ class Crawler:
             data = self.dump_data()
             self.log_snitch_map_changes(old_snitches, data['snitch_map'])
         except WebDriverException as e:
-            # If we can't load the background page here, just quit :(
+            # If we can't load the options page here, just quit :(
             self.logger.error(
                 "Could not get Badger storage!\n"
                 "%s: %s", type(e).__name__, e.msg)
@@ -960,7 +956,7 @@ class SurveyCrawler(Crawler):
         self.storage_objects = ['snitch_map']
 
     def set_passive_mode(self):
-        self.load_extension_page(OPTIONS)
+        self.load_extension_page()
         script = '''
 chrome.runtime.sendMessage({
     type: "updateSettings",
