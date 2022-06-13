@@ -193,19 +193,29 @@ def internal_link(page_url, link_href):
     wanted_paths.append('{d.year}{d.month:02}{d.day:02}'.format(d=today))
     wanted_paths.append('{d.year}-{d.month:02}-{d.day:02}'.format(d=today))
 
-    # only keep http(s) links that point somewhere else within the site we are on
-    if not link_href.startswith(page_url) or link_href.startswith(page_url + '#'):
+    link_parts = urlparse(link_href)
+    if link_parts.path == "/":
         return False
 
-    hpath = urlparse(link_href).path
-    if hpath == "/":
-        return False
+    # only keep links that point somewhere else within the site we are on
+    if link_href.startswith(page_url):
+        if link_href.startswith(page_url + '#'):
+            return False
+
+        # limit to news/blog/media articles for now
+        if all('/' + x + '/' not in link_parts.path or link_parts.path.endswith('/' + x + '/') for x in wanted_paths):
+            return False
+
+    # also keep links that point to different news/blog/media
+    # subdomains of the same base domain
+    else:
+        netloc_parts = link_parts.netloc.split('.')
+        if netloc_parts[0] not in wanted_paths or not page_url.endswith('.'.join(netloc_parts[1:]) + '/'):
+            return False
+
     # if there is a file extension, limit to allowed extensions
-    ext = os.path.splitext(hpath)[1]
+    ext = os.path.splitext(link_parts.path)[1]
     if ext and ext not in ('.html', '.php', '.htm', '.aspx', '.shtml', '.jsp', '.asp'):
-        return False
-    # limit to news articles for now
-    if not any('/' + x + '/' in hpath and not hpath.endswith('/' + x + '/') for x in wanted_paths):
         return False
 
     return True
