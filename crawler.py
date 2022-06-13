@@ -658,7 +658,7 @@ class Crawler:
 
     def click_internal_link(self):
         links = self.gather_internal_links()
-        if not links:
+        if not links or len(links) < 10:
             return
 
         # sort by link length (try to prioritize article links)
