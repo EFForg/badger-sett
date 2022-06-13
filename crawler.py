@@ -431,9 +431,11 @@ class Crawler:
         # wait for Badger to finish initializing
         self.load_extension_page()
         wait_for_script(self.driver, (
-            "return chrome.extension.getBackgroundPage()"
-            ".badger.INITIALIZED"
-        ))
+            "let badger = chrome.extension.getBackgroundPage().badger;"
+            "if (badger.INITIALIZED) {"
+            "  badger.getSettings().setItem('showIntroPage', false);"
+            "  return true;"
+            "}"))
 
     def load_extension_page(self, tries=3):
         """Loads Privacy Badger's options page."""
