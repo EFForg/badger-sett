@@ -181,14 +181,17 @@ def dismiss_alert(driver, accept=False):
 
 def internal_link(page_url, link_href):
     # path components we care about when looking for links to click
-    wanted_paths = ["news", "article", "articles", "story", "video",
-                    "videos", "media", "artikel", "news-story", "noticias",
-                    "actualite", "actualites", "nachrichten", "nyheter",
-                    "noticia", "haber", "notizie"]
-    start_year = datetime.today().year - 2
+    wanted_paths = ["news", "article", "articles", "story", "blog", "world",
+                    "video", "videos", "media", "artikel", "news-story",
+                    "noticias", "actualite", "actualites", "nachrichten",
+                    "nyheter", "noticia", "haber", "notizie"]
+    today = datetime.today()
+    start_year = today.year - 2
     wanted_paths = [
         str(year) for year in range(start_year, start_year + 3)
     ] + wanted_paths
+    wanted_paths.append('{d.year}{d.month:02}{d.day:02}'.format(d=today))
+    wanted_paths.append('{d.year}-{d.month:02}-{d.day:02}'.format(d=today))
 
     # only keep http(s) links that point somewhere else within the site we are on
     if not link_href.startswith(page_url) or link_href.startswith(page_url + '#'):
