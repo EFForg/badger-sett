@@ -179,6 +179,35 @@ def dismiss_alert(driver, accept=False):
         pass
 
 
+def internal_link(page_url, link_href):
+    # path components we care about when looking for links to click
+    wanted_paths = ["news", "article", "articles", "story", "video",
+                    "videos", "media", "artikel", "news-story", "noticias",
+                    "actualite", "actualites", "nachrichten", "nyheter",
+                    "noticia", "haber", "notizie"]
+    start_year = datetime.today().year - 2
+    wanted_paths = [
+        str(year) for year in range(start_year, start_year + 3)
+    ] + wanted_paths
+
+    # only keep http(s) links that point somewhere else within the site we are on
+    if not link_href.startswith(page_url) or link_href.startswith(page_url + '#'):
+        return False
+
+    hpath = urlparse(link_href).path
+    if hpath == "/":
+        return False
+    # if there is a file extension, limit to allowed extensions
+    ext = os.path.splitext(hpath)[1]
+    if ext and ext not in ('.html', '.php', '.htm', '.aspx', '.shtml', '.jsp', '.asp'):
+        return False
+    # limit to news articles for now
+    if not any('/' + x + '/' in hpath and not hpath.endswith('/' + x + '/') for x in wanted_paths):
+        return False
+
+    return True
+
+
 class Crawler:
     def __init__(self, args):
         self.browser = args.browser
@@ -576,16 +605,6 @@ class Crawler:
         links = []
         curl = self.driver.current_url
 
-        # path components we care about when looking for links to click
-        wanted_paths = ["news", "article", "articles", "story", "video",
-                        "videos", "media", "artikel", "news-story", "noticias",
-                        "actualite", "actualites", "nachrichten", "nyheter",
-                        "noticia", "haber", "notizie"]
-        start_year = datetime.today().year - 2
-        wanted_paths = [
-            str(year) for year in range(start_year, start_year + 3)
-        ] + wanted_paths
-
         for i, el in enumerate(self.driver.find_elements(By.TAG_NAME, 'a')):
             # limit to checking 200 links
             if i > 199:
@@ -609,19 +628,7 @@ class Crawler:
                     self.logger.warning("Skipping unexpected href: %s", href)
                     continue
 
-            # only keep http(s) links that point somewhere else within the site we are on
-            if not href.startswith("http") or not href.startswith(curl) or href.startswith(curl + '#'):
-                continue
-
-            hpath = urlparse(href).path
-            if hpath == "/":
-                continue
-            # if there is a file extension, limit to allowed extensions
-            ext = os.path.splitext(hpath)[1]
-            if ext and ext not in ('.html', '.php', '.htm', '.aspx', '.shtml', '.jsp', '.asp'):
-                continue
-            # limit to news articles for now
-            if not any('/' + x + '/' in hpath and not hpath.endswith('/' + x + '/') for x in wanted_paths):
+            if not href.startswith("http") or not internal_link(curl, href):
                 continue
 
             # remove duplicates
