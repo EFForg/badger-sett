@@ -88,6 +88,8 @@ ap.add_argument('--wait-time', type=float, default=5.0, help=(
 ))
 ap.add_argument('--log-stdout', action='store_true', default=False,
                 help='If set, log to stdout as well as log.txt')
+ap.add_argument('--take-screenshots', action='store_true', default=False,
+                help=f"Saves screenshots to {os.path.join('OUT_DIR', 'screenshots')}")
 ap.add_argument('--load-extension', default=None,
                 help='If set, load arbitrary extension to run in parallel to PB')
 
@@ -235,6 +237,7 @@ class Crawler:
         self.num_sites = args.num_sites
         self.out_dir = args.out_dir
         self.pb_dir = args.pb_dir
+        self.take_screenshots = args.take_screenshots
         self.timeout = args.timeout
         self.wait_time = args.wait_time
 
@@ -618,6 +621,16 @@ class Crawler:
 
         raise WebDriverException(msg)
 
+    def take_screenshot(self, domain):
+        pathlib.Path(self.out_dir + '/screenshots').mkdir(exist_ok=True)
+        filename = os.path.join(self.out_dir, "screenshots", "".join((
+            str(int(time.time())),
+            "-",
+            re.sub(r'[^a-z0-9]', '-', domain.lower()[:100]),
+            ".png")))
+        if not self.driver.save_screenshot(filename):
+            self.logger.warning("Failed to save screenshot for %s", domain)
+
     def gather_internal_links(self):
         links = []
         curl = self.driver.current_url
@@ -715,8 +728,13 @@ class Crawler:
         if len(list(handles)) > 1:
             for handle in handles[1:]:
                 self.driver.switch_to.window(handle)
+                if self.take_screenshots:
+                    self.take_screenshot(domain + "-" + self.driver.current_url)
                 self.driver.close()
             self.driver.switch_to.window(handles[0])
+
+        if self.take_screenshots:
+            self.take_screenshot(domain + "-" + self.driver.current_url)
 
         return url
 
