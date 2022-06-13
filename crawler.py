@@ -9,6 +9,7 @@ import glob
 import json
 import logging
 import os
+import pathlib
 import random
 import re
 import subprocess
@@ -246,6 +247,7 @@ class Crawler:
         log_fmt = logging.Formatter('%(asctime)s %(message)s')
 
         # by default, just log to file
+        pathlib.Path(self.out_dir).mkdir(exist_ok=True)
         fh = logging.FileHandler(os.path.join(self.out_dir, 'log.txt'))
         fh.setFormatter(log_fmt)
         self.logger.addHandler(fh)
