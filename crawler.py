@@ -470,6 +470,8 @@ class Crawler:
         self.driver.set_page_load_timeout(self.timeout)
         self.driver.set_script_timeout(self.timeout)
 
+        self.driver.maximize_window()
+
         # wait for Badger to finish initializing
         self.load_extension_page()
         wait_for_script(self.driver, (
@@ -1094,7 +1096,7 @@ if __name__ == '__main__':
     args = ap.parse_args()
 
     # create an XVFB virtual display (to avoid opening an actual browser)
-    with Xvfb(width=1280, height=720) if not args.no_xvfb else contextlib.suppress():
+    with Xvfb(width=1920, height=1200) if not args.no_xvfb else contextlib.suppress():
         if args.survey:
             crawler = SurveyCrawler(args)
         else:
