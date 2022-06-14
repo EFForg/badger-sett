@@ -631,6 +631,22 @@ class Crawler:
         if not self.driver.save_screenshot(filename):
             self.logger.warning("Failed to save screenshot for %s", domain)
 
+    def scroll_page(self):
+        # split self.wait_time into INTERVAL_SEC intervals
+        INTERVAL_SEC = 0.1
+        for _ in range(int(self.wait_time / INTERVAL_SEC)):
+            time.sleep(INTERVAL_SEC)
+
+            # scroll a bit during every interval
+            # dismiss any modal dialogs (alerts)
+            while True:
+                try:
+                    self.driver.execute_script("window.scrollBy(0, arguments[0]);",
+                        abs(random.normalvariate(50, 25)))
+                    break
+                except UnexpectedAlertPresentException:
+                    dismiss_alert(self.driver)
+
     def gather_internal_links(self):
         links = []
         curl = self.driver.current_url
@@ -704,7 +720,8 @@ class Crawler:
             self.logger.error(
                 "Failed to visit link (%s): %s", type(e).__name__, e.msg)
         else:
-            time.sleep(self.wait_time)
+            # TODO wait for the page to actually load first
+            self.scroll_page()
 
     def get_domain(self, domain):
         """
@@ -719,7 +736,7 @@ class Crawler:
         self.raise_on_chrome_error_pages()
         self.raise_on_security_pages()
 
-        time.sleep(self.wait_time)
+        self.scroll_page()
 
         self.click_internal_link()
 
