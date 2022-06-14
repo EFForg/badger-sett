@@ -81,7 +81,7 @@ ap.add_argument('--exclude', default=None,
                 help='Exclude sites from scan whose domains end with one of the specified comma-separated suffixes')
 ap.add_argument('--no-blocking', action='store_true', default=False,
                 help="Disables blocking and snitch_map limits in Privacy Badger")
-ap.add_argument('--timeout', type=float, default=30.0,
+ap.add_argument('--timeout', type=float, default=60.0,
                 help='Amount of time to allow each site to load, in seconds')
 ap.add_argument('--wait-time', type=float, default=5.0, help=(
     "Amount of time to wait on each site after it loads, in seconds"
