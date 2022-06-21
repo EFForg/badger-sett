@@ -196,7 +196,10 @@ def internal_link(page_url, link_href):
     wanted_paths.append('{d.year}{d.month:02}{d.day:02}'.format(d=today))
     wanted_paths.append('{d.year}-{d.month:02}-{d.day:02}'.format(d=today))
 
-    link_parts = urlparse(link_href)
+    try:
+        link_parts = urlparse(link_href)
+    except ValueError:
+        return False
     if link_parts.path == "/":
         return False
 
