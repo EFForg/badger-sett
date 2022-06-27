@@ -497,7 +497,7 @@ class Crawler:
             "  data: { showIntroPage: false }"
             "}, done);")
 
-    def load_extension_page(self, tries=3):
+    def load_extension_page(self):
         """Loads Privacy Badger's options page."""
 
         if self.browser in (CHROME, EDGE):
@@ -510,9 +510,11 @@ class Crawler:
             # wait for extension page to be ready
             wait_for_script(self.driver, "return chrome.extension")
 
+        max_tries = 7
+        max_timeouts = 3
         num_timeouts = 0
 
-        for _ in range(tries):
+        for _ in range(max_tries):
             try:
                 self.handle_alerts_and(_load_ext_page)
                 break
@@ -522,13 +524,16 @@ class Crawler:
             except TimeoutException:
                 num_timeouts += 1
                 self.logger.warning("Timed out loading extension page")
+                if num_timeouts >= max_timeouts:
+                    num_timeouts = 0
+                    self.restart_browser()
             except WebDriverException as err:
-                self.logger.warning("Error loading extension page (%s): %s", type(err).__name__, err.msg)
+                self.logger.warning(
+                    "Error loading extension page (%s): %s",
+                    type(err).__name__, err.msg)
                 if should_restart(err):
                     self.restart_browser()
         else:
-            if num_timeouts >= tries:
-                self.restart_browser()
             raise WebDriverException("Failed to load extension page")
 
     def load_user_data(self, data):
@@ -921,8 +926,7 @@ class Crawler:
             num_errors = num_total - num_successes
             self.logger.info(
                 "Finished scan. Visited %d sites and errored on %d (%.1f%%)",
-                num_successes, num_errors, (num_errors / num_total * 100)
-            )
+                num_successes, num_errors, (num_errors / num_total * 100))
 
         try:
             if self.last_data:
