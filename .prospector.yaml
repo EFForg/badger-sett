@@ -1,3 +1,5 @@
+strictness: medium
+
 pylint:
   disable:
     - invalid-name
