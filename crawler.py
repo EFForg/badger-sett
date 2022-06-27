@@ -167,10 +167,10 @@ def should_restart(e):
 
 def wait_for_script(driver, script, *script_args, execute_async=False, timeout=30,
                     message="Timed out waiting for execute_script to eval to True"):
-    script_fn = lambda dr: dr.execute_script(script, *script_args)
-    if execute_async:
-        script_fn = lambda dr: dr.execute_async_script(script, *script_args)
-    return WebDriverWait(driver, timeout).until(script_fn, message)
+    def execute_script(dr):
+        if execute_async: return dr.execute_async_script(script, *script_args)
+        return dr.execute_script(script, *script_args)
+    return WebDriverWait(driver, timeout).until(execute_script, message)
 
 
 def dismiss_alert(driver, accept=False):
