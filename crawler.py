@@ -165,10 +165,12 @@ def should_restart(e):
     return False
 
 
-def wait_for_script(driver, script, timeout=30, message=(
-        "Timed out waiting for execute_script to eval to True")):
-    return WebDriverWait(driver, timeout).until(
-        lambda driver: driver.execute_script(script), message)
+def wait_for_script(driver, script, *script_args, execute_async=False, timeout=30,
+                    message="Timed out waiting for execute_script to eval to True"):
+    script_fn = lambda dr: dr.execute_script(script, *script_args)
+    if execute_async:
+        script_fn = lambda dr: dr.execute_async_script(script, *script_args)
+    return WebDriverWait(driver, timeout).until(script_fn, message)
 
 
 def dismiss_alert(driver, accept=False):
@@ -483,11 +485,17 @@ class Crawler:
         # wait for Badger to finish initializing
         self.load_extension_page()
         wait_for_script(self.driver, (
-            "let badger = chrome.extension.getBackgroundPage().badger;"
-            "if (badger.INITIALIZED) {"
-            "  badger.getSettings().setItem('showIntroPage', false);"
-            "  return true;"
-            "}"))
+            "let done = arguments[arguments.length - 1];"
+            "chrome.runtime.sendMessage({"
+            "  type: 'isBadgerInitialized'"
+            "}, r => done(r));"), execute_async=True)
+        # also disable the welcome page
+        self.driver.execute_async_script(
+            "let done = arguments[arguments.length - 1];"
+            "chrome.runtime.sendMessage({"
+            "  type: 'updateSettings',"
+            "  data: { showIntroPage: false }"
+            "}, done);")
 
     def load_extension_page(self, tries=3):
         """Loads Privacy Badger's options page."""
@@ -527,6 +535,8 @@ class Crawler:
         """Load saved user data into Privacy Badger after a restart"""
         self.load_extension_page()
 
+        # TODO migrate away from getBackgroundPage()
+        # TODO add message that calls mergeUserData only, no blockWidgetDomains or anything else
         self.driver.execute_script(
             "(function (data) {"
             "  let bg = chrome.extension.getBackgroundPage();"
@@ -536,13 +546,11 @@ class Crawler:
         # force Badger data to get written to disk
         for store_name in self.storage_objects:
             self.driver.execute_async_script((
-                "let done = arguments[arguments.length - 1],"
-                "  store_name = arguments[0];"
+                "let done = arguments[arguments.length - 1];"
                 "chrome.runtime.sendMessage({"
                 "  type: 'syncStorage',"
-                "  storeName: store_name"
-                "}, done);"
-            ), store_name)
+                "  storeName: arguments[0]"
+                "}, done);"), store_name)
 
     def dump_data(self):
         """Extract the objects Privacy Badger learned during its training
