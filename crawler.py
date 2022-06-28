@@ -540,13 +540,12 @@ class Crawler:
         """Load saved user data into Privacy Badger after a restart"""
         self.load_extension_page()
 
-        # TODO migrate away from getBackgroundPage()
-        # TODO add message that calls mergeUserData only, no blockWidgetDomains or anything else
-        self.driver.execute_script(
-            "(function (data) {"
-            "  let bg = chrome.extension.getBackgroundPage();"
-            "  bg.badger.mergeUserData(data);"
-            "}(arguments[0]));", data)
+        self.driver.execute_async_script((
+            "let done = arguments[arguments.length - 1];"
+            "chrome.runtime.sendMessage({"
+            "  type: 'mergeData',"
+            "  data: arguments[0]"
+            "}, done);"), data)
 
         # force Badger data to get written to disk
         for store_name in self.storage_objects:
