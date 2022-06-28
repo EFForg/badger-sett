@@ -649,18 +649,16 @@ class Crawler:
     def scroll_page(self):
         # split self.wait_time into INTERVAL_SEC intervals
         INTERVAL_SEC = 0.1
+
+        def _scroll_down():
+            self.driver.execute_script(
+                "window.scrollBy(0, arguments[0]);",
+                abs(random.normalvariate(50, 25)))
+
         for _ in range(int(self.wait_time / INTERVAL_SEC)):
             time.sleep(INTERVAL_SEC)
-
             # scroll a bit during every interval
-            # dismiss any modal dialogs (alerts)
-            while True:
-                try:
-                    self.driver.execute_script("window.scrollBy(0, arguments[0]);",
-                        abs(random.normalvariate(50, 25)))
-                    break
-                except UnexpectedAlertPresentException:
-                    dismiss_alert(self.driver)
+            self.handle_alerts_and(_scroll_down)
 
     def gather_internal_links(self):
         links = []
