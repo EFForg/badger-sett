@@ -10,6 +10,8 @@ import tldextract
 
 from lib.mdfp import flag_potential_mdfp_domains
 
+old_path = None
+new_path = None
 
 # ./validate.py old.json new.json
 if len(sys.argv) == 3:
@@ -17,7 +19,6 @@ if len(sys.argv) == 3:
     new_path = sys.argv[2]
 # ./validate.py new.json
 elif len(sys.argv) == 2:
-    old_path = None
     new_path = sys.argv[1]
 else:
     print(f"Usage: {sys.argv[0]} [BADGER_JSON_OLD] BADGER_JSON_NEW")
