@@ -179,6 +179,13 @@ if 'tracking_map' in new_js:
 
             print(f"  {C_YELLOW}{domain}{C_RESET} on", ", ".join(tm[base].keys()))
 
+            # show known fingerprinter scripts
+            for script_domain in new_js['fp_scripts']:
+                if script_domain.endswith(domain):
+                    for script_path in new_js['fp_scripts'][script_domain]:
+                        print(f"   • {script_domain}{script_path}")
+
+
 print("")
 
 sys.exit(0)
