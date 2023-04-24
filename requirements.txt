@@ -1,6 +1,6 @@
 colorama==0.3.9
 prospector==1.9.0
-selenium==4.8.3
+selenium
 tldextract==3.1.2
 tranco==0.3
 xvfbwrapper==0.2.9
