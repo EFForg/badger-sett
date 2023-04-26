@@ -6,8 +6,8 @@ import sys
 from collections import defaultdict
 
 import colorama
-import tldextract
 
+from lib.basedomain import extract
 from lib.mdfp import flag_potential_mdfp_domains
 
 old_path = None
@@ -71,8 +71,6 @@ overlap = old_keys & new_keys
 # pylint: disable-next=consider-using-f-string
 print("New action map has %d new domains and dropped %d old domains\n" %
       (len(new_keys - overlap), len(old_keys - overlap)))
-
-extract = tldextract.TLDExtract(cache_dir=False, include_psl_private_domains=True)
 
 BLOCKED = ("block", "cookieblock")
 
