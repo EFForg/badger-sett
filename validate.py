@@ -158,36 +158,43 @@ flag_potential_mdfp_domains(new_js['snitch_map'], extract)
 
 # list unblocked canvas fingerprinters
 # https://github.com/EFForg/privacybadger/issues/1527
-if 'tracking_map' in new_js:
-    tm = new_js['tracking_map']
+if 'tracking_map' in new_js and 'fp_scripts' in new_js:
     print_canvas_header = True
 
-    for base in sorted(new_domains):
+    for domain in sorted(new_js['fp_scripts'], key=lambda d: extract(d).registered_domain or d):
+        already_known_hosts = (
+            'cdnjs.cloudflare.com',
+            'cdn.jsdelivr.net',
+            'd1af033869koo7.cloudfront.net',
+            'd38xvr37kwwhcm.cloudfront.net',
+            'd.alicdn.com',
+            'fp-cdn.azureedge.net',
+            'gadasource.storage.googleapis.com',
+            'sdtagging.azureedge.net',
+        )
+        if domain in already_known_hosts:
+            continue
+
+        base = extract(domain).registered_domain or domain
+
         if len(new_js['snitch_map'][base]) < 3: # TRACKING_THRESHOLD
             continue
 
-        for domain in new_domains[base]:
-            if new_js['action_map'][domain]['heuristicAction'] == "block":
+        if new_js['action_map'][base]['heuristicAction'] != "cookieblock":
+            if domain not in new_js['action_map']:
+                continue
+            if new_js['action_map'][domain]['heuristicAction'] != "cookieblock":
                 continue
 
-            if not any(True for tracking in tm.get(base, {}).values() if "canvas" in tracking):
-                continue
+        if print_canvas_header:
+            print(f"\n{C_YELLOW}??{C_RESET} Unblocked canvas fingerprinters:\n")
+            print_canvas_header = False
 
-            if print_canvas_header:
-                print(f"\n{C_YELLOW}??{C_RESET} Unblocked canvas fingerprinters:\n")
-                print_canvas_header = False
+        domain_fmt = f"{C_YELLOW}{domain}{C_RESET}"
+        print(f"  {domain_fmt} on", ", ".join(new_js['tracking_map'][base].keys()))
 
-            domain_fmt = domain
-            if new_js['action_map'][domain]['heuristicAction'] == "cookieblock":
-                domain_fmt = f"{C_YELLOW}{domain}{C_RESET}"
-            print(f"  {domain_fmt} on", ", ".join(tm[base].keys()))
-
-            # show known fingerprinter scripts
-            if 'fp_scripts' not in new_js:
-                continue
-            if domain in new_js['fp_scripts']:
-                for script_path in new_js['fp_scripts'][domain]:
-                    print(f"   • {domain}{script_path}")
+        for script_path in new_js['fp_scripts'][domain]:
+            print(f"   • {domain}{script_path}")
 
 print("")
 
