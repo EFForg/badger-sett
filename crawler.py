@@ -40,6 +40,7 @@ from selenium.common.exceptions import (
 )
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.edge.options import Options as EdgeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.firefox.service import Service as FirefoxService
@@ -448,7 +449,8 @@ class Crawler:
             for _ in range(5):
                 try:
                     if self.browser == CHROME:
-                        self.driver = webdriver.Chrome(self.chromedriver_path, options=opts)
+                        service = ChromeService(executable_path=self.chromedriver_path)
+                        self.driver = webdriver.Chrome(options=opts, service=service)
                     else:
                         self.driver = webdriver.Edge(options=opts)
                 except ConnectionResetError as e:
