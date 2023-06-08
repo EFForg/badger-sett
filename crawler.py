@@ -673,6 +673,9 @@ class Crawler:
 
             try:
                 href = el.get_property('href')
+            except AttributeError:
+                # AttributeError: 'NoneType' object has no attribute 'get_property'
+                continue
             except StaleElementReferenceException:
                 continue
 
