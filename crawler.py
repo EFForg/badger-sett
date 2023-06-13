@@ -145,6 +145,7 @@ def size_of(data):
 def should_restart(e):
     ERROR_STRINGS = (
         "chrome not reachable",
+        "disconnected: not connected to DevTools",
         "response from marionette",
         "tab crashed",
         "TypeError: this.curBrowser.contentBrowser is null",
@@ -616,7 +617,7 @@ class Crawler:
         actual_page_url = self.handle_alerts_and(
             lambda: self.driver.execute_script("return document.location.href"))
 
-        if not actual_page_url.startswith("chrome-error://"):
+        if not actual_page_url or not actual_page_url.startswith("chrome-error://"):
             return
 
         error_text = self.driver.find_element(By.TAG_NAME, "body").text
