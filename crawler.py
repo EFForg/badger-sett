@@ -53,7 +53,6 @@ from xvfbwrapper import Xvfb
 
 CHROME_EXT_ID = 'mcgekeccgjgcmhnhbabplanchdogjcnh'
 CHROME_URL_PREFIX = 'chrome-extension://'
-CHROMEDRIVER_PATH = 'chromedriver'
 
 FF_EXT_ID = 'jid1-MnnxcxisBPnSXQ@jetpack'
 FF_UUID = 'd56a5b99-51b6-4e83-ab23-796216679614'
@@ -111,7 +110,7 @@ ap.add_argument('--pb-dir', '--pb-path', dest='pb_dir', default='./privacybadger
                 help='Path to the Privacy Badger source checkout')
 ap.add_argument('--browser-binary', default=None,
                 help="Path to the browser binary, for example /usr/bin/google-chrome-beta")
-ap.add_argument('--chromedriver-path', default=CHROMEDRIVER_PATH,
+ap.add_argument('--chromedriver-path', default=None,
                 help="Path to the ChromeDriver binary")
 
 ap.add_argument('--firefox-tracking-protection',
@@ -447,11 +446,16 @@ class Crawler:
             opts.set_capability("acceptInsecureCerts", False);
             opts.set_capability("unhandledPromptBehavior", "ignore");
 
+            # TODO Edge-specific settings? disable Tracking Prevention by default?
+
             for _ in range(5):
                 try:
                     if self.browser == CHROME:
-                        service = ChromeService(executable_path=self.chromedriver_path)
-                        self.driver = webdriver.Chrome(options=opts, service=service)
+                        if self.chromedriver_path:
+                            service = ChromeService(executable_path=self.chromedriver_path)
+                            self.driver = webdriver.Chrome(options=opts, service=service)
+                        else:
+                            self.driver = webdriver.Chrome(options=opts)
                     else:
                         self.driver = webdriver.Edge(options=opts)
                 except ConnectionResetError as e:
