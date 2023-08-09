@@ -26,6 +26,7 @@ else \
   useradd -ms /bin/bash -u $UID -g $GID $UNAME; \
 fi
 
+USER $UNAME
 ENV USER=$UNAME
 ENV HOME=/home/$USER
 ENV OUTPATH=$HOME/out/
@@ -35,17 +36,17 @@ ENV EXTENSIONS=$HOME/parallel-extensions/
 WORKDIR $HOME
 
 COPY requirements.txt .
-RUN pip3 install -r requirements.txt
+RUN pip3 install --user -r requirements.txt
 
 COPY crawler.py validate.py docker-entry.sh $HOME/
 COPY domain-lists $HOME/domain-lists
 COPY privacybadger $PBPATH
 COPY parallel-extensions $EXTENSIONS
 
+USER root
 RUN chown -R $USER:$USER $PBPATH
-RUN mkdir -p $OUTPATH
-RUN chown -R $USER:$USER $OUTPATH
-
 USER $UNAME
+RUN mkdir -p $OUTPATH
+
 ENTRYPOINT ["./docker-entry.sh"]
 CMD []
