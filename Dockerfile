@@ -16,6 +16,7 @@ RUN if [ $(getent group $GID) ]; then \
   old_group=$(getent group $GID | cut -d: -f1); \
   groupmod -n $UNAME $old_group; \
 else \
+  echo "Creating group $UNAME ($GID)"; \
   groupadd -g $GID $UNAME; \
 fi
 
@@ -23,6 +24,7 @@ RUN if [ $(getent passwd $UID) ]; then \
   old_uname=$(getent passwd $UID | cut -d: -f1); \
   usermod -l $UNAME -g $GID -m -d /home/$UNAME -s /bin/bash $old_uname; \
 else \
+  echo "Creating user $UNAME ($UID:$GID)"; \
   useradd -ms /bin/bash -u $UID -g $GID $UNAME; \
 fi
 
@@ -34,6 +36,7 @@ ENV PBPATH=$HOME/privacybadger/
 ENV EXTENSIONS=$HOME/parallel-extensions/
 
 WORKDIR $HOME
+RUN ls -Altr .
 
 COPY requirements.txt .
 RUN pip3 install --user -r requirements.txt
