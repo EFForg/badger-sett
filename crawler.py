@@ -469,7 +469,7 @@ class Crawler:
 
         elif self.browser == FIREFOX:
             opts = self.get_firefox_options()
-            service = FirefoxService(log_path=os.path.devnull)
+            service = FirefoxService(log_output=os.path.devnull)
             self.driver = webdriver.Firefox(options=opts, service=service)
 
             # load Privacy Badger
