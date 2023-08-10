@@ -59,6 +59,9 @@ if [ "$GIT_PUSH" = "1" ] ; then
   update_badger_sett_repo
 fi
 
+printf "Running with "
+docker --version
+
 # pull the latest version of the selenium image so we're up-to-date
 echo "Pulling latest browser..."
 docker pull selenium/standalone-"$BROWSER"

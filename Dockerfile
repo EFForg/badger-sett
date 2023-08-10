@@ -36,7 +36,6 @@ ENV PBPATH=$HOME/privacybadger/
 ENV EXTENSIONS=$HOME/parallel-extensions/
 
 WORKDIR $HOME
-RUN ls -Altr .
 
 COPY requirements.txt .
 RUN pip3 install --user -r requirements.txt
