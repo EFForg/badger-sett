@@ -69,6 +69,9 @@ MAX_ALERTS = 10
 # day before yesterday, as yesterday's list is sometimes not yet available
 TRANCO_VERSION = (datetime.utcnow() - timedelta(days=2)).strftime('%Y-%m-%d')
 
+# Privacy Badger storage keys not for export/import
+STORAGE_KEYS_TO_IGNORE = ['cookieblock_list', 'dnt_hashes', 'settings_map', 'private_storage']
+
 
 ap = argparse.ArgumentParser(
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -268,7 +271,6 @@ class Crawler:
             self.logger.addHandler(sh)
 
         self.last_data = None
-        self.storage_objects = ['snitch_map', 'action_map', 'tracking_map', 'fp_scripts']
 
         self.logger.info("Fetching TLD definitions ...")
         self.tld_extract = TLDExtract(cache_dir=False, include_psl_private_domains=True)
@@ -564,7 +566,9 @@ class Crawler:
             "}, done);"), data)
 
         # force Badger data to get written to disk
-        for store_name in self.storage_objects:
+        for store_name in data.keys():
+            if store_name in STORAGE_KEYS_TO_IGNORE:
+                continue
             self.driver.execute_async_script((
                 "let done = arguments[arguments.length - 1];"
                 "chrome.runtime.sendMessage({"
@@ -577,7 +581,14 @@ class Crawler:
         run."""
         data = {}
         self.load_extension_page()
-        for store_name in self.storage_objects:
+
+        store_keys = self.driver.execute_async_script(
+            "let done = arguments[arguments.length - 1];"
+            "chrome.storage.local.get(null, r=>done(Object.keys(r)));")
+
+        for store_name in store_keys:
+            if store_name in STORAGE_KEYS_TO_IGNORE:
+                continue
             data[store_name] = self.driver.execute_async_script((
                 "let done = arguments[arguments.length - 1],"
                 "  store_name = arguments[0];"
@@ -590,6 +601,7 @@ class Crawler:
                 "  });"
                 "});"
             ), store_name)
+
         return data
 
     def clear_data(self):
@@ -1025,20 +1037,19 @@ class Crawler:
         data['version'] = self.version
 
         # remove unnecessary properties to save space
-        if 'action_map' in self.storage_objects:
-            for domain_data in data['action_map'].values():
-                # if DNT compliance wasn't seen
-                if 'dnt' in domain_data and not domain_data['dnt']:
-                    # no need to store DNT compliance
-                    del domain_data['dnt']
+        for domain_data in data['action_map'].values():
+            # if DNT compliance wasn't seen
+            if 'dnt' in domain_data and not domain_data['dnt']:
+                # no need to store DNT compliance
+                del domain_data['dnt']
 
-                # if we haven't yet checked for DNT compliance
-                if 'nextUpdateTime' in domain_data and domain_data['nextUpdateTime'] == 0:
-                    # no need to store the earliest next check date
-                    del domain_data['nextUpdateTime']
+            # if we haven't yet checked for DNT compliance
+            if 'nextUpdateTime' in domain_data and domain_data['nextUpdateTime'] == 0:
+                # no need to store the earliest next check date
+                del domain_data['nextUpdateTime']
 
-                # user actions are never set
-                del domain_data['userAction']
+            # user actions are never set
+            del domain_data['userAction']
 
         self.logger.info("Saving seed data version %s ...", self.version)
         # save the snitch_map in a human-readable JSON file
@@ -1053,7 +1064,6 @@ class SurveyCrawler(Crawler):
         super().__init__(args)
 
         self.max_data_size = args.max_data_size
-        self.storage_objects = ['snitch_map']
 
     def set_passive_mode(self):
         self.load_extension_page()
