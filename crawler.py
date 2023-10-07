@@ -586,6 +586,11 @@ class Crawler:
             "let done = arguments[arguments.length - 1];"
             "chrome.storage.local.get(null, r=>done(Object.keys(r)));")
 
+        if 'action_map' not in store_keys:
+            store_keys.append('action_map')
+        if 'snitch_map' not in store_keys:
+            store_keys.append('snitch_map')
+
         for store_name in store_keys:
             if store_name in STORAGE_KEYS_TO_IGNORE:
                 continue
