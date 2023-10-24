@@ -626,11 +626,12 @@ class Crawler:
         """
         page_title = self.driver.title
 
-        if page_title == "Attention Required! | Cloudflare":
-            raise WebDriverException("Reached Cloudflare security page")
+        if page_title in ("Attention Required! | Cloudflare", "Just a moment..."):
+            if 'https://challenges.cloudflare.com' in self.driver.page_source:
+                raise WebDriverException("Reached Cloudflare security page")
 
         # TODO this seems to be out of date
-        if page_title == "You have been blocked":
+        elif page_title == "You have been blocked":
             if "https://ct.captcha-delivery.com/c.js" in self.driver.page_source:
                 raise WebDriverException("Reached DataDome security page")
 
