@@ -11,6 +11,7 @@ from lib.basedomain import extract
 
 from lib.linters.mdfp import print_warnings as flag_potential_mdfp_domains
 from lib.linters.unblocked import print_warnings as list_unblocked_canvas_fingerprinters
+from lib.linters.site_outliers import print_warnings as list_suspicious_site_domains
 
 old_path = None
 new_path = None
@@ -159,6 +160,8 @@ for base in sorted(no_longer_blocked):
 flag_potential_mdfp_domains(new_js['snitch_map'])
 
 list_unblocked_canvas_fingerprinters(new_js)
+
+list_suspicious_site_domains(new_js['snitch_map'])
 
 print("")
 
