@@ -98,6 +98,8 @@ ap.add_argument('--load-extension', default=None,
 
 ap.add_argument('--load-data', metavar='BADGER_DATA_JSON', action='append', default=[],
                 help="If set, load tracker data from specified Badger data JSON file(s)")
+ap.add_argument('--load-data-ignore-sites', default=None,
+                help='Comma-separated list of site eTLD+1 domains to ignore when merging data sets')
 
 ap.add_argument('--survey', action='store_true', default=False,
                 help="If set, don't block anything or store action_map data")
@@ -243,6 +245,7 @@ class Crawler:
         self.firefox_tracking_protection = args.firefox_tracking_protection
         self.load_extension = args.load_extension
         self.no_blocking = args.no_blocking
+        self.load_data_ignore_sites = args.load_data_ignore_sites
         self.num_sites = args.num_sites
         self.out_dir = args.out_dir
         self.pb_dir = args.pb_dir
@@ -852,6 +855,14 @@ class Crawler:
                 "  type: 'setBlockThreshold',"
                 "  value: Number.MAX_VALUE"
                 "})")
+
+        if self.load_data_ignore_sites:
+            self.driver.execute_async_script(
+                "let done = arguments[arguments.length - 1];"
+                "chrome.runtime.sendMessage({"
+                "  type: 'setIgnoredSiteBases',"
+                "  value: arguments[0].split(',')"
+                "}, r => done());", self.load_data_ignore_sites)
 
         # enable local learning
         wait_for_script(self.driver, "return window.OPTIONS_INITIALIZED")
