@@ -4,11 +4,14 @@ import re
 
 import colorama
 
+from lib.basedomain import extract
+
 
 C_YELLOW = colorama.Style.BRIGHT + colorama.Fore.YELLOW
 C_RESET = colorama.Style.RESET_ALL
 
-def get_shared_base_root(base, extract):
+
+def get_shared_base_root(base):
     tracker_root = extract(base).domain
     if not tracker_root:
         tracker_root = base.partition('.')[0]
@@ -20,7 +23,7 @@ def get_shared_base_root(base, extract):
             sbr = tracker_root
     return sbr
 
-def get_site_roots(sites, extract):
+def get_site_roots(sites):
     site_roots = []
 
     for site in sites:
@@ -77,19 +80,18 @@ def highlight_common_roots(base, sites, shared_roots):
 
     return formatted_base, formatted_sites, num_other_sites
 
-def flag_potential_mdfp_domains(snitch_map, extract):
+def print_warnings(snitch_map):
     """Looks for and warns about common "roots" (base minus PSL TLD).
 
     :param snitch_map: Privacy Badger snitch map
-    :param extract: instance of tldextract.TLDExtract
     """
     print_mdfp_header = True
 
     for base in sorted(snitch_map.keys()):
-        site_roots = get_site_roots(snitch_map[base], extract)
+        site_roots = get_site_roots(snitch_map[base])
 
         # include the tracker base, sans common resource domain strings
-        sbr = get_shared_base_root(base, extract)
+        sbr = get_shared_base_root(base)
         site_roots.append(sbr)
 
         shared_roots = get_shared_roots(site_roots, sbr)
