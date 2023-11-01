@@ -110,19 +110,20 @@ if ! docker run --rm $FLAGS \
   exit 1;
 fi
 
+# update the repo from remote again now to reduce chance of conflict
+if [ "$GIT_PUSH" = "1" ] ; then
+  update_badger_sett_repo
+fi
+
 # copy the updated results and log file out of the docker volume
 mv "$DOCKER_OUT"/results.json "$DOCKER_OUT"/log.txt ./
 
-# Get the version string from the results file
+# get the version string from the results file
 VERSION=$(python3 -c "import json; print(json.load(open('results.json'))['version'])")
 echo "Scan successful. Seed data version: $VERSION"
 
 if [ "$GIT_PUSH" = "1" ] ; then
-  update_badger_sett_repo
-
-  echo "Updating public repository."
-
-  # Commit updated list to github
+  # commit updated list
   git add results.json log.txt
 
   NUM_SITES=$(grep '^  domains to crawl: [0-9]\+$' log.txt | grep -o '[0-9]\+$' | numfmt --to=si)
