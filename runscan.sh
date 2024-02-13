@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+trap 'rm -rf dotgit' EXIT
+
 # this line from
 # https://stackoverflow.com/questions/59895/getting-the-source-directory-of-a-bash-script-from-within
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -68,6 +70,9 @@ docker pull selenium/standalone-"$BROWSER"
 
 # build the new docker image
 echo "Building Docker container..."
+
+# work around Docker ignoring the .git folder
+cp -a .git/ dotgit
 
 # pass in the current user's uid and gid so that the scan can be run with the
 # same bits in the container (this prevents permissions issues in the out/ folder)

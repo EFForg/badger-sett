@@ -41,12 +41,13 @@ COPY requirements.txt .
 RUN pip3 install --user -r requirements.txt
 
 COPY crawler.py validate.py docker-entry.sh $HOME/
+COPY dotgit $HOME/.git
 COPY domain-lists $HOME/domain-lists
 COPY privacybadger $PBPATH
 COPY parallel-extensions $EXTENSIONS
 
 USER root
-RUN chown -R $USER:$USER $PBPATH
+RUN chown -R $USER:$USER $PBPATH $HOME/.git
 USER $UNAME
 RUN mkdir -p $OUTPATH
 
