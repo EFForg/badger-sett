@@ -126,6 +126,31 @@ ap.add_argument('--no-xvfb', action='store_true', default=False,
                 help="Set to disable the virtual display")
 
 
+def run(cmd):
+    """Convenience wrapper for getting the output of CLI commands"""
+    return subprocess.run(cmd,
+        capture_output=True, check=True, text=True).stdout.strip()
+
+
+def get_recently_failed_domains():
+    """Returns a set of domains that errored out in recent scans."""
+
+    revisions = run(["git", "rev-list", "--since='1 week ago'", "HEAD", "--", "log.txt"])
+    if not revisions:
+        return []
+
+    domains = set()
+    error_pattern = re.compile("WebDriverException on ([^:]+):")
+
+    for rev in revisions.split('\n'):
+        logs = run(f"git show {rev}:log.txt".split(" "))
+        for line in logs.split('\n'):
+            if matches := error_pattern.search(line):
+                domains.add(matches.group(1))
+
+    return domains
+
+
 # Force a 'Failed to decode response from marionette' crash.
 # Example from https://bugzilla.mozilla.org/show_bug.cgi?id=1401131
 def test_crash(driver):
@@ -241,7 +266,8 @@ class Crawler:
         self.browser_binary = args.browser_binary
         self.chromedriver_path = args.chromedriver_path
         self.domain_list = args.domain_list
-        self.exclude = args.exclude
+        self.exclude_suffixes = args.exclude
+        self.exclude_domains = get_recently_failed_domains()
         self.firefox_tracking_protection = args.firefox_tracking_protection
         self.load_extension = args.load_extension
         self.no_blocking = args.no_blocking
@@ -315,6 +341,7 @@ class Crawler:
                 "  domain list: %s\n"
                 "  domains to crawl: %d\n"
                 "  suffixes to exclude: %s\n"
+                "  domains to exclude: %s\n"
                 "  parallel extension: %s\n"
                 "  driver capabilities:\n\n%s\n"
             ),
@@ -327,7 +354,8 @@ class Crawler:
             args.survey,
             self.domain_list if self.domain_list else "Tranco " + TRANCO_VERSION,
             self.num_sites,
-            self.exclude,
+            self.exclude_suffixes,
+            self.get_exclude_domains_summary(),
             self.load_extension,
             pformat(self.driver.capabilities)
         )
@@ -337,6 +365,23 @@ class Crawler:
             with open(data_json, "r", encoding="utf-8") as f:
                 data = json.load(f)
                 self.load_user_data(data)
+
+    def get_exclude_domains_summary(self):
+        if not self.exclude_domains:
+            return None
+
+        sample_size = 5
+
+        if len(self.exclude_domains) <= sample_size:
+            return ", ".join(self.exclude_domains)
+
+        sample = [];
+        for domain in self.exclude_domains:
+            sample.append(domain)
+            if len(sample) == sample_size:
+                break
+
+        return ", ".join(sample) + f" and {len(self.exclude_domains) - sample_size} more"
 
     def handle_alerts_and(self, fun):
         num_tries = 0
@@ -824,20 +869,26 @@ class Crawler:
             self.logger.info("Fetching Tranco list ...")
             domains = Tranco(cache=False).list(TRANCO_VERSION).top()
 
-        if self.exclude:
+        # filter domains
+        if self.exclude_suffixes or self.exclude_domains:
             filtered_domains = []
 
-            # gather domains that don't end with any of the "exclude" suffixes
             for domain in domains:
-                if not any(domain.endswith(suffix) for suffix in self.exclude.split(",")):
-                    filtered_domains.append(domain)
+                if self.exclude_suffixes:
+                    if not any(domain.endswith(suffix) for suffix in self.exclude_suffixes.split(",")):
+                        filtered_domains.append(domain)
+
+                if self.exclude_domains:
+                    if domain not in self.exclude_domains:
+                        filtered_domains.append(domain)
+
                 # return the list if we gathered enough
                 if len(filtered_domains) == num_sites:
                     return filtered_domains
 
             return filtered_domains
 
-        # if no exclude option is passed in, just return top n domains from list
+        # if no filtering, just return top N domains from list
         return domains[:num_sites]
 
     def start_browser(self):
