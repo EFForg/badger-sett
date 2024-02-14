@@ -873,14 +873,18 @@ class Crawler:
         if self.exclude_suffixes or self.exclude_domains:
             filtered_domains = []
 
-            for domain in domains:
-                if self.exclude_suffixes:
-                    if not any(domain.endswith(suffix) for suffix in self.exclude_suffixes.split(",")):
-                        filtered_domains.append(domain)
+            suffixes = self.exclude_suffixes.split(",") if self.exclude_suffixes else []
 
+            for domain in domains:
                 if self.exclude_domains:
-                    if domain not in self.exclude_domains:
-                        filtered_domains.append(domain)
+                    if domain in self.exclude_domains:
+                        continue
+
+                if suffixes:
+                    if any(domain.endswith(suffix) for suffix in suffixes):
+                        continue
+
+                filtered_domains.append(domain)
 
                 # return the list if we gathered enough
                 if len(filtered_domains) == num_sites:
