@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-printf "%-12s%-14s%-28s%-14s%-14s%-14s\n" \
-  BROWSER 'NUM DOMAINS' 'ERRORS (TIMEOUTS, ANTIBOT)' 'NUM RESTARTS' DURATION 'GIT INFO'
+printf "%-11s%-12s%-28s%-13s%-12s%-14s\n" \
+  BROWSER 'NUM SITES' 'ERRORS (TIMEOUTS, ANTIBOT)' 'NUM CRASHES' DURATION 'GIT INFO'
 
 for rev in $(git rev-list HEAD -- log.txt); do
   git --no-pager show "$rev":log.txt > /tmp/log.txt
   num_domains=$(grep 'domains to crawl' /tmp/log.txt | grep -oP '[0-9,]+')
-  printf "%-12s%-14s%6s%-22s%-14s%-14s%-14s\n" \
+  printf "%-11s%-12s%6s%-22s%-13s%-12s%-14s\n" \
     "$(grep -oP 'browser: [A-Za-z]+' /tmp/log.txt | cut -d ' ' -f 2- | tr '[:upper:]' '[:lower:]')" \
     "$num_domains" \
     "$(grep 'errored on' /tmp/log.txt | rev | cut -d ' ' -f -2 | rev | cut -d ' ' -f 2- | sed 's/[()]//g')" \
