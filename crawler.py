@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-# adapted from https://github.com/cowlicks/badger-claw
 
 import argparse
 import contextlib
