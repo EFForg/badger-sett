@@ -135,7 +135,7 @@ def get_recently_failed_domains():
         return []
 
     domains = set()
-    error_pattern = re.compile("WebDriverException on ([^:]+):")
+    error_pattern = re.compile("(?:WebDriver|InsecureCertificate)Exception on ([^:]+):")
 
     for rev in revisions.split('\n'):
         logs = run(f"git show {rev}:log.txt".split(" "))
