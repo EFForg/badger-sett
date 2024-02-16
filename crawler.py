@@ -5,7 +5,6 @@
 import argparse
 import contextlib
 import copy
-import glob
 import json
 import logging
 import os
@@ -101,12 +100,8 @@ ap.add_argument('--load-data', metavar='BADGER_DATA_JSON', action='append', defa
 ap.add_argument('--load-data-ignore-sites', default=None,
                 help='Comma-separated list of site eTLD+1 domains to ignore when merging data sets')
 
-ap.add_argument('--survey', action='store_true', default=False,
-                help="If set, don't block anything or store action_map data")
 ap.add_argument('--domain-list', default=None,
                 help="If set, load domains from this file instead of the Tranco list")
-ap.add_argument('--max-data-size', type=int, default=2e6,
-                help='Maximum size of serialized localstorage data (survey mode only)')
 
 # Arguments below should never have to be used within the docker container.
 ap.add_argument('--out-dir', '--out-path', dest='out_dir', default='./',
@@ -163,11 +158,6 @@ Components.utils.import("resource://gre/modules/ctypes.jsm");
 var zero = new ctypes.intptr_t(8);
 var badptr = ctypes.cast(zero, ctypes.PointerType(ctypes.int32_t));
 var crash = badptr.contents;""")
-
-
-def size_of(data):
-    """Get the size (in bytes) of the serialized data structure"""
-    return len(json.dumps(data))
 
 
 # determine whether we need to restart the webdriver after an error
@@ -337,7 +327,6 @@ class Crawler:
                 "  blocking: %s\n"
                 "  timeout: %ss\n"
                 "  wait time: %ss\n"
-                "  survey mode: %s\n"
                 "  domain list: %s\n"
                 "  domains to crawl: %d\n"
                 "  suffixes to exclude: %s\n"
@@ -351,7 +340,6 @@ class Crawler:
             "off" if self.no_blocking else "standard",
             self.timeout,
             self.wait_time,
-            args.survey,
             self.domain_list if self.domain_list else "Tranco " + TRANCO_VERSION,
             self.num_sites,
             self.exclude_suffixes,
@@ -1131,125 +1119,11 @@ class Crawler:
         self.logger.info("Saved data to %s", name)
 
 
-class SurveyCrawler(Crawler):
-    def __init__(self, args):
-        super().__init__(args)
-
-        self.max_data_size = args.max_data_size
-
-    def set_passive_mode(self):
-        self.load_extension_page()
-        script = '''
-chrome.runtime.sendMessage({
-    type: "updateSettings",
-    data: { passiveMode: true }
-});'''
-        self.driver.execute_script(script)
-
-    def start_browser(self):
-        self.start_driver()
-        # TODO should we clear data here?
-        # TODO should we enable local learning?
-        # don't block anything, just listen and log
-        self.set_passive_mode()
-
-    # TODO use --load-data instead?
-    def merge_saved_data(self):
-        paths = glob.glob(os.path.join(self.out_dir, 'results-*.json'))
-        snitch_map = {}
-        for p in paths:
-            with open(p, encoding='utf-8') as f:
-                sm = json.load(f)['snitch_map']
-            for tracker, snitches in sm.items():
-                if tracker not in snitch_map:
-                    snitch_map[tracker] = snitches
-                    continue
-
-                for snitch, data in snitches.items():
-                    if snitch == 'length':
-                        snitch_map[tracker]['length'] = \
-                            int(snitch_map[tracker]['length']) + int(data)
-                        continue
-                    snitch_map[tracker][snitch] = data
-
-        return {'version': self.version, 'snitch_map': snitch_map}
-
-    def crawl(self):
-        """
-        Visit the top `num_sites` websites in the Tranco list, in order, in
-        a virtual browser with Privacy Badger installed. Afterwards, save the
-        snitch_map that the Badger learned.
-        """
-
-        domains = self.get_domain_list()
-
-        # list of domains we actually visited
-        visited = []
-        first_i = 0
-
-        i = None
-        for i, domain in enumerate(domains):
-            # If we can't load the options page for some reason, treat it like
-            # any other error
-            try:
-                # save the state of privacy badger before we do anything else
-                self.last_data = self.dump_data()
-
-                # If the localstorage data is getting too big, dump and restart
-                if size_of(self.last_data) > self.max_data_size:
-                    self.save(self.last_data, f'results-{first_i}-{i}.json')
-                    first_i = i + 1
-                    self.last_data = {}
-                    self.restart_browser()
-
-                self.logger.info("Visiting %d: %s", i + 1, domain)
-                url = self.get_domain(domain)
-                visited.append(url)
-            except (MaxRetryError, ProtocolError) as e:
-                self.logger.warning("Error loading %s:\n%s", domain, str(e))
-                self.restart_browser()
-            except TimeoutException:
-                self.logger.warning("Timed out loading %s", domain)
-            except WebDriverException as e:
-                self.logger.error("%s on %s: %s", type(e).__name__, domain, e.msg)
-                if should_restart(e):
-                    self.restart_browser()
-            except KeyboardInterrupt:
-                self.logger.warning(
-                    "Keyboard interrupt. Ending scan after %d sites.", i + 1)
-                break
-
-        self.logger.info("Finished scan. Visited %d sites and errored on %d",
-                         len(visited), i + 1 - len(visited))
-        self.logger.info("Getting data from browser storage ...")
-
-        try:
-            data = self.dump_data()
-        except WebDriverException as e:
-            if self.last_data:
-                self.logger.error(
-                    "Could not get Badger storage:\n"
-                    "%s: %s\nUsing cached data ...",
-                    type(e).__name__, e.msg)
-                data = self.last_data
-            else:
-                self.logger.error("Could not export data:\n%s", e.msg)
-                sys.exit(1)
-
-        self.driver.quit()
-
-        self.save(data, f'results-{first_i}-{i}.json')
-        self.save(self.merge_saved_data())
-
-
 if __name__ == '__main__':
     args = ap.parse_args()
 
     # create an XVFB virtual display (to avoid opening an actual browser)
     with Xvfb(width=1920, height=1200) if not args.no_xvfb else contextlib.suppress():
-        if args.survey:
-            crawler = SurveyCrawler(args)
-        else:
-            crawler = Crawler(args)
+        crawler = Crawler(args)
 
         crawler.crawl()
