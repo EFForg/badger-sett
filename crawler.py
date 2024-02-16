@@ -146,15 +146,16 @@ def get_git_info(path):
 
 def get_recently_failed_domains():
     """Returns a set of domains that errored out in recent scans."""
+    domains = set()
 
     revisions = run(["git", "rev-list", "--since='1 week ago'", "HEAD", "--", "log.txt"])
     if not revisions:
-        return []
+        return domains
+    revisions = revisions.split('\n')
 
-    domains = set()
     error_pattern = re.compile("(?:WebDriver|InsecureCertificate)Exception on ([^:]+):")
 
-    for rev in revisions.split('\n'):
+    for rev in revisions:
         logs = run(f"git show {rev}:log.txt".split(" "))
         for line in logs.split('\n'):
             if matches := error_pattern.search(line):
