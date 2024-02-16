@@ -70,59 +70,78 @@ TRANCO_VERSION = (datetime.utcnow() - timedelta(days=2)).strftime('%Y-%m-%d')
 STORAGE_KEYS_TO_IGNORE = ['cookieblock_list', 'dnt_hashes', 'settings_map', 'private_storage']
 
 
-ap = argparse.ArgumentParser(
-    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+def create_argument_parser():
+    ap = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-ap.add_argument('--browser', choices=[FIREFOX, CHROME, EDGE], default=CHROME,
-                help='Browser to use for the scan')
-ap.add_argument('--num-sites', '--n-sites', type=int, default=DEFAULT_NUM_SITES,
-                help='Number of websites to visit on the crawl')
-ap.add_argument('--exclude', default=None,
-                help='Exclude sites from scan whose domains end with one of the specified comma-separated suffixes')
-ap.add_argument('--no-blocking', action='store_true', default=False,
-                help="Disables blocking and snitch_map limits in Privacy Badger")
-ap.add_argument('--timeout', type=float, default=30.0,
-                help='Amount of time to allow each site to load, in seconds')
-ap.add_argument('--wait-time', type=float, default=5.0, help=(
-    "Amount of time to wait on each site after it loads, in seconds"
-))
-ap.add_argument('--log-stdout', action='store_true', default=False,
-                help='If set, log to stdout as well as log.txt')
-ap.add_argument('--take-screenshots', action='store_true', default=False,
-                help=f"Saves screenshots to {os.path.join('OUT_DIR', 'screenshots')}")
-ap.add_argument('--load-extension', default=None,
-                help='If set, load arbitrary extension to run in parallel to PB')
+    ap.add_argument('--browser', choices=[FIREFOX, CHROME, EDGE], default=CHROME,
+                    help='Browser to use for the scan')
+    ap.add_argument('--num-sites', '--n-sites', type=int, default=DEFAULT_NUM_SITES,
+                    help='Number of websites to visit on the crawl')
+    ap.add_argument('--exclude', default=None,
+                    help='Exclude sites from scan whose domains end with one of the specified comma-separated suffixes')
+    ap.add_argument('--no-blocking', action='store_true', default=False,
+                    help="Disables blocking and snitch_map limits in Privacy Badger")
+    ap.add_argument('--timeout', type=float, default=30.0,
+                    help='Amount of time to allow each site to load, in seconds')
+    ap.add_argument('--wait-time', type=float, default=5.0, help=(
+        "Amount of time to wait on each site after it loads, in seconds"
+    ))
+    ap.add_argument('--log-stdout', action='store_true', default=False,
+                    help='If set, log to stdout as well as log.txt')
+    ap.add_argument('--take-screenshots', action='store_true', default=False,
+                    help=f"Saves screenshots to {os.path.join('OUT_DIR', 'screenshots')}")
+    ap.add_argument('--load-extension', default=None,
+                    help='If set, load arbitrary extension to run in parallel to PB')
 
-ap.add_argument('--load-data', metavar='BADGER_DATA_JSON', action='append', default=[],
-                help="If set, load tracker data from specified Badger data JSON file(s)")
-ap.add_argument('--load-data-ignore-sites', default=None,
-                help='Comma-separated list of site eTLD+1 domains to ignore when merging data sets')
+    ap.add_argument('--load-data', metavar='BADGER_DATA_JSON', action='append', default=[],
+                    help="If set, load tracker data from specified Badger data JSON file(s)")
+    ap.add_argument('--load-data-ignore-sites', default=None,
+                    help='Comma-separated list of site eTLD+1 domains to ignore when merging data sets')
 
-ap.add_argument('--domain-list', default=None,
-                help="If set, load domains from this file instead of the Tranco list")
+    ap.add_argument('--domain-list', default=None,
+                    help="If set, load domains from this file instead of the Tranco list")
 
-# Arguments below should never have to be used within the docker container.
-ap.add_argument('--out-dir', '--out-path', dest='out_dir', default='./',
-                help='Path at which to save output')
-ap.add_argument('--pb-dir', '--pb-path', dest='pb_dir', default='./privacybadger',
-                help='Path to the Privacy Badger source checkout')
-ap.add_argument('--browser-binary', default=None,
-                help="Path to the browser binary, for example /usr/bin/google-chrome-beta")
-ap.add_argument('--chromedriver-path', default=None,
-                help="Path to the ChromeDriver binary")
+    # Arguments below should never have to be used within the docker container.
+    ap.add_argument('--out-dir', '--out-path', dest='out_dir', default='./',
+                    help='Path at which to save output')
+    ap.add_argument('--pb-dir', '--pb-path', dest='pb_dir', default='./privacybadger',
+                    help='Path to the Privacy Badger source checkout')
+    ap.add_argument('--browser-binary', default=None,
+                    help="Path to the browser binary, for example /usr/bin/google-chrome-beta")
+    ap.add_argument('--chromedriver-path', default=None,
+                    help="Path to the ChromeDriver binary")
 
-ap.add_argument('--firefox-tracking-protection',
-    choices=("off", "standard", "strict"), default="off",
-    help="Re-enable or set to strict Enhanced Tracking Protection in Firefox")
+    ap.add_argument('--firefox-tracking-protection',
+        choices=("off", "standard", "strict"), default="off",
+        help="Re-enable or set to strict Enhanced Tracking Protection in Firefox")
 
-ap.add_argument('--no-xvfb', action='store_true', default=False,
-                help="Set to disable the virtual display")
+    ap.add_argument('--no-xvfb', action='store_true', default=False,
+                    help="Set to disable the virtual display")
+
+    return ap
 
 
-def run(cmd):
+def run(cmd, **kwargs):
     """Convenience wrapper for getting the output of CLI commands"""
-    return subprocess.run(cmd,
-        capture_output=True, check=True, text=True).stdout.strip()
+    return subprocess.run(
+        cmd, capture_output=True, check=True, text=True, **kwargs).stdout.strip()
+
+
+def get_git_info(path):
+    git_info = {
+        'branch': None,
+        'commit_hash': None
+    }
+
+    commit_hash = run("git rev-parse HEAD".split(" "), cwd=path)
+    git_info['commit_hash'] = commit_hash
+
+    branch = run("git rev-parse --abbrev-ref HEAD".split(" "), cwd=path)
+    if branch != "HEAD":
+        git_info['branch'] = branch
+
+    return git_info
 
 
 def get_recently_failed_domains():
@@ -270,7 +289,9 @@ class Crawler:
         # version is based on when the crawl started
         self.version = time.strftime('%Y.%-m.%-d', time.localtime())
 
-        # set up logging
+        self.last_data = None
+
+    def init_logging(self):
         self.logger = logging.getLogger()
         self.logger.setLevel(logging.INFO)
         log_fmt = logging.Formatter('%(asctime)s %(message)s')
@@ -287,35 +308,8 @@ class Crawler:
             sh.setFormatter(log_fmt)
             self.logger.addHandler(sh)
 
-        self.last_data = None
-
-        self.logger.info("Fetching TLD definitions ...")
-        self.tld_extract = TLDExtract(cache_dir=False, include_psl_private_domains=True)
-
-        self.start_browser()
-
-        # collect Privacy Badger git info for logging
-        def get_git_info(path):
-            git_info = {
-                'branch': None,
-                'commit_hash': None
-            }
-
-            commit_hash = subprocess.check_output(
-                "git rev-parse HEAD".split(" "),
-                cwd=path, universal_newlines=True).strip()
-            git_info['commit_hash'] = commit_hash
-
-            branch = subprocess.check_output(
-                "git rev-parse --abbrev-ref HEAD".split(" "),
-                cwd=path, universal_newlines=True).strip()
-            if branch != "HEAD":
-                git_info['branch'] = branch
-
-            return git_info
-
+    def log_scan_summary(self):
         git_data = get_git_info(self.pb_dir)
-
         self.logger.info(
             (
                 "Starting new crawl:\n\n"
@@ -345,12 +339,6 @@ class Crawler:
             self.load_extension,
             pformat(self.driver.capabilities)
         )
-
-        # load tracker data from one or more Badger data JSON files
-        for data_json in args.load_data:
-            with open(data_json, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                self.load_user_data(data)
 
     def get_exclude_domains_summary(self):
         if not self.exclude_domains:
@@ -1110,7 +1098,6 @@ class Crawler:
             del domain_data['userAction']
 
         self.logger.info("Saving seed data version %s ...", self.version)
-        # save the snitch_map in a human-readable JSON file
         with open(os.path.join(self.out_dir, name), 'w', encoding="utf-8") as f:
             json.dump(
                 data, f, indent=2, sort_keys=True, separators=(',', ': '))
@@ -1118,10 +1105,25 @@ class Crawler:
 
 
 if __name__ == '__main__':
+    ap = create_argument_parser()
     args = ap.parse_args()
 
     # create an XVFB virtual display (to avoid opening an actual browser)
     with Xvfb(width=1920, height=1200) if not args.no_xvfb else contextlib.suppress():
         crawler = Crawler(args)
+
+        crawler.init_logging()
+
+        crawler.logger.info("Fetching TLD definitions ...")
+        crawler.tld_extract = TLDExtract(cache_dir=False, include_psl_private_domains=True)
+
+        crawler.start_browser()
+
+        crawler.log_scan_summary()
+
+        for data_json in args.load_data:
+            with open(data_json, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                crawler.load_user_data(data)
 
         crawler.crawl()
