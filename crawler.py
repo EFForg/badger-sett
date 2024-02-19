@@ -269,42 +269,41 @@ def internal_link(page_url, link_href):
 
 
 class Crawler:
-    def __init__(self, args):
-        self.browser = args.browser
-        self.browser_binary = args.browser_binary
-        self.chromedriver_path = args.chromedriver_path
-        self.domain_list = args.domain_list
-        self.exclude_suffixes = args.exclude
+    def __init__(self, opts):
+        self.browser_binary = opts.browser_binary
+        self.browser = opts.browser
+        self.chromedriver_path = opts.chromedriver_path
+        self.domain_list = opts.domain_list
         self.exclude_domains = get_recently_failed_domains()
-        self.firefox_tracking_protection = args.firefox_tracking_protection
-        self.load_extension = args.load_extension
-        self.no_blocking = args.no_blocking
-        self.load_data_ignore_sites = args.load_data_ignore_sites
-        self.num_sites = args.num_sites
-        self.out_dir = args.out_dir
-        self.pb_dir = args.pb_dir
-        self.take_screenshots = args.take_screenshots
-        self.timeout = args.timeout
-        self.wait_time = args.wait_time
-
-        # version is based on when the crawl started
-        self.version = time.strftime('%Y.%-m.%-d', time.localtime())
-
+        self.exclude_suffixes = opts.exclude
+        self.firefox_tracking_protection = opts.firefox_tracking_protection
         self.last_data = None
-
-    def init_logging(self):
+        self.load_data_ignore_sites = opts.load_data_ignore_sites
+        self.load_extension = opts.load_extension
         self.logger = logging.getLogger()
+        self.no_blocking = opts.no_blocking
+        self.num_sites = opts.num_sites
+        self.out_dir = opts.out_dir
+        self.pb_dir = opts.pb_dir
+        self.take_screenshots = opts.take_screenshots
+        self.timeout = opts.timeout
+        self.version = time.strftime('%Y.%-m.%-d', time.localtime())
+        self.wait_time = opts.wait_time
+
+        pathlib.Path(self.out_dir).mkdir(exist_ok=True)
+
+    def init_logging(self, log_stdout):
         self.logger.setLevel(logging.INFO)
+
         log_fmt = logging.Formatter('%(asctime)s %(message)s')
 
         # by default, just log to file
-        pathlib.Path(self.out_dir).mkdir(exist_ok=True)
         fh = logging.FileHandler(os.path.join(self.out_dir, 'log.txt'))
         fh.setFormatter(log_fmt)
         self.logger.addHandler(fh)
 
         # log to stdout as well if configured
-        if args.log_stdout:
+        if log_stdout:
             sh = logging.StreamHandler(sys.stdout)
             sh.setFormatter(log_fmt)
             self.logger.addHandler(sh)
@@ -1106,14 +1105,13 @@ class Crawler:
 
 
 if __name__ == '__main__':
-    ap = create_argument_parser()
-    args = ap.parse_args()
+    args = create_argument_parser().parse_args()
 
     # create an XVFB virtual display (to avoid opening an actual browser)
     with Xvfb(width=1920, height=1200) if not args.no_xvfb else contextlib.suppress():
         crawler = Crawler(args)
 
-        crawler.init_logging()
+        crawler.init_logging(args.log_stdout)
 
         crawler.logger.info("Fetching TLD definitions ...")
         crawler.tld_extract = TLDExtract(cache_dir=False, include_psl_private_domains=True)

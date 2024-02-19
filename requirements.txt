@@ -1,5 +1,6 @@
 colorama==0.3.9
 prospector==1.9.0
+pytest
 selenium
 tldextract==3.1.2
 tranco==0.7.1

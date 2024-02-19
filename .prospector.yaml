@@ -1,5 +1,7 @@
 strictness: medium
 
+test-warnings: true
+
 pylint:
   disable:
     - invalid-name
