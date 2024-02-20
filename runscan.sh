@@ -104,7 +104,7 @@ fi
 if ! docker run --rm $FLAGS \
     -v "$DOCKER_OUT:/home/$USER/out:z" \
     --shm-size="2g" \
-    badger-sett --browser "$BROWSER" "$@" ; then
+    badger-sett "$BROWSER" "$@" ; then
   mv "$DOCKER_OUT"/log.txt ./
   echo "Scan failed. See log.txt for details."
   exit 1;

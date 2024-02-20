@@ -8,13 +8,13 @@ from tranco import Tranco
 class TestSitelist:
 
     @pytest.mark.parametrize("num_sites, exclude, expected", [
-        (10, None, ["example.com", "example.net", "example.org"]),
-        (1, None, ["example.com"]),
-        (10, ".com", ["example.net", "example.org"]),
-        (10, ".gov,.mil,.net,.org", ["example.com"]),
-        (1, ".gov", ["example.com"])])
+        ("10", None, ["example.com", "example.net", "example.org"]),
+        ("1", None, ["example.com"]),
+        ("10", ".com", ["example.net", "example.org"]),
+        ("10", ".gov,.mil,.net,.org", ["example.com"]),
+        ("1", ".gov", ["example.com"])])
     def test_exclude_suffixes(self, monkeypatch, num_sites, exclude, expected):
-        args = [f"--num-sites={num_sites}"]
+        args = ["firefox", num_sites]
         if exclude:
             args.append("--exclude=" + exclude)
         cr = crawler.Crawler(crawler.create_argument_parser().parse_args(args))

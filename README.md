@@ -11,7 +11,7 @@ See the following EFF.org blog post for more information: [Giving Privacy Badger
 
 ## Setup
 
-0. Prerequisites: have [docker](https://docs.docker.com/install/) installed.
+0. Prerequisites: have [Docker](https://docs.docker.com/get-docker/) installed.
    Make sure your user is part of the `docker` group so that you can build and
    run docker images without `sudo`. You can add yourself to the group with
 
@@ -28,47 +28,26 @@ See the following EFF.org blog post for more information: [Giving Privacy Badger
 2. Run a scan
 
    ```
-   $ ./runscan.sh
+   $ BROWSER=firefox ./runscan.sh 500
    ```
 
-   This will run a scan with the latest version of Privacy Badger's master branch
-   and won't commit the results.
+   This will scan the top 1000 sites on the Tranco list in Chrome
+   with the latest version of Privacy Badger's master branch.
 
-   To run the script with a different branch of privacy badger, set the `PB_BRANCH`
+   To run the script with a different branch of Privacy Badger, set the `PB_BRANCH`
    variable. e.g.
 
    ```
-   $ PB_BRANCH=my-feature-branch ./runscan.sh
+   $ PB_BRANCH=my-feature-branch BROWSER=firefox ./runscan.sh 500
    ```
 
-   You can also pass arguments to `crawler.py`, the python script that does the
-   actual crawl. Any arguments passed to `runscan.sh` will be forwarded to
-   `crawler.py`. To control the number of sites that the crawler visits, use the
-   `--num-sites` argument (the default is 2000). For example:
+   You can also pass arguments to `crawler.py`, the Python script that does
+   the actual crawl. Any arguments passed to `runscan.sh` will be
+   forwarded to `crawler.py`. For example, to exclude all websites ending
+   with .gov and .mil from your website visit list:
 
    ```
-   $ ./runscan.sh --num-sites 10
-   ```
-
-   To exclude any sites with a given top level domain from the scan, pass in
-   the `--exclude` argument followed by the TLD suffix you want to exclude.
-   For example, if you wanted to exclude all sites with a .gov TLD:
-
-   ```
-   $ ./runscan.sh --exclude .gov
-   ```
-   To exclude multiple TLDs from a scan, pass in each TLD separated by a comma,
-   with no space between. For example, if you wanted to exclude all sites with
-   .org and .net TLDs:
-   ```
-   $ ./runscan.sh --exclude .org,.net
-   ```
-
-   You can load another extension to run in parallel to Privacy Badger during a scan.
-   Use the `--load-extension` flag and pass along the filepath for the `.crx` or `.xpi`
-   file that you want to load. For example:
-   ```
-   $ ./runscan.sh --load-extension parallel-extensions/ublock.crx
+   $ BROWSER=edge ./runscan.sh 500 --exclude .gov,.mil
    ```
 
 3. Monitor the scan
@@ -80,7 +59,7 @@ See the following EFF.org blog post for more information: [Giving Privacy Badger
    `docker-out/log.txt`, beginning after the script outputs "Running scan in
    Docker..."
 
-### Automatic crawling
+### Automatic scanning
 
 To set up the script to run periodically and automatically update the
 repository with its results:
@@ -123,10 +102,8 @@ repository with its results:
    example `crontab` entry:
 
    ```
-   0 0 * * *  RUN_BY_CRON=1 GIT_PUSH=1 /home/USER/badger-sett/runscan.sh
+   0 0 * * *  RUN_BY_CRON=1 GIT_PUSH=1 BROWSER=chrome /home/USER/badger-sett/runscan.sh 6000 --exclude=.mil,.gov
    ```
 
 6. If everything has been set up correctly, the script should push a new version
-   of `results.json` after each crawl. Soon, whenever you `make` a new version of
-   Privacy Badger, it will pull the latest version of the crawler's data and
-   ship it with the new version of the extension.
+   of `results.json` after each scan.
