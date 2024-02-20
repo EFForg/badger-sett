@@ -7,16 +7,21 @@ from tranco import Tranco
 
 class TestSitelist:
 
-    @pytest.mark.parametrize("num_sites, exclude, expected", [
-        ("10", None, ["example.com", "example.net", "example.org"]),
-        ("1", None, ["example.com"]),
-        ("10", ".com", ["example.net", "example.org"]),
-        ("10", ".gov,.mil,.net,.org", ["example.com"]),
-        ("1", ".gov", ["example.com"])])
-    def test_exclude_suffixes(self, monkeypatch, num_sites, exclude, expected):
+    @pytest.mark.parametrize("num_sites, exclude_suffixes, exclude_domains, expected", [
+        ("10", None, set(), ["example.com", "example.net", "example.org"]),
+        ("1", None, set(), ["example.com"]),
+        ("10", ".com", set(), ["example.net", "example.org"]),
+        ("10", ".gov,.mil,.net,.org", set(), ["example.com"]),
+        ("1", ".gov", set(), ["example.com"]),
+        ("10", None, set(["example.net"]), ["example.com", "example.org"]),
+        ("10", ".com", set(["example.net"]), ["example.org"]),
+        ("1", ".org", set(["example.com"]), ["example.net"])])
+    def test_get_domain_list(self, # pylint:disable=too-many-arguments
+                             monkeypatch,
+                             num_sites, exclude_suffixes, exclude_domains, expected):
         args = ["firefox", num_sites]
-        if exclude:
-            args.append("--exclude=" + exclude)
+        if exclude_suffixes:
+            args.append("--exclude=" + exclude_suffixes)
         cr = crawler.Crawler(crawler.create_argument_parser().parse_args(args))
 
         # mock out Tranco list
@@ -29,8 +34,8 @@ class TestSitelist:
 
         monkeypatch.setattr(Tranco, "list", mock_get)
 
-        # also clear exclude_domains
-        monkeypatch.setattr(cr, "exclude_domains", set())
+        # also mock out exclude_domains
+        monkeypatch.setattr(cr, "exclude_domains", exclude_domains)
 
         assert cr.get_domain_list() == expected
 
