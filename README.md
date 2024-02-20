@@ -31,7 +31,7 @@ See the following EFF.org blog post for more information: [Giving Privacy Badger
    $ BROWSER=firefox ./runscan.sh 500
    ```
 
-   This will scan the top 1000 sites on the Tranco list in Chrome
+   This will scan the top 500 sites on the Tranco list in Chrome
    with the latest version of Privacy Badger's master branch.
 
    To run the script with a different branch of Privacy Badger, set the `PB_BRANCH`
