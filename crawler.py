@@ -80,6 +80,8 @@ def create_argument_parser():
                     help='Number of websites to visit on the crawl')
     ap.add_argument('--exclude', default=None,
                     help='Exclude sites from scan whose domains end with one of the specified comma-separated suffixes')
+    ap.add_argument('--get-sitelist-only', action='store_true', default=False,
+                    help='If set, output the site list and exit')
     ap.add_argument('--no-blocking', action='store_true', default=False,
                     help="Disables blocking and snitch_map limits in Privacy Badger")
     ap.add_argument('--timeout', type=float, default=30.0,
@@ -1106,6 +1108,11 @@ class Crawler:
 
 if __name__ == '__main__':
     args = create_argument_parser().parse_args()
+
+    if args.get_sitelist_only:
+        for domain in Crawler(args).get_domain_list():
+            print(domain)
+        sys.exit(0)
 
     # create an XVFB virtual display (to avoid opening an actual browser)
     with Xvfb(width=1920, height=1200) if not args.no_xvfb else contextlib.suppress():
