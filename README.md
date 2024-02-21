@@ -9,7 +9,43 @@ about the trackers on popular sites. Every day, [`crawler.py`](./crawler.py) vis
 
 See the following EFF.org blog post for more information: [Giving Privacy Badger a Jump Start](https://www.eff.org/deeplinks/2018/08/giving-privacy-badger-jump-start).
 
-## Setup
+
+## Development setup
+
+1. Install Python 3.8+
+
+2. Create and activate a Python virtual environment:
+
+    ```bash
+    python3 -m venv venv
+    source ./venv/bin/activate
+    pip install -U pip
+    ```
+
+    For more, read [this blog post](https://snarky.ca/a-quick-and-dirty-guide-on-how-to-install-packages-for-python/).
+
+3. Install Python dependencies with `pip install -r requirements.txt`
+
+4. Run static analysis with `prospector`
+
+5. Run unit tests with `pytest`
+
+6. Take a look at Badger Sett commandline flags with `./crawler.py --help`
+
+7. Git clone the [Privacy Badger repository](https://github.com/EFForg/privacybadger) somewhere
+
+8. Try running a tiny scan:
+
+    ```bash
+    ./crawler.py firefox 5 --no-xvfb --log-stdout --pb-dir /path/to/privacybadger
+    ```
+
+
+## Production setup with Docker
+
+Docker takes care of all dependencies, including setting up the latest browser version.
+
+However, Docker brings its own complexity. Problems from improper file ownership and permissions are a particular pain point.
 
 0. Prerequisites: have [Docker](https://docs.docker.com/get-docker/) installed.
    Make sure your user is part of the `docker` group so that you can build and
