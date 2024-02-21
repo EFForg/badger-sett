@@ -130,10 +130,10 @@ def create_argument_parser():
     return ap
 
 
-def run(cmd, **kwargs):
+def run(cmd, cwd=pathlib.Path(__file__).parent.resolve()):
     """Convenience wrapper for getting the output of CLI commands"""
-    return subprocess.run(
-        cmd, capture_output=True, check=True, text=True, **kwargs).stdout.strip()
+    return subprocess.run(cmd, capture_output=True, check=True,
+                          cwd=cwd, text=True).stdout.strip()
 
 
 def get_git_info(path):
