@@ -851,33 +851,28 @@ class Crawler:
             domains = Tranco(cache=False).list(TRANCO_VERSION).top()
 
         # filter domains
-        if self.exclude_suffixes or self.exclude_domains:
-            filtered_domains = []
+        filtered_domains = []
+        suffixes = self.exclude_suffixes.split(",") if self.exclude_suffixes else []
 
-            suffixes = self.exclude_suffixes.split(",") if self.exclude_suffixes else []
+        for domain in domains:
+            if domain in self.exclude_domains:
+                continue
 
-            for domain in domains:
-                if self.exclude_domains:
-                    if domain in self.exclude_domains:
-                        continue
+            if domain.startswith("google.") and domain != "google.com":
+                continue
 
-                if domain.startswith("google.") and domain != "google.com":
+            if suffixes:
+                if any(domain.endswith(suffix) for suffix in suffixes):
                     continue
 
-                if suffixes:
-                    if any(domain.endswith(suffix) for suffix in suffixes):
-                        continue
+            filtered_domains.append(domain)
 
-                filtered_domains.append(domain)
+            # return the list if we gathered enough
+            if len(filtered_domains) == self.num_sites:
+                return filtered_domains
 
-                # return the list if we gathered enough
-                if len(filtered_domains) == self.num_sites:
-                    return filtered_domains
+        return filtered_domains
 
-            return filtered_domains
-
-        # if no filtering, just return top N domains from list
-        return domains[:self.num_sites]
 
     def start_browser(self):
         self.start_driver()
