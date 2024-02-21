@@ -861,6 +861,9 @@ class Crawler:
                     if domain in self.exclude_domains:
                         continue
 
+                if domain.startswith("google.") and domain != "google.com":
+                    continue
+
                 if suffixes:
                     if any(domain.endswith(suffix) for suffix in suffixes):
                         continue
