@@ -40,6 +40,24 @@ class TestSitelist:
 
         assert cr.get_domain_list() == expected
 
-    @pytest.mark.skip()
-    def test_recently_failed_domains(self):
-        pass
+    def test_get_recently_failed_domains(self, monkeypatch):
+        def mock_run(cmd, cwd=None): # pylint:disable=unused-argument
+            cmd = " ".join(cmd)
+
+            if cmd == "git rev-list --since='1 week ago' HEAD -- log.txt":
+                return "abcde\nfghij"
+
+            if cmd == "git show abcde:log.txt":
+                return "WebDriverException on example.com: XXX"
+
+            if cmd == "git show fghij:log.txt":
+                return "\n".join(["WebDriverException on example.org: YYY",
+                    "InsecureCertificateException on example.net: ZZZ"])
+
+            return ""
+
+        monkeypatch.setattr(crawler, "run", mock_run)
+
+        assert crawler.get_recently_failed_domains() == set(["example.com",
+                                                             "example.net",
+                                                             "example.org"])
