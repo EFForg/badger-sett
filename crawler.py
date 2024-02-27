@@ -868,7 +868,8 @@ class Crawler:
         # filter domains
         filtered_domains = []
         suffixes = self.exclude_suffixes.split(",") if self.exclude_suffixes else []
-        suffixes = ['*' + suffix for suffix in suffixes]
+        wildsuffixes = ['*' + suffix for suffix in suffixes if "?" in suffix]
+        suffixes = [suffix for suffix in suffixes if "?" not in suffix]
 
         for domain in domains:
             if domain in self.exclude_domains:
@@ -878,7 +879,11 @@ class Crawler:
                 continue
 
             if suffixes:
-                if any(fnmatch(domain, suffix) for suffix in suffixes):
+                if any(domain.endswith(suffix) for suffix in suffixes):
+                    continue
+
+            if wildsuffixes:
+                if any(fnmatch(domain, suffix) for suffix in wildsuffixes):
                     continue
 
             filtered_domains.append(domain)
