@@ -153,7 +153,8 @@ def get_git_info(path):
 
 
 def get_recently_failed_domains():
-    """Returns a set of domains that errored out in recent scans."""
+    """Returns a set of domains that errored or consistently timed out
+    in recent scans."""
     domains = set()
 
     revisions = run(["git", "rev-list", "--since='1 week ago'", "HEAD", "--", "log.txt"])
@@ -162,12 +163,23 @@ def get_recently_failed_domains():
     revisions = revisions.split('\n')
 
     error_pattern = re.compile("(?:WebDriver|InsecureCertificate)Exception on ([^:]+):")
+    timeout_pattern = re.compile("Timed out loading (.+)$")
+    timeout_counts = {}
 
     for rev in revisions:
         logs = run(f"git show {rev}:log.txt".split(" "))
         for line in logs.split('\n'):
             if matches := error_pattern.search(line):
                 domains.add(matches.group(1))
+            elif matches := timeout_pattern.search(line):
+                domain = matches.group(1)
+                if domain != "extension page":
+                    timeout_counts[domain] = timeout_counts.get(domain, 0) + 1
+
+    num_scans = len(revisions)
+    for domain, count in timeout_counts.items():
+        if count >= num_scans:
+            domains.add(domain)
 
     return domains
 

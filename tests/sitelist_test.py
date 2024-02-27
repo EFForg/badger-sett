@@ -48,10 +48,15 @@ class TestSitelist:
                 return "abcde\nfghij"
 
             if cmd == "git show abcde:log.txt":
-                return "WebDriverException on example.com: XXX"
+                return "\n".join(["WebDriverException on example.com: XXX",
+                    "Timed out loading example.biz",
+                    "Timed out loading example.co.uk",
+                    "Timed out loading extension page",])
 
             if cmd == "git show fghij:log.txt":
                 return "\n".join(["WebDriverException on example.org: YYY",
+                    "Timed out loading extension page",
+                    "Timed out loading example.co.uk",
                     "InsecureCertificateException on example.net: ZZZ"])
 
             return ""
@@ -60,4 +65,5 @@ class TestSitelist:
 
         assert crawler.get_recently_failed_domains() == set(["example.com",
                                                              "example.net",
-                                                             "example.org"])
+                                                             "example.org",
+                                                             "example.co.uk"])
