@@ -7,12 +7,32 @@ from tranco import Tranco
 
 class TestSitelist:
 
+    def mock_tranco_list(self, list_version): # pylint:disable=unused-argument
+        class MockResponse:
+            def top(self):
+                return ["example.com", "example.net", "example.org",
+                        "google.co.uk", "google.com"]
+        return MockResponse()
+
+    @pytest.mark.parametrize("exclude_suffixes, expected", [
+        (".com", ["example.net", "example.org"]),
+        (".net,.org", ["example.com", "google.com"]),
+        (".?om,.or?", ["example.net"]),
+        (".net,.org,google", ["example.com", "google.com"])])
+    def test_excluding_suffixes(self, monkeypatch, exclude_suffixes, expected):
+        args = ["firefox", "10"]
+        args.append("--exclude=" + exclude_suffixes)
+
+        cr = crawler.Crawler(crawler.create_argument_parser().parse_args(args))
+
+        monkeypatch.setattr(Tranco, "list", self.mock_tranco_list)
+        monkeypatch.setattr(cr, "exclude_domains", set())
+
+        assert cr.get_domain_list() == expected
+
     @pytest.mark.parametrize("num_sites, exclude_suffixes, exclude_domains, expected", [
         ("10", None, set(), ["example.com", "example.net", "example.org", "google.com"]),
         ("1", None, set(), ["example.com"]),
-        ("10", ".com", set(), ["example.net", "example.org"]),
-        ("10", ".gov,.mil,.net,.org", set(), ["example.com", "google.com"]),
-        ("1", ".gov", set(), ["example.com"]),
         ("10", None, set(["example.net"]), ["example.com", "example.org", "google.com"]),
         ("10", ".com", set(["example.net"]), ["example.org"]),
         ("1", ".org", set(["example.com"]), ["example.net"])])
@@ -24,18 +44,7 @@ class TestSitelist:
             args.append("--exclude=" + exclude_suffixes)
         cr = crawler.Crawler(crawler.create_argument_parser().parse_args(args))
 
-        # mock out Tranco list
-        class MockResponse:
-            def top(self):
-                return ["example.com", "example.net", "example.org",
-                        "google.co.uk", "google.com"]
-
-        def mock_get(self, list_version): # pylint:disable=unused-argument
-            return MockResponse()
-
-        monkeypatch.setattr(Tranco, "list", mock_get)
-
-        # also mock out exclude_domains
+        monkeypatch.setattr(Tranco, "list", self.mock_tranco_list)
         monkeypatch.setattr(cr, "exclude_domains", exclude_domains)
 
         assert cr.get_domain_list() == expected

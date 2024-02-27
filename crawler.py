@@ -15,6 +15,7 @@ import tempfile
 import time
 
 from datetime import datetime, timedelta
+from fnmatch import fnmatch
 from pprint import pformat
 from shutil import copytree
 from urllib3.exceptions import MaxRetryError, ProtocolError
@@ -73,7 +74,7 @@ def create_argument_parser():
     ap = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    ap.add_argument('browser', choices=[FIREFOX, CHROME, EDGE],
+    ap.add_argument('browser', choices=[CHROME, EDGE, FIREFOX],
                     help='Browser to use')
     ap.add_argument('num_sites', type=int,
                     help='Number of websites to visit')
@@ -100,12 +101,14 @@ def create_argument_parser():
                     help="If set, log to stdout as well as to log.txt")
 
     sg = ap.add_argument_group("optional sitelist arguments")
-    sg.add_argument('--exclude', default=None,
-                    help="Exclude domains that end with one of the specified "
-                    "comma-separated suffixes")
     sg.add_argument('--domain-list', default=None,
                     help="If set, load domains from this file "
                     "instead of Tranco")
+    sg.add_argument('--exclude', default=None,
+                    help="Exclude domains that end with one of the specified "
+                    "comma-separated suffixes. For example .gov,.gov.?? will "
+                    "exclude domains that end with .gov and also exclude "
+                    "domains that end with .gov. followed by any two letters")
     sg.add_argument('--get-sitelist-only', action='store_true', default=False,
                     help="If set, output the site list and exit")
 
@@ -865,6 +868,7 @@ class Crawler:
         # filter domains
         filtered_domains = []
         suffixes = self.exclude_suffixes.split(",") if self.exclude_suffixes else []
+        suffixes = ['*' + suffix for suffix in suffixes]
 
         for domain in domains:
             if domain in self.exclude_domains:
@@ -874,7 +878,7 @@ class Crawler:
                 continue
 
             if suffixes:
-                if any(domain.endswith(suffix) for suffix in suffixes):
+                if any(fnmatch(domain, suffix) for suffix in suffixes):
                     continue
 
             filtered_domains.append(domain)
