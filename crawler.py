@@ -863,7 +863,7 @@ class Crawler:
                         domains.append(domain)
         else:
             self.logger.info("Fetching Tranco list ...")
-            domains = Tranco(cache=False).list(TRANCO_VERSION).top()
+            domains = Tranco(cache_dir=tempfile.gettempdir()).list(TRANCO_VERSION).top()
 
         # filter domains
         filtered_domains = []
