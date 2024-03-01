@@ -23,10 +23,12 @@ class TestSitelist:
         args = ["firefox", "10"]
         args.append("--exclude=" + exclude_suffixes)
 
+        monkeypatch.setattr(crawler, "get_recently_failed_domains",
+                            lambda: set()) # pylint:disable=unnecessary-lambda
+
         cr = crawler.Crawler(crawler.create_argument_parser().parse_args(args))
 
         monkeypatch.setattr(Tranco, "list", self.mock_tranco_list)
-        monkeypatch.setattr(cr, "exclude_domains", set())
 
         assert cr.get_domain_list() == expected
 
@@ -42,6 +44,10 @@ class TestSitelist:
         args = ["firefox", num_sites]
         if exclude_suffixes:
             args.append("--exclude=" + exclude_suffixes)
+
+        monkeypatch.setattr(crawler, "get_recently_failed_domains",
+                            lambda: set()) # pylint:disable=unnecessary-lambda
+
         cr = crawler.Crawler(crawler.create_argument_parser().parse_args(args))
 
         monkeypatch.setattr(Tranco, "list", self.mock_tranco_list)
@@ -54,19 +60,33 @@ class TestSitelist:
             cmd = " ".join(cmd)
 
             if cmd == "git rev-list --since='1 week ago' HEAD -- log.txt":
-                return "abcde\nfghij"
+                return "abcde\nfghij\nklmno"
 
             if cmd == "git show abcde:log.txt":
-                return "\n".join(["WebDriverException on example.com: XXX",
+                return "\n".join(["Visiting 1: example.com",
+                    "WebDriverException on example.com: XXX",
+                    "Visiting 2: example.biz",
                     "Timed out loading example.biz",
+                    "Visiting 3: example.co.uk",
                     "Timed out loading example.co.uk",
-                    "Timed out loading extension page",])
+                    "Timed out loading extension page",
+                    "Timed out loading extension page"])
 
             if cmd == "git show fghij:log.txt":
-                return "\n".join(["WebDriverException on example.org: YYY",
+                return "\n".join(["Visiting 1: example.org",
+                    "WebDriverException on example.org: YYY",
                     "Timed out loading extension page",
+                    "Visiting 2: example.co.uk",
                     "Timed out loading example.co.uk",
+                    "Visiting 3: example.biz",
+                    "Visiting 4: example.website",
+                    "Timed out loading example.website",
+                    "Visiting 5: example.net",
                     "InsecureCertificateException on example.net: ZZZ"])
+
+            if cmd == "git show klmno:log.txt":
+                return "\n".join(["Visiting 1: example.website",
+                    "Timed out loading example.website"])
 
             return ""
 
@@ -75,4 +95,5 @@ class TestSitelist:
         assert crawler.get_recently_failed_domains() == set(["example.com",
                                                              "example.net",
                                                              "example.org",
-                                                             "example.co.uk"])
+                                                             "example.co.uk",
+                                                             "example.website"])

@@ -168,21 +168,30 @@ def get_recently_failed_domains():
     error_pattern = re.compile("(?:WebDriver|InsecureCertificate)Exception on ([^:]+):")
     timeout_pattern = re.compile("Timed out loading (.+)$")
     timeout_counts = {}
+    logs = []
 
     for rev in revisions:
-        logs = run(f"git show {rev}:log.txt".split(" "))
-        for line in logs.split('\n'):
+        log_txt = run(f"git show {rev}:log.txt".split(" "))
+        for line in log_txt.split('\n'):
             if matches := error_pattern.search(line):
                 domains.add(matches.group(1))
             elif matches := timeout_pattern.search(line):
                 domain = matches.group(1)
                 if domain != "extension page":
                     timeout_counts[domain] = timeout_counts.get(domain, 0) + 1
+        logs.append(log_txt)
 
     num_scans = len(revisions)
     for domain, count in timeout_counts.items():
         if count >= num_scans:
+            # site timed out in all recent scans
             domains.add(domain)
+        elif count > 1:
+            num_visits = sum(1 for log_txt in logs if re.search(
+                r"Visiting \d+: " + domain, log_txt))
+            if count == num_visits:
+                # site timed out in all recent scans **that it appeared in**
+                domains.add(domain)
 
     return domains
 
