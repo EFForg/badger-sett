@@ -44,9 +44,10 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from tldextract import TLDExtract
 from tranco import Tranco
 from xvfbwrapper import Xvfb
+
+from lib.basedomain import extract
 
 
 CHROME_EXT_ID = 'mcgekeccgjgcmhnhbabplanchdogjcnh'
@@ -1073,8 +1074,7 @@ class Crawler:
             self.logger.info(str(snitch_map['']))
             del snitch_map['']
 
-        # TODO once the need for this is gone, should be able to get rid of tldextract, in this script anyway
-        d1_base = self.tld_extract(d1).registered_domain
+        d1_base = extract(d1).registered_domain
         if not d1_base:
             d1_base = d1
 
@@ -1152,9 +1152,6 @@ if __name__ == '__main__':
         crawler = Crawler(args)
 
         crawler.init_logging(args.log_stdout)
-
-        crawler.logger.info("Fetching TLD definitions ...")
-        crawler.tld_extract = TLDExtract(cache_dir=False, include_psl_private_domains=True)
 
         crawler.start_browser()
 
