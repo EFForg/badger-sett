@@ -41,6 +41,7 @@ COPY requirements.txt .
 RUN pip3 install --user -r requirements.txt
 
 COPY crawler.py validate.py docker-entry.sh $HOME/
+COPY lib $HOME/lib
 COPY .git $HOME/.git
 COPY domain-lists $HOME/domain-lists
 COPY privacybadger $PBPATH
