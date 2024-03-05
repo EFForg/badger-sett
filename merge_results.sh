@@ -25,7 +25,7 @@ merge_results() {
     set -- "--load-data=<(git show ${rev}:results.json)" "$@"
   done
 
-  printf "./crawler.py --num-sites 0 --pb-dir ../privacybadger/ %s\\n" \\
+  printf "./crawler.py chrome 0 --pb-dir ../privacybadger/ %s\\n" \\
   for arg in "${@:1:${#@}-1}"; do
     printf "  %s %s\n" "$arg" \\
   done
