@@ -166,7 +166,7 @@ def get_recently_failed_domains():
         return domains
     revisions = revisions.split('\n')
 
-    error_pattern = re.compile("(?:WebDriver|InsecureCertificate)Exception on ([^:]+):")
+    error_pattern = re.compile("Exception on ([^:]+):")
     timeout_pattern = re.compile("Timed out loading (.+)$")
     timeout_counts = {}
     logs = []
