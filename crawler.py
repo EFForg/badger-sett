@@ -166,8 +166,8 @@ def get_recently_failed_domains():
         return domains
     revisions = revisions.split('\n')
 
-    error_pattern = re.compile("Exception on ([^:]+):")
-    timeout_pattern = re.compile("Timed out loading (.+)$")
+    error_pattern = re.compile("(?:Error loading|Exception on) ([^: ]+):")
+    timeout_pattern = re.compile("Timed out loading ([^ ]+)$")
     timeout_counts = {}
     logs = []
 
@@ -178,8 +178,7 @@ def get_recently_failed_domains():
                 domains.add(matches.group(1))
             elif matches := timeout_pattern.search(line):
                 domain = matches.group(1)
-                if domain != "extension page":
-                    timeout_counts[domain] = timeout_counts.get(domain, 0) + 1
+                timeout_counts[domain] = timeout_counts.get(domain, 0) + 1
         logs.append(log_txt)
 
     num_scans = len(revisions)

@@ -86,7 +86,11 @@ class TestSitelist:
 
             if cmd == "git show klmno:log.txt":
                 return "\n".join(["Visiting 1: example.website",
-                    "Timed out loading example.website"])
+                    "Timed out loading example.website",
+                    "Visiting 2: example.com",
+                    "Error loading extension page (JavascriptException):",
+                    "Visiting 3: example.us",
+                    "Error loading example.us:"])
 
             return ""
 
@@ -96,4 +100,5 @@ class TestSitelist:
                                                              "example.net",
                                                              "example.org",
                                                              "example.co.uk",
-                                                             "example.website"])
+                                                             "example.website",
+                                                             "example.us"])
