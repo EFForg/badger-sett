@@ -167,6 +167,7 @@ def get_recently_failed_domains():
     revisions = revisions.split('\n')
 
     error_pattern = re.compile("(?:Error loading|Exception on) ([^: ]+):")
+    num_scans = len(revisions)
     timeout_pattern = re.compile("Timed out loading ([^ ]+)$")
     timeout_counts = {}
     logs = []
@@ -179,9 +180,12 @@ def get_recently_failed_domains():
             elif matches := timeout_pattern.search(line):
                 domain = matches.group(1)
                 timeout_counts[domain] = timeout_counts.get(domain, 0) + 1
-        logs.append(log_txt)
+        if num_scans > 1:
+            logs.append(log_txt)
 
-    num_scans = len(revisions)
+    if num_scans == 1: # not enough data to look at timeouts
+        return domains
+
     for domain, count in timeout_counts.items():
         if count >= num_scans:
             # site timed out in all recent scans
