@@ -677,21 +677,23 @@ class Crawler:
             "}, done);"
         ))
 
+    def raise_on_datadome_pages(self):
+        try:
+            self.driver.find_element(By.CSS_SELECTOR,
+                "iframe[src^='https://geo.captcha-delivery.com/captcha/']")
+            raise WebDriverException("Reached DataDome security page")
+        except NoSuchElementException:
+            pass
+
     def raise_on_security_pages(self):
         """
-        Errors out on security check pages.
-        If we run into a lot of these, we may have a problem.
+        Detects and errors out on anti-bot CAPTCHA or challenge pages.
         """
-        page_title = self.driver.title
-
-        if page_title in ("Attention Required! | Cloudflare", "Just a moment..."):
+        if self.driver.title in ("Attention Required! | Cloudflare", "Just a moment..."):
             if 'https://challenges.cloudflare.com' in self.driver.page_source:
                 raise WebDriverException("Reached Cloudflare security page")
 
-        # TODO this seems to be out of date
-        elif page_title == "You have been blocked":
-            if "https://ct.captcha-delivery.com/c.js" in self.driver.page_source:
-                raise WebDriverException("Reached DataDome security page")
+        self.raise_on_datadome_pages()
 
     def raise_on_chrome_error_pages(self):
         # TODO update for changes in Chrome 85? now Chrome raises in many cases
@@ -845,6 +847,8 @@ class Crawler:
         self.raise_on_security_pages()
 
         self.scroll_page()
+
+        self.raise_on_datadome_pages()
 
         self.click_internal_link()
 
