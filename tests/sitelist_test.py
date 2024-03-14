@@ -20,11 +20,8 @@ class TestSitelist:
         (".?om,.or?", ["example.net"]),
         (".net,.org,google", ["example.com", "google.com"])])
     def test_excluding_suffixes(self, monkeypatch, exclude_suffixes, expected):
-        args = ["firefox", "10"]
+        args = ["firefox", "10", "--exclude-failures-since=off"]
         args.append("--exclude=" + exclude_suffixes)
-
-        monkeypatch.setattr(crawler, "get_recently_failed_domains",
-                            lambda: set()) # pylint:disable=unnecessary-lambda
 
         cr = crawler.Crawler(crawler.create_argument_parser().parse_args(args))
 
@@ -41,12 +38,9 @@ class TestSitelist:
     def test_get_domain_list(self, # pylint:disable=too-many-arguments
                              monkeypatch,
                              num_sites, exclude_suffixes, exclude_domains, expected):
-        args = ["firefox", num_sites]
+        args = ["firefox", num_sites, "--exclude-failures-since=off"]
         if exclude_suffixes:
             args.append("--exclude=" + exclude_suffixes)
-
-        monkeypatch.setattr(crawler, "get_recently_failed_domains",
-                            lambda: set()) # pylint:disable=unnecessary-lambda
 
         cr = crawler.Crawler(crawler.create_argument_parser().parse_args(args))
 
@@ -96,9 +90,8 @@ class TestSitelist:
 
         monkeypatch.setattr(crawler, "run", mock_run)
 
-        assert crawler.get_recently_failed_domains() == set(["example.com",
-                                                             "example.net",
-                                                             "example.org",
-                                                             "example.co.uk",
-                                                             "example.website",
-                                                             "example.us"])
+        expected_domains_set = set(["example.com", "example.net",
+                                    "example.org", "example.co.uk",
+                                    "example.website", "example.us"])
+
+        assert crawler.get_recently_failed_domains("1 week ago") == expected_domains_set

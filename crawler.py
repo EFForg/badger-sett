@@ -89,6 +89,7 @@ def create_argument_parser():
                     help=f"Saves screenshots to {os.path.join('OUT_DIR', 'screenshots')}")
     ap.add_argument('--load-extension', default=None,
                     help="Extension (.crx or .xpi) to install in addition to Privacy Badger")
+
     ap.add_argument('--no-blocking', action='store_true', default=False,
                     help="Disables blocking and snitch_map limits in Privacy Badger")
 
@@ -110,6 +111,10 @@ def create_argument_parser():
                     "comma-separated suffixes. For example .gov,.gov.?? will "
                     "exclude domains that end with .gov and also exclude "
                     "domains that end with .gov. followed by any two letters")
+    sg.add_argument('--exclude-failures-since', metavar='DATE', default='1 week',
+                    help="How far back to look in git history for log.txt "
+                    "for failed sites to auto-exclude from the site list. "
+                    "Set to 'off' to disable this feature")
     sg.add_argument('--get-sitelist-only', action='store_true', default=False,
                     help="If set, output the site list and exit")
 
@@ -156,12 +161,15 @@ def get_git_info(path):
     return git_info
 
 
-def get_recently_failed_domains():
+def get_recently_failed_domains(since_date):
     """Returns a set of domains that errored or consistently timed out
     in recent scans."""
     domains = set()
 
-    revisions = run(["git", "rev-list", "--since='1 week ago'", "HEAD", "--", "log.txt"])
+    if not since_date or since_date == "off":
+        return domains
+
+    revisions = run(["git", "rev-list", f"--since='{since_date}'", "HEAD", "--", "log.txt"])
     if not revisions:
         return domains
     revisions = revisions.split('\n')
@@ -310,7 +318,7 @@ class Crawler:
         self.browser = opts.browser
         self.chromedriver_path = opts.chromedriver_path
         self.domain_list = opts.domain_list
-        self.exclude_domains = get_recently_failed_domains()
+        self.exclude_domains = get_recently_failed_domains(opts.exclude_failures_since)
         self.exclude_suffixes = opts.exclude
         self.firefox_tracking_protection = opts.firefox_tracking_protection
         self.last_data = None
