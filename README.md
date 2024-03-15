@@ -138,7 +138,7 @@ repository with its results:
    example `crontab` entry:
 
    ```
-   0 0 * * *  RUN_BY_CRON=1 GIT_PUSH=1 BROWSER=chrome /home/USER/badger-sett/runscan.sh 6000 --exclude=.mil,.mil.??,.gov,.gov.??
+   0 0 * * *  RUN_BY_CRON=1 GIT_PUSH=1 BROWSER=chrome /home/USER/badger-sett/runscan.sh 6000 --exclude=.mil,.mil.??,.gov,.gov.??,.edu,.edu.??
    ```
 
 6. If everything has been set up correctly, the script should push a new version
