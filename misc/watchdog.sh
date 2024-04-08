@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd "$(dirname "$0")" || exit;
+cd "$(dirname "$0")" || exit
 
 lockdir=../.scan_in_progress
 logfile=../docker-out/log.txt

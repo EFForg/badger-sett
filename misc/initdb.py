@@ -94,20 +94,21 @@ def print_summary(cur):
     cur.execute("SELECT COUNT(DISTINCT scan_date) from TRACKING")
     print(f"Rebuilt badger.sqlite3 with data from {cur.fetchone()[0]} scans")
 
-    print("\nThe most prevalent third-party tracking domains:")
+    print("\nThe most prevalent (appearing on the greatest number of distinct"
+        "\nwebsites) third-party tracking domains over the last 365 days:\n")
     cur.execute("""
         SELECT t.base, COUNT(distinct tr.site_id) AS num_sites
         FROM tracking tr
         JOIN tracker t ON t.id = tr.tracker_id
-        --WHERE scan_date > DATETIME('now', '-30 day')
+        WHERE scan_date > DATETIME('now', '-365 day')
         GROUP BY t.base
-        ORDER BY num_sites  DESC
+        ORDER BY num_sites DESC
         LIMIT 40""")
     top_prevalence = None
     for row in cur.fetchall():
         if not top_prevalence:
             top_prevalence = row[1]
-        print(" ", round(row[1] / top_prevalence, 1), row[0])
+        print(f"  {round(row[1] / top_prevalence, 2):.2f}  {row[0]}")
     print()
 
 def main():
