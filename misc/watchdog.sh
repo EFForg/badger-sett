@@ -20,7 +20,7 @@ if [ ! "$(find "$logfile" -newermt "6 minutes ago")" ]; then
 
   # TODO it's possible we are still in the middle of restarting here
 
-  browser=$(grep -oP 'browser: [A-Za-z]+' "$logfile" | cut -d ' ' -f 2-)
+  browser=$(grep -oE 'browser: [A-Za-z]+' "$logfile" | cut -d ' ' -f 2-)
 
   # force a restart by killing the browser
   if [ "$browser" = Chrome ]; then
