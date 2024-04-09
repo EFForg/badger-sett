@@ -163,6 +163,9 @@ def main():
             browser = get_browser_from_commit(rev, version)
             if not browser:
                 continue
+            if browser not in browsers:
+                print(f"Skipping scan version {version}: unrecognized browser {browser}")
+                continue
 
             ingest_scan(cur, browser, version, results['snitch_map'],
                         results.get('tracking_map', {}))
