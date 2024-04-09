@@ -13,6 +13,7 @@ browsers = {
     "chrome": 2,
     "edge": 3
 }
+tracking_types = {}
 
 
 def run(cmd, cwd=pathlib.Path(__file__).parent.parent.resolve()):
@@ -69,17 +70,26 @@ def create_tables(cur):
             base VARCHAR(200) NOT NULL UNIQUE
         )""")
 
+    cur.execute("DROP TABLE IF EXISTS tracking_type")
+    cur.execute("""
+        CREATE TABLE tracking_type (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name VARCHAR(50) NOT NULL UNIQUE
+        )""")
+
     cur.execute("DROP TABLE IF EXISTS tracking")
     # TODO add unique constraint?
     cur.execute("""
         CREATE TABLE tracking (
             scan_date TIMESTAMP NOT NULL,
-            browser_id INTEGER,
-            site_id INTEGER,
-            tracker_id INTEGER,
+            browser_id INTEGER NOT NULL,
+            site_id INTEGER NOT NULL,
+            tracker_id INTEGER NOT NULL,
+            tracking_type_id INTEGER,
             FOREIGN KEY(browser_id) REFERENCES browser(id)
             FOREIGN KEY(site_id) REFERENCES site(id)
             FOREIGN KEY(tracker_id) REFERENCES tracker(id)
+            FOREIGN KEY(tracking_type_id) REFERENCES tracking_type(id)
         )""")
 
 def get_id(cur, table, field, value):
@@ -90,8 +100,31 @@ def get_id(cur, table, field, value):
     cur.execute(f"INSERT INTO {table} ({field}) VALUES (?)", (value,))
     return cur.lastrowid
 
+def ingest_scan(cur, browser, version, snitch_map, tracking_map):
+    year, month, day = (int(x) for x in version.split("."))
+
+    for tracker_base, sites in snitch_map.items():
+        tracker_id = get_id(cur, "tracker", "base", tracker_base)
+        tracking_map_entry = tracking_map.get(tracker_base, {})
+
+        for site in sites:
+            # TODO skip if latest MDFP says tracker_base and site are actually first parties
+            site_id = get_id(cur, "site", "fqdn", site)
+
+            for tracking_name in tracking_map_entry.get(site, [None]):
+                if tracking_name and tracking_name not in tracking_types:
+                    tracking_types[tracking_name] = get_id(
+                        cur, "tracking_type", "name", tracking_name)
+
+                cur.execute("""INSERT INTO tracking
+                    (scan_date, browser_id, tracker_id, site_id, tracking_type_id)
+                    VALUES (?,?,?,?,?)""", (
+                        datetime.datetime(year=year, month=month, day=day),
+                        browsers[browser], tracker_id, site_id,
+                        tracking_types[tracking_name] if tracking_name else None))
+
 def print_summary(cur):
-    cur.execute("SELECT COUNT(DISTINCT scan_date) from TRACKING")
+    cur.execute("SELECT COUNT(DISTINCT scan_date) FROM tracking")
     print(f"Rebuilt badger.sqlite3 with data from {cur.fetchone()[0]} scans")
 
     print("\nThe most prevalent (appearing on the greatest number of distinct"
@@ -131,21 +164,8 @@ def main():
             if not browser:
                 continue
 
-            year, month, day = (int(x) for x in version.split("."))
-            #tracking_map = results.get('tracking_map', {})
-
-            for tracker_base, sites in results['snitch_map'].items():
-                for site in sites:
-                    # TODO do something with tracking_map / canvas, beacon, etc.
-                    #tracking_types = tracking_map.get(tracker_base, {}).get(site, [])
-                    # TODO don't store if latest MDFP says tracker_base and site are actually first parties
-                    tracker_id = get_id(cur, "tracker", "base", tracker_base)
-                    site_id = get_id(cur, "site", "fqdn", site)
-                    cur.execute("INSERT INTO tracking "
-                        "(scan_date, browser_id, tracker_id, site_id) "
-                        "VALUES (?,?,?,?)", (
-                            datetime.datetime(year=year, month=month, day=day),
-                            browsers[browser], tracker_id, site_id))
+            ingest_scan(cur, browser, version, results['snitch_map'],
+                        results.get('tracking_map', {}))
 
         print_summary(cur)
         # TODO generate prevalence data for validate.py
