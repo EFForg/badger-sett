@@ -142,6 +142,19 @@ def print_summary(cur):
         if not top_prevalence:
             top_prevalence = row[1]
         print(f"  {round(row[1] / top_prevalence, 2):.2f}  {row[0]}")
+
+    print("\nThe most prevalent canvas fingerprinters over same date range:\n")
+    cur.execute("""
+        SELECT t.base, COUNT(distinct tr.site_id) AS num_sites
+        FROM tracking tr
+        JOIN tracker t ON t.id = tr.tracker_id
+        JOIN tracking_type tt ON tt.id = tr.tracking_type_id
+        WHERE tt.name = 'canvas' AND scan_date > DATETIME('now', '-365 day')
+        GROUP BY t.base
+        ORDER BY num_sites DESC
+        LIMIT 20""")
+    for row in cur.fetchall():
+        print(f"  {round(row[1] / top_prevalence, 2):.2f}  {row[0]}")
     print()
 
 def main():
