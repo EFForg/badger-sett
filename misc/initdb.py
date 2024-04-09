@@ -56,6 +56,15 @@ def create_tables(cur):
     for name, rowid in browsers.items():
         cur.execute("INSERT INTO browser (id,name) VALUES (?,?)", (rowid, name))
 
+    cur.execute("DROP TABLE IF EXISTS scan")
+    cur.execute("""
+        CREATE TABLE scan (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            date TIMESTAMP NOT NULL,
+            browser_id INTEGER NOT NULL,
+            FOREIGN KEY(browser_id) REFERENCES browser(id)
+        )""")
+
     cur.execute("DROP TABLE IF EXISTS site")
     cur.execute("""
         CREATE TABLE site (
@@ -81,12 +90,11 @@ def create_tables(cur):
     # TODO add unique constraint?
     cur.execute("""
         CREATE TABLE tracking (
-            scan_date TIMESTAMP NOT NULL,
-            browser_id INTEGER NOT NULL,
+            scan_id INTEGER NOT NULL,
             site_id INTEGER NOT NULL,
             tracker_id INTEGER NOT NULL,
             tracking_type_id INTEGER,
-            FOREIGN KEY(browser_id) REFERENCES browser(id)
+            FOREIGN KEY(scan_id) REFERENCES scan(id)
             FOREIGN KEY(site_id) REFERENCES site(id)
             FOREIGN KEY(tracker_id) REFERENCES tracker(id)
             FOREIGN KEY(tracking_type_id) REFERENCES tracking_type(id)
@@ -100,9 +108,7 @@ def get_id(cur, table, field, value):
     cur.execute(f"INSERT INTO {table} ({field}) VALUES (?)", (value,))
     return cur.lastrowid
 
-def ingest_scan(cur, browser, version, snitch_map, tracking_map):
-    year, month, day = (int(x) for x in version.split("."))
-
+def ingest_scan(cur, scan_id, snitch_map, tracking_map):
     for tracker_base, sites in snitch_map.items():
         tracker_id = get_id(cur, "tracker", "base", tracker_base)
         tracking_map_entry = tracking_map.get(tracker_base, {})
@@ -117,14 +123,13 @@ def ingest_scan(cur, browser, version, snitch_map, tracking_map):
                         cur, "tracking_type", "name", tracking_name)
 
                 cur.execute("""INSERT INTO tracking
-                    (scan_date, browser_id, tracker_id, site_id, tracking_type_id)
-                    VALUES (?,?,?,?,?)""", (
-                        datetime.datetime(year=year, month=month, day=day),
-                        browsers[browser], tracker_id, site_id,
+                    (scan_id, tracker_id, site_id, tracking_type_id)
+                    VALUES (?,?,?,?)""", (
+                        scan_id, tracker_id, site_id,
                         tracking_types[tracking_name] if tracking_name else None))
 
 def print_summary(cur):
-    cur.execute("SELECT COUNT(DISTINCT scan_date) FROM tracking")
+    cur.execute("SELECT COUNT(*) FROM scan")
     print(f"Rebuilt badger.sqlite3 with data from {cur.fetchone()[0]} scans")
 
     print("\nThe most prevalent (appearing on the greatest number of distinct"
@@ -132,8 +137,9 @@ def print_summary(cur):
     cur.execute("""
         SELECT t.base, COUNT(distinct tr.site_id) AS num_sites
         FROM tracking tr
+        JOIN scan ON scan.id = tr.scan_id
         JOIN tracker t ON t.id = tr.tracker_id
-        WHERE scan_date > DATETIME('now', '-365 day')
+        WHERE scan.date > DATETIME('now', '-365 day')
         GROUP BY t.base
         ORDER BY num_sites DESC
         LIMIT 40""")
@@ -147,9 +153,10 @@ def print_summary(cur):
     cur.execute("""
         SELECT t.base, COUNT(distinct tr.site_id) AS num_sites
         FROM tracking tr
+        JOIN scan ON scan.id = tr.scan_id
         JOIN tracker t ON t.id = tr.tracker_id
         JOIN tracking_type tt ON tt.id = tr.tracking_type_id
-        WHERE tt.name = 'canvas' AND scan_date > DATETIME('now', '-365 day')
+        WHERE tt.name = 'canvas' AND scan.date > DATETIME('now', '-365 day')
         GROUP BY t.base
         ORDER BY num_sites DESC
         LIMIT 20""")
@@ -180,8 +187,13 @@ def main():
                 print(f"Skipping scan version {version}: unrecognized browser {browser}")
                 continue
 
-            ingest_scan(cur, browser, version, results['snitch_map'],
-                        results.get('tracking_map', {}))
+            year, month, day = (int(x) for x in version.split("."))
+            cur.execute("INSERT INTO scan (date, browser_id) VALUES (?,?)", (
+                datetime.datetime(year=year, month=month, day=day),
+                browsers[browser]))
+            scan_id = cur.lastrowid
+
+            ingest_scan(cur, scan_id, results['snitch_map'], results.get('tracking_map', {}))
 
         print_summary(cur)
         # TODO generate prevalence data for validate.py
