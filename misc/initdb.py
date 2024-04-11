@@ -108,13 +108,16 @@ def get_id(cur, table, field, value):
     cur.execute(f"INSERT INTO {table} ({field}) VALUES (?)", (value,))
     return cur.lastrowid
 
-def ingest_scan(cur, scan_id, snitch_map, tracking_map):
+def ingest_scan(mdfp, cur, scan_id, snitch_map, tracking_map):
     for tracker_base, sites in snitch_map.items():
         tracker_id = get_id(cur, "tracker", "base", tracker_base)
         tracking_map_entry = tracking_map.get(tracker_base, {})
 
         for site in sites:
-            # TODO skip if latest MDFP says tracker_base and site are actually first parties
+            # skip if latest MDFP says tracker_base and site are first parties
+            if site in mdfp.get(tracker_base, []):
+                continue
+
             site_id = get_id(cur, "site", "fqdn", site)
 
             for tracking_name in tracking_map_entry.get(site, [None]):
@@ -164,10 +167,29 @@ def print_summary(cur):
         print(f"  {round(row[1] / top_prevalence, 2):.2f}  {row[0]}")
     print()
 
+def load_mdfp():
+    pb_path = "../privacybadger" # TODO make into cli arg
+    mdfp_export_js = ("const { default: mdfp } = "
+        f"await import('{pb_path}/src/js/multiDomainFirstParties.js'); "
+        "process.stdout.write(JSON.stringify(mdfp.multiDomainFirstPartiesArray));")
+    mdfp_array = run(["node", "--input-type=module", f'--eval={mdfp_export_js}'])
+
+    if not mdfp_array:
+        print("Failed to load MDFP definitions, fix path to Privacy Badger")
+        return {}
+
+    mdfp_lookup_dict = {}
+    for entity_bases in json.loads(mdfp_array):
+        for base in entity_bases:
+            mdfp_lookup_dict[base] = entity_bases
+    return mdfp_lookup_dict
+
 def main():
     revisions = run("git rev-list HEAD -- results.json".split(" "))
     if not revisions:
         return
+
+    mdfp = load_mdfp()
 
     with sqlite3.connect("badger.sqlite3", detect_types=sqlite3.PARSE_DECLTYPES) as db:
         cur = db.cursor()
@@ -193,7 +215,7 @@ def main():
                 browsers[browser]))
             scan_id = cur.lastrowid
 
-            ingest_scan(cur, scan_id, results['snitch_map'], results.get('tracking_map', {}))
+            ingest_scan(mdfp, cur, scan_id, results['snitch_map'], results.get('tracking_map', {}))
 
         print_summary(cur)
         # TODO generate prevalence data for validate.py
