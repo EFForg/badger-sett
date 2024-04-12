@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
+import configparser
 import datetime
 import json
+import os
 import pathlib
 import re
 import sqlite3
@@ -44,6 +46,13 @@ def get_browser_from_commit(rev, version):
             return "firefox"
 
     return None
+
+def get_scan_id(cur, version, browser):
+    year, month, day = (int(x) for x in version.split("."))
+    cur.execute("INSERT INTO scan (date, browser_id) VALUES (?,?)", (
+        datetime.datetime(year=year, month=month, day=day),
+        browsers[browser]))
+    return cur.lastrowid
 
 def create_tables(cur):
     cur.execute("DROP TABLE IF EXISTS browser")
@@ -108,7 +117,7 @@ def get_id(cur, table, field, value):
     cur.execute(f"INSERT INTO {table} ({field}) VALUES (?)", (value,))
     return cur.lastrowid
 
-def ingest_scan(mdfp, cur, scan_id, snitch_map, tracking_map):
+def ingest_scan(cur, mdfp, scan_id, snitch_map, tracking_map):
     for tracker_base, sites in snitch_map.items():
         tracker_id = get_id(cur, "tracker", "base", tracker_base)
         tracking_map_entry = tracking_map.get(tracker_base, {})
@@ -167,15 +176,14 @@ def print_summary(cur):
         print(f"  {round(row[1] / top_prevalence, 2):.2f}  {row[0]}")
     print()
 
-def load_mdfp():
-    pb_path = "../privacybadger" # TODO make into cli arg
+def load_mdfp(pb_dir):
     mdfp_export_js = ("const { default: mdfp } = "
-        f"await import('{pb_path}/src/js/multiDomainFirstParties.js'); "
+        f"await import('{pb_dir}/src/js/multiDomainFirstParties.js'); "
         "process.stdout.write(JSON.stringify(mdfp.multiDomainFirstPartiesArray));")
     mdfp_array = run(["node", "--input-type=module", f'--eval={mdfp_export_js}'])
 
     if not mdfp_array:
-        print("Failed to load MDFP definitions, fix path to Privacy Badger")
+        print("Failed to load MDFP definitions")
         return {}
 
     mdfp_lookup_dict = {}
@@ -184,43 +192,87 @@ def load_mdfp():
             mdfp_lookup_dict[base] = entity_bases
     return mdfp_lookup_dict
 
-def main():
+def ingest_distributed_scans(badger_swarm_dir, cur, mdfp):
+    bs_path = pathlib.Path(badger_swarm_dir)
+    if not bs_path.is_dir():
+        print("Badger Swarm not found, skipping distributed scans")
+        return
+
+    scan_paths = sorted(
+        [x for x in pathlib.Path(bs_path/'output').iterdir() if x.is_dir()],
+        # sort by date started
+        key=lambda path: os.path.getctime(sorted(path.glob('*'), key=os.path.getctime)[0]))
+
+    for scan_path in scan_paths:
+        # skip if it's not clear this is a --no-blocking mode scan
+        if not pathlib.Path(scan_path/'results-noblocking.json').is_file():
+            continue
+
+        # skip if no run settings config
+        config_path = pathlib.Path(scan_path/'run_settings.ini')
+        if not config_path.is_file():
+            continue
+
+        # skip non-default branch runs
+        config = configparser.ConfigParser()
+        config.read(config_path)
+        run_settings = { key: val for name in config.keys() \
+            for key, val in dict(config.items(name)).items() }
+        if run_settings.get('pb_branch', 'master') != 'master':
+            continue
+
+        browser = run_settings['browser']
+
+        results_glob = "results.???.json"
+        if not any(True for _ in scan_path.glob(results_glob)):
+            results_glob = "results.????.json"
+
+        for results_file in scan_path.glob(results_glob):
+            results = json.loads(results_file.read_bytes())
+            version = results['version']
+            scan_id = get_scan_id(cur, version, browser)
+            ingest_scan(cur, mdfp, scan_id, results['snitch_map'],
+                        results.get('tracking_map', {}))
+
+def ingest_daily_scans(cur, mdfp):
     revisions = run("git rev-list HEAD -- results.json".split(" "))
     if not revisions:
         return
 
-    mdfp = load_mdfp()
+    for rev in revisions.split('\n'):
+        results = json.loads(run(f"git show {rev}:results.json".split(" ")))
+
+        version = results.get('version')
+        if not version:
+            continue
+
+        browser = get_browser_from_commit(rev, version)
+        if not browser:
+            continue
+        if browser not in browsers:
+            print(f"Skipping scan version {version}: unrecognized browser {browser}")
+            continue
+
+        scan_id = get_scan_id(cur, version, browser)
+
+        ingest_scan(cur, mdfp, scan_id, results['snitch_map'],
+                    results.get('tracking_map', {}))
+
+
+if __name__ == '__main__':
+    # TODO don't hardcode
+    mdfp = load_mdfp("../privacybadger")
 
     with sqlite3.connect("badger.sqlite3", detect_types=sqlite3.PARSE_DECLTYPES) as db:
         cur = db.cursor()
+
         create_tables(cur)
 
-        for rev in revisions.split('\n'):
-            results = json.loads(run(f"git show {rev}:results.json".split(" ")))
+        # TODO don't hardcode
+        ingest_distributed_scans("../badger-swarm", cur, mdfp)
 
-            version = results.get('version')
-            if not version:
-                continue
-
-            browser = get_browser_from_commit(rev, version)
-            if not browser:
-                continue
-            if browser not in browsers:
-                print(f"Skipping scan version {version}: unrecognized browser {browser}")
-                continue
-
-            year, month, day = (int(x) for x in version.split("."))
-            cur.execute("INSERT INTO scan (date, browser_id) VALUES (?,?)", (
-                datetime.datetime(year=year, month=month, day=day),
-                browsers[browser]))
-            scan_id = cur.lastrowid
-
-            ingest_scan(mdfp, cur, scan_id, results['snitch_map'], results.get('tracking_map', {}))
+        ingest_daily_scans(cur, mdfp)
 
         print_summary(cur)
         # TODO generate prevalence data for validate.py
         print("All done")
-
-
-if __name__ == '__main__':
-    main()
