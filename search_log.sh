@@ -44,6 +44,6 @@ for rev in $(git rev-list HEAD -- log.txt); do
 
   printf "%s  %-20.20s  %s\n" \
     "$(git show -s --format="%h  %ci" "$rev")" \
-    "$(git show -s --format="%s" "$rev" | sed -e 's/^.*(//' -e 's/).*$//' -e 's/\(Add data \|Update seed data: \|master \|from \)//g')" \
+    "$(git show -s --format="%s" "$rev" | sed -e 's/^.*(//' -e 's/).*$//' -e 's/\(Add data \|Update seed data: \|master \|from \)//g' | rev | cut -d ' ' -f 1,2 | rev)" \
     "$found"
 done
