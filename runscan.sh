@@ -42,7 +42,9 @@ if [ -e "$PB_DIR" ] ; then
   cd "$PB_DIR" || exit
   git fetch
   git checkout "$PB_BRANCH"
-  git pull
+  # git pull will fail when the remote branch was force pushed to;
+  # explicitly discard local revisions/changes and use the latest from remote
+  git reset --hard origin/"$PB_BRANCH"
 else
   echo "Cloning Privacy Badger into $PB_DIR ..."
   git clone https://github.com/efforg/privacybadger "$PB_DIR"
