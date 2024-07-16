@@ -1,6 +1,6 @@
 ARG BROWSER
 
-FROM python:3.8
+FROM python:3.9
 FROM selenium/standalone-${BROWSER}
 
 ARG UID
