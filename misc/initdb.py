@@ -32,7 +32,8 @@ def get_browser_from_commit(rev, version):
     subject = run(f"git show {rev} -s --format=%s".split(" "))
     version_esc = version.replace('.', '\\.')
 
-    if matches := re.search(f"^Add data {version_esc} " + r"\(master ([^ \)]+)", subject):
+    # skip non-default branch runs
+    if matches := re.search(f"^Add data {version_esc} " + r"\((?:master|mv3-chrome) ([^ \)]+)", subject):
         return matches.group(1)
 
     if matches := re.search(f"^Add data v{version_esc} from (.+)$", subject):
@@ -226,7 +227,7 @@ def ingest_distributed_scans(badger_swarm_dir, cur, mdfp):
         config.read(config_path)
         run_settings = { key: val for name in config.keys() \
             for key, val in dict(config.items(name)).items() }
-        if run_settings.get('pb_branch', 'master') != 'master':
+        if run_settings.get('pb_branch', 'master') not in ('master', 'mv3-chrome'):
             continue
 
         browser = run_settings['browser']
