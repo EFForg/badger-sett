@@ -20,8 +20,10 @@ tracking_types = {}
 
 def run(cmd, cwd=pathlib.Path(__file__).parent.parent.resolve()):
     """Convenience wrapper for getting the output of CLI commands"""
-    return subprocess.run(cmd, capture_output=True, check=False,
-                          cwd=cwd, text=True).stdout.strip()
+    res = subprocess.run(
+            cmd, cwd=cwd, capture_output=True, check=True, text=True)
+
+    return res.stdout.strip()
 
 def get_browser_from_commit(rev, version):
     """Returns the browser string for daily scans with corresponding logs;
@@ -37,8 +39,9 @@ def get_browser_from_commit(rev, version):
         return matches.group(1)
 
     if subject == f"Update seed data: {version}":
-        log_txt = run(f"git show {rev}:log.txt".split(" "))
-        if not log_txt:
+        try:
+            log_txt = run(f"git show {rev}:log.txt".split(" "))
+        except subprocess.CalledProcessError:
             return None
         if "'browserName': 'chrome'," in log_txt or "browser: chrome" in log_txt:
             return "chrome"
@@ -177,10 +180,15 @@ def print_summary(cur):
     print()
 
 def load_mdfp(pb_dir):
-    mdfp_export_js = ("const { default: mdfp } = "
-        f"await import('{pb_dir}/src/js/multiDomainFirstParties.js'); "
-        "process.stdout.write(JSON.stringify(mdfp.multiDomainFirstPartiesArray));")
-    mdfp_array = run(["node", "--input-type=module", f'--eval={mdfp_export_js}'])
+    mdfp_array = None
+    try:
+        mdfp_export_js = ("const { default: mdfp } = "
+            f"await import('{pb_dir}/src/js/multiDomainFirstParties.js'); "
+            "process.stdout.write(JSON.stringify(mdfp.multiDomainFirstPartiesArray));")
+        mdfp_array = run(["node", "--input-type=module",
+                          f'--eval={mdfp_export_js}'])
+    except subprocess.CalledProcessError as ex:
+        print(ex.stderr)
 
     if not mdfp_array:
         print("Failed to load MDFP definitions")
