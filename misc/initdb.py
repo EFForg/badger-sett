@@ -51,13 +51,9 @@ def get_browser_from_commit(rev, version):
 
     return None
 
-def get_scan_id(cur, version, browser, no_blocking):
-    year, month, day = (int(x) for x in version.split("."))
+def get_scan_id(cur, scan_time, browser, no_blocking):
     cur.execute("INSERT INTO scan (date, browser_id, no_blocking) "
-                "VALUES (?,?,?)", (
-                    datetime.datetime(year=year, month=month, day=day),
-                    browsers[browser],
-                    no_blocking))
+                "VALUES (?,?,?)", (scan_time, browsers[browser], no_blocking))
     return cur.lastrowid
 
 def create_tables(cur):
@@ -241,8 +237,9 @@ def ingest_distributed_scans(badger_swarm_dir, cur, mdfp):
 
         for results_file in scan_path.glob(results_glob):
             results = json.loads(results_file.read_bytes())
-            version = results['version']
-            scan_id = get_scan_id(cur, version, browser, True)
+            scan_time = datetime.datetime.fromtimestamp(int(
+                str(scan_path).rpartition('-')[-1]))
+            scan_id = get_scan_id(cur, scan_time, browser, True)
             ingest_scan(cur, mdfp, scan_id, results['snitch_map'],
                         results.get('tracking_map', {}))
 
@@ -265,7 +262,9 @@ def ingest_daily_scans(cur, mdfp):
             print(f"Skipping scan version {version}: unrecognized browser {browser}")
             continue
 
-        scan_id = get_scan_id(cur, version, browser, False)
+        year, month, day = (int(x) for x in version.split("."))
+        scan_date = datetime.datetime(year=year, month=month, day=day)
+        scan_id = get_scan_id(cur, scan_date, browser, False)
 
         ingest_scan(cur, mdfp, scan_id, results['snitch_map'],
                     results.get('tracking_map', {}))
