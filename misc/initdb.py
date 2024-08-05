@@ -182,10 +182,10 @@ def print_summary(cur):
 def load_mdfp(pb_dir):
     mdfp_array = None
     try:
-        mdfp_export_js = ("const { default: mdfp } = "
-            f"await import('{pb_dir}/src/js/multiDomainFirstParties.js'); "
-            "process.stdout.write(JSON.stringify(mdfp.multiDomainFirstPartiesArray));")
-        mdfp_array = run(["node", "--input-type=module",
+        mdfp_export_js = f"""
+const {{ default: mdfp }} = await import('{pb_dir}/src/js/multiDomainFirstParties.js');
+process.stdout.write(JSON.stringify(mdfp.multiDomainFirstPartiesArray));"""
+        mdfp_array = run(["node", "--experimental-default-type=module",
                           f'--eval={mdfp_export_js}'])
     except subprocess.CalledProcessError as ex:
         print(ex.stderr)
