@@ -41,9 +41,12 @@ def get_browser(log_txt):
         return "edge"
     return None
 
-def get_scan_id(cur, scan_time, browser, no_blocking):
-    cur.execute("INSERT INTO scan (date, browser_id, no_blocking) "
-                "VALUES (?,?,?)", (scan_time, browsers[browser], no_blocking))
+def get_scan_id(cur, scan_time, browser, no_blocking, daily_scan):
+    # TODO also record region we're scanning from
+    # TODO and the list we're scanning against
+    cur.execute("INSERT INTO scan (date, browser_id, no_blocking, daily_scan) "
+                "VALUES (?,?,?,?)", (scan_time, browsers[browser], no_blocking,
+                daily_scan))
     return cur.lastrowid
 
 def create_tables(cur):
@@ -64,6 +67,7 @@ def create_tables(cur):
             date TIMESTAMP NOT NULL,
             browser_id INTEGER NOT NULL,
             no_blocking BOOLEAN NOT NULL CHECK (no_blocking IN (0, 1)),
+            daily_scan BOOLEAN NOT NULL CHECK (daily_scan IN (0, 1)),
             FOREIGN KEY(browser_id) REFERENCES browser(id)
         )""")
 
@@ -229,7 +233,7 @@ def ingest_distributed_scans(badger_swarm_dir, cur, mdfp):
             results = json.loads(results_file.read_bytes())
             scan_time = datetime.datetime.fromtimestamp(int(
                 str(scan_path).rpartition('-')[-1]))
-            scan_id = get_scan_id(cur, scan_time, browser, True)
+            scan_id = get_scan_id(cur, scan_time, browser, True, False)
             ingest_scan(cur, mdfp, scan_id, results['snitch_map'],
                         results.get('tracking_map', {}))
 
@@ -261,15 +265,15 @@ def ingest_daily_scans(cur, mdfp):
             if branch not in ("master", "mv3-chrome"):
                 continue
 
-        results = json.loads(run(f"git show {rev}:results.json".split(" ")))
-
         scan_time = datetime.datetime.strptime(log_txt[:19], "%Y-%m-%d %H:%M:%S")
 
         no_blocking = False
         if "  blocking: off\n" in log_txt:
             no_blocking = True
 
-        scan_id = get_scan_id(cur, scan_time, browser, no_blocking)
+        scan_id = get_scan_id(cur, scan_time, browser, no_blocking, True)
+
+        results = json.loads(run(f"git show {rev}:results.json".split(" ")))
 
         ingest_scan(cur, mdfp, scan_id, results['snitch_map'],
                     results.get('tracking_map', {}))
