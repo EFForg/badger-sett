@@ -16,7 +16,7 @@ fi
 
 if [ -f badger.sqlite3 ]; then
   query_results=$(sqlite3 badger.sqlite3 -batch -noheader \
-    'SELECT tr.base, scan.date, b.name, GROUP_CONCAT(site.fqdn), GROUP_CONCAT(DISTINCT tt.name) FROM tracking t JOIN tracker tr ON t.tracker_id = tr.id JOIN scan ON scan.id = t.scan_id JOIN browser b ON b.id = scan.browser_id JOIN site ON site.id = t.site_id JOIN tracking_type tt ON tt.id = t.tracking_type_id WHERE scan.daily_scan = 1 AND tr.base LIKE "%'"$1"'%" GROUP BY scan.date ORDER BY scan.date DESC')
+    'SELECT tr.base, scan.date, b.name, GROUP_CONCAT(site.fqdn), GROUP_CONCAT(DISTINCT tt.name) FROM tracking t JOIN tracker tr ON t.tracker_id = tr.id JOIN scan ON scan.id = t.scan_id JOIN browser b ON b.id = scan.browser_id JOIN site ON site.id = t.site_id LEFT JOIN tracking_type tt ON tt.id = t.tracking_type_id WHERE scan.daily_scan = 1 AND tr.base LIKE "%'"$1"'%" GROUP BY scan.date ORDER BY scan.date DESC')
   if [ -z "$query_results" ]; then
     printf "No matches in badger.sqlite3\n\n"
   else
