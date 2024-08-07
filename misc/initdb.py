@@ -5,7 +5,6 @@ import datetime
 import json
 import os
 import pathlib
-import re
 import sqlite3
 import subprocess
 
@@ -25,30 +24,21 @@ def run(cmd, cwd=pathlib.Path(__file__).parent.parent.resolve()):
 
     return res.stdout.strip()
 
-def get_browser_from_commit(rev, version):
-    """Returns the browser string for daily scans with corresponding logs;
-    returns None otherwise."""
-
-    subject = run(f"git show {rev} -s --format=%s".split(" "))
-    version_esc = version.replace('.', '\\.')
-
-    # skip non-default branch runs
-    if matches := re.search(f"^Add data {version_esc} " + r"\((?:master|mv3-chrome) ([^ \)]+)", subject):
-        return matches.group(1)
-
-    if matches := re.search(f"^Add data v{version_esc} from (.+)$", subject):
-        return matches.group(1)
-
-    if subject == f"Update seed data: {version}":
-        try:
-            log_txt = run(f"git show {rev}:log.txt".split(" "))
-        except subprocess.CalledProcessError:
-            return None
-        if "'browserName': 'chrome'," in log_txt or "browser: chrome" in log_txt:
-            return "chrome"
-        if "'browserName': 'firefox'," in log_txt or "browser: firefox" in log_txt:
-            return "firefox"
-
+def get_browser(log_txt):
+    if " 'browserName': 'chrome',\n" in log_txt:
+        return "chrome"
+    if " 'browserName': 'firefox',\n" in log_txt:
+        return "firefox"
+    if "  browser: Edge\n" in log_txt:
+        return "edge"
+    if "  browser: chrome\n" in log_txt:
+        return "chrome"
+    if "  browser: firefox\n" in log_txt:
+        return "firefox"
+    if "\tbrowser: chrome" in log_txt:
+        return "chrome"
+    if " 'browserName': 'msedge',\n" in log_txt:
+        return "edge"
     return None
 
 def get_scan_id(cur, scan_time, browser, no_blocking):
@@ -249,22 +239,37 @@ def ingest_daily_scans(cur, mdfp):
         return
 
     for rev in revisions.split('\n'):
+        log_txt = None
+
+        try:
+            log_txt = run(f"git show {rev}:log.txt".split(" "))
+        except subprocess.CalledProcessError:
+            continue
+
+        # discard most of the log
+        log_txt = log_txt[:log_txt.index("isiting 1:")]
+
+        browser = get_browser(log_txt)
+        if browser not in browsers:
+            print(f"Skipping scan {rev}: unrecognized browser {browser}")
+            continue
+
+        # skip non-default branch runs
+        branch_info_idx = log_txt.find("  Badger branch: ")
+        if branch_info_idx > -1:
+            branch = log_txt[branch_info_idx+17 : log_txt.index("\n", branch_info_idx+17)]
+            if branch not in ("master", "mv3-chrome"):
+                continue
+
         results = json.loads(run(f"git show {rev}:results.json".split(" ")))
 
-        version = results.get('version')
-        if not version:
-            continue
+        scan_time = datetime.datetime.strptime(log_txt[:19], "%Y-%m-%d %H:%M:%S")
 
-        browser = get_browser_from_commit(rev, version)
-        if not browser:
-            continue
-        if browser not in browsers:
-            print(f"Skipping scan version {version}: unrecognized browser {browser}")
-            continue
+        no_blocking = False
+        if "  blocking: off\n" in log_txt:
+            no_blocking = True
 
-        year, month, day = (int(x) for x in version.split("."))
-        scan_date = datetime.datetime(year=year, month=month, day=day)
-        scan_id = get_scan_id(cur, scan_date, browser, False)
+        scan_id = get_scan_id(cur, scan_time, browser, no_blocking)
 
         ingest_scan(cur, mdfp, scan_id, results['snitch_map'],
                     results.get('tracking_map', {}))
