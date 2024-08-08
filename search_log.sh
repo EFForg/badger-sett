@@ -14,15 +14,37 @@ if [ -z "$1" ] || [ $# -ne 1 ]; then
   exit 1
 fi
 
+show_trackers_by_site() {
+  local query_results
+  query_results=$(sqlite3 badger.sqlite3 -batch \
+    'SELECT site.fqdn "site", scan.daily_scan, GROUP_CONCAT(DISTINCT tr.base) FROM tracking t JOIN site ON site.id = t.site_id JOIN tracker tr ON tr.id = t.tracker_id JOIN scan ON scan.id = t.scan_id WHERE scan.date > DATETIME("now", "-30 day") AND site.fqdn LIKE "%'"$1"'%" GROUP BY site.fqdn, scan.daily_scan')
+  if [ -n "$query_results" ]; then
+    echo "Recent trackers on matching site domains:"
+    echo "$query_results" | column -s "|" -t
+    echo
+  fi
+}
+
+show_sites_by_tracker() {
+  local query_results
+  query_results=$(sqlite3 badger.sqlite3 -batch \
+    'SELECT tr.base "tracker", scan.daily_scan, GROUP_CONCAT(DISTINCT site.fqdn) FROM tracking t JOIN site ON site.id = t.site_id JOIN tracker tr ON tr.id = t.tracker_id JOIN scan ON scan.id = t.scan_id WHERE scan.date > DATETIME("now", "-30 day") AND tr.base LIKE "%'"$1"'%" GROUP BY tr.base, scan.daily_scan')
+  if [ -n "$query_results" ]; then
+    echo "Recent site domains with matching trackers:"
+    echo "$query_results" | column -s "|" -t
+    echo
+  fi
+}
+
 show_most_recent_matches() {
   local query_results num_results
   query_results=$(sqlite3 badger.sqlite3 -batch -noheader \
     'SELECT tr.base, scan.date, b.name, GROUP_CONCAT(site.fqdn), GROUP_CONCAT(DISTINCT tt.name) FROM tracking t JOIN tracker tr ON t.tracker_id = tr.id JOIN scan ON scan.id = t.scan_id JOIN browser b ON b.id = scan.browser_id JOIN site ON site.id = t.site_id LEFT JOIN tracking_type tt ON tt.id = t.tracking_type_id WHERE scan.daily_scan = 1 AND tr.base LIKE "%'"$1"'%" GROUP BY scan.date ORDER BY scan.date DESC')
   if [ -z "$query_results" ]; then
-    printf "No matches in badger.sqlite3\n\n"
+    printf "No daily scan matches in badger.sqlite3\n\n"
   else
     num_results=$(echo "$query_results" | wc -l)
-    echo "Most recent matches from badger.sqlite3:"
+    echo "Most recent daily scan matches from badger.sqlite3:"
     echo "$query_results" | head -n 10 | column -s "|" -t
     if [ "$num_results" -gt 10 ]; then
       printf "...%s more matches..." $((num_results - 10))
@@ -33,6 +55,8 @@ show_most_recent_matches() {
 
 if [ -f badger.sqlite3 ]; then
   show_most_recent_matches "$1"
+  show_sites_by_tracker "$1"
+  show_trackers_by_site "$1"
 fi
 
 echo "Searching through git history ..."
