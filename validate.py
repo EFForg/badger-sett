@@ -75,17 +75,14 @@ overlap = old_keys & new_keys
 print("New action map has %d new domains and dropped %d old domains\n" %
       (len(new_keys - overlap), len(old_keys - overlap)))
 
-BLOCKED = ("block", "cookieblock")
-
 blocked_old = defaultdict(list)
 for domain in old_js['action_map'].keys():
-    if old_js['action_map'][domain]['heuristicAction'] not in BLOCKED:
-        continue
-
     base = extract(domain).registered_domain
     if not base:
         base = domain
-    blocked_old[base].append(domain)
+    if base in old_js['snitch_map']:
+        if len(old_js['snitch_map'][base]) >= 3:
+            blocked_old[base].append(domain)
 
 new_domains = defaultdict(list)
 blocked_new = defaultdict(list)
@@ -97,8 +94,12 @@ for domain in new_js['action_map'].keys():
         print(f"Failed to extract base domain for {domain}")
         base = domain
     new_domains[base].append(domain)
-    if new_js['action_map'][domain]['heuristicAction'] in BLOCKED:
-        blocked_new[base].append(domain)
+    if base in new_js['snitch_map']:
+        if len(new_js['snitch_map'][base]) >= 3:
+            blocked_new[base].append(domain)
+    else:
+        # TODO happens with s3.amazonaws.com, why?
+        print(f"Failed to find {base} (eTLD+1 of {domain}) in snitch_map")
 
 blocked_bases_old = set(blocked_old.keys())
 blocked_bases_new = set(blocked_new.keys())
