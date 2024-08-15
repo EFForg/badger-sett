@@ -17,16 +17,18 @@ def print_warnings(new_js):
 
     for domain in sorted(new_js['fp_scripts'], key=lambda d: extract(d).registered_domain or d):
         already_known_hosts = (
+            'd.alicdn.com',
+            's3.us-west-2.amazonaws.com',
+            'fp-cdn.azureedge.net',
+            'sdtagging.azureedge.net',
             'cdnjs.cloudflare.com',
-            'cdn.jsdelivr.net',
             'd1af033869koo7.cloudfront.net',
             'd38xvr37kwwhcm.cloudfront.net',
-            'd.alicdn.com',
-            'fp-cdn.azureedge.net',
+            'dlthst9q2beh8.cloudfront.net',
+            'cdn.jsdelivr.net',
             'gadasource.storage.googleapis.com',
-            'sdtagging.azureedge.net',
         )
-        if domain in already_known_hosts:
+        if domain.endswith(".awswaf.com") or domain in already_known_hosts:
             continue
 
         base = extract(domain).registered_domain or domain
