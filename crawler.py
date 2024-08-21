@@ -102,9 +102,9 @@ def create_argument_parser():
     ap.add_argument('--log-stdout', action='store_true', default=False,
                     help="If set, log to stdout as well as to log.txt")
 
-    sg = ap.add_argument_group("optional sitelist arguments")
-    sg.add_argument('--domain-list', default=None,
-                    help="If set, load domains from this file "
+    sg = ap.add_argument_group("optional site list arguments")
+    sg.add_argument('--site-list', '--domain-list', default=None,
+                    help="If set, load site domains from this file "
                     "instead of Tranco")
     sg.add_argument('--exclude', default=None,
                     help="Exclude domains that end with one of the specified "
@@ -317,7 +317,7 @@ class Crawler:
         self.browser_binary = opts.browser_binary
         self.browser = opts.browser
         self.chromedriver_path = opts.chromedriver_path
-        self.domain_list = opts.domain_list
+        self.site_list = opts.site_list
         self.exclude_domains = get_recently_failed_domains(opts.exclude_failures_since)
         self.exclude_suffixes = opts.exclude
         self.firefox_tracking_protection = opts.firefox_tracking_protection
@@ -363,7 +363,7 @@ class Crawler:
                 "  blocking: %s\n"
                 "  timeout: %ss\n"
                 "  wait time: %ss\n"
-                "  domain list: %s\n"
+                "  site list: %s\n"
                 "  domains to crawl: %d\n"
                 "  suffixes to exclude: %s\n"
                 "  domains to exclude: %s\n"
@@ -376,7 +376,7 @@ class Crawler:
             "off" if self.no_blocking else "standard",
             self.timeout,
             self.wait_time,
-            self.domain_list if self.domain_list else "Tranco " + TRANCO_VERSION,
+            self.site_list if self.site_list else "Tranco " + TRANCO_VERSION,
             self.num_sites,
             self.exclude_suffixes,
             self.get_exclude_domains_summary(),
@@ -875,13 +875,13 @@ class Crawler:
 
         return url
 
-    def get_domain_list(self):
+    def get_sitelist(self):
         """Get the top n sites from the Tranco list"""
         domains = []
 
-        if self.domain_list:
+        if self.site_list:
             # read in domains from file
-            with open(self.domain_list, encoding="utf-8") as f:
+            with open(self.site_list, encoding="utf-8") as f:
                 for line in f:
                     domain = line.strip()
                     if domain and domain[0] != '#':
@@ -1000,7 +1000,7 @@ class Crawler:
         if self.num_sites == 0:
             domains = []
         else:
-            domains = self.get_domain_list()
+            domains = self.get_sitelist()
 
         # list of domains we actually visited
         visited = []
@@ -1158,7 +1158,7 @@ if __name__ == '__main__':
     args = create_argument_parser().parse_args()
 
     if args.get_sitelist_only:
-        for domain in Crawler(args).get_domain_list():
+        for domain in Crawler(args).get_sitelist():
             print(domain)
         sys.exit(0)
 
