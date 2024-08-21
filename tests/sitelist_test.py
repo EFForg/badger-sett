@@ -27,7 +27,7 @@ class TestSitelist:
 
         monkeypatch.setattr(Tranco, "list", self.mock_tranco_list)
 
-        assert cr.get_domain_list() == expected
+        assert cr.get_sitelist() == expected
 
     @pytest.mark.parametrize("num_sites, exclude_suffixes, exclude_domains, expected", [
         ("10", None, set(), ["example.com", "example.net", "example.org", "google.com"]),
@@ -35,7 +35,7 @@ class TestSitelist:
         ("10", None, set(["example.net"]), ["example.com", "example.org", "google.com"]),
         ("10", ".com", set(["example.net"]), ["example.org"]),
         ("1", ".org", set(["example.com"]), ["example.net"])])
-    def test_get_domain_list(self, # pylint:disable=too-many-arguments
+    def get_sitelist(self, # pylint:disable=too-many-arguments
                              monkeypatch,
                              num_sites, exclude_suffixes, exclude_domains, expected):
         args = ["firefox", num_sites, "--exclude-failures-since=off"]
@@ -47,7 +47,7 @@ class TestSitelist:
         monkeypatch.setattr(Tranco, "list", self.mock_tranco_list)
         monkeypatch.setattr(cr, "exclude_domains", exclude_domains)
 
-        assert cr.get_domain_list() == expected
+        assert cr.get_sitelist() == expected
 
     def test_get_recently_failed_domains(self, monkeypatch):
         def mock_run(cmd, cwd=None): # pylint:disable=unused-argument
