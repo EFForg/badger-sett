@@ -76,65 +76,68 @@ def create_argument_parser():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     ap.add_argument('browser', choices=[CHROME, EDGE, FIREFOX],
-                    help='Browser to use')
+                    help='browser to use')
     ap.add_argument('num_sites', type=int,
-                    help='Number of websites to visit')
+                    help='number of websites to visit')
 
     ap.add_argument('--timeout', type=float, default=30.0,
-                    help="Time in seconds to allow each site to finish loading")
+                    help="time in seconds to allow each site to finish loading")
     ap.add_argument('--wait-time', type=float, default=5.0,
-                    help="Time in seconds to wait on each site after it loads")
-
-    ap.add_argument('--take-screenshots', action='store_true', default=False,
-                    help=f"Saves screenshots to {os.path.join('OUT_DIR', 'screenshots')}")
-    ap.add_argument('--load-extension', default=None,
-                    help="Extension (.crx or .xpi) to install in addition to Privacy Badger")
-
-    ap.add_argument('--no-blocking', action='store_true', default=False,
-                    help="Disables blocking and snitch_map limits in Privacy Badger")
-
-    ap.add_argument('--load-data', metavar='BADGER_DATA_JSON', action='append', default=[],
-                    help="If set, load tracker data from specified Badger data file")
-    ap.add_argument('--load-data-ignore-sites', default=None,
-                    help="Comma-separated list of site eTLD+1 domains to ignore "
-                    "when merging data sets")
+                    help="time in seconds to wait on each site after it loads")
 
     ap.add_argument('--log-stdout', action='store_true', default=False,
-                    help="If set, log to stdout as well as to log.txt")
+                    help="if set, log to stdout as well as to log.txt")
 
-    sg = ap.add_argument_group("optional site list arguments")
-    sg.add_argument('--site-list', '--domain-list', default=None,
-                    help="If set, load site domains from this file "
-                    "instead of Tranco")
-    sg.add_argument('--exclude', default=None,
-                    help="Exclude domains that end with one of the specified "
-                    "comma-separated suffixes. For example .gov,.gov.?? will "
-                    "exclude domains that end with .gov and also exclude "
-                    "domains that end with .gov. followed by any two letters")
-    sg.add_argument('--exclude-failures-since', metavar='DATE', default='1 week',
-                    help="How far back to look in git history for log.txt "
-                    "for failed sites to auto-exclude from the site list. "
-                    "Set to 'off' to disable this feature")
-    sg.add_argument('--get-sitelist-only', action='store_true', default=False,
-                    help="If set, output the site list and exit")
+    feat = ap.add_argument_group("scan modes and features")
+
+    feat.add_argument('--no-blocking', action='store_true', default=False,
+                        help="disables blocking and snitch_map limits in Privacy Badger")
+    feat.add_argument('--take-screenshots', action='store_true', default=False,
+                        help=f"saves screenshots to {os.path.join('OUT_DIR', 'screenshots')}")
+    feat.add_argument('--load-extension', default=None,
+                        help="extension (.crx or .xpi) to install in addition to Privacy Badger")
+
+    sites = ap.add_argument_group("site list arguments")
+
+    sites.add_argument('--site-list', '--domain-list', default=None,
+                       help="if set, load site domains from this file instead of Tranco")
+    sites.add_argument('--exclude', default=None,
+                       help="exclude domains that end with one of the specified "
+                       "comma-separated suffixes; for example: .gov,.gov.?? will "
+                       "exclude domains that end with .gov and also exclude "
+                       "domains that end with .gov. followed by any two letters")
+    sites.add_argument('--exclude-failures-since', metavar='DATE', default='1 week',
+                       help="how far back to look in git history for log.txt "
+                       "for failed sites to auto-exclude from the site list; "
+                       "set to 'off' to disable this feature")
+    sites.add_argument('--get-sitelist-only', action='store_true', default=False,
+                       help="if set, output the site list and exit")
+
+    pb_data = ap.add_argument_group("Badger data arguments")
+
+    pb_data.add_argument('--load-data', metavar='BADGER_DATA_JSON', action='append', default=[],
+                         help="if set, load tracker data from specified Badger data file")
+    pb_data.add_argument('--load-data-ignore-sites', default=None,
+                         help="comma-separated list of site eTLD+1 domains to ignore "
+                         "when merging data sets")
 
     # Arguments below should never have to be used within the docker container.
     ap.add_argument('--out-dir', '--out-path', dest='out_dir', default='./',
-                    help="Path at which to save output")
+                    help="path at which to save output")
     ap.add_argument('--pb-dir', '--pb-path', dest='pb_dir', default='./privacybadger',
-                    help="Path to the Privacy Badger source checkout")
+                    help="path to the Privacy Badger source checkout")
     ap.add_argument('--browser-binary', default=None,
-                    help="Path to the browser binary, "
+                    help="path to the browser binary, "
                     "for example /usr/bin/google-chrome-beta")
     ap.add_argument('--chromedriver-path', default=None,
-                    help="Path to the ChromeDriver binary")
+                    help="path to the ChromeDriver binary")
 
     ap.add_argument('--firefox-tracking-protection',
         choices=("off", "standard", "strict"), default="off",
         help="Firefox Enhanced Tracking Protection setting")
 
     ap.add_argument('--no-xvfb', action='store_true', default=False,
-                    help="Set to disable the virtual display")
+                    help="set to disable the virtual display")
 
     return ap
 
