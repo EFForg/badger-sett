@@ -92,6 +92,8 @@ def create_argument_parser():
 
     feat.add_argument('--no-blocking', action='store_true', default=False,
                         help="disables blocking and snitch_map limits in Privacy Badger")
+    feat.add_argument('--no-link-clicking', action='store_true', default=False,
+                        help="disables finding and clicking internal links on sites")
     feat.add_argument('--take-screenshots', action='store_true', default=False,
                         help=f"saves screenshots to {os.path.join('OUT_DIR', 'screenshots')}")
     feat.add_argument('--load-extension', default=None,
@@ -332,6 +334,7 @@ class Crawler:
         self.num_sites = opts.num_sites
         self.out_dir = opts.out_dir
         self.pb_dir = opts.pb_dir
+        self.no_link_clicking = opts.no_link_clicking
         self.take_screenshots = opts.take_screenshots
         self.timeout = opts.timeout
         self.version = time.strftime('%Y.%-m.%-d', time.localtime())
@@ -861,7 +864,8 @@ class Crawler:
 
         self.raise_on_datadome_pages()
 
-        self.click_internal_link()
+        if not self.no_link_clicking:
+            self.click_internal_link()
 
         # if any new tabs/windows got opened, close them now
         handles = self.driver.window_handles
