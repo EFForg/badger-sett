@@ -86,7 +86,7 @@ def create_argument_parser():
                     help="time in seconds to wait on each site after it loads")
 
     ap.add_argument('--log-stdout', action='store_true', default=False,
-                    help="if set, log to stdout as well as to log.txt")
+                    help="log to stdout as well as to log.txt")
 
     feat = ap.add_argument_group("scan modes and features")
 
@@ -98,11 +98,13 @@ def create_argument_parser():
                         help=f"saves screenshots to {os.path.join('OUT_DIR', 'screenshots')}")
     feat.add_argument('--load-extension', default=None,
                         help="extension (.crx or .xpi) to install in addition to Privacy Badger")
+    feat.add_argument('--get-sitelist-only', action='store_true', default=False,
+                       help="output the site list and exit")
 
     sites = ap.add_argument_group("site list arguments")
 
     sites.add_argument('--site-list', '--domain-list', default=None,
-                       help="if set, load site domains from this file instead of Tranco")
+                       help="load site domains from this file instead of Tranco")
     sites.add_argument('--exclude', default=None,
                        help="exclude domains that end with one of the specified "
                        "comma-separated suffixes; for example: .gov,.gov.?? will "
@@ -112,13 +114,11 @@ def create_argument_parser():
                        help="how far back to look in git history for log.txt "
                        "for failed sites to auto-exclude from the site list; "
                        "set to 'off' to disable this feature")
-    sites.add_argument('--get-sitelist-only', action='store_true', default=False,
-                       help="if set, output the site list and exit")
 
     pb_data = ap.add_argument_group("Badger data arguments")
 
     pb_data.add_argument('--load-data', metavar='BADGER_DATA_JSON', action='append', default=[],
-                         help="if set, load tracker data from specified Badger data file")
+                         help="load tracker data from specified Badger data file")
     pb_data.add_argument('--load-data-ignore-sites', default=None,
                          help="comma-separated list of site eTLD+1 domains to ignore "
                          "when merging data sets")
