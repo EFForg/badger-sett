@@ -4,14 +4,16 @@ import configparser
 import datetime
 import json
 import os
-import pathlib
 import sqlite3
 import subprocess
+
+from pathlib import Path
 
 from lib.mdfp import is_mdfp_first_party
 from lib.utils import run
 
 
+db_filename = "badger.sqlite3"
 browsers = {
     "firefox": 1,
     "chrome": 2,
@@ -134,9 +136,6 @@ def ingest_scan(cur, scan_id, snitch_map, tracking_map):
                         tracking_types[tracking_name] if tracking_name else None))
 
 def print_summary(cur):
-    cur.execute("SELECT COUNT(*) FROM scan")
-    print(f"Rebuilt badger.sqlite3 with data from {cur.fetchone()[0]} scans")
-
     cur.execute("""
         SELECT COUNT(DISTINCT tr.site_id)
         FROM tracking tr
@@ -190,23 +189,23 @@ def print_summary(cur):
     print()
 
 def ingest_distributed_scans(badger_swarm_dir, cur):
-    bs_path = pathlib.Path(badger_swarm_dir)
+    bs_path = Path(badger_swarm_dir)
     if not bs_path.is_dir():
         print("Badger Swarm not found, skipping distributed scans")
         return
 
     scan_paths = sorted(
-        [x for x in pathlib.Path(bs_path/'output').iterdir() if x.is_dir()],
+        [x for x in Path(bs_path/'output').iterdir() if x.is_dir()],
         # sort by date started
         key=lambda path: os.path.getctime(sorted(path.glob('*'), key=os.path.getctime)[0]))
 
     for scan_path in scan_paths:
         # skip if it's not clear this is a --no-blocking mode scan
-        if not pathlib.Path(scan_path/'results-noblocking.json').is_file():
+        if not Path(scan_path/'results-noblocking.json').is_file():
             continue
 
         # skip if no run settings config
-        config_path = pathlib.Path(scan_path/'run_settings.ini')
+        config_path = Path(scan_path/'run_settings.ini')
         if not config_path.is_file():
             continue
 
@@ -218,7 +217,19 @@ def ingest_distributed_scans(badger_swarm_dir, cur):
         if run_settings.get('pb_branch', 'master') not in ('master', 'mv3-chrome'):
             continue
 
+        scan_time = datetime.datetime.fromtimestamp(
+                int(str(scan_path).rpartition('-')[-1]))
+
         browser = run_settings['browser']
+
+        # skip if already ingested
+        cur.execute("SELECT id FROM scan WHERE date = ? AND browser_id = ? "
+                    "AND no_blocking = 1 AND daily_scan = 0",
+                    (scan_time, browsers[browser]))
+        if cur.fetchone():
+            continue
+
+        scan_id = get_scan_id(cur, scan_time, browser, True, False)
 
         results_glob = "results.???.json"
         if not any(True for _ in scan_path.glob(results_glob)):
@@ -226,9 +237,6 @@ def ingest_distributed_scans(badger_swarm_dir, cur):
 
         for results_file in scan_path.glob(results_glob):
             results = json.loads(results_file.read_bytes())
-            scan_time = datetime.datetime.fromtimestamp(int(
-                str(scan_path).rpartition('-')[-1]))
-            scan_id = get_scan_id(cur, scan_time, browser, True, False)
             ingest_scan(cur, scan_id, results['snitch_map'],
                         results.get('tracking_map', {}))
 
@@ -266,6 +274,13 @@ def ingest_daily_scans(cur):
         if "  blocking: off\n" in log_txt:
             no_blocking = True
 
+        # skip if already ingested
+        cur.execute("SELECT id FROM scan WHERE date = ? AND browser_id = ? "
+                    "AND no_blocking = ? AND daily_scan = 1",
+                    (scan_time, browsers[browser], no_blocking))
+        if cur.fetchone():
+            continue
+
         scan_id = get_scan_id(cur, scan_time, browser, no_blocking, True)
 
         results = json.loads(run(f"git show {rev}:results.json".split(" ")))
@@ -275,16 +290,33 @@ def ingest_daily_scans(cur):
 
 
 if __name__ == '__main__':
-    with sqlite3.connect("badger.sqlite3", detect_types=sqlite3.PARSE_DECLTYPES) as db:
+    num_scans = 0
+    rebuild = True
+    if Path(db_filename).is_file():
+        rebuild = input(f"Rebuild {db_filename}? (y/N) ") == "y"
+
+    with sqlite3.connect(db_filename, detect_types=sqlite3.PARSE_DECLTYPES) as db:
         cur = db.cursor()
 
-        create_tables(cur)
+        if rebuild:
+            print("Rebuilding...")
+            create_tables(cur)
+        else:
+            cur.execute("SELECT COUNT(*) FROM scan")
+            num_scans = int(cur.fetchone()[0])
 
+        print("Ingesting distributed scans...")
         # TODO don't hardcode
         ingest_distributed_scans("../badger-swarm", cur)
 
+        print("Ingesting daily scans...")
         ingest_daily_scans(cur)
 
-        print_summary(cur)
+        cur.execute("SELECT COUNT(*) FROM scan")
+        print(f"{'Rebuilt' if rebuild else 'Updated'} {db_filename} with data "
+              f"from {int(cur.fetchone()[0]) - num_scans} scans")
+
         # TODO generate prevalence data for validate.py
+        print_summary(cur)
+
         print("All done")
