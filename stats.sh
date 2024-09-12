@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+if date --version >/dev/null 2>&1; then
+  DATE_TO_EPOCH() {
+    read -r datestr
+    date +%s -d "$datestr" # GNU
+  }
+else
+  DATE_TO_EPOCH() {
+    read -r datestr
+    date -j -f "%Y-%m-%d %T" "+%s" "$datestr" # BSD
+  }
+fi
+
 tmp_dir=$(mktemp -d "${TMPDIR:-/tmp}/badger_sett_stats.XXXXXXXXX")
 trap 'rm -rf "$tmp_dir"' EXIT
 
@@ -18,6 +30,6 @@ for rev in $(git rev-list HEAD -- log.txt); do
     "$(grep 'errored on' "$log_txt" | rev | cut -d ' ' -f -2 | rev | cut -d ' ' -f 2- | sed 's/[()]//g')" \
     " ($(echo "$(grep -c 'Timed out loading ' "$log_txt") * 100 / $num_domains" | bc -l | xargs printf "%.1f")%, $(echo "$(grep -c 'security page' "$log_txt") * 100 / $num_domains" | bc -l | xargs printf "%.1f")%)" \
     "$(grep -c 'restarted' "$log_txt")" \
-    "$((($(grep 'Finished scan' "$log_txt" | cut -d " " -f "1,2" | xargs -0 date +%s -d) - $(head -n1 "$log_txt" | cut -d " " -f "1,2" | xargs -0 date +%s -d)) / 3600)) hours" \
+    "$((($(grep 'Finished scan' "$log_txt" | cut -d " " -f "1,2" | cut -d "," -f 1 | tr -d "\n" | DATE_TO_EPOCH) - $(head -n1 "$log_txt" | cut -d " " -f "1,2" | cut -d "," -f 1 | tr -d "\n" | DATE_TO_EPOCH)) / 3600)) hours" \
     "$(git show -s --format="%h  %ci" "$rev")"
 done
