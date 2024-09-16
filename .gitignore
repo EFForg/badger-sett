@@ -3,3 +3,4 @@ __pycache__/
 parallel-extensions/*.crx
 parallel-extensions/*.xpi
 venv/
+badger.sqlite3
