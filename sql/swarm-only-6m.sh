@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-sqlite3 badger.sqlite3 -batch 'SELECT t.base,
+sqlite3 badger.sqlite3 -batch "SELECT t.base,
   COUNT(DISTINCT site.id) num_sites,
   COUNT(DISTINCT s.date) num_swarm_runs
   FROM tracker t
@@ -13,8 +13,8 @@ sqlite3 badger.sqlite3 -batch 'SELECT t.base,
       JOIN tracking tr2 ON tr2.tracker_id = t2.id
       JOIN scan s2 ON s2.id = tr2.scan_id
       WHERE s2.daily_scan = 1
-        AND s2.date > DATETIME("now", "-6 month"))
-    AND s.date > DATETIME("now", "-6 month")
+        AND s2.date > DATETIME('now', '-6 month'))
+    AND s.date > DATETIME('now', '-6 month')
   GROUP BY t.id
   ORDER BY num_sites DESC, num_swarm_runs DESC
-  LIMIT 30' | column -s '|' -t
+  LIMIT 30" | column -s '|' -t
