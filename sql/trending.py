@@ -4,14 +4,28 @@ import sqlite3
 
 
 def print_trends(cur):
-    cur.execute("""
+    # the date ranges
+    date_prev = "60 day"
+    date_curr = "30 day"
+
+    cur.execute(f"""
+        SELECT COUNT(DISTINCT tr.site_id)
+        FROM tracking tr
+        JOIN site ON site.id = tr.site_id
+        JOIN scan ON scan.id = tr.scan_id
+        WHERE scan.no_blocking = 1 AND scan.daily_scan = 1
+            AND scan.date >= DATETIME('now', '-{date_prev}')
+            AND scan.date < DATETIME('now', '-{date_curr}')""")
+    total_sites_prev = cur.fetchone()[0]
+
+    cur.execute(f"""
         SELECT t.base, COUNT(DISTINCT tr.site_id) AS num_sites
         FROM tracking tr
         JOIN scan ON scan.id = tr.scan_id
         JOIN tracker t ON t.id = tr.tracker_id
         WHERE scan.no_blocking = 1 AND scan.daily_scan = 1
-            AND scan.date >= DATETIME('now', '-14 day')
-            AND scan.date < DATETIME('now', '-7 day')
+            AND scan.date >= DATETIME('now', '-{date_prev}')
+            AND scan.date < DATETIME('now', '-{date_curr}')
         GROUP BY t.base
         ORDER BY num_sites DESC""")
 
@@ -21,13 +35,22 @@ def print_trends(cur):
         return
     top_prevalence_prev = next(iter(prev.values()))
 
-    cur.execute("""
+    cur.execute(f"""
+        SELECT COUNT(DISTINCT tr.site_id)
+        FROM tracking tr
+        JOIN site ON site.id = tr.site_id
+        JOIN scan ON scan.id = tr.scan_id
+        WHERE scan.no_blocking = 1 AND scan.daily_scan = 1
+            AND scan.date >= DATETIME('now', '-{date_curr}')""")
+    total_sites = cur.fetchone()[0]
+
+    cur.execute(f"""
         SELECT t.base, COUNT(DISTINCT tr.site_id) AS num_sites
         FROM tracking tr
         JOIN scan ON scan.id = tr.scan_id
         JOIN tracker t ON t.id = tr.tracker_id
         WHERE scan.no_blocking = 1 AND scan.daily_scan = 1
-            AND scan.date >= DATETIME('now', '-7 day')
+            AND scan.date >= DATETIME('now', '-{date_curr}')
         GROUP BY t.base
         ORDER BY num_sites DESC""")
 
@@ -36,6 +59,15 @@ def print_trends(cur):
     for row in cur.fetchall():
         if not top_prevalence:
             top_prevalence = row[1]
+
+            # absolute change in total sites
+            print(total_sites_prev, total_sites,
+                f"({round((total_sites - total_sites_prev) / total_sites_prev * 100, 2)}%)\n")
+
+            # absolute change in most prevalent domain
+            print(next(iter(prev.keys())), top_prevalence_prev)
+            print(f"{row[0]} {top_prevalence} "
+                f"({round((top_prevalence - top_prevalence_prev) / top_prevalence_prev * 100, 2)}%)\n")
 
         rel_prevalence = row[1] / top_prevalence
 
@@ -48,12 +80,14 @@ def print_trends(cur):
             rel_prevalence_prev = prevalence_prev / top_prevalence_prev
             delta = rel_prevalence - rel_prevalence_prev
 
-        if abs(delta) < 0.03:
+        if abs(delta) < 0.04:
             continue
 
         print("  "
+            # num sites (previous)
+            f"{prevalence_prev if prevalence_prev else 0:>4}  "
             # num sites
-            f"{row[1]:>{len(str(top_prevalence))}}  "
+            f"{row[1]:>4}  "
             # relative prevalence
             f"{round(rel_prevalence, 2):.2f}  "
             # change from previous
