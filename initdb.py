@@ -274,12 +274,13 @@ def ingest_daily_scans(cur):
         if "  blocking: off\n" in log_txt:
             no_blocking = True
 
-        # skip if already ingested
+        # as scans are ordered from most recent to least,
+        # short-circuit upon encountering an already ingested scan
         cur.execute("SELECT id FROM scan WHERE date = ? AND browser_id = ? "
                     "AND no_blocking = ? AND daily_scan = 1",
                     (scan_time, browsers[browser], no_blocking))
         if cur.fetchone():
-            continue
+            return
 
         scan_id = get_scan_id(cur, scan_time, browser, no_blocking, True)
 
