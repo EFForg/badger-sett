@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 import configparser
-import datetime
 import json
 import os
 import sqlite3
 
+from datetime import datetime
 from pathlib import Path
 
 from lib.mdfp import is_mdfp_first_party
@@ -38,12 +38,14 @@ def get_browser(log_txt):
         return "edge"
     return None
 
-def get_scan_id(cur, scan_time, browser, no_blocking, daily_scan):
+# pylint: disable-next=too-many-arguments
+def get_scan_id(cur, start_time, end_time, num_sites, browser, no_blocking, daily_scan):
     # TODO also record region we're scanning from
     # TODO and the list we're scanning against
-    cur.execute("INSERT INTO scan (start_time, browser_id, no_blocking, daily_scan) "
-                "VALUES (?,?,?,?)", (scan_time, browsers[browser], no_blocking,
-                daily_scan))
+    cur.execute("INSERT INTO scan (start_time, end_time, num_sites, "
+                    "browser_id, no_blocking, daily_scan) "
+                "VALUES (?,?,?,?,?,?)", (start_time, end_time, num_sites,
+                    browsers[browser], no_blocking, daily_scan))
     return cur.lastrowid
 
 def create_tables(cur):
@@ -62,6 +64,8 @@ def create_tables(cur):
         CREATE TABLE scan (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             start_time TIMESTAMP NOT NULL,
+            end_time TIMESTAMP NOT NULL,
+            num_sites INTEGER NOT NULL,
             browser_id INTEGER NOT NULL,
             no_blocking BOOLEAN NOT NULL CHECK (no_blocking IN (0, 1)),
             daily_scan BOOLEAN NOT NULL CHECK (daily_scan IN (0, 1)),
@@ -163,23 +167,26 @@ def ingest_distributed_scans(badger_swarm_dir, cur):
         if run_settings.get('pb_branch', 'master') not in ('master', 'mv3-chrome'):
             continue
 
-        scan_time = datetime.datetime.fromtimestamp(
-                int(str(scan_path).rpartition('-')[-1]))
-
-        browser = run_settings['browser']
-
-        # skip if already ingested
-        cur.execute("SELECT id FROM scan WHERE start_time = ? AND browser_id = ? "
-                    "AND no_blocking = 1 AND daily_scan = 0",
-                    (scan_time, browsers[browser]))
-        if cur.fetchone():
-            continue
-
-        scan_id = get_scan_id(cur, scan_time, browser, True, False)
+        start_time = datetime.fromtimestamp(int(str(scan_path).rpartition('-')[-1]))
 
         results_glob = "results.???.json"
         if not any(True for _ in scan_path.glob(results_glob)):
             results_glob = "results.????.json"
+
+        end_time = datetime.fromtimestamp(os.path.getmtime(
+            sorted(scan_path.glob(results_glob), key=os.path.getmtime)[-1]))
+
+        # skip if already ingested
+        cur.execute("SELECT id FROM scan WHERE start_time = ? AND browser_id = ? "
+                    "AND no_blocking = 1 AND daily_scan = 0",
+                    (start_time, browsers[run_settings['browser']]))
+        if cur.fetchone():
+            continue
+
+        scan_id = get_scan_id(cur, start_time, end_time,
+                              run_settings['num_sites'],
+                              run_settings['browser'],
+                              True, False)
 
         for results_file in scan_path.glob(results_glob):
             results = json.loads(results_file.read_bytes())
@@ -194,8 +201,14 @@ def ingest_daily_scans(cur):
     for rev in revisions.split('\n'):
         log_txt = run(f"git show {rev}:log.txt".split(" "))
 
+        end_time = datetime.strptime(
+                log_txt[log_txt.rindex("\n")+1:][:19], "%Y-%m-%d %H:%M:%S")
+
         # discard most of the log
         log_txt = log_txt[:log_txt.index("isiting 1:")]
+
+        num_sites_idx = log_txt.index("domains to crawl: ")
+        num_sites = log_txt[num_sites_idx+18:log_txt.index("\n", num_sites_idx)]
 
         browser = get_browser(log_txt)
         if browser not in browsers:
@@ -209,7 +222,7 @@ def ingest_daily_scans(cur):
             if branch not in ("master", "mv3-chrome"):
                 continue
 
-        scan_time = datetime.datetime.strptime(log_txt[:19], "%Y-%m-%d %H:%M:%S")
+        start_time = datetime.strptime(log_txt[:19], "%Y-%m-%d %H:%M:%S")
 
         no_blocking = False
         if "  blocking: off\n" in log_txt:
@@ -219,11 +232,12 @@ def ingest_daily_scans(cur):
         # short-circuit upon encountering an already ingested scan
         cur.execute("SELECT id FROM scan WHERE start_time = ? AND browser_id = ? "
                     "AND no_blocking = ? AND daily_scan = 1",
-                    (scan_time, browsers[browser], no_blocking))
+                    (start_time, browsers[browser], no_blocking))
         if cur.fetchone():
             return
 
-        scan_id = get_scan_id(cur, scan_time, browser, no_blocking, True)
+        scan_id = get_scan_id(cur, start_time, end_time, num_sites,
+                              browser, no_blocking, True)
 
         results = json.loads(run(f"git show {rev}:results.json".split(" ")))
 
