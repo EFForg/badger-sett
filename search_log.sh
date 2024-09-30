@@ -92,7 +92,7 @@ for rev in $(git rev-list HEAD -- log.txt); do
   found=
   git --no-pager show "$rev":log.txt > "$tmp_dir/log.txt"
   if grep -Eq '[Nn]ew (domains|trackers) in snitch_map' "$tmp_dir/log.txt"; then
-    found=$(grep -m 1 -nE "[Nn]ew (domains|trackers) in snitch_map.*$1" "$tmp_dir/log.txt" | \
+    found=$(grep -m 1 -nE "[Nn]ew (domains|trackers) in snitch_map.*${1//./\\.}" "$tmp_dir/log.txt" | \
       cut -d : -f 1)
 
     if [ -n "$found" ]; then
