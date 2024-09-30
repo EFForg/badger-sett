@@ -5,7 +5,6 @@ import datetime
 import json
 import os
 import sqlite3
-import subprocess
 
 from pathlib import Path
 
@@ -188,17 +187,12 @@ def ingest_distributed_scans(badger_swarm_dir, cur):
                         results.get('tracking_map', {}))
 
 def ingest_daily_scans(cur):
-    revisions = run("git rev-list HEAD -- results.json".split(" "))
+    revisions = run("git rev-list HEAD -- log.txt".split(" "))
     if not revisions:
         return
 
     for rev in revisions.split('\n'):
-        log_txt = None
-
-        try:
-            log_txt = run(f"git show {rev}:log.txt".split(" "))
-        except subprocess.CalledProcessError:
-            continue
+        log_txt = run(f"git show {rev}:log.txt".split(" "))
 
         # discard most of the log
         log_txt = log_txt[:log_txt.index("isiting 1:")]
