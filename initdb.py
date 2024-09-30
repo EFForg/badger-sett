@@ -135,59 +135,6 @@ def ingest_scan(cur, scan_id, snitch_map, tracking_map):
                         scan_id, tracker_id, site_id,
                         tracking_types[tracking_name] if tracking_name else None))
 
-def print_summary(cur):
-    cur.execute("""
-        SELECT COUNT(DISTINCT tr.site_id)
-        FROM tracking tr
-        JOIN site ON site.id = tr.site_id
-        JOIN scan ON scan.id = tr.scan_id
-        WHERE scan.no_blocking = 1 AND scan.daily_scan = 1
-            AND scan.date > DATETIME('now', '-365 day')""")
-    total_sites = cur.fetchone()[0]
-
-    print("\nThe most prevalent (appearing on the greatest number of distinct"
-        "\nwebsites) third-party tracking domains over the last 365 days:\n")
-    cur.execute("""
-        SELECT t.base, COUNT(DISTINCT tr.site_id) AS num_sites
-        FROM tracking tr
-        JOIN scan ON scan.id = tr.scan_id
-        JOIN tracker t ON t.id = tr.tracker_id
-        WHERE scan.no_blocking = 1 AND scan.daily_scan = 1
-            AND scan.date > DATETIME('now', '-365 day')
-        GROUP BY t.base
-        ORDER BY num_sites DESC
-        LIMIT 40""")
-    top_prevalence = None
-    col_width = None
-    for row in cur.fetchall():
-        if not top_prevalence:
-            top_prevalence = row[1]
-            col_width = len(str(top_prevalence))
-        # total site count, site count for tracking domain
-        print(f"  {total_sites}  {row[1]:>{col_width}}  "
-            # absolute prevalence
-            f"{round(row[1] / total_sites, 2):.2f}  "
-            # relative prevalence, tracking domain
-            f"{round(row[1] / top_prevalence, 2):.2f}  {row[0]}")
-
-    print("\nThe most prevalent canvas fingerprinters over same date range:\n")
-    cur.execute("""
-        SELECT t.base, COUNT(DISTINCT tr.site_id) AS num_sites
-        FROM tracking tr
-        JOIN scan ON scan.id = tr.scan_id
-        JOIN tracker t ON t.id = tr.tracker_id
-        JOIN tracking_type tt ON tt.id = tr.tracking_type_id
-        WHERE scan.no_blocking = 1 AND scan.daily_scan = 1
-            AND tt.name = 'canvas' AND scan.date > DATETIME('now', '-365 day')
-        GROUP BY t.base
-        ORDER BY num_sites DESC
-        LIMIT 20""")
-    for row in cur.fetchall():
-        print(f"  {total_sites}  {row[1]:>{col_width}}  "
-            f"{round(row[1] / total_sites, 2):.2f}  "
-            f"{round(row[1] / top_prevalence, 2):.2f}  {row[0]}")
-    print()
-
 def ingest_distributed_scans(badger_swarm_dir, cur):
     bs_path = Path(badger_swarm_dir)
     if not bs_path.is_dir():
@@ -318,6 +265,5 @@ if __name__ == '__main__':
               f"from {int(cur.fetchone()[0]) - num_scans} scans")
 
         # TODO generate prevalence data for validate.py
-        print_summary(cur)
 
         print("All done")
