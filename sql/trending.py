@@ -14,8 +14,8 @@ def print_trends(cur):
         JOIN site ON site.id = tr.site_id
         JOIN scan ON scan.id = tr.scan_id
         WHERE scan.no_blocking = 1 AND scan.daily_scan = 1
-            AND scan.date >= DATETIME('now', '-{date_prev}')
-            AND scan.date < DATETIME('now', '-{date_curr}')""")
+            AND scan.start_time >= DATETIME('now', '-{date_prev}')
+            AND scan.start_time < DATETIME('now', '-{date_curr}')""")
     total_sites_prev = cur.fetchone()[0]
 
     cur.execute(f"""
@@ -24,8 +24,8 @@ def print_trends(cur):
         JOIN scan ON scan.id = tr.scan_id
         JOIN tracker t ON t.id = tr.tracker_id
         WHERE scan.no_blocking = 1 AND scan.daily_scan = 1
-            AND scan.date >= DATETIME('now', '-{date_prev}')
-            AND scan.date < DATETIME('now', '-{date_curr}')
+            AND scan.start_time >= DATETIME('now', '-{date_prev}')
+            AND scan.start_time < DATETIME('now', '-{date_curr}')
         GROUP BY t.base
         ORDER BY num_sites DESC""")
 
@@ -41,7 +41,7 @@ def print_trends(cur):
         JOIN site ON site.id = tr.site_id
         JOIN scan ON scan.id = tr.scan_id
         WHERE scan.no_blocking = 1 AND scan.daily_scan = 1
-            AND scan.date >= DATETIME('now', '-{date_curr}')""")
+            AND scan.start_time >= DATETIME('now', '-{date_curr}')""")
     total_sites = cur.fetchone()[0]
 
     cur.execute(f"""
@@ -50,7 +50,7 @@ def print_trends(cur):
         JOIN scan ON scan.id = tr.scan_id
         JOIN tracker t ON t.id = tr.tracker_id
         WHERE scan.no_blocking = 1 AND scan.daily_scan = 1
-            AND scan.date >= DATETIME('now', '-{date_curr}')
+            AND scan.start_time >= DATETIME('now', '-{date_curr}')
         GROUP BY t.base
         ORDER BY num_sites DESC""")
 

@@ -42,7 +42,7 @@ def get_browser(log_txt):
 def get_scan_id(cur, scan_time, browser, no_blocking, daily_scan):
     # TODO also record region we're scanning from
     # TODO and the list we're scanning against
-    cur.execute("INSERT INTO scan (date, browser_id, no_blocking, daily_scan) "
+    cur.execute("INSERT INTO scan (start_time, browser_id, no_blocking, daily_scan) "
                 "VALUES (?,?,?,?)", (scan_time, browsers[browser], no_blocking,
                 daily_scan))
     return cur.lastrowid
@@ -62,7 +62,7 @@ def create_tables(cur):
     cur.execute("""
         CREATE TABLE scan (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            date TIMESTAMP NOT NULL,
+            start_time TIMESTAMP NOT NULL,
             browser_id INTEGER NOT NULL,
             no_blocking BOOLEAN NOT NULL CHECK (no_blocking IN (0, 1)),
             daily_scan BOOLEAN NOT NULL CHECK (daily_scan IN (0, 1)),
@@ -170,7 +170,7 @@ def ingest_distributed_scans(badger_swarm_dir, cur):
         browser = run_settings['browser']
 
         # skip if already ingested
-        cur.execute("SELECT id FROM scan WHERE date = ? AND browser_id = ? "
+        cur.execute("SELECT id FROM scan WHERE start_time = ? AND browser_id = ? "
                     "AND no_blocking = 1 AND daily_scan = 0",
                     (scan_time, browsers[browser]))
         if cur.fetchone():
@@ -223,7 +223,7 @@ def ingest_daily_scans(cur):
 
         # as scans are ordered from most recent to least,
         # short-circuit upon encountering an already ingested scan
-        cur.execute("SELECT id FROM scan WHERE date = ? AND browser_id = ? "
+        cur.execute("SELECT id FROM scan WHERE start_time = ? AND browser_id = ? "
                     "AND no_blocking = ? AND daily_scan = 1",
                     (scan_time, browsers[browser], no_blocking))
         if cur.fetchone():

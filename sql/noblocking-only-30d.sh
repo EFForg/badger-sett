@@ -15,8 +15,8 @@ sqlite3 badger.sqlite3 -batch "SELECT t.base,
       JOIN scan s2 ON s2.id = tr2.scan_id
       WHERE s2.no_blocking = 0
         AND s2.daily_scan = 1
-        AND s2.date > DATETIME('now', '-30 day'))
-    AND s.date > DATETIME('now', '-30 day')
+        AND s2.start_time > DATETIME('now', '-30 day'))
+    AND s.start_time > DATETIME('now', '-30 day')
   GROUP BY t.id
   ORDER BY num_sites DESC, num_scans DESC
   LIMIT 30" | column -s '|' -t

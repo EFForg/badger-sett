@@ -9,14 +9,14 @@ sqlite3 badger.sqlite3 -batch "SELECT t.base,
   JOIN site ON site.id = tr.site_id
   WHERE s.browser_id = 1
     AND s.daily_scan = 1
-    AND s.date > DATETIME('now', '-30 day')
+    AND s.start_time > DATETIME('now', '-30 day')
     AND t.id NOT IN (SELECT t2.id
       FROM tracker t2
       JOIN tracking tr2 ON tr2.tracker_id = t2.id
       JOIN scan s2 ON s2.id = tr2.scan_id
       WHERE s2.browser_id != 1
         AND s2.daily_scan = 1
-        AND s2.date > DATETIME('now', '-30 day'))
+        AND s2.start_time > DATETIME('now', '-30 day'))
   GROUP BY t.id
   ORDER BY num_sites DESC, num_scans DESC
   LIMIT 30" | column -s '|' -t

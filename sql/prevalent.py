@@ -10,7 +10,7 @@ def print_prevalence_summary(cur):
         JOIN site ON site.id = tr.site_id
         JOIN scan ON scan.id = tr.scan_id
         WHERE scan.no_blocking = 1 AND scan.daily_scan = 1
-            AND scan.date > DATETIME('now', '-365 day')""")
+            AND scan.start_time > DATETIME('now', '-365 day')""")
     total_sites = cur.fetchone()[0]
 
     print("\nThe most prevalent (appearing on the greatest number of distinct"
@@ -21,7 +21,7 @@ def print_prevalence_summary(cur):
         JOIN scan ON scan.id = tr.scan_id
         JOIN tracker t ON t.id = tr.tracker_id
         WHERE scan.no_blocking = 1 AND scan.daily_scan = 1
-            AND scan.date > DATETIME('now', '-365 day')
+            AND scan.start_time > DATETIME('now', '-365 day')
         GROUP BY t.base
         ORDER BY num_sites DESC
         LIMIT 40""")
@@ -46,7 +46,7 @@ def print_prevalence_summary(cur):
         JOIN tracker t ON t.id = tr.tracker_id
         JOIN tracking_type tt ON tt.id = tr.tracking_type_id
         WHERE scan.no_blocking = 1 AND scan.daily_scan = 1
-            AND tt.name = 'canvas' AND scan.date > DATETIME('now', '-365 day')
+            AND tt.name = 'canvas' AND scan.start_time > DATETIME('now', '-365 day')
         GROUP BY t.base
         ORDER BY num_sites DESC
         LIMIT 20""")

@@ -9,7 +9,7 @@ sqlite3 badger.sqlite3 -batch "SELECT s.fqdn AS site,
   JOIN tracking_type tt ON tt.id = tr.tracking_type_id
   JOIN scan ON scan.id = tr.scan_id
   WHERE tt.name = 'canvas'
-    AND scan.date > DATETIME('now', '-30 day')
+    AND scan.start_time > DATETIME('now', '-30 day')
   GROUP BY s.id
   ORDER BY num_records DESC,
     COUNT(DISTINCT t.base) DESC" | column -s '|' -t
