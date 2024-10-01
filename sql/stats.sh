@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-sqlite3 badger.sqlite3 -batch "SELECT browser.name,
+sqlite3 badger.sqlite3 -batch "SELECT browser.name AS browser,
     no_blocking,
     num_sites,
-    COUNT(DISTINCT blocked_trackers.tracker_id) num_blocked,
-    ((CAST(STRFTIME('%s', end_time) AS INT) - CAST(STRFTIME('%s', start_time) AS INT)) / 60 / 60),
+    COUNT(DISTINCT blocked_trackers.tracker_id) AS num_blocked,
+    ((CAST(STRFTIME('%s', end_time) AS INT) - CAST(STRFTIME('%s', start_time) AS INT)) / 60 / 60) AS num_hours,
     start_time
   FROM scan
   JOIN browser ON browser.id = scan.browser_id
