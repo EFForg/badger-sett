@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 sqlite3 badger.sqlite3 -batch -header -column "SELECT start_time, end_time,
-    ((CAST(STRFTIME('%s', end_time) AS INT) - CAST(STRFTIME('%s', start_time) AS INT)) / 60 / 60) AS num_hours,
+    ROUND((CAST(STRFTIME('%s', end_time) AS FLOAT) -
+        CAST(STRFTIME('%s', start_time) AS FLOAT)) / 60 / 60, 1) AS num_hours,
     browser.name AS browser,
     no_blocking,
     num_sites,
