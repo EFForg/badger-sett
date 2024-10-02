@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-sqlite3 badger.sqlite3 -batch "SELECT t.base,
+sqlite3 badger.sqlite3 -batch -header "SELECT t.base,
   COUNT(DISTINCT site.id) num_sites,
   COUNT(DISTINCT s.start_time) num_swarm_runs
   FROM tracker t

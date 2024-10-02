@@ -16,7 +16,7 @@ fi
 
 show_trackers_by_site() {
   local query_results
-  query_results=$(sqlite3 badger.sqlite3 -batch \
+  query_results=$(sqlite3 badger.sqlite3 -batch -header \
     "SELECT site.fqdn AS site, scan.daily_scan, GROUP_CONCAT(DISTINCT tr.base)
       FROM tracking t
       JOIN site ON site.id = t.site_id
@@ -34,7 +34,7 @@ show_trackers_by_site() {
 
 show_sites_by_tracker() {
   local query_results
-  query_results=$(sqlite3 badger.sqlite3 -batch \
+  query_results=$(sqlite3 badger.sqlite3 -batch -header \
     "SELECT tr.base AS tracker, scan.daily_scan, GROUP_CONCAT(DISTINCT site.fqdn)
       FROM tracking t
       JOIN site ON site.id = t.site_id

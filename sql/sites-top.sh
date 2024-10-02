@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-sqlite3 badger.sqlite3 -batch "SELECT s.fqdn AS site,
+sqlite3 badger.sqlite3 -batch -header "SELECT s.fqdn AS site,
     COUNT(DISTINCT t.base) AS num_trackers
   FROM site s
   JOIN tracking tr ON tr.site_id = s.id

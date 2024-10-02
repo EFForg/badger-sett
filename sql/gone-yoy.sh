@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-sqlite3 badger.sqlite3 -batch "SELECT t.base, COUNT(DISTINCT site.id) num_sites, COUNT(DISTINCT s.id) num_scans
+sqlite3 badger.sqlite3 -batch -header "SELECT t.base,
+    COUNT(DISTINCT site.id) num_sites,
+    COUNT(DISTINCT s.id) num_scans
   FROM tracker t
   JOIN tracking tr ON tr.tracker_id = t.id
   JOIN scan s ON s.id = tr.scan_id

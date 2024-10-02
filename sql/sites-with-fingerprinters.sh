@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-sqlite3 badger.sqlite3 -batch "SELECT s.fqdn AS site,
+sqlite3 badger.sqlite3 -batch -header "SELECT s.fqdn AS site,
     COUNT(*) num_records,
     GROUP_CONCAT(DISTINCT t.base) AS fingerprinters
   FROM site s
