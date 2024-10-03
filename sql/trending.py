@@ -9,14 +9,15 @@ def print_trends(cur):
     date_curr = "30 day"
 
     cur.execute(f"""
-        SELECT COUNT(DISTINCT tr.site_id)
+        SELECT COUNT(DISTINCT tr.site_id),
+            COUNT(DISTINCT tr.scan_id)
         FROM tracking tr
         JOIN site ON site.id = tr.site_id
         JOIN scan ON scan.id = tr.scan_id
         WHERE scan.no_blocking = 1 AND scan.daily_scan = 1
             AND scan.start_time >= DATETIME('now', '-{date_prev}')
             AND scan.start_time < DATETIME('now', '-{date_curr}')""")
-    total_sites_prev = cur.fetchone()[0]
+    total_sites_prev, total_scans_prev = cur.fetchone()
 
     cur.execute(f"""
         SELECT t.base, COUNT(DISTINCT tr.site_id) AS num_sites
@@ -36,13 +37,14 @@ def print_trends(cur):
     top_prevalence_prev = next(iter(prev.values()))
 
     cur.execute(f"""
-        SELECT COUNT(DISTINCT tr.site_id)
+        SELECT COUNT(DISTINCT tr.site_id),
+            COUNT(DISTINCT tr.scan_id)
         FROM tracking tr
         JOIN site ON site.id = tr.site_id
         JOIN scan ON scan.id = tr.scan_id
         WHERE scan.no_blocking = 1 AND scan.daily_scan = 1
             AND scan.start_time >= DATETIME('now', '-{date_curr}')""")
-    total_sites = cur.fetchone()[0]
+    total_sites, total_scans = cur.fetchone()
 
     cur.execute(f"""
         SELECT t.base, COUNT(DISTINCT tr.site_id) AS num_sites
@@ -60,14 +62,19 @@ def print_trends(cur):
         if not top_prevalence:
             top_prevalence = row[1]
 
+            print(f"Comparing {total_scans_prev} scans to {total_scans} scans")
+
             # absolute change in total sites
-            print(total_sites_prev, total_sites,
-                f"({round((total_sites - total_sites_prev) / total_sites_prev * 100, 2)}%)\n")
+            print("\nSite totals:")
+            print(total_sites_prev)
+            print(total_sites, f"({round((total_sites - total_sites_prev) / total_sites_prev * 100, 2)}%)")
 
             # absolute change in most prevalent domain
+            print("\nMost prevalent tracker:")
             print(next(iter(prev.keys())), top_prevalence_prev)
-            print(f"{row[0]} {top_prevalence} "
-                f"({round((top_prevalence - top_prevalence_prev) / top_prevalence_prev * 100, 2)}%)\n")
+            print(f"{row[0]} {top_prevalence} ({round((top_prevalence - top_prevalence_prev) / top_prevalence_prev * 100, 2)}%)\n")
+
+            print("Notable changes in relative tracker prevalence:")
 
         rel_prevalence = row[1] / top_prevalence
 
