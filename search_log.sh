@@ -75,7 +75,8 @@ show_most_recent_matches() {
     printf "\nMost recent daily scan matches from badger.sqlite3:\n\n"
     {
       while read -r line; do
-        sites=$(echo "$line" | cut -d '|' -f 5 | tr ',' '\n' | sort | tr '\n' ',' | head -c -1)
+        sites=$(echo "$line" | cut -d '|' -f 5 | tr ',' '\n' | sort | tr '\n' ',')
+	sites="${sites%,}"
         sites_sample=$(echo "$sites" | cut -d ',' -f '1-3')
         dotdotdot=
         if [ "$sites_sample" != "$sites" ]; then
@@ -86,11 +87,11 @@ show_most_recent_matches() {
           "${sites_sample//,/, }" \
           "$dotdotdot"
       done <<< "$(echo "$query_results" | head -n 10)"
-    } | column -s '|' -t | head -c -1
+    } | column -s '|' -t
     if [ "$num_results" -gt 10 ]; then
-      printf "\n...%s more matches..." $((num_results - 10))
+      printf "...%s more matches...\n" $((num_results - 10))
     fi
-    printf "\n\n"
+    printf "\n"
   fi
 }
 
