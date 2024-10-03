@@ -26,7 +26,7 @@ show_trackers_by_site() {
         AND site.fqdn LIKE '%$1%'
       GROUP BY site.fqdn, scan.daily_scan")
   if [ -n "$query_results" ]; then
-    echo "Recent trackers on matching site domains:"
+    printf "Recent trackers on matching site domains:\n\n"
     echo "$query_results" | column -s "|" -t
     echo
   fi
@@ -44,16 +44,20 @@ show_sites_by_tracker() {
         AND tr.base LIKE '%$1%'
       GROUP BY tr.base, scan.daily_scan")
   if [ -n "$query_results" ]; then
-    echo "Recent site domains with matching trackers:"
+    printf "Recent site domains with matching trackers:\n\n"
     echo "$query_results" | column -s "|" -t
     echo
   fi
 }
 
 show_most_recent_matches() {
-  local query_results num_results
+  local query_results num_results line sites sites_sample dotdotdot
   query_results=$(sqlite3 badger.sqlite3 -batch -noheader \
-    "SELECT tr.base, scan.start_time, b.name, GROUP_CONCAT(site.fqdn), GROUP_CONCAT(DISTINCT tt.name)
+    "SELECT tr.base,
+        scan.start_time,
+        b.name,
+        GROUP_CONCAT(DISTINCT tt.name),
+        GROUP_CONCAT(site.fqdn)
       FROM tracking t
       JOIN tracker tr ON t.tracker_id = tr.id
       JOIN scan ON scan.id = t.scan_id
@@ -68,10 +72,23 @@ show_most_recent_matches() {
     printf "No daily scan matches in badger.sqlite3\n\n"
   else
     num_results=$(echo "$query_results" | wc -l)
-    echo "Most recent daily scan matches from badger.sqlite3:"
-    echo "$query_results" | head -n 10 | column -s "|" -t
+    printf "\nMost recent daily scan matches from badger.sqlite3:\n\n"
+    {
+      while read -r line; do
+        sites=$(echo "$line" | cut -d '|' -f 5 | tr ',' '\n' | sort | tr '\n' ',' | head -c -1)
+        sites_sample=$(echo "$sites" | cut -d ',' -f '1-3')
+        dotdotdot=
+        if [ "$sites_sample" != "$sites" ]; then
+          dotdotdot=", ...$(($(echo "$sites" | tr -dc ',' | wc -c) - 3)) more"
+        fi
+        printf '%s|%s%s\n' \
+          "$(echo "$line" | cut -d '|' -f '1-4')" \
+          "${sites_sample//,/, }" \
+          "$dotdotdot"
+      done <<< "$(echo "$query_results" | head -n 10)"
+    } | column -s '|' -t | head -c -1
     if [ "$num_results" -gt 10 ]; then
-      printf "...%s more matches..." $((num_results - 10))
+      printf "\n...%s more matches..." $((num_results - 10))
     fi
     printf "\n\n"
   fi
@@ -83,7 +100,7 @@ if [ -f badger.sqlite3 ]; then
   show_trackers_by_site "$1"
 fi
 
-echo "Searching through git history ..."
+printf "Searching through git history ...\n\n"
 
 tmp_dir=$(mktemp -d "${TMPDIR:-/tmp}/search_log.XXXXXXXXX")
 trap 'rm -rf "$tmp_dir"' EXIT
