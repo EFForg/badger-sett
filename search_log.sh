@@ -80,7 +80,7 @@ show_most_recent_matches() {
         sites_sample=$(echo "$sites" | cut -d ',' -f '1-3')
         dotdotdot=
         if [ "$sites_sample" != "$sites" ]; then
-          dotdotdot=", ...$(($(echo "$sites" | tr -dc ',' | wc -c) - 3)) more"
+          dotdotdot=", ...$(($(echo "$sites" | tr -dc ',' | wc -c) + 1 - 3)) more"
         fi
         printf '%s|%s%s\n' \
           "$(echo "$line" | cut -d '|' -f '1-4')" \
