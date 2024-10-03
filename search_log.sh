@@ -56,7 +56,7 @@ show_most_recent_matches() {
     "SELECT tr.base,
         scan.start_time,
         b.name,
-        GROUP_CONCAT(DISTINCT tt.name),
+        COALESCE(GROUP_CONCAT(DISTINCT tt.name), '-'),
         GROUP_CONCAT(site.fqdn)
       FROM tracking t
       JOIN tracker tr ON t.tracker_id = tr.id
