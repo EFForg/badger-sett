@@ -6,8 +6,6 @@
 #
 # Falls back to searching results.json for old revisions
 # where we didn't log new domains in log.txt.
-#
-# See also: audit.py
 
 if [ -z "$1" ] || [ $# -ne 1 ]; then
   echo "Usage: $0 DOMAIN"
