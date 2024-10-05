@@ -12,84 +12,116 @@ if [ -z "$1" ] || [ $# -ne 1 ]; then
   exit 1
 fi
 
+print_results() {
+  local query_results summary_size \
+    line summary_field field_full field_summary dotdotdot num_results
+
+  query_results="$1"
+  summary_size="${2:-3}"
+
+  {
+    while read -r line; do
+      if [ -z "$summary_field" ]; then
+        # get index of final |-delimited field
+        summary_field=$(($(echo "$line" | tr -dc '|' | wc -c) + 1))
+      fi
+
+      # sort the values inside the summary field
+      field_full=$(echo "$line" | cut -d '|' -f "$summary_field" | tr ',' '\n' | sort | tr '\n' ',')
+      field_full="${field_full%,}"
+
+      # take the first $summary_size values
+      field_summary=$(echo "$field_full" | cut -d ',' -f "1-$summary_size")
+
+      dotdotdot=
+      if [ "$field_summary" != "$field_full" ]; then
+        dotdotdot=", ...$(($(echo "$field_full" | tr -dc ',' | wc -c) + 1 - summary_size)) more"
+      fi
+
+      printf '%s|%s%s\n' \
+        "$(echo "$line" | cut -d '|' -f "1-$((summary_field - 1))")" \
+        "${field_summary//,/, }" \
+        "$dotdotdot"
+
+    done <<< "$(echo "$query_results" | head -n 30)"
+  } | column -s '|' -t
+
+  num_results=$(echo "$query_results" | wc -l)
+  if [ "$num_results" -gt 30 ]; then
+    printf "...%s more matches...\n" $((num_results - 30))
+  fi
+
+  echo
+}
+
 show_trackers_by_site() {
   local query_results
-  query_results=$(sqlite3 badger.sqlite3 -batch -header \
-    "SELECT site.fqdn AS site, scan.daily_scan, GROUP_CONCAT(DISTINCT tr.base)
+  query_results=$(sqlite3 badger.sqlite3 -batch -noheader \
+    "SELECT site.fqdn AS site,
+        scan.daily_scan,
+        GROUP_CONCAT(DISTINCT tr.base)
       FROM tracking t
       JOIN site ON site.id = t.site_id
       JOIN tracker tr ON tr.id = t.tracker_id
       JOIN scan ON scan.id = t.scan_id
       WHERE scan.start_time > DATETIME('now', '-30 day')
         AND site.fqdn LIKE '%$1%'
-      GROUP BY site.fqdn, scan.daily_scan")
+      GROUP BY site.fqdn, scan.daily_scan
+      ORDER BY COUNT(DISTINCT tr.base) DESC")
   if [ -n "$query_results" ]; then
-    printf "Recent trackers on matching site domains:\n\n"
-    echo "$query_results" | column -s "|" -t
-    echo
+    printf "Recent matching sites:\n\n"
+    print_results "$query_results" 6
   fi
 }
 
 show_sites_by_tracker() {
   local query_results
-  query_results=$(sqlite3 badger.sqlite3 -batch -header \
-    "SELECT tr.base AS tracker, scan.daily_scan, GROUP_CONCAT(DISTINCT site.fqdn)
+  query_results=$(sqlite3 badger.sqlite3 -batch -noheader \
+    "SELECT tr.base AS tracker,
+        browser.name AS browser,
+        scan.daily_scan,
+        GROUP_CONCAT(DISTINCT site.fqdn)
       FROM tracking t
       JOIN site ON site.id = t.site_id
       JOIN tracker tr ON tr.id = t.tracker_id
       JOIN scan ON scan.id = t.scan_id
+      JOIN browser ON browser.id = scan.browser_id
       WHERE scan.start_time > DATETIME('now', '-30 day')
         AND tr.base LIKE '%$1%'
-      GROUP BY tr.base, scan.daily_scan")
+      GROUP BY tr.base, scan.browser_id, scan.daily_scan
+      ORDER BY COUNT(DISTINCT site.fqdn) DESC")
   if [ -n "$query_results" ]; then
-    printf "Recent site domains with matching trackers:\n\n"
-    echo "$query_results" | column -s "|" -t
-    echo
+    printf "Recent matching trackers:\n\n"
+    print_results "$query_results" 6
   fi
 }
 
 show_most_recent_matches() {
-  local query_results num_results line sites sites_sample dotdotdot
+  local query_results
   query_results=$(sqlite3 badger.sqlite3 -batch -noheader \
     "SELECT tr.base,
-        scan.start_time,
+        scan.end_time,
         b.name,
         COALESCE(GROUP_CONCAT(DISTINCT tt.name), '-'),
-        GROUP_CONCAT(site.fqdn)
+        GROUP_CONCAT(DISTINCT site.fqdn)
       FROM tracking t
-      JOIN tracker tr ON t.tracker_id = tr.id
+      JOIN tracker tr ON tr.id = t.tracker_id
       JOIN scan ON scan.id = t.scan_id
       JOIN browser b ON b.id = scan.browser_id
       JOIN site ON site.id = t.site_id
       LEFT JOIN tracking_type tt ON tt.id = t.tracking_type_id
       WHERE scan.daily_scan = 1
         AND tr.base LIKE '%$1%'
-      GROUP BY scan.start_time
-      ORDER BY scan.start_time DESC")
+      GROUP BY scan.end_time,
+        tr.base
+      ORDER BY scan.end_time DESC,
+        COUNT(DISTINCT site.fqdn) DESC,
+        tr.base ASC")
   if [ -z "$query_results" ]; then
     printf "No daily scan matches in badger.sqlite3\n\n"
   else
-    num_results=$(echo "$query_results" | wc -l)
     printf "\nMost recent daily scan matches from badger.sqlite3:\n\n"
-    {
-      while read -r line; do
-        sites=$(echo "$line" | cut -d '|' -f 5 | tr ',' '\n' | sort | tr '\n' ',')
-	sites="${sites%,}"
-        sites_sample=$(echo "$sites" | cut -d ',' -f '1-3')
-        dotdotdot=
-        if [ "$sites_sample" != "$sites" ]; then
-          dotdotdot=", ...$(($(echo "$sites" | tr -dc ',' | wc -c) + 1 - 3)) more"
-        fi
-        printf '%s|%s%s\n' \
-          "$(echo "$line" | cut -d '|' -f '1-4')" \
-          "${sites_sample//,/, }" \
-          "$dotdotdot"
-      done <<< "$(echo "$query_results" | head -n 10)"
-    } | column -s '|' -t
-    if [ "$num_results" -gt 10 ]; then
-      printf "...%s more matches...\n" $((num_results - 10))
-    fi
-    printf "\n"
+    print_results "$query_results"
   fi
 }
 
