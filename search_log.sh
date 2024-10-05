@@ -121,7 +121,7 @@ for rev in $(git rev-list HEAD -- log.txt); do
       if [ "$((found-counter))" -eq 0 ]; then
         found=detected-but-unable-to-find-visiting-line
       else
-        found=$(sed -n "$((found-counter))p" "$tmp_dir/log.txt" | sed 's/.*isiting \([0-9]\+\): \(.*\)/\1\t\2/')
+        found=$(sed -n "$((found-counter))p" "$tmp_dir/log.txt" | sed -E 's/.*isiting ([0-9]+): (.*)/\1\t\2/')
       fi
     fi
 
