@@ -3,6 +3,7 @@
 import argparse
 import contextlib
 import copy
+import datetime
 import json
 import logging
 import os
@@ -14,7 +15,6 @@ import sys
 import tempfile
 import time
 
-from datetime import datetime, timedelta
 from fnmatch import fnmatch
 from pprint import pformat
 from shutil import copytree
@@ -65,7 +65,8 @@ RESTART_RETRIES = 5
 MAX_ALERTS = 10
 
 # day before yesterday, as yesterday's list is sometimes not yet available
-TRANCO_VERSION = (datetime.utcnow() - timedelta(days=2)).strftime('%Y-%m-%d')
+TRANCO_VERSION = (datetime.datetime.now(datetime.UTC) -
+                  datetime.timedelta(days=2)).strftime('%Y-%m-%d')
 
 # Privacy Badger storage keys not for export/import
 STORAGE_KEYS_TO_IGNORE = ['cookieblock_list', 'dnt_hashes', 'settings_map', 'private_storage']
@@ -278,7 +279,7 @@ def internal_link(page_url, link_href):
                     "video", "videos", "media", "artikel", "news-story",
                     "noticias", "actualite", "actualites", "nachrichten",
                     "nyheter", "noticia", "haber", "notizie"]
-    today = datetime.today()
+    today = datetime.datetime.today()
     start_year = today.year - 2
     wanted_paths = [
         str(year) for year in range(start_year, start_year + 3)
