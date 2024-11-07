@@ -100,6 +100,7 @@ show_most_recent_matches() {
   local query_results
   query_results=$(sqlite3 badger.sqlite3 -batch -noheader \
     "SELECT tr.base,
+        scan.daily_scan,
         scan.end_time,
         b.name,
         COALESCE(GROUP_CONCAT(DISTINCT tt.name), '-'),
@@ -110,17 +111,17 @@ show_most_recent_matches() {
       JOIN browser b ON b.id = scan.browser_id
       JOIN site ON site.id = t.site_id
       LEFT JOIN tracking_type tt ON tt.id = t.tracking_type_id
-      WHERE scan.daily_scan = 1
-        AND tr.base LIKE '%$1%'
-      GROUP BY scan.end_time,
+      WHERE tr.base LIKE '%$1%'
+      GROUP BY scan.daily_scan,
+        scan.end_time,
         tr.base
       ORDER BY scan.end_time DESC,
         COUNT(DISTINCT site.fqdn) DESC,
         tr.base ASC")
   if [ -z "$query_results" ]; then
-    printf "No daily scan matches in badger.sqlite3\n\n"
+    printf "No tracker matches in badger.sqlite3\n\n"
   else
-    printf "\nMost recent daily scan matches from badger.sqlite3:\n\n"
+    printf "\nMost recent tracker matches from badger.sqlite3:\n\n"
     print_results "$query_results"
   fi
 }
