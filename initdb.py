@@ -175,6 +175,7 @@ def ingest_distributed_scans(badger_swarm_dir, cur):
 
         end_time = datetime.fromtimestamp(os.path.getmtime(
             sorted(scan_path.glob(results_glob), key=os.path.getmtime)[-1]))
+        end_time = end_time.replace(microsecond=0)
 
         # skip if already ingested
         cur.execute("SELECT id FROM scan WHERE start_time = ? AND browser_id = ? "
