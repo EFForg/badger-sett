@@ -18,7 +18,7 @@ import time
 from fnmatch import fnmatch
 from pprint import pformat
 from shutil import copytree
-from urllib3.exceptions import MaxRetryError, ProtocolError
+from urllib3.exceptions import MaxRetryError, ProtocolError, ReadTimeoutError
 from urllib.parse import urljoin, urlparse
 
 from selenium import webdriver
@@ -609,7 +609,7 @@ class Crawler:
             try:
                 self.handle_alerts_and(_load_ext_page)
                 break
-            except (MaxRetryError, ProtocolError) as e:
+            except (MaxRetryError, ProtocolError, ReadTimeoutError) as e:
                 self.logger.warning("Error loading extension page:\n%s", str(e))
                 self.restart_browser()
             except TimeoutException:
@@ -1043,7 +1043,7 @@ class Crawler:
                 self.logger.info("Visiting %d: %s", i + 1, domain)
                 url = self.get_domain(domain)
                 visited.append(url)
-            except (MaxRetryError, ProtocolError) as e:
+            except (MaxRetryError, ProtocolError, ReadTimeoutError) as e:
                 self.logger.warning("Error loading %s:\n%s", domain, str(e))
                 self.restart_browser()
             except TimeoutException:
