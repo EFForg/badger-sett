@@ -39,12 +39,12 @@ def get_browser(log_txt):
     return None
 
 # pylint: disable-next=too-many-arguments
-def get_scan_id(cur, start_time, end_time, num_sites, browser, no_blocking, daily_scan):
-    # TODO also record region we're scanning from
-    # TODO and the list we're scanning against
-    cur.execute("INSERT INTO scan (start_time, end_time, num_sites, "
+def get_scan_id(cur, start_time, end_time, region, num_sites, browser, no_blocking, daily_scan):
+    # TODO also record the list we're scanning against
+    cur.execute("INSERT INTO scan (start_time, end_time, region, num_sites, "
                     "browser_id, no_blocking, daily_scan) "
-                "VALUES (?,?,?,?,?,?)", (start_time, end_time, num_sites,
+                "VALUES (?,?,?,?,?,?,?)", (
+                    start_time, end_time, region, num_sites,
                     browsers[browser], no_blocking, daily_scan))
     return cur.lastrowid
 
@@ -65,6 +65,7 @@ def create_tables(cur):
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             start_time TIMESTAMP NOT NULL,
             end_time TIMESTAMP NOT NULL,
+            region VARCHAR(4) NOT NULL,
             num_sites INTEGER NOT NULL,
             browser_id INTEGER NOT NULL,
             no_blocking BOOLEAN NOT NULL CHECK (no_blocking IN (0, 1)),
@@ -185,6 +186,7 @@ def ingest_distributed_scans(badger_swarm_dir, cur):
             continue
 
         scan_id = get_scan_id(cur, start_time, end_time,
+                              run_settings['do_region'],
                               run_settings['num_sites'],
                               run_settings['browser'],
                               True, False)
@@ -237,7 +239,7 @@ def ingest_daily_scans(cur):
         if cur.fetchone():
             return
 
-        scan_id = get_scan_id(cur, start_time, end_time, num_sites,
+        scan_id = get_scan_id(cur, start_time, end_time, "sfo1", num_sites,
                               browser, no_blocking, True)
 
         results = json.loads(run(f"git show {rev}:results.json".split(" ")))
