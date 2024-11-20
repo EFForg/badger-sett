@@ -14,6 +14,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import traceback
 
 from fnmatch import fnmatch
 from pprint import pformat
@@ -983,11 +984,12 @@ class Crawler:
                 self.logger.info("Successfully restarted")
                 break
             except Exception as e:
-                self.logger.error("Error restarting browser. Retrying ...")
                 if isinstance(e, WebDriverException):
                     self.logger.error('%s: %s', type(e).__name__, e.msg)
                 else:
                     self.logger.error('%s: %s', type(e).__name__, e)
+                self.logger.error(traceback.format_exc())
+                self.logger.error("Error restarting browser. Retrying ...")
         else:
             # If we couldn't restart the browser after all that, just quit.
             self.logger.error("Could not restart browser")
