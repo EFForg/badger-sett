@@ -75,7 +75,6 @@ echo "Building Docker container..."
 # same bits in the container (this prevents permissions issues in the out/ folder)
 if ! docker build \
     --build-arg BROWSER="$BROWSER" \
-    --build-arg VALIDATE="$GIT_PUSH" \
     --build-arg UID="$(id -u "$USER")" \
     --build-arg GID="$(id -g "$USER")" \
     --build-arg UNAME="$USER" \

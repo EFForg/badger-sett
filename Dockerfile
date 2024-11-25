@@ -6,7 +6,6 @@ FROM selenium/standalone-${BROWSER}
 ARG UID
 ARG GID
 ARG UNAME
-ARG VALIDATE
 
 USER root
 
@@ -40,7 +39,7 @@ WORKDIR $HOME
 COPY requirements.txt .
 RUN pip3 install --user --break-system-packages -r requirements.txt
 
-COPY crawler.py validate.py docker-entry.sh $HOME/
+COPY crawler.py docker-entry.sh $HOME/
 COPY lib $HOME/lib
 COPY .git $HOME/.git
 COPY domain-lists $HOME/domain-lists
