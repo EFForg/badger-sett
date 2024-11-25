@@ -1,5 +1,6 @@
 *.sw?
 __pycache__/
+lib/lists/.cache/
 parallel-extensions/*.crx
 parallel-extensions/*.xpi
 venv/

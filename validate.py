@@ -9,6 +9,9 @@ import colorama
 
 from lib.basedomain import extract
 
+from lib.lists.adblocker import Adblocker
+from lib.lists.disconnect import Disconnect
+
 from lib.linters.mdfp import print_warnings as flag_potential_mdfp_domains
 from lib.linters.unblocked import print_warnings as list_unblocked_canvas_fingerprinters
 from lib.linters.site_outliers import print_warnings as list_suspicious_site_domains
@@ -60,6 +63,10 @@ C_GREEN = colorama.Style.BRIGHT + colorama.Fore.GREEN
 C_RED = colorama.Style.BRIGHT + colorama.Fore.RED
 C_YELLOW = colorama.Style.BRIGHT + colorama.Fore.YELLOW
 C_RESET = colorama.Style.RESET_ALL
+
+adblocker = Adblocker()
+disconnect = Disconnect()
+otherlists_available = adblocker.ready and disconnect.ready
 
 # warn when BADGER_JSON_NEW is close to or exceeds QUOTA_BYTES
 size_bytes = len(json.dumps(new_js))
@@ -114,12 +121,19 @@ if blocked_bases_old:
 newly_blocked = blocked_bases_new - blocked_bases_old
 print(f"\n{C_GREEN}++{C_RESET} Newly blocked domains ({len(newly_blocked)}):\n")
 for base in sorted(newly_blocked):
-    subdomains = blocked_new[base]
+    otherlists = ""
+    if otherlists_available:
+        otherlists = "  "
+        if base in adblocker.bases or base in disconnect.bases:
+            otherlists = "".join((
+                "⊙" if base in adblocker.bases else " ",
+                f"{C_YELLOW}⊙{C_RESET}" if base in disconnect.bases_unblocked else (
+                    "⊙" if base in disconnect.bases else " ")))
     cookieblocked = ""
     if base in new_js['action_map']:
         if new_js['action_map'][base]['heuristicAction'] == "cookieblock":
             cookieblocked = f"{C_YELLOW}❋{C_RESET}"
-    out = f"  {cookieblocked}{C_GREEN}{base}{C_RESET}"
+    out = f" {otherlists} {cookieblocked}{C_GREEN}{base}{C_RESET}"
     if base in new_js['snitch_map']:
         sites = ", ".join(new_js['snitch_map'][base])
         sites = sites.replace(".edu", "." + C_YELLOW + "edu" + C_RESET)
@@ -128,11 +142,13 @@ for base in sorted(newly_blocked):
         sites = sites.replace(".mil", "." + C_RED + "mil" + C_RESET)
         out = out + " on " + sites
     print(out)
+
+    subdomains = blocked_new[base]
     if len(subdomains) > 1 or subdomains[0] != base:
         for y in sorted(subdomains):
             if y == base:
                 continue
-            out = "    • {}{}"
+            out = "      • {}{}" if otherlists_available else "    • {}{}"
             if y in new_js['snitch_map']:
                 out = out + " on " + ", ".join(new_js['snitch_map'][y])
             cookieblocked = ""
@@ -144,16 +160,25 @@ no_longer_blocked = blocked_bases_old - blocked_bases_new
 if no_longer_blocked:
     print(f"\n{C_RED}--{C_RESET} No longer blocked domains ({len(no_longer_blocked)}):\n")
 for base in sorted(no_longer_blocked):
-    subdomains = blocked_old[base]
-    out = f"  {C_RED}{base}{C_RESET}"
+    otherlists = ""
+    if otherlists_available:
+        otherlists = "  "
+        if base in adblocker.bases or base in disconnect.bases:
+            otherlists = "".join((
+                "⊙" if base in adblocker.bases else " ",
+                f"{C_YELLOW}⊙{C_RESET}" if base in disconnect.bases_unblocked else (
+                    "⊙" if base in disconnect.bases else " ")))
+    out = f" {otherlists} {C_RED}{base}{C_RESET}"
     if base in old_js['snitch_map']:
         out = out + " on " + ", ".join(old_js['snitch_map'][base])
     print(out)
+
+    subdomains = blocked_old[base]
     if len(subdomains) > 1 or subdomains[0] != base:
         for y in sorted(subdomains):
             if y == base:
                 continue
-            out = "    • {}"
+            out = "      • {}" if otherlists_available else "    • {}"
             if y in old_js['snitch_map']:
                 out = out + " on " + ", ".join(old_js['snitch_map'][y])
             print(out.format(y))
