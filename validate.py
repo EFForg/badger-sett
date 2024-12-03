@@ -10,6 +10,7 @@ import colorama
 from lib.basedomain import extract
 
 from lib.lists.adblocker import Adblocker
+from lib.lists.ddg import DDG
 from lib.lists.disconnect import Disconnect
 
 from lib.linters.mdfp import print_warnings as flag_potential_mdfp_domains
@@ -65,8 +66,9 @@ C_YELLOW = colorama.Style.BRIGHT + colorama.Fore.YELLOW
 C_RESET = colorama.Style.RESET_ALL
 
 adblocker = Adblocker()
+ddg = DDG()
 disconnect = Disconnect()
-otherlists_available = adblocker.ready and disconnect.ready
+otherlists_available = adblocker.ready and ddg.ready and disconnect.ready
 
 # warn when BADGER_JSON_NEW is close to or exceeds QUOTA_BYTES
 size_bytes = len(json.dumps(new_js))
@@ -123,10 +125,12 @@ print(f"\n{C_GREEN}++{C_RESET} Newly blocked domains ({len(newly_blocked)}):\n")
 for base in sorted(newly_blocked):
     otherlists = ""
     if otherlists_available:
-        otherlists = "  "
-        if base in adblocker.bases or base in disconnect.bases:
+        otherlists = "   "
+        if base in adblocker.bases or base in ddg.bases or base in disconnect.bases:
             otherlists = "".join((
                 "⊙" if base in adblocker.bases else " ",
+                f"{C_YELLOW}⊙{C_RESET}" if base in ddg.bases_unblocked else (
+                    "⊙" if base in ddg.bases else " "),
                 f"{C_YELLOW}⊙{C_RESET}" if base in disconnect.bases_unblocked else (
                     "⊙" if base in disconnect.bases else " ")))
     cookieblocked = ""
@@ -148,7 +152,7 @@ for base in sorted(newly_blocked):
         for y in sorted(subdomains):
             if y == base:
                 continue
-            out = "      • {}{}" if otherlists_available else "    • {}{}"
+            out = "       • {}{}" if otherlists_available else "    • {}{}"
             if y in new_js['snitch_map']:
                 out = out + " on " + ", ".join(new_js['snitch_map'][y])
             cookieblocked = ""
@@ -162,10 +166,12 @@ if no_longer_blocked:
 for base in sorted(no_longer_blocked):
     otherlists = ""
     if otherlists_available:
-        otherlists = "  "
-        if base in adblocker.bases or base in disconnect.bases:
+        otherlists = "   "
+        if base in adblocker.bases or base in ddg.bases or base in disconnect.bases:
             otherlists = "".join((
                 "⊙" if base in adblocker.bases else " ",
+                f"{C_YELLOW}⊙{C_RESET}" if base in ddg.bases_unblocked else (
+                    "⊙" if base in ddg.bases else " "),
                 f"{C_YELLOW}⊙{C_RESET}" if base in disconnect.bases_unblocked else (
                     "⊙" if base in disconnect.bases else " ")))
     out = f" {otherlists} {C_RED}{base}{C_RESET}"
@@ -178,7 +184,7 @@ for base in sorted(no_longer_blocked):
         for y in sorted(subdomains):
             if y == base:
                 continue
-            out = "      • {}" if otherlists_available else "    • {}"
+            out = "       • {}" if otherlists_available else "    • {}"
             if y in old_js['snitch_map']:
                 out = out + " on " + ", ".join(old_js['snitch_map'][y])
             print(out.format(y))
