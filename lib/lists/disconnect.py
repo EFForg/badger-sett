@@ -30,11 +30,11 @@ class Disconnect(Blocklist):
         url = "https://services.disconnect.me/disconnect-plaintext.json"
         filename = os.path.join(self.cache_dir, "disconnect-plaintext.json")
 
-        self.fetch(url, filename)
+        self.fetch(url, filename, expire_cache_hrs=168) # weekly expiration
 
         try:
-            with open(filename, encoding='utf-8') as f:
-                data = json.load(f)
+            with open(filename, encoding='utf-8') as file:
+                data = json.load(file)
         except FileNotFoundError:
             print(f"WARNING Failed to open {filename}")
             return
