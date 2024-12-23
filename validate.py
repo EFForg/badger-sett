@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import argparse
 import json
 import sys
 
@@ -17,22 +18,15 @@ from lib.linters.mdfp import print_warnings as flag_potential_mdfp_domains
 from lib.linters.unblocked import print_warnings as list_unblocked_canvas_fingerprinters
 from lib.linters.site_outliers import print_warnings as list_suspicious_site_domains
 
-old_path = None
-new_path = None
 
-# ./validate.py old.json new.json
-if len(sys.argv) == 3:
-    old_path = sys.argv[1]
-    new_path = sys.argv[2]
-# ./validate.py new.json
-elif len(sys.argv) == 2:
-    new_path = sys.argv[1]
-else:
-    print(f"Usage: {sys.argv[0]} [BADGER_JSON_OLD] BADGER_JSON_NEW")
-    sys.exit(1)
+ap = argparse.ArgumentParser()
+ap.add_argument('old_path', nargs='?')
+ap.add_argument('new_path')
+ap.add_argument('--badger-only', action='store_true', default=False)
+args = ap.parse_args()
 
-if old_path:
-    with open(old_path, encoding='utf-8') as f:
+if args.old_path:
+    with open(args.old_path, encoding='utf-8') as f:
         old_js = json.load(f)
 else:
     old_js = {
@@ -40,7 +34,7 @@ else:
         "snitch_map": {},
     }
 
-with open(new_path, encoding='utf-8') as f:
+with open(args.new_path, encoding='utf-8') as f:
     new_js = json.load(f)
 
 # make sure new JSON is not the same as old JSON
@@ -68,13 +62,18 @@ C_RESET = colorama.Style.RESET_ALL
 adblocker = Adblocker()
 ddg = DDG()
 disconnect = Disconnect()
-otherlists_available = adblocker.ready and ddg.ready and disconnect.ready
+
+ddg_blocked = ddg.bases - ddg.bases_unblocked
+disconnect_blocked = set(disconnect.bases) - set(disconnect.bases_unblocked)
+
+combined_blocked = ddg_blocked | disconnect_blocked
+combined_blocked_with_adblocker_lists = adblocker.bases | combined_blocked
 
 # warn when BADGER_JSON_NEW is close to or exceeds QUOTA_BYTES
 size_bytes = len(json.dumps(new_js))
 if size_bytes >= (5242880 / 100 * 80):
     size_mb = round(size_bytes / 1024 / 1024, 2)
-    print(f"{C_RED}WARNING{C_RESET}: {new_path} serializes to {size_mb} MB\n")
+    print(f"{C_RED}WARNING{C_RESET}: {args.new_path} serializes to {size_mb} MB\n")
 
 old_keys = set(old_js['action_map'].keys())
 new_keys = set(new_js['action_map'].keys())
@@ -113,6 +112,11 @@ for domain in new_js['action_map'].keys():
 blocked_bases_old = set(blocked_old.keys())
 blocked_bases_new = set(blocked_new.keys())
 
+if args.badger_only:
+    badger_only_new = blocked_bases_new - combined_blocked_with_adblocker_lists
+    if blocked_bases_old:
+        badger_only_old = blocked_bases_old - combined_blocked_with_adblocker_lists
+
 if blocked_bases_old:
     # pylint: disable-next=consider-using-f-string
     print("\nCount of blocked base domains went from {} to {} ({:+0.2f}%)".format(
@@ -123,8 +127,12 @@ if blocked_bases_old:
 newly_blocked = blocked_bases_new - blocked_bases_old
 print(f"\n{C_GREEN}++{C_RESET} Newly blocked domains ({len(newly_blocked)}):\n")
 for base in sorted(newly_blocked):
+    if args.badger_only:
+        if base not in badger_only_new:
+            continue
+
     otherlists = ""
-    if otherlists_available:
+    if not args.badger_only:
         otherlists = "   "
         if base in adblocker.bases or base in ddg.bases or base in disconnect.bases:
             otherlists = "".join((
@@ -152,7 +160,7 @@ for base in sorted(newly_blocked):
         for y in sorted(subdomains):
             if y == base:
                 continue
-            out = "       • {}{}" if otherlists_available else "    • {}{}"
+            out = "       • {}{}" if not args.badger_only else "    • {}{}"
             if y in new_js['snitch_map']:
                 out = out + " on " + ", ".join(new_js['snitch_map'][y])
             cookieblocked = ""
@@ -164,8 +172,12 @@ no_longer_blocked = blocked_bases_old - blocked_bases_new
 if no_longer_blocked:
     print(f"\n{C_RED}--{C_RESET} No longer blocked domains ({len(no_longer_blocked)}):\n")
 for base in sorted(no_longer_blocked):
+    if args.badger_only:
+        if base not in badger_only_old:
+            continue
+
     otherlists = ""
-    if otherlists_available:
+    if not args.badger_only:
         otherlists = "   "
         if base in adblocker.bases or base in ddg.bases or base in disconnect.bases:
             otherlists = "".join((
@@ -184,7 +196,7 @@ for base in sorted(no_longer_blocked):
         for y in sorted(subdomains):
             if y == base:
                 continue
-            out = "       • {}" if otherlists_available else "    • {}"
+            out = "       • {}" if not args.badger_only else "    • {}"
             if y in old_js['snitch_map']:
                 out = out + " on " + ", ".join(old_js['snitch_map'][y])
             print(out.format(y))
