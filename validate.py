@@ -164,7 +164,14 @@ for base in sorted(newly_blocked):
             if y in new_js['snitch_map']:
                 out = out + " on " + ", ".join(new_js['snitch_map'][y])
             cookieblocked = ""
-            if new_js['action_map'][y]['heuristicAction'] == "cookieblock":
+            # cookieblocked if it or any parent domain up to base is cookieblocked
+            domain_parts = y.split('.')
+            exploded_subdomains = (s for s in (
+                    '.'.join(domain_parts[idx:])
+                    for idx, _ in enumerate(domain_parts))
+                if len(s) >= len(base))
+            if any(sub for sub in exploded_subdomains
+                   if new_js['action_map'].get(sub, {}).get('heuristicAction', "") == "cookieblock"):
                 cookieblocked = f"{C_YELLOW}❋{C_RESET}"
             print(out.format(cookieblocked, y))
 
