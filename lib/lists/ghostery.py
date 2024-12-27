@@ -2,23 +2,10 @@
 
 import json
 import os
-
-from collections.abc import MutableMapping
+import urllib
 
 from lib.basedomain import extract
 from lib.lists.blocklist import Blocklist
-
-
-# https://stackoverflow.com/a/6027615
-def flatten(dictionary, parent_key='', separator='_'):
-    items = []
-    for key, value in dictionary.items():
-        new_key = parent_key + separator + key if parent_key else key
-        if isinstance(value, MutableMapping):
-            items.extend(flatten(value, new_key, separator).items())
-        else:
-            items.append((new_key, value))
-    return dict(items)
 
 
 class Ghostery(Blocklist):
@@ -30,10 +17,18 @@ class Ghostery(Blocklist):
     blocked_categories = ("advertising", "site_analytics", "pornvertising")
 
     def __init__(self):
-        url = "https://cdn.ghostery.com/update/v4.1/bugs.json"
-        filename = os.path.join(self.cache_dir, "ghostery-bugs.json")
+        filename = os.path.join(self.cache_dir, "ghostery-trackerdb.json")
+        expire_hrs = 168 # weekly expiration
 
-        self.fetch(url, filename, expire_cache_hrs=168) # weekly expiration
+        if not self.exists_and_unexpired(filename, expire_hrs):
+            url = "https://github.com/ghostery/trackerdb/releases/latest"
+            with urllib.request.urlopen(
+                    urllib.request.Request(url, method='HEAD')) as conn:
+                version = conn.geturl().rpartition('/')[-1]
+
+            url = ("https://github.com/ghostery/trackerdb/releases"
+                f"/download/{version}/trackerdb.json")
+            self.fetch(url, filename, expire_cache_hrs=expire_hrs)
 
         try:
             with open(filename, encoding='utf-8') as file:
@@ -42,26 +37,14 @@ class Ghostery(Blocklist):
             print(f"WARNING Failed to open {filename}")
             return
 
-        # TODO review if we can ingest some domains from other pattern types, not just "host"
+        for name in data['patterns']:
+            for domain in data['patterns'][name]['domains']:
+                base = extract(domain).registered_domain or domain
+                self.bases.add(base)
 
-        # since '_' is a valid domain names character, '_' is a bad separator
-        # for working with domains names; let's use ':' instead
-        host_patterns_flat = flatten(data["patterns"]["host"], separator=':')
+                if data['patterns'][name]['category'] not in self.blocked_categories:
+                    self.bases_unblocked.add(base)
 
-        for domain_key, bug_id in host_patterns_flat.items():
-            # trim the last segment ("_$") and then reverse
-            domain = ".".join(domain_key.split(":")[:-1][::-1])
-
-            base = extract(domain).registered_domain
-            if not base:
-                base = domain
-            self.bases.add(base)
-
-            aid = data["bugs"][str(bug_id)]["aid"]
-            category = data["apps"][str(aid)]["cat"]
-            if category not in self.blocked_categories:
-                self.bases_unblocked.add(base)
-
-            self.domains.add(domain)
+                self.domains.add(domain)
 
         self.ready = True

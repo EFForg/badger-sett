@@ -24,14 +24,23 @@ class Blocklist:
             with open(filename, 'w', encoding='utf-8') as file:
                 file.write(data.decode('utf-8'))
 
+    def exists_and_unexpired(self, filename, expire_cache_hrs):
+        if not os.path.isfile(filename):
+            return False
+
+        time_diff = time.time() - os.path.getmtime(filename)
+        if time_diff / 3600 > expire_cache_hrs:
+            return False
+
+        return True
+
     def fetch(self, url, filename, expire_cache_hrs=24):
         os.makedirs(self.cache_dir, exist_ok=True)
 
-        if not os.path.isfile(filename):
-            self._download(url, filename)
-        # redownload if cached file is older than specified span of hours
-        elif (time.time() - os.path.getmtime(filename)) / 3600 > expire_cache_hrs:
-            # first remove (back up) the file so that if downloading fails,
-            # we know something went wrong
-            os.replace(filename, filename + ".bak")
+        if not self.exists_and_unexpired(filename, expire_cache_hrs):
+            if os.path.isfile(filename):
+                # first remove (back up) the file so that if downloading fails,
+                # we know something went wrong
+                os.replace(filename, filename + ".bak")
+
             self._download(url, filename)
