@@ -13,6 +13,7 @@ from lib.basedomain import extract
 from lib.lists.adblocker import Adblocker
 from lib.lists.ddg import DDG
 from lib.lists.disconnect import Disconnect
+from lib.lists.ghostery import Ghostery
 
 from lib.linters.mdfp import print_warnings as flag_potential_mdfp_domains
 from lib.linters.unblocked import print_warnings as list_unblocked_canvas_fingerprinters
@@ -62,11 +63,13 @@ C_RESET = colorama.Style.RESET_ALL
 adblocker = Adblocker()
 ddg = DDG()
 disconnect = Disconnect()
+ghostery = Ghostery()
 
 ddg_blocked = ddg.bases - ddg.bases_unblocked
-disconnect_blocked = set(disconnect.bases) - set(disconnect.bases_unblocked)
+disconnect_blocked = disconnect.bases - disconnect.bases_unblocked
+ghostery_blocked = ghostery.bases - ghostery.bases_unblocked
 
-combined_blocked = ddg_blocked | disconnect_blocked
+combined_blocked = ddg_blocked | disconnect_blocked | ghostery_blocked
 combined_blocked_with_adblocker_lists = adblocker.bases | combined_blocked
 
 # warn when BADGER_JSON_NEW is close to or exceeds QUOTA_BYTES
@@ -133,14 +136,16 @@ for base in sorted(newly_blocked):
 
     otherlists = ""
     if not args.badger_only:
-        otherlists = "   "
-        if base in adblocker.bases or base in ddg.bases or base in disconnect.bases:
+        otherlists = "    "
+        if base in adblocker.bases or base in ddg.bases or base in disconnect.bases or base in ghostery.bases:
             otherlists = "".join((
                 "⊙" if base in adblocker.bases else " ",
                 f"{C_YELLOW}⊙{C_RESET}" if base in ddg.bases_unblocked else (
                     "⊙" if base in ddg.bases else " "),
                 f"{C_YELLOW}⊙{C_RESET}" if base in disconnect.bases_unblocked else (
-                    "⊙" if base in disconnect.bases else " ")))
+                    "⊙" if base in disconnect.bases else " "),
+                f"{C_YELLOW}⊙{C_RESET}" if base in ghostery.bases_unblocked else (
+                    "⊙" if base in ghostery.bases else " ")))
     cookieblocked = ""
     if base in new_js['action_map']:
         if new_js['action_map'][base]['heuristicAction'] == "cookieblock":
@@ -160,7 +165,7 @@ for base in sorted(newly_blocked):
         for y in sorted(subdomains):
             if y == base:
                 continue
-            out = "       • {}{}" if not args.badger_only else "    • {}{}"
+            out = "        • {}{}" if not args.badger_only else "    • {}{}"
             if y in new_js['snitch_map']:
                 out = out + " on " + ", ".join(new_js['snitch_map'][y])
             cookieblocked = ""
@@ -185,14 +190,16 @@ for base in sorted(no_longer_blocked):
 
     otherlists = ""
     if not args.badger_only:
-        otherlists = "   "
-        if base in adblocker.bases or base in ddg.bases or base in disconnect.bases:
+        otherlists = "    "
+        if base in adblocker.bases or base in ddg.bases or base in disconnect.bases or base in ghostery.bases:
             otherlists = "".join((
                 "⊙" if base in adblocker.bases else " ",
                 f"{C_YELLOW}⊙{C_RESET}" if base in ddg.bases_unblocked else (
                     "⊙" if base in ddg.bases else " "),
                 f"{C_YELLOW}⊙{C_RESET}" if base in disconnect.bases_unblocked else (
-                    "⊙" if base in disconnect.bases else " ")))
+                    "⊙" if base in disconnect.bases else " "),
+                f"{C_YELLOW}⊙{C_RESET}" if base in ghostery.bases_unblocked else (
+                    "⊙" if base in ghostery.bases else " ")))
     out = f" {otherlists} {C_RED}{base}{C_RESET}"
     if base in old_js['snitch_map']:
         out = out + " on " + ", ".join(old_js['snitch_map'][base])
@@ -203,7 +210,7 @@ for base in sorted(no_longer_blocked):
         for y in sorted(subdomains):
             if y == base:
                 continue
-            out = "       • {}" if not args.badger_only else "    • {}"
+            out = "        • {}" if not args.badger_only else "    • {}"
             if y in old_js['snitch_map']:
                 out = out + " on " + ", ".join(old_js['snitch_map'][y])
             print(out.format(y))

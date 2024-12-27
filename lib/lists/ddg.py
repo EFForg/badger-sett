@@ -9,7 +9,6 @@ from lib.lists.blocklist import Blocklist
 
 class DDG(Blocklist):
 
-    ready = False
     bases = set()
     bases_unblocked = set()
     domains = set()

@@ -11,9 +11,10 @@ from lib.lists.blocklist import Blocklist
 
 class Disconnect(Blocklist):
 
+    bases = set()
+    bases_unblocked = set()
+
     categories = defaultdict(set)
-    bases = []
-    bases_unblocked = []
 
     def process_entity(self, category, entity):
         for name in entity:
@@ -43,8 +44,7 @@ class Disconnect(Blocklist):
             for entity in data['categories'][category]:
                 self.process_entity(category, entity)
 
-        self.bases = [base for domains in self.categories.values() for base in domains]
-        # TODO ignore Content category domains when comparing what we're not blocking
-        self.bases_unblocked = list(self.categories["Content"])
+        self.bases = {base for domains in self.categories.values() for base in domains}
+        self.bases_unblocked = self.categories["Content"]
 
         self.ready = True
