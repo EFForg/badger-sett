@@ -16,6 +16,10 @@ class Adblocker(Blocklist):
         ("https://pgl.yoyo.org/adservers/serverlist.php?hostformat=adblockplus&showintro=0&mimetype=plaintext",
          "peterlowe.txt"),
 
+        "https://malware-filter.gitlab.io/malware-filter/urlhaus-filter-agh-online.txt",
+
+        "https://raw.githubusercontent.com/brave/adblock-lists/master/brave-lists/brave-ios-specific.txt",
+
         ("https://ublockorigin.github.io/uAssets/filters/filters.txt",
          "uAssets-filters.txt"),
         ("https://ublockorigin.github.io/uAssets/filters/filters-2020.txt",
@@ -28,8 +32,12 @@ class Adblocker(Blocklist):
          "uAssets-filters-2023.txt"),
         ("https://ublockorigin.github.io/uAssets/filters/filters-2024.txt",
          "uAssets-filters-2024.txt"),
+        ("https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/badware.txt",
+         "uAssets-badware.txt"),
         ("https://ublockorigin.github.io/uAssets/filters/privacy.txt",
          "uAssets-privacy.txt"),
+
+        "https://ublockorigin.pages.dev/thirdparties/easylist-cookies.txt",
 
         # uBO regional lists
         "https://raw.githubusercontent.com/AnXh3L0/blocklist/master/albanian-easylist-addition/Albania.txt",
