@@ -29,7 +29,7 @@ for rev in $(git rev-list HEAD -- log.txt); do
     "$(./validate.py <(git --no-pager show "$rev:results.json") 2>/dev/null | grep 'Newly blocked domains' | grep -oE '[0-9]+')" \
     "$(grep 'errored on' "$log_txt" | rev | cut -d ' ' -f -2 | rev | cut -d ' ' -f 2- | sed 's/[()]//g')" \
     " ($(echo "$(grep -c 'Timed out loading ' "$log_txt") * 100 / $num_domains" | bc -l | xargs printf "%.1f")%, $(echo "$(grep -c 'security page' "$log_txt") * 100 / $num_domains" | bc -l | xargs printf "%.1f")%)" \
-    "$(grep -c 'restarted' "$log_txt")" \
+    "$(grep -cE '[Rr]estarting browser( )?\.\.\.' "$log_txt")" \
     "$((($(grep 'Finished scan' "$log_txt" | cut -d " " -f "1,2" | cut -d "," -f 1 | tr -d "\n" | DATE_TO_EPOCH) - $(head -n1 "$log_txt" | cut -d " " -f "1,2" | cut -d "," -f 1 | tr -d "\n" | DATE_TO_EPOCH)) / 3600)) hours" \
     "$(git show -s --format="%h  %ci" "$rev")"
 done
