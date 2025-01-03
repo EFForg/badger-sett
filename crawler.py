@@ -849,15 +849,12 @@ class Crawler:
             # TODO wait for the page to actually load first
             self.scroll_page()
 
-    def get_domain(self, domain):
+    def visit_domain(self, domain):
         """
         Visit a domain, then spend `self.wait_time` seconds on the site
         waiting for dynamic loading to complete.
         """
-
-        url = f"http://{domain}/"
-
-        self.handle_alerts_and(lambda: self.driver.get(url))
+        self.handle_alerts_and(lambda: self.driver.get(f"http://{domain}/"))
 
         self.raise_on_chrome_error_pages()
         self.raise_on_security_pages()
@@ -881,8 +878,6 @@ class Crawler:
 
         if self.take_screenshots:
             self.take_screenshot(domain + "-" + self.driver.current_url)
-
-        return url
 
     def get_sitelist(self):
         """Get the top n sites from the Tranco list"""
@@ -1012,8 +1007,7 @@ class Crawler:
         else:
             domains = self.get_sitelist()
 
-        # list of domains we actually visited
-        visited = []
+        num_visited = 0
         old_snitches = self.dump_data()['snitch_map']
 
         random.shuffle(domains)
@@ -1043,25 +1037,31 @@ class Crawler:
 
                 # load the next domain
                 self.logger.info("Visiting %d: %s", i + 1, domain)
-                url = self.get_domain(domain)
-                visited.append(url)
+                self.visit_domain(domain)
+                self.logger.info("Visited %s", self.driver.current_url)
+                num_visited += 1
+
             except (MaxRetryError, ProtocolError, ReadTimeoutError) as e:
-                self.logger.warning("Error loading %s:\n%s", domain, str(e))
+                self.logger.warning("Error loading %s:\n%s",
+                                    self.driver.current_url, str(e))
                 self.restart_browser()
+
             except TimeoutException:
-                self.logger.warning("Timed out loading %s", domain)
-            except WebDriverException as e:
-                self.logger.error("%s on %s: %s", type(e).__name__, domain, e.msg)
-                if should_restart(e):
+                self.logger.warning("Timed out loading %s",
+                                    self.driver.current_url)
+
+            except WebDriverException as ex:
+                self.logger.error("%s on %s: %s", type(ex).__name__,
+                                  self.driver.current_url, ex.msg)
+                if should_restart(ex):
                     self.restart_browser()
 
         num_total = len(domains)
         if num_total:
-            num_successes = len(visited)
-            num_errors = num_total - num_successes
+            num_errors = num_total - num_visited
             self.logger.info(
                 "Finished scan. Visited %d sites and errored on %d (%.1f%%)",
-                num_successes, num_errors, (num_errors / num_total * 100))
+                num_visited, num_errors, (num_errors / num_total * 100))
 
         try:
             if self.last_data:
