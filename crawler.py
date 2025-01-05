@@ -1047,8 +1047,10 @@ class Crawler:
                 self.restart_browser()
 
             except TimeoutException:
-                self.logger.warning("Timed out loading %s",
-                                    self.driver.current_url)
+                # TODO driver.current_url here can raise a "Timed out
+                # TODO receiving message from renderer" TimeoutException
+                # TODO when we run into same exception in visit_domain()
+                self.logger.warning("Timed out loading %s", domain)
 
             except WebDriverException as ex:
                 self.logger.error("%s on %s: %s", type(ex).__name__,
