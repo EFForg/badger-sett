@@ -1,4 +1,4 @@
-ARG BROWSER
+ARG BROWSER=firefox
 
 FROM python:3.11
 FROM selenium/standalone-${BROWSER}
