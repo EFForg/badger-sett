@@ -995,6 +995,16 @@ class Crawler:
         if diff:
             self.logger.info("New domains in snitch_map: %s", ', '.join(sorted(diff)))
 
+    def get_current_url(self):
+        for i in range(3):
+            try:
+                return self.driver.current_url
+            except TimeoutException:
+                time.sleep(2 + i)
+
+        return None
+
+
     def crawl(self):
         """
         Visit the top `num_sites` websites in the Tranco list, in order, in
@@ -1038,24 +1048,23 @@ class Crawler:
                 # load the next domain
                 self.logger.info("Visiting %d: %s", i + 1, domain)
                 self.visit_domain(domain)
-                self.logger.info("Visited %s", self.driver.current_url)
+                self.logger.info("Visited %s", self.get_current_url() or domain)
                 num_visited += 1
 
             except (MaxRetryError, ProtocolError, ReadTimeoutError) as ex:
                 self.logger.warning("Error loading %s:\n%s",
-                                    self.driver.current_url, str(ex))
+                                    self.get_current_url() or domain,
+                                    str(ex))
                 self.restart_browser()
 
-            except TimeoutException as ex:
-                # TODO driver.current_url here can raise a "Timed out
-                # TODO receiving message from renderer" TimeoutException
-                # TODO when we run into same exception in visit_domain()
-                self.logger.warning("Timed out loading %s (%s)",
-                                    domain, str(ex))
+            except TimeoutException:
+                self.logger.warning("Timed out loading %s",
+                                    self.get_current_url() or domain)
 
             except WebDriverException as ex:
                 self.logger.error("%s on %s: %s", type(ex).__name__,
-                                  self.driver.current_url, ex.msg)
+                                  self.get_current_url() or domain,
+                                  ex.msg)
                 if should_restart(ex):
                     self.restart_browser()
 
