@@ -998,8 +998,12 @@ class Crawler:
     def get_current_url(self):
         for i in range(3):
             try:
-                return self.driver.current_url
+                curl = self.driver.current_url
+                if curl.startswith("chrome-extension://"):
+                    self.logger.error(traceback.format_exc())
+                return curl
             except TimeoutException:
+                self.logger.info("Timed out getting driver.current_url, retrying...")
                 time.sleep(2 + i)
 
         return None
