@@ -1052,9 +1052,7 @@ class Crawler:
                 num_visited += 1
 
             except (MaxRetryError, ProtocolError, ReadTimeoutError) as ex:
-                self.logger.warning("Error loading %s:\n%s",
-                                    self.get_current_url() or domain,
-                                    str(ex))
+                self.logger.warning("Error loading %s:\n%s", domain, str(ex))
                 self.restart_browser()
 
             except TimeoutException:
