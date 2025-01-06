@@ -1069,11 +1069,14 @@ class Crawler:
                                     self.get_current_url() or domain)
 
             except WebDriverException as ex:
-                self.logger.error("%s on %s: %s", type(ex).__name__,
-                                  self.get_current_url() or domain,
-                                  ex.msg)
                 if should_restart(ex):
+                    self.logger.error("%s on %s: %s", type(ex).__name__,
+                                      domain, ex.msg)
                     self.restart_browser()
+                else:
+                    self.logger.error("%s on %s: %s", type(ex).__name__,
+                                      self.get_current_url() or domain,
+                                      ex.msg)
 
         num_total = len(domains)
         if num_total:
