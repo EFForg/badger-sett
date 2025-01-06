@@ -854,7 +854,15 @@ class Crawler:
         Visit a domain, then spend `self.wait_time` seconds on the site
         waiting for dynamic loading to complete.
         """
-        self.handle_alerts_and(lambda: self.driver.get(f"http://{domain}/"))
+        for i in range(3):
+            try:
+                self.handle_alerts_and(lambda: self.driver.get(f"http://{domain}/"))
+            except TimeoutException as ex:
+                if "Timed out receiving message from renderer: -" in str(ex):
+                    self.logger.info("Timed out with negative value, retrying...")
+                    time.sleep(2 + i)
+                else:
+                    raise
 
         self.raise_on_chrome_error_pages()
         self.raise_on_security_pages()
@@ -998,10 +1006,7 @@ class Crawler:
     def get_current_url(self):
         for i in range(3):
             try:
-                curl = self.driver.current_url
-                if curl.startswith("chrome-extension://"):
-                    self.logger.error(traceback.format_exc())
-                return curl
+                return self.driver.current_url
             except TimeoutException:
                 self.logger.info("Timed out getting driver.current_url, retrying...")
                 time.sleep(2 + i)
