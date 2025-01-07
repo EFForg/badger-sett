@@ -860,7 +860,7 @@ class Crawler:
             except TimeoutException as ex:
                 if "Timed out receiving message from renderer: -" in str(ex):
                     self.logger.info("Timed out with negative value, retrying...")
-                    time.sleep(2 + i)
+                    time.sleep(2 + 4**i)
                 else:
                     raise
 
@@ -1007,9 +1007,10 @@ class Crawler:
         for i in range(3):
             try:
                 return self.driver.current_url
-            except TimeoutException:
+            except TimeoutException as ex:
                 self.logger.info("Timed out getting driver.current_url, retrying...")
-                time.sleep(2 + i)
+                self.logger.info(str(ex))
+                time.sleep(2 + 4**i)
 
         return None
 
