@@ -1039,24 +1039,23 @@ class Crawler:
                 self.log_snitch_map_changes(old_snitches, self.last_data['snitch_map'])
 
                 # try to fix misattribution errors
-                if i >= 2:
-                    clean_data = self.cleanup(
-                        domains[i - 2],
-                        domains[i - 1]
-                    )
-                    if self.last_data != clean_data:
-                        self.clear_data()
-                        self.load_user_data(clean_data)
-                        self.last_data = clean_data
+                if i > 1:
+                    self.cleanup(domains[i - 2], domains[i - 1])
 
-                # load the next domain
                 self.logger.info("Visiting %d: %s", i + 1, domain)
                 self.visit_domain(domain)
-                self.logger.info("Visited %s", self.get_current_url() or domain)
-                num_visited += 1
+
+                curl_or_domain = self.get_current_url() or domain
+                if curl_or_domain.startswith(CHROME_URL_PREFIX):
+                    self.logger.error("Error loading %s: "
+                        "driver.current_url is still %s",
+                        domain, curl_or_domain)
+                else:
+                    self.logger.info("Visited %s", curl_or_domain)
+                    num_visited += 1
 
             except (MaxRetryError, ProtocolError, ReadTimeoutError) as ex:
-                self.logger.warning("Error loading %s:\n%s", domain, str(ex))
+                self.logger.error("Error loading %s:\n%s", domain, str(ex))
                 self.restart_browser()
 
             except TimeoutException:
@@ -1154,7 +1153,10 @@ class Crawler:
                     )
                     action_map[d1_base]['heuristicAction'] = 'allow'
 
-        return new_data
+        if self.last_data != new_data:
+            self.clear_data()
+            self.load_user_data(new_data)
+            self.last_data = new_data
 
     def save(self, data, name='results.json'):
         data['version'] = self.version
