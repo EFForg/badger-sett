@@ -1004,16 +1004,10 @@ class Crawler:
             self.logger.info("New domains in snitch_map: %s", ', '.join(sorted(diff)))
 
     def get_current_url(self):
-        for i in range(3):
-            try:
-                return self.driver.current_url
-            except TimeoutException as ex:
-                self.logger.info("Timed out getting driver.current_url, retrying...")
-                self.logger.info(str(ex))
-                time.sleep(2 + 4**i)
-
-        return None
-
+        try:
+            return self.driver.current_url
+        except TimeoutException:
+            return None
 
     def crawl(self):
         """
