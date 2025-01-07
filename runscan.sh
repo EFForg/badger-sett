@@ -116,8 +116,13 @@ if [ "$GIT_PUSH" = "1" ] ; then
   update_badger_sett_repo
 fi
 
-# copy the updated results and log file out of the docker volume
+# move the updated results and log file out of the docker volume
 mv "$DOCKER_OUT"/results.json "$DOCKER_OUT"/log.txt ./
+
+# if present, also move the screenshots directory
+if [ -d "$DOCKER_OUT"/screenshots ]; then
+  mv "$DOCKER_OUT"/screenshots ./
+fi
 
 # get the version string from the results file
 VERSION=$(python3 -c "import json; print(json.load(open('results.json'))['version'])")
