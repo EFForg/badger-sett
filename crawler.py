@@ -1001,18 +1001,12 @@ class Crawler:
         except Exception:
             return None
 
-    def crawl(self):
+    def crawl(self, domains):
         """
         Visit the top `num_sites` websites in the Tranco list, in order, in
         a virtual browser with Privacy Badger installed. Afterwards, save the
         action_map and snitch_map that the Badger learned.
         """
-
-        if self.num_sites == 0:
-            domains = []
-        else:
-            domains = self.get_sitelist()
-
         num_visited = 0
         old_snitches = self.dump_data()['snitch_map']
 
@@ -1037,14 +1031,14 @@ class Crawler:
                 self.logger.info("Visiting %d: %s", i + 1, domain)
                 self.visit_domain(domain)
 
-                curl_or_domain = self.get_current_url() or domain
-                if curl_or_domain.startswith(CHROME_URL_PREFIX):
+                curl = self.get_current_url()
+                if curl and curl.startswith(CHROME_URL_PREFIX):
                     self.logger.error("Error loading %s: "
-                        "driver.current_url is still %s",
-                        domain, curl_or_domain)
+                        "driver.current_url is still a %s page",
+                        domain, CHROME_URL_PREFIX)
                     continue
 
-                self.logger.info("Visited %s", curl_or_domain)
+                self.logger.info("Visited %s", curl or domain)
                 num_visited += 1
 
             except (MaxRetryError, ProtocolError, ReadTimeoutError) as ex:
@@ -1052,8 +1046,10 @@ class Crawler:
                 self.restart_browser()
 
             except TimeoutException:
-                self.logger.warning("Timed out loading %s",
-                                    self.get_current_url() or domain)
+                curl = self.get_current_url()
+                if curl and curl.startswith(CHROME_URL_PREFIX):
+                    curl = None
+                self.logger.warning("Timed out loading %s", curl or domain)
 
             except WebDriverException as ex:
                 if should_restart(ex):
@@ -1199,4 +1195,9 @@ if __name__ == '__main__':
                 data = json.load(f)
                 crawler.load_user_data(data)
 
-        crawler.crawl()
+        if crawler.num_sites == 0:
+            domains = []
+        else:
+            domains = crawler.get_sitelist()
+
+        crawler.crawl(domains)
