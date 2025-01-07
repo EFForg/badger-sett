@@ -1037,7 +1037,14 @@ class Crawler:
                 self.logger.info("Visiting %d: %s", i + 1, domain)
                 self.visit_domain(domain)
 
-                self.logger.info("Visited %s", self.get_current_url() or domain)
+                curl_or_domain = self.get_current_url() or domain
+                if curl_or_domain.startswith(CHROME_URL_PREFIX):
+                    self.logger.error("Error loading %s: "
+                        "driver.current_url is still %s",
+                        domain, curl_or_domain)
+                    continue
+
+                self.logger.info("Visited %s", curl_or_domain)
                 num_visited += 1
 
             except (MaxRetryError, ProtocolError, ReadTimeoutError) as ex:
