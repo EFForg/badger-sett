@@ -1006,7 +1006,7 @@ class Crawler:
     def get_current_url(self):
         try:
             return self.driver.current_url
-        except TimeoutException:
+        except Exception:
             return None
 
     def crawl(self):
