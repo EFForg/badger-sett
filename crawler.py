@@ -1046,7 +1046,7 @@ class Crawler:
 
             except TimeoutException:
                 curl = self.get_current_url()
-                if curl and curl.startswith(CHROME_URL_PREFIX):
+                if curl and curl.startswith((FF_URL_PREFIX, CHROME_URL_PREFIX)):
                     curl = None
                 self.logger.warning("Timed out loading %s", curl or domain)
 
