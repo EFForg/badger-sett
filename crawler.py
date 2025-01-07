@@ -712,12 +712,11 @@ class Crawler:
         self.raise_on_datadome_pages()
 
     def raise_on_chrome_error_pages(self):
-        # TODO update for changes in Chrome 85? now Chrome raises in many cases
         """
         Chrome doesn't automatically raise WebDriverExceptions on error pages.
         This makes Chrome behave more like Firefox.
         """
-        if self.browser != CHROME:
+        if self.browser not in (CHROME, EDGE):
             return
 
         # self.driver.current_url has the URL we tried, not the error page URL
