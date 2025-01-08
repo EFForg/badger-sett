@@ -183,7 +183,7 @@ def get_recently_failed_domains(since_date):
 
     error_pattern = re.compile("(?:Error loading|Exception on) ([^: ]+):")
     num_scans = len(revisions)
-    timeout_pattern = re.compile("Timed out loading ([^ ]+)$")
+    timeout_pattern = re.compile("Timed out loading ([^ ]+)(?: on |$)")
     timeout_counts = {}
     logs = []
 
@@ -1036,7 +1036,8 @@ class Crawler:
                         domain, CHROME_URL_PREFIX)
                     continue
 
-                self.logger.info("Visited %s", curl or domain)
+                self.logger.info("Visited %s%s",
+                                 domain, (" on " + curl if curl else ""))
                 num_visited += 1
 
             except (MaxRetryError, ProtocolError, ReadTimeoutError) as ex:
@@ -1047,7 +1048,8 @@ class Crawler:
                 curl = self.get_current_url()
                 if curl and curl.startswith((FF_URL_PREFIX, CHROME_URL_PREFIX)):
                     curl = None
-                self.logger.warning("Timed out loading %s", curl or domain)
+                self.logger.warning("Timed out loading %s%s",
+                                    domain, (" on " + curl if curl else ""))
 
             except WebDriverException as ex:
                 self.logger.error("%s on %s: %s",

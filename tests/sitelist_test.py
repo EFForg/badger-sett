@@ -76,7 +76,9 @@ class TestSitelist:
                     "Visiting 4: example.website",
                     "Timed out loading example.website",
                     "Visiting 5: example.net",
-                    "InsecureCertificateException on example.net: ZZZ"])
+                    "InsecureCertificateException on example.net: ZZZ",
+                    "Visiting 4: example.club",
+                    "Timed out loading example.club"])
 
             if cmd == "git show klmno:log.txt":
                 return "\n".join(["Visiting 1: example.website",
@@ -84,7 +86,9 @@ class TestSitelist:
                     "Visiting 2: example.com",
                     "Error loading extension page (JavascriptException):",
                     "Visiting 3: example.us",
-                    "Error loading example.us:"])
+                    "Error loading example.us:",
+                    "Visiting 4: example.club",
+                    "Timed out loading example.club on https://example.club"])
 
             return ""
 
@@ -92,6 +96,7 @@ class TestSitelist:
 
         expected_domains_set = set(["example.com", "example.net",
                                     "example.org", "example.co.uk",
-                                    "example.website", "example.us"])
+                                    "example.website", "example.us",
+                                    "example.club"])
 
         assert crawler.get_recently_failed_domains("1 week ago") == expected_domains_set
