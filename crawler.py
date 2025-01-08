@@ -610,8 +610,8 @@ class Crawler:
             try:
                 self.handle_alerts_and(_load_ext_page)
                 break
-            except (MaxRetryError, ProtocolError, ReadTimeoutError) as e:
-                self.logger.warning("Error loading extension page:\n%s", str(e))
+            except (MaxRetryError, ProtocolError, ReadTimeoutError) as ex:
+                self.logger.error("Error loading extension page:\n%s", str(ex))
                 self.restart_browser()
             except TimeoutException:
                 num_timeouts += 1
@@ -619,11 +619,10 @@ class Crawler:
                 if num_timeouts >= max_timeouts:
                     num_timeouts = 0
                     self.restart_browser()
-            except WebDriverException as err:
-                self.logger.warning(
-                    "Error loading extension page (%s): %s",
-                    type(err).__name__, err.msg)
-                if should_restart(err):
+            except WebDriverException as ex:
+                self.logger.error("Error loading extension page (%s): %s",
+                                  type(ex).__name__, ex.msg)
+                if should_restart(ex):
                     self.restart_browser()
         else:
             raise WebDriverException("Failed to load extension page")
@@ -1051,14 +1050,10 @@ class Crawler:
                 self.logger.warning("Timed out loading %s", curl or domain)
 
             except WebDriverException as ex:
+                self.logger.error("%s on %s: %s",
+                                  type(ex).__name__, domain, ex.msg)
                 if should_restart(ex):
-                    self.logger.error("%s on %s: %s", type(ex).__name__,
-                                      domain, ex.msg)
                     self.restart_browser()
-                else:
-                    self.logger.error("%s on %s: %s", type(ex).__name__,
-                                      self.get_current_url() or domain,
-                                      ex.msg)
 
         num_total = len(domains)
         if num_total:
