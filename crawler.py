@@ -563,7 +563,11 @@ class Crawler:
         self.driver.set_page_load_timeout(self.timeout)
         self.driver.set_script_timeout(self.timeout)
 
-        self.driver.maximize_window()
+        # TODO work around driver.maximize_window() w/ Xvfb crashing Chrome
+        if self.browser == FIREFOX:
+            self.driver.maximize_window()
+        else:
+            self.driver.set_window_size(1920, 1152)
 
         # wait for Badger to finish initializing
         self.load_extension_page()
