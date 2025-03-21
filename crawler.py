@@ -953,6 +953,8 @@ class Crawler:
         # enable local learning
         wait_for_script(self.driver, "return window.OPTIONS_INITIALIZED")
         try:
+            self.driver.find_element(By.CSS_SELECTOR,
+                'a[href="#tab-general-settings"]').click()
             self.driver.find_element(By.ID, 'local-learning-checkbox').click()
         except NoSuchElementException:
             self.logger.warning("Learning checkbox not found, learning NOT enabled!")
