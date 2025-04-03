@@ -65,10 +65,6 @@ EDGE = 'edge'
 RESTART_RETRIES = 5
 MAX_ALERTS = 10
 
-# day before yesterday, as yesterday's list is sometimes not yet available
-TRANCO_VERSION = (datetime.datetime.now(datetime.UTC) -
-                  datetime.timedelta(days=2)).strftime('%Y-%m-%d')
-
 # Privacy Badger storage keys not for export/import
 STORAGE_KEYS_TO_IGNORE = ['cookieblock_list', 'dnt_hashes', 'settings_map', 'private_storage']
 
@@ -339,6 +335,7 @@ class Crawler:
         self.no_link_clicking = opts.no_link_clicking
         self.take_screenshots = opts.take_screenshots
         self.timeout = opts.timeout
+        self.tranco_date = None
         self.version = time.strftime('%Y.%-m.%-d', time.localtime())
         self.wait_time = opts.wait_time
 
@@ -384,7 +381,7 @@ class Crawler:
             "off" if self.no_blocking else "standard",
             self.timeout,
             self.wait_time,
-            self.site_list if self.site_list else "Tranco " + TRANCO_VERSION,
+            self.site_list if self.site_list else "Tranco " + self.tranco_date,
             self.num_sites,
             self.exclude_suffixes,
             self.get_exclude_domains_summary(),
@@ -881,6 +878,28 @@ class Crawler:
         if self.take_screenshots:
             self.take_screenshot(domain + "-" + self.driver.current_url)
 
+    def get_tranco_domains(self):
+        days_ago = 1
+
+        tr = Tranco(cache_dir=tempfile.gettempdir())
+
+        while True:
+            days_ago += 1
+
+            self.tranco_date = (datetime.datetime.now(datetime.UTC) -
+                              datetime.timedelta(days=days_ago)).strftime('%Y-%m-%d')
+
+            self.logger.info("Fetching Tranco list %s ...", self.tranco_date)
+
+            try:
+                domains = tr.list(self.tranco_date).top()
+                break
+            except AttributeError as ex:
+                if not str(ex).startswith("The daily list for this date is currently unavailable"):
+                    raise ex
+
+        return domains
+
     def get_sitelist(self):
         """Get the top n sites from the Tranco list"""
         domains = []
@@ -893,8 +912,7 @@ class Crawler:
                     if domain and domain[0] != '#':
                         domains.append(domain)
         else:
-            self.logger.info("Fetching Tranco list ...")
-            domains = Tranco(cache_dir=tempfile.gettempdir()).list(TRANCO_VERSION).top()
+            domains = self.get_tranco_domains()
 
         # filter domains
         filtered_domains = []
@@ -1007,9 +1025,8 @@ class Crawler:
 
     def crawl(self, domains):
         """
-        Visit the top `num_sites` websites in the Tranco list, in order, in
-        a virtual browser with Privacy Badger installed. Afterwards, save the
-        action_map and snitch_map that the Badger learned.
+        Visit each website in `domains` in a browser with Privacy Badger.
+        When finished, export PB's user data.
         """
         num_visited = 0
         old_snitches = self.dump_data()['snitch_map']
@@ -1188,6 +1205,11 @@ if __name__ == '__main__':
 
         crawler.init_logging(args.log_stdout)
 
+        if crawler.num_sites == 0:
+            domains = []
+        else:
+            domains = crawler.get_sitelist()
+
         crawler.start_browser()
 
         crawler.log_scan_summary()
@@ -1196,10 +1218,5 @@ if __name__ == '__main__':
             with open(data_json, "r", encoding="utf-8") as f:
                 data = json.load(f)
                 crawler.load_user_data(data)
-
-        if crawler.num_sites == 0:
-            domains = []
-        else:
-            domains = crawler.get_sitelist()
 
         crawler.crawl(domains)

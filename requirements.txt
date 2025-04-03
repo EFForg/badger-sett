@@ -3,5 +3,5 @@ prospector==1.10.3
 pytest
 selenium
 tldextract==3.1.2
-tranco==0.7.1
+tranco==0.8.1
 xvfbwrapper==0.2.9
