@@ -879,15 +879,14 @@ class Crawler:
             self.take_screenshot(domain + "-" + self.driver.current_url)
 
     def get_tranco_domains(self):
-        days_ago = 1
+        max_tries = 10
+        ex_msg = "The daily list for this date is currently unavailable"
 
         tr = Tranco(cache_dir=tempfile.gettempdir())
 
-        while True:
-            days_ago += 1
-
+        for i in range(max_tries):
             self.tranco_date = (datetime.datetime.now(datetime.UTC) -
-                              datetime.timedelta(days=days_ago)).strftime('%Y-%m-%d')
+                                datetime.timedelta(days=i+2)).strftime('%Y-%m-%d')
 
             self.logger.info("Fetching Tranco list %s ...", self.tranco_date)
 
@@ -895,7 +894,7 @@ class Crawler:
                 domains = tr.list(self.tranco_date).top()
                 break
             except AttributeError as ex:
-                if not str(ex).startswith("The daily list for this date is currently unavailable"):
+                if i == max_tries-1 or not str(ex).startswith(ex_msg):
                     raise ex
 
         return domains
