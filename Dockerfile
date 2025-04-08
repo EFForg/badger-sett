@@ -37,7 +37,9 @@ ENV EXTENSIONS=$HOME/parallel-extensions/
 WORKDIR $HOME
 
 COPY requirements.txt .
-RUN pip3 install --user --break-system-packages -r requirements.txt
+USER root
+RUN pip3 install -r requirements.txt
+USER $UNAME
 
 COPY crawler.py docker-entry.sh $HOME/
 COPY lib $HOME/lib
