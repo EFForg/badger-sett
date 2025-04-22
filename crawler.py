@@ -1202,7 +1202,8 @@ if __name__ == '__main__':
     with Xvfb(width=1920, height=1200) if not args.no_xvfb else contextlib.suppress():
         crawler = Crawler(args)
 
-        crawler.init_logging(args.log_stdout)
+        if crawler.num_sites > 0:
+            crawler.init_logging(args.log_stdout)
 
         if crawler.num_sites == 0:
             domains = []
@@ -1211,7 +1212,8 @@ if __name__ == '__main__':
 
         crawler.start_browser()
 
-        crawler.log_scan_summary()
+        if crawler.num_sites > 0:
+            crawler.log_scan_summary()
 
         for data_json in args.load_data:
             with open(data_json, "r", encoding="utf-8") as f:
