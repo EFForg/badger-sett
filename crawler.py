@@ -545,9 +545,8 @@ class Crawler:
             opts.add_argument("--load-extension=" + extension_path)
 
             if self.browser == CHROME:
-                # disable Chrome for Testing on-by-default experiments
-                # https://issues.chromium.org/issues/378022921
-                opts.add_argument("--disable-features=TrackingProtection3pcd,HttpsFirstBalancedModeAutoEnable")
+                # disable all Chrome for Testing on-by-default experiments
+                opts.add_argument("--disable-field-trial-config")
 
             # loads parallel extension to run alongside pb
             if self.load_extension:
