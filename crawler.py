@@ -509,6 +509,9 @@ class Crawler:
 
             opts.add_argument("--load-extension=" + new_extension_path)
 
+            if self.browser == CHROME:
+                opts.add_argument("--disable-features=TrackingProtection3pcd")
+
             # loads parallel extension to run alongside pb
             if self.load_extension:
                 opts.add_extension(self.load_extension)
@@ -566,8 +569,15 @@ class Crawler:
         else:
             self.driver.set_window_size(1920, 1152)
 
-        # wait for Badger to finish initializing
-        self.load_extension_page()
+        # wait for PB to finish initializing
+        try:
+            self.load_extension_page(max_tries=1)
+        except WebDriverException as e:
+            self.logger.error(e.msg)
+            if self.browser == CHROME:
+                self.logger.error("Badger Sett requires Chrome for Testing builds for Chrome scans at this time")
+            self.driver.quit()
+            sys.exit(1)
         wait_for_script(self.driver, (
             "let done = arguments[arguments.length - 1];"
             "chrome.runtime.sendMessage({"
@@ -590,7 +600,7 @@ class Crawler:
             "   });"
             "});")
 
-    def load_extension_page(self):
+    def load_extension_page(self, max_tries=7):
         """Loads Privacy Badger's options page."""
 
         if self.browser in (CHROME, EDGE):
@@ -603,7 +613,6 @@ class Crawler:
             # wait for extension page to be ready
             wait_for_script(self.driver, "return chrome.extension")
 
-        max_tries = 7
         max_timeouts = 3
         num_timeouts = 0
 
