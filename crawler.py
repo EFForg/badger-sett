@@ -472,42 +472,77 @@ class Crawler:
 
         return opts
 
+    def fix_chrome_manifest(self):
+        """Sets extension ID and removes extension storage limit."""
+        # create temp directory
+        # TODO does tmp_dir actually get cleaned up?
+        self.tmp_dir = tempfile.TemporaryDirectory() # pylint:disable=consider-using-with
+        extension_path = os.path.join(self.tmp_dir.name, "src")
+
+        # copy extension sources there
+        copytree(os.path.join(self.pb_dir, 'src'), extension_path)
+
+        # update manifest.json
+        manifest_path = os.path.join(extension_path, "manifest.json")
+        with open(manifest_path, "r", encoding="utf-8") as f:
+            manifest = json.load(f)
+
+        # this key and the extension ID
+        # must both be derived from the same private key
+        manifest['key'] = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArMdgFkGsm7nOBr/9qkx8XEcmYSu1VkIXXK94oXLz1VKGB0o2MN+mXL/Dsllgkh61LZgK/gVuFFk89e/d6Vlsp9IpKLANuHgyS98FKx1+3sUoMujue+hyxulEGxXXJKXhk0kGxWdE0IDOamFYpF7Yk0K8Myd/JW1U2XOoOqJRZ7HR6is1W6iO/4IIL2/j3MUioVqu5ClT78+fE/Fn9b/DfzdX7RxMNza9UTiY+JCtkRTmm4ci4wtU1lxHuVmWiaS45xLbHphQr3fpemDlyTmaVoE59qG5SZZzvl6rwDah06dH01YGSzUF1ezM2IvY9ee1nMSHEadQRQ2sNduNZWC9gwIDAQAB" # noqa:E501 pylint:disable=line-too-long
+
+        # remove the 5MB limit on Chrome extension local storage
+        if 'unlimitedStorage' not in manifest['permissions']:
+            manifest['permissions'].append('unlimitedStorage')
+
+        with open(manifest_path, "w", encoding="utf-8") as f:
+            json.dump(manifest, f)
+
+        return extension_path
+
+    def wait_for_pb_to_be_ready(self):
+        try:
+            self.load_extension_page(max_tries=1)
+        except WebDriverException as e:
+            self.logger.error(e.msg)
+            if self.browser == CHROME:
+                self.logger.error("Badger Sett requires Chrome for Testing builds for Chrome scans at this time")
+            self.driver.quit()
+            sys.exit(1)
+        wait_for_script(self.driver, (
+            "let done = arguments[arguments.length - 1];"
+            "chrome.runtime.sendMessage({"
+            "  type: 'isBadgerInitialized'"
+            "}, r => done(r));"), execute_async=True)
+        # also disable the welcome page
+        self.driver.execute_async_script(
+            "let done = arguments[arguments.length - 1];"
+            "chrome.runtime.sendMessage({"
+            "  type: 'updateSettings',"
+            "  data: { showIntroPage: false }"
+            "}, () => {"
+            "   chrome.tabs.query({}, (res) => {"
+            "     let welcome_tab = res && res.find("
+            "       tab => tab.url == chrome.runtime.getURL('skin/firstRun.html'));"
+            "     if (!welcome_tab) {"
+            "       return done();"
+            "     }"
+            "     chrome.tabs.remove(welcome_tab.id, done);"
+            "   });"
+            "});")
+
     def start_driver(self):
         """Start a new Selenium web driver and install the bundled
         extension."""
         if self.browser in (CHROME, EDGE):
-            # make extension ID constant across runs
-
-            # create temp directory
-            # TODO does tmp_dir actually get cleaned up?
-            self.tmp_dir = tempfile.TemporaryDirectory() # pylint:disable=consider-using-with
-            new_extension_path = os.path.join(self.tmp_dir.name, "src")
-
-            # copy extension sources there
-            copytree(os.path.join(self.pb_dir, 'src'), new_extension_path)
-
-            # update manifest.json
-            manifest_path = os.path.join(new_extension_path, "manifest.json")
-            with open(manifest_path, "r", encoding="utf-8") as f:
-                manifest = json.load(f)
-
-            # this key and the extension ID
-            # must both be derived from the same private key
-            manifest['key'] = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArMdgFkGsm7nOBr/9qkx8XEcmYSu1VkIXXK94oXLz1VKGB0o2MN+mXL/Dsllgkh61LZgK/gVuFFk89e/d6Vlsp9IpKLANuHgyS98FKx1+3sUoMujue+hyxulEGxXXJKXhk0kGxWdE0IDOamFYpF7Yk0K8Myd/JW1U2XOoOqJRZ7HR6is1W6iO/4IIL2/j3MUioVqu5ClT78+fE/Fn9b/DfzdX7RxMNza9UTiY+JCtkRTmm4ci4wtU1lxHuVmWiaS45xLbHphQr3fpemDlyTmaVoE59qG5SZZzvl6rwDah06dH01YGSzUF1ezM2IvY9ee1nMSHEadQRQ2sNduNZWC9gwIDAQAB" # noqa:E501 pylint:disable=line-too-long
-
-            # remove the 5MB limit on Chrome extension local storage
-            if 'unlimitedStorage' not in manifest['permissions']:
-                manifest['permissions'].append('unlimitedStorage')
-
-            with open(manifest_path, "w", encoding="utf-8") as f:
-                json.dump(manifest, f)
+            extension_path = self.fix_chrome_manifest()
 
             opts = ChromeOptions() if self.browser == CHROME else EdgeOptions()
 
             if self.browser_binary:
                 opts.binary_location = self.browser_binary
 
-            opts.add_argument("--load-extension=" + new_extension_path)
+            opts.add_argument("--load-extension=" + extension_path)
 
             if self.browser == CHROME:
                 opts.add_argument("--disable-features=TrackingProtection3pcd")
@@ -569,36 +604,7 @@ class Crawler:
         else:
             self.driver.set_window_size(1920, 1152)
 
-        # wait for PB to finish initializing
-        try:
-            self.load_extension_page(max_tries=1)
-        except WebDriverException as e:
-            self.logger.error(e.msg)
-            if self.browser == CHROME:
-                self.logger.error("Badger Sett requires Chrome for Testing builds for Chrome scans at this time")
-            self.driver.quit()
-            sys.exit(1)
-        wait_for_script(self.driver, (
-            "let done = arguments[arguments.length - 1];"
-            "chrome.runtime.sendMessage({"
-            "  type: 'isBadgerInitialized'"
-            "}, r => done(r));"), execute_async=True)
-        # also disable the welcome page
-        self.driver.execute_async_script(
-            "let done = arguments[arguments.length - 1];"
-            "chrome.runtime.sendMessage({"
-            "  type: 'updateSettings',"
-            "  data: { showIntroPage: false }"
-            "}, () => {"
-            "   chrome.tabs.query({}, (res) => {"
-            "     let welcome_tab = res && res.find("
-            "       tab => tab.url == chrome.runtime.getURL('skin/firstRun.html'));"
-            "     if (!welcome_tab) {"
-            "       return done();"
-            "     }"
-            "     chrome.tabs.remove(welcome_tab.id, done);"
-            "   });"
-            "});")
+        self.wait_for_pb_to_be_ready()
 
     def load_extension_page(self, max_tries=7):
         """Loads Privacy Badger's options page."""
