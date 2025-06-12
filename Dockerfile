@@ -3,6 +3,8 @@ ARG BROWSER=firefox
 FROM python:3.11
 FROM selenium/standalone-${BROWSER}
 
+ARG BROWSER=firefox
+
 ARG UID
 ARG GID
 ARG UNAME
@@ -10,6 +12,17 @@ ARG UNAME
 USER root
 
 RUN apt-get update; apt-get install -y python3-pip git
+
+# install Chrome for Testing
+RUN if [ "$BROWSER" = chrome ]; then \
+  apt-get install -y npm xvfb; \
+  npx @puppeteer/browsers install chrome@stable; \
+  npx @puppeteer/browsers install chromedriver@stable; \
+  CHROME_BINARY=$(npx @puppeteer/browsers list | head -n 1 | cut -d ' ' -f 3); \
+  CHROMEDRIVER_BINARY=$(npx @puppeteer/browsers list | tail -n 1 | cut -d ' ' -f 3); \
+  ln -sf "$CHROME_BINARY" /usr/bin/google-chrome; \
+  ln -sf "$CHROMEDRIVER_BINARY" /usr/bin/chromedriver; \
+fi
 
 RUN if [ $(getent group $GID) ]; then \
   old_group=$(getent group $GID | cut -d: -f1); \
