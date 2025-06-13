@@ -506,7 +506,7 @@ class Crawler:
         except WebDriverException as e:
             self.logger.error(e.msg)
             if self.browser == CHROME:
-                self.logger.error("Badger Sett requires Chrome for Testing builds for Chrome scans at this time")
+                self.logger.error("Running in Chrome requires MV3 Privacy Badger and Chrome for Testing")
             self.driver.quit()
             sys.exit(1)
         wait_for_script(self.driver, (
