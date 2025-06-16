@@ -99,10 +99,20 @@ if [ "$RUN_BY_CRON" != "1" ] ; then
 fi
 
 # Run the scan, passing any extra command line arguments to crawler.py
+#
 # the --rm tag automatically removes containers & images after the run
+#
+# the --cap-add=SYS_ADMIN appears required to work around "No usable sandbox!",
+# at least on Ubuntu 24 with Chrome for Testing
+# * https://chromium.googlesource.com/chromium/src/+/main/docs/security/apparmor-userns-restrictions.md
+# * >Note the image requires the SYS_ADMIN capability since the browser runs in sandbox mode.
+#   -- https://pptr.dev/guides/docker#usage
+# * https://github.com/GoogleChrome/lighthouse-ci/blob/602bf7d0fb5120493fe677ff61b63424c466386e/docs/recipes/docker-client/README.md#--no-sandbox-issues-explained
+#
 # the -v maps the local DOCKER_OUT dir to the /home/USER/out dir in the container
+#
 # the --shm-size gives docker access to host's shared memory
-if ! docker run --rm $FLAGS \
+if ! docker run --rm --cap-add=SYS_ADMIN $FLAGS \
     -v "$DOCKER_OUT:/home/$USER/out:z" \
     --shm-size="2g" \
     badger-sett "$BROWSER" "$@" ; then
