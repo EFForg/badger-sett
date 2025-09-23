@@ -4,17 +4,18 @@ print_stats() {
   browser="$1"
 
   no_blocking=0
+  blocking_mode_text=
   if [ -n "$2" ]; then
+    blocking_mode_text="no-blocking "
     no_blocking=1
   fi
 
   region_col=
-  no_blocking_col=no_blocking,
   daily_scan=1
   if [ -n "$3" ]; then
     region_col=region,
-    no_blocking_col=
     daily_scan=0
+    blocking_mode_text="distributed scan "
   fi
 
   num_days=60
@@ -22,12 +23,12 @@ print_stats() {
     num_days="$4"
   fi
 
+  printf "** %s %s**\n\n" "$browser" "$blocking_mode_text"
+
   sqlite3 badger.sqlite3 -batch -header -column "SELECT start_time, end_time,
       ROUND((CAST(STRFTIME('%s', end_time) AS FLOAT) -
           CAST(STRFTIME('%s', start_time) AS FLOAT)) / 60 / 60, 1) AS num_hours,
-      browser.name AS browser,
       $region_col
-      $no_blocking_col
       num_sites,
       COUNT(DISTINCT blocked_trackers.tracker_id) AS num_blocked
     FROM scan
@@ -55,6 +56,8 @@ print_distributed_scan_stats() {
   browser="$1"
   print_stats "$browser" 1 1 365
 }
+
+echo
 
 print_stats "chrome"
 print_stats "chrome" 1
