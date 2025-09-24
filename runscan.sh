@@ -116,8 +116,9 @@ if ! docker run --rm --cap-add=SYS_ADMIN $FLAGS \
     -v "$DOCKER_OUT:/home/$USER/out:z" \
     --shm-size="2g" \
     badger-sett "$BROWSER" "$@" ; then
-  mv "$DOCKER_OUT"/log.txt ./
-  echo "Scan failed. See log.txt for details."
+  logfile=log.$(date +"%s").txt
+  mv "$DOCKER_OUT"/log.txt ./"$logfile"
+  echo "Scan failed. See $logfile for details."
   exit 1;
 fi
 
