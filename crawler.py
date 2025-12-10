@@ -15,6 +15,7 @@ import sys
 import tempfile
 import time
 import traceback
+import zipfile
 
 from fnmatch import fnmatch
 from pprint import pformat
@@ -341,6 +342,13 @@ class Crawler:
 
         pathlib.Path(self.out_dir).mkdir(exist_ok=True)
 
+    def __del__(self):
+        if getattr(self, "tmp_dir", None):
+            self.tmp_dir.cleanup()
+
+        if getattr(self, "extra_ext_dir", None):
+            self.extra_ext_dir.cleanup()
+
     def init_logging(self, log_stdout):
         self.logger.setLevel(logging.INFO)
 
@@ -475,7 +483,6 @@ class Crawler:
     def fix_chrome_manifest(self):
         """Sets extension ID and removes extension storage limit."""
         # create temp directory
-        # TODO does tmp_dir actually get cleaned up?
         self.tmp_dir = tempfile.TemporaryDirectory() # pylint:disable=consider-using-with
         extension_path = os.path.join(self.tmp_dir.name, "src")
 
@@ -501,19 +508,14 @@ class Crawler:
         return extension_path
 
     def wait_for_pb_to_be_ready(self):
-        try:
-            self.load_extension_page(max_tries=1)
-        except WebDriverException as e:
-            self.logger.error(e.msg)
-            if self.browser == CHROME:
-                self.logger.error("Running in Chrome requires MV3 Privacy Badger and Chrome for Testing")
-            self.driver.quit()
-            sys.exit(1)
+        self.load_extension_page()
+
         wait_for_script(self.driver, (
             "let done = arguments[arguments.length - 1];"
             "chrome.runtime.sendMessage({"
             "  type: 'isBadgerInitialized'"
             "}, r => done(r));"), execute_async=True)
+
         # also disable the welcome page
         self.driver.execute_async_script(
             "let done = arguments[arguments.length - 1];"
@@ -542,15 +544,8 @@ class Crawler:
             if self.browser_binary:
                 opts.binary_location = self.browser_binary
 
-            opts.add_argument("--load-extension=" + extension_path)
-
-            if self.browser == CHROME:
-                # disable all Chrome for Testing on-by-default experiments
-                opts.add_argument("--disable-field-trial-config")
-
-            # loads parallel extension to run alongside pb
-            if self.load_extension:
-                opts.add_extension(self.load_extension)
+            opts.enable_bidi = True
+            opts.enable_webextensions = True
 
             opts.add_argument("--disable-blink-features=AutomationControlled")
             opts.add_argument("--disable-crash-reporter")
@@ -579,6 +574,15 @@ class Crawler:
                 else:
                     break
 
+            self.driver.webextension.install(extension_path)
+
+            # load another extension to run alongside PB
+            if self.load_extension:
+                self.extra_ext_dir = tempfile.TemporaryDirectory() # pylint:disable=consider-using-with
+                with zipfile.ZipFile(self.load_extension, "r") as zf:
+                    zf.extractall(self.extra_ext_dir.name)
+                self.driver.webextension.install(self.extra_ext_dir.name)
+
         elif self.browser == FIREFOX:
             opts = self.get_firefox_options()
             service = FirefoxService(log_output=os.path.devnull)
@@ -590,10 +594,10 @@ class Crawler:
                 os.path.join(self.pb_dir, 'src'))
             self.driver.install_addon(unpacked_addon_path, temporary=True)
 
-            # loads parallel extension to run alongside pb
+            # load another extension to run alongside PB
             if self.load_extension:
-                parallel_extension_url = os.path.abspath(self.load_extension)
-                self.driver.install_addon(parallel_extension_url)
+                self.driver.install_addon(
+                    os.path.abspath(self.load_extension), temporary=True)
 
         # apply timeout settings
         self.driver.set_page_load_timeout(self.timeout)
@@ -1201,8 +1205,7 @@ class Crawler:
 
         self.logger.info("Saving seed data version %s ...", self.version)
         with open(os.path.join(self.out_dir, name), 'w', encoding="utf-8") as f:
-            json.dump(
-                data, f, indent=2, sort_keys=True, separators=(',', ': '))
+            json.dump(data, f, indent=2, sort_keys=True, separators=(',', ': '))
         self.logger.info("Saved data to %s", name)
 
 
