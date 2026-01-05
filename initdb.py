@@ -3,11 +3,14 @@
 import configparser
 import json
 import os
+import re
 import sqlite3
 
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import urlparse
 
+from lib.basedomain import extract
 from lib.mdfp import is_mdfp_first_party
 from lib.utils import run
 
@@ -18,7 +21,21 @@ browsers = {
     "chrome": 2,
     "edge": 3
 }
+site_statuses = {
+    "success": 1,
+    "timeout": 2,
+    "error": 3,
+    "antibot": 4,
+}
 tracking_types = {}
+
+re_patterns = {
+    "log_ts": re.compile("[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]{3}"),
+    "log_visiting": re.compile("[Vv]isiting [0-9]+: (.+)$"),
+    "log_visited": re.compile("Visited ([^ ]+)(?: on (.+)$)"),
+    "log_timeout": re.compile("Timed out loading ([^ ]+)(?: on |$)"),
+    "log_error": re.compile("(?:Error loading|Exception on) ([^: ]+):")
+}
 
 
 def get_browser(log_txt):
@@ -55,7 +72,6 @@ def create_tables(cur):
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name VARCHAR(20) NOT NULL UNIQUE
         )""")
-
     for name, rowid in browsers.items():
         cur.execute("INSERT INTO browser (id,name) VALUES (?,?)", (rowid, name))
 
@@ -80,6 +96,31 @@ def create_tables(cur):
             fqdn VARCHAR(200) NOT NULL UNIQUE
         )""")
 
+    cur.execute("DROP TABLE IF EXISTS site_status")
+    cur.execute("""
+        CREATE TABLE site_status (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name VARCHAR(20) NOT NULL UNIQUE
+        )""")
+    for name, rowid in site_statuses.items():
+        cur.execute("INSERT INTO site_status (id,name) VALUES (?,?)", (rowid, name))
+
+    cur.execute("DROP TABLE IF EXISTS scan_sites")
+    cur.execute("""
+        CREATE TABLE scan_sites (
+            scan_id INTEGER NOT NULL,
+            initial_site_id INTEGER NOT NULL,
+            final_site_id INTEGER NOT NULL,
+            status_id INTEGER NOT NULL,
+            start_time TIMESTAMP NOT NULL,
+            end_time TIMESTAMP NOT NULL,
+            --UNIQUE(scan_id, initial_site_id)
+            FOREIGN KEY(scan_id) REFERENCES scan(id),
+            FOREIGN KEY(initial_site_id) REFERENCES site(id),
+            FOREIGN KEY(final_site_id) REFERENCES site(id),
+            FOREIGN KEY(status_id) REFERENCES site_status(id)
+        )""")
+
     cur.execute("DROP TABLE IF EXISTS tracker")
     cur.execute("""
         CREATE TABLE tracker (
@@ -102,9 +143,9 @@ def create_tables(cur):
             site_id INTEGER NOT NULL,
             tracker_id INTEGER NOT NULL,
             tracking_type_id INTEGER,
-            FOREIGN KEY(scan_id) REFERENCES scan(id)
-            FOREIGN KEY(site_id) REFERENCES site(id)
-            FOREIGN KEY(tracker_id) REFERENCES tracker(id)
+            FOREIGN KEY(scan_id) REFERENCES scan(id),
+            FOREIGN KEY(site_id) REFERENCES site(id),
+            FOREIGN KEY(tracker_id) REFERENCES tracker(id),
             FOREIGN KEY(tracking_type_id) REFERENCES tracking_type(id)
         )""")
 
@@ -115,6 +156,66 @@ def get_id(cur, table, field, value):
         return row[0]
     cur.execute(f"INSERT INTO {table} ({field}) VALUES (?)", (value,))
     return cur.lastrowid
+
+def get_status_string(match_type, line, full_matching_string):
+    status = "success"
+
+    if match_type == 'log_timeout':
+        status = "timeout"
+
+    elif match_type == 'log_error':
+        status = "error"
+
+        # parse out antibot and errors that are actually timeouts
+        error = line.partition(full_matching_string)[2].strip()
+        if "security page" in error:
+            status = "antibot"
+        elif "e=netTimeout" in error:
+            status = "timeout"
+
+    return status
+
+def ingest_log(cur, scan_id, log_txt):
+    domain = None
+    start_time = None
+
+    for line in log_txt.split('\n'):
+        if not re_patterns["log_ts"].match(line):
+            continue
+
+        if matches := re_patterns["log_visiting"].search(line):
+            domain = matches.group(1)
+            start_time = datetime.strptime(line[:19], "%Y-%m-%d %H:%M:%S")
+            continue
+
+        for match_type in ('log_visited', 'log_timeout', 'log_error'):
+            if matches := re_patterns[match_type].search(line):
+                if domain != matches.group(1):
+                    break
+
+                end_domain = domain
+                if len(matches.groups()) > 1:
+                    end_domain = urlparse(matches.group(2)).netloc
+                    end_domain = extract(end_domain).registered_domain or end_domain
+
+                end_time = datetime.strptime(line[:19], "%Y-%m-%d %H:%M:%S")
+
+                status = get_status_string(match_type, line, matches.group(0))
+
+                cur.execute("""INSERT INTO scan_sites
+                    (scan_id,
+                    initial_site_id,
+                    final_site_id,
+                    status_id,
+                    start_time, end_time)
+                    VALUES (?,?,?,?,?,?)""", (
+                        scan_id,
+                        get_id(cur, "site", "fqdn", domain),
+                        get_id(cur, "site", "fqdn", end_domain),
+                        site_statuses[status],
+                        start_time, end_time))
+
+                break
 
 def ingest_scan(cur, scan_id, snitch_map, tracking_map):
     for tracker_base, sites in snitch_map.items():
@@ -139,6 +240,7 @@ def ingest_scan(cur, scan_id, snitch_map, tracking_map):
                         scan_id, tracker_id, site_id,
                         tracking_types[tracking_name] if tracking_name else None))
 
+# pylint: disable-next=too-many-locals
 def ingest_distributed_scans(badger_swarm_dir, cur):
     bs_path = Path(badger_swarm_dir)
     if not bs_path.is_dir():
@@ -171,8 +273,10 @@ def ingest_distributed_scans(badger_swarm_dir, cur):
         start_time = datetime.fromtimestamp(int(str(scan_path).rpartition('-')[-1]))
 
         results_glob = "results.???.json"
+        log_glob = "log.???.txt"
         if not any(True for _ in scan_path.glob(results_glob)):
             results_glob = "results.????.json"
+            log_glob = "log.????.txt"
 
         end_time = datetime.fromtimestamp(os.path.getmtime(
             sorted(scan_path.glob(results_glob), key=os.path.getmtime)[-1]))
@@ -191,6 +295,9 @@ def ingest_distributed_scans(badger_swarm_dir, cur):
                               run_settings['browser'],
                               True, False)
 
+        for log_file in scan_path.glob(log_glob):
+            ingest_log(cur, scan_id, log_file.read_text())
+
         for results_file in scan_path.glob(results_glob):
             results = json.loads(results_file.read_bytes())
             ingest_scan(cur, scan_id, results['snitch_map'],
@@ -202,7 +309,7 @@ def ingest_daily_scans(cur):
         return
 
     for rev in revisions.split('\n'):
-        log_txt = run(f"git show {rev}:log.txt".split(" "))
+        log_txt = log_txt_full = run(f"git show {rev}:log.txt".split(" "))
 
         end_time = datetime.strptime(
                 log_txt[log_txt.rindex("\n")+1:][:19], "%Y-%m-%d %H:%M:%S")
@@ -241,6 +348,8 @@ def ingest_daily_scans(cur):
 
         scan_id = get_scan_id(cur, start_time, end_time, "sfo1", num_sites,
                               browser, no_blocking, True)
+
+        ingest_log(cur, scan_id, log_txt_full)
 
         results = json.loads(run(f"git show {rev}:results.json".split(" ")))
 

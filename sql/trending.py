@@ -9,11 +9,10 @@ def print_trends(cur):
     date_curr = "30 day"
 
     cur.execute(f"""
-        SELECT COUNT(DISTINCT tr.site_id),
-            COUNT(DISTINCT tr.scan_id)
-        FROM tracking tr
-        JOIN site ON site.id = tr.site_id
-        JOIN scan ON scan.id = tr.scan_id
+        SELECT COUNT(DISTINCT initial_site_id),
+            COUNT(DISTINCT scan_id)
+        FROM scan_sites
+        JOIN scan ON scan.id = scan_id
         WHERE scan.no_blocking = 1 AND scan.daily_scan = 1
             AND scan.start_time >= DATETIME('now', '-{date_prev}')
             AND scan.start_time < DATETIME('now', '-{date_curr}')""")
@@ -37,11 +36,10 @@ def print_trends(cur):
     top_prevalence_prev = next(iter(prev.values()))
 
     cur.execute(f"""
-        SELECT COUNT(DISTINCT tr.site_id),
-            COUNT(DISTINCT tr.scan_id)
-        FROM tracking tr
-        JOIN site ON site.id = tr.site_id
-        JOIN scan ON scan.id = tr.scan_id
+        SELECT COUNT(DISTINCT initial_site_id),
+            COUNT(DISTINCT scan_id)
+        FROM scan_sites
+        JOIN scan ON scan.id = scan_id
         WHERE scan.no_blocking = 1 AND scan.daily_scan = 1
             AND scan.start_time >= DATETIME('now', '-{date_curr}')""")
     total_sites, total_scans = cur.fetchone()
