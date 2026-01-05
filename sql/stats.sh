@@ -31,7 +31,8 @@ print_stats() {
       $region_col
       num_sites,
       COUNT(DISTINCT blocked_trackers.tracker_id) AS num_blocked,
-      ROUND(scan_sites.num_errors * 1.0 / num_sites * 100, 1) || '%' AS error_rate
+      ROUND(scan_sites.num_errors * 1.0 / num_sites * 100, 1) || '%' AS error_rate,
+      CASE WHEN scan_crashes.num_crashes != '' THEN scan_crashes.num_crashes ELSE 0 END AS num_crashes
     FROM scan
     JOIN browser ON browser.id = scan.browser_id
     JOIN (SELECT scan.id AS scan_id,
@@ -50,6 +51,13 @@ print_stats() {
         AND scan.start_time > DATETIME('now', '-$num_days day')
       GROUP BY scan_id)
         AS scan_sites ON scan_sites.scan_id = scan.id
+    LEFT JOIN (SELECT scan_id,
+      COUNT(*) num_crashes
+      FROM scan_crashes
+      JOIN scan ON scan.id = scan_id
+      WHERE scan.start_time > DATETIME('now', '-$num_days day')
+      GROUP BY scan_id)
+        AS scan_crashes ON scan_crashes.scan_id = scan.id
     WHERE start_time > DATETIME('now', '-$num_days day')
       AND browser.name = '$browser'
       AND no_blocking = '$no_blocking'

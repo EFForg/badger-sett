@@ -34,7 +34,8 @@ re_patterns = {
     "log_visiting": re.compile("[Vv]isiting [0-9]+: (.+)$"),
     "log_visited": re.compile("Visited ([^ ]+)(?: on (.+)$)"),
     "log_timeout": re.compile("Timed out loading ([^ ]+)(?: on |$)"),
-    "log_error": re.compile("(?:Error loading|Exception on) ([^: ]+):")
+    "log_error": re.compile("(?:Error loading|Exception on) ([^:]+):"),
+    "log_restart": re.compile("[Rr]estarting browser( )?\\.\\.\\.")
 }
 
 
@@ -121,6 +122,23 @@ def create_tables(cur):
             FOREIGN KEY(status_id) REFERENCES site_status(id)
         )""")
 
+    cur.execute("DROP TABLE IF EXISTS crash")
+    cur.execute("""
+        CREATE TABLE crash (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name VARCHAR(200) NOT NULL UNIQUE
+        )""")
+
+    cur.execute("DROP TABLE IF EXISTS scan_crashes")
+    cur.execute("""
+        CREATE TABLE scan_crashes (
+            scan_id INTEGER NOT NULL,
+            crash_id INTEGER NOT NULL,
+            time TIMESTAMP NOT NULL,
+            FOREIGN KEY(scan_id) REFERENCES scan(id),
+            FOREIGN KEY(crash_id) REFERENCES crash(id)
+        )""")
+
     cur.execute("DROP TABLE IF EXISTS tracker")
     cur.execute("""
         CREATE TABLE tracker (
@@ -157,6 +175,48 @@ def get_id(cur, table, field, value):
     cur.execute(f"INSERT INTO {table} ({field}) VALUES (?)", (value,))
     return cur.lastrowid
 
+def get_error_string(line):
+    error = None
+
+    LEGACY_ERRORS = (
+        "Failed to get current URL (NoSuchWindowException)",
+        "Failed to switch windows (NoSuchWindowException)",
+        "Failed to switch windows (InvalidArgumentException)",
+        "Failed to switch windows (WebDriverException)",
+        "Failed to switch windows (Browsing context has been discarded)",
+        "Failed to switch windows (chrome not reachable", # sic
+        "Timed out waiting for new window",
+        "Failed to open new window (NoSuchWindowException)",
+        "Failed to open new window with window.open()",
+        "Failed to open new window",
+        "Error closing timed out window (WebDriverException)",
+        "Error closing timed out window (NoSuchWindowException)",
+        "Error closing timed out window",
+        "Closed all windows somehow",
+        "Failed to get window handles (WebDriverException)",
+        "Invalid session")
+
+    if re_patterns["log_error"].search(line):
+        error = line[24:].split(" ")[0]
+
+        # add more context for some errors
+        if error in ("WebDriverException", "NoSuchWindowException"):
+            error = error + ":" + line[24:].partition(":")[2]
+
+    elif "Timed out loading extension page" in line:
+        error = "Extension timeout"
+
+    elif re_patterns["log_timeout"].search(line):
+        error = "Timeout"
+
+    else:
+        for err in LEGACY_ERRORS:
+            if err in line:
+                error = err
+                break
+
+    return error
+
 def get_status_string(match_type, line, full_matching_string):
     status = "success"
 
@@ -178,6 +238,7 @@ def get_status_string(match_type, line, full_matching_string):
 def ingest_log(cur, scan_id, log_txt):
     domain = None
     start_time = None
+    prev_line = None
 
     for line in log_txt.split('\n'):
         if not re_patterns["log_ts"].match(line):
@@ -186,6 +247,17 @@ def ingest_log(cur, scan_id, log_txt):
         if matches := re_patterns["log_visiting"].search(line):
             domain = matches.group(1)
             start_time = datetime.strptime(line[:19], "%Y-%m-%d %H:%M:%S")
+            prev_line = line
+            continue
+
+        if matches := re_patterns["log_restart"].search(line):
+            error = get_error_string(prev_line)
+            crash_id = get_id(cur, "crash", "name", error)
+            cur.execute("""INSERT INTO scan_crashes
+                (scan_id, crash_id, time) VALUES (?,?,?)""", (
+                    scan_id, crash_id,
+                    datetime.strptime(line[:19], "%Y-%m-%d %H:%M:%S")))
+            prev_line = line
             continue
 
         for match_type in ('log_visited', 'log_timeout', 'log_error'):
@@ -216,6 +288,8 @@ def ingest_log(cur, scan_id, log_txt):
                         start_time, end_time))
 
                 break
+
+        prev_line = line
 
 def ingest_scan(cur, scan_id, snitch_map, tracking_map):
     for tracker_base, sites in snitch_map.items():
