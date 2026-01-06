@@ -632,7 +632,8 @@ class Crawler:
                 self.handle_alerts_and(_load_ext_page)
                 break
             except (MaxRetryError, ProtocolError, ReadTimeoutError) as ex:
-                self.logger.error("Error loading extension page:\n%s", str(ex))
+                self.logger.error("%s loading extension page: %s",
+                                  type(ex).__name__, str(ex))
                 self.restart_browser()
             except TimeoutException:
                 num_timeouts += 1
@@ -641,7 +642,7 @@ class Crawler:
                     num_timeouts = 0
                     self.restart_browser()
             except WebDriverException as ex:
-                self.logger.error("Error loading extension page (%s): %s",
+                self.logger.error("%s loading extension page: %s",
                                   type(ex).__name__, ex.msg)
                 if should_restart(ex):
                     self.restart_browser()
@@ -1083,7 +1084,8 @@ class Crawler:
                 num_visited += 1
 
             except (MaxRetryError, ProtocolError, ReadTimeoutError) as ex:
-                self.logger.error("Error loading %s:\n%s", domain, str(ex))
+                self.logger.error("%s loading %s: %s",
+                                  type(ex).__name__, domain, str(ex))
                 self.restart_browser()
 
             except TimeoutException:
