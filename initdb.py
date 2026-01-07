@@ -33,7 +33,7 @@ re_patterns = {
     "log_ts": re.compile("[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]{3}"),
     "log_visiting": re.compile("[Vv]isiting [0-9]+: (.+)$"),
     "log_visited": re.compile("Visited ([^ ]+)(?: on (.+)$)"),
-    "log_timeout": re.compile("Timed out loading ([^ ]+)(?: on |$)"),
+    "log_timeout": re.compile("Timed out loading ([^ ]+)(?: on (.+)|$)"),
     "log_error": re.compile("(?:Error loading|Exception on) ([^:]+):"),
     "log_restart": re.compile("[Rr]estarting browser( )?\\.\\.\\.")
 }
@@ -206,6 +206,9 @@ def get_error_string(line):
     elif "Timed out loading extension page" in line:
         error = "Extension timeout"
 
+    elif "Timed out loading skin/options.html" in line:
+        error = "Extension timeout"
+
     elif re_patterns["log_timeout"].search(line):
         error = "Timeout"
 
@@ -266,7 +269,7 @@ def ingest_log(cur, scan_id, log_txt):
                     break
 
                 end_domain = domain
-                if len(matches.groups()) > 1:
+                if len(matches.groups()) > 1 and matches.group(2):
                     end_domain = urlparse(matches.group(2)).netloc
                     end_domain = extract(end_domain).registered_domain or end_domain
 
