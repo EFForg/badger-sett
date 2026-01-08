@@ -113,18 +113,20 @@ def create_tables(cur):
             initial_site_id INTEGER NOT NULL,
             final_site_id INTEGER NOT NULL,
             status_id INTEGER NOT NULL,
+            error_id INTEGER,
             start_time TIMESTAMP NOT NULL,
             end_time TIMESTAMP NOT NULL,
             --UNIQUE(scan_id, initial_site_id)
             FOREIGN KEY(scan_id) REFERENCES scan(id),
             FOREIGN KEY(initial_site_id) REFERENCES site(id),
             FOREIGN KEY(final_site_id) REFERENCES site(id),
-            FOREIGN KEY(status_id) REFERENCES site_status(id)
+            FOREIGN KEY(status_id) REFERENCES site_status(id),
+            FOREIGN KEY(error_id) REFERENCES error(id)
         )""")
 
-    cur.execute("DROP TABLE IF EXISTS crash")
+    cur.execute("DROP TABLE IF EXISTS error")
     cur.execute("""
-        CREATE TABLE crash (
+        CREATE TABLE error (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name VARCHAR(200) NOT NULL UNIQUE
         )""")
@@ -133,10 +135,10 @@ def create_tables(cur):
     cur.execute("""
         CREATE TABLE scan_crashes (
             scan_id INTEGER NOT NULL,
-            crash_id INTEGER NOT NULL,
+            error_id INTEGER NOT NULL,
             time TIMESTAMP NOT NULL,
             FOREIGN KEY(scan_id) REFERENCES scan(id),
-            FOREIGN KEY(crash_id) REFERENCES crash(id)
+            FOREIGN KEY(error_id) REFERENCES error(id)
         )""")
 
     cur.execute("DROP TABLE IF EXISTS tracker")
@@ -202,6 +204,13 @@ def get_error_string(line):
         # add more context for some errors
         if error in ("WebDriverException", "NoSuchWindowException"):
             error = error + ":" + line[24:].partition(":")[2]
+        elif error == "Error" and "driver.current_url is still" in line:
+            error = error + ":" + line[24:].partition(":")[2]
+
+        # normalize Firefox error page exceptions
+        if "about:neterror?" in error:
+            error_parts = error.partition("about:neterror?")
+            error = error_parts[0] + error_parts[1] + error_parts[2].partition("&u=")[0]
 
     elif "Timed out loading extension page" in line:
         error = "Extension timeout"
@@ -255,10 +264,10 @@ def ingest_log(cur, scan_id, log_txt):
 
         if matches := re_patterns["log_restart"].search(line):
             error = get_error_string(prev_line)
-            crash_id = get_id(cur, "crash", "name", error)
+            error_id = get_id(cur, "error", "name", error)
             cur.execute("""INSERT INTO scan_crashes
-                (scan_id, crash_id, time) VALUES (?,?,?)""", (
-                    scan_id, crash_id,
+                (scan_id, error_id, time) VALUES (?,?,?)""", (
+                    scan_id, error_id,
                     datetime.strptime(line[:19], "%Y-%m-%d %H:%M:%S")))
             prev_line = line
             continue
@@ -277,17 +286,22 @@ def ingest_log(cur, scan_id, log_txt):
 
                 status = get_status_string(match_type, line, matches.group(0))
 
+                error_id = None
+                if match_type == 'log_error':
+                    error = get_error_string(line)
+                    error_id = get_id(cur, "error", "name", error)
+
                 cur.execute("""INSERT INTO scan_sites
                     (scan_id,
                     initial_site_id,
                     final_site_id,
-                    status_id,
+                    status_id, error_id,
                     start_time, end_time)
-                    VALUES (?,?,?,?,?,?)""", (
+                    VALUES (?,?,?,?,?,?,?)""", (
                         scan_id,
                         get_id(cur, "site", "fqdn", domain),
                         get_id(cur, "site", "fqdn", end_domain),
-                        site_statuses[status],
+                        site_statuses[status], error_id,
                         start_time, end_time))
 
                 break
