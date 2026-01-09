@@ -5,10 +5,9 @@ import sqlite3
 
 def print_prevalence_summary(cur):
     cur.execute("""
-        SELECT COUNT(DISTINCT tr.site_id)
-        FROM tracking tr
-        JOIN site ON site.id = tr.site_id
-        JOIN scan ON scan.id = tr.scan_id
+        SELECT COUNT(DISTINCT initial_site_id)
+        FROM scan_sites
+        JOIN scan ON scan.id = scan_id
         WHERE scan.no_blocking = 1 AND scan.daily_scan = 1
             AND scan.start_time > DATETIME('now', '-365 day')""")
     total_sites = cur.fetchone()[0]
