@@ -30,11 +30,13 @@ print_stats() {
           CAST(STRFTIME('%s', start_time) AS FLOAT)) / 60 / 60, 1) AS num_hours,
       $region_col
       num_sites,
-      COUNT(DISTINCT blocked_trackers.tracker_id) AS num_blocked
+      COUNT(DISTINCT blocked_trackers.tracker_id) AS num_blocked,
+      ROUND(sites_with_trackers.num * 1.0 / scan_sites.num_successes * 100, 1) || '%' AS tracking_rate,
+      ROUND(scan_sites.num_errors * 1.0 / num_sites * 100, 1) || '%' AS error_rate,
+      CASE WHEN scan_crashes.num_crashes != '' THEN scan_crashes.num_crashes ELSE 0 END AS num_crashes
     FROM scan
     JOIN browser ON browser.id = scan.browser_id
-    JOIN (SELECT scan.id AS scan_id,
-        tr.tracker_id
+    JOIN (SELECT tr.scan_id, tr.tracker_id
       FROM scan
       JOIN browser ON browser.id = scan.browser_id
       JOIN tracking tr ON tr.scan_id = scan.id
@@ -42,11 +44,32 @@ print_stats() {
       GROUP BY tr.scan_id, tr.tracker_id
       HAVING COUNT(DISTINCT tr.site_id) > 2)
         AS blocked_trackers ON blocked_trackers.scan_id = scan.id
-    WHERE scan.start_time > DATETIME('now', '-$num_days day')
+    JOIN (SELECT scan_id,
+        SUM(CASE WHEN status_id = 1 THEN 1 ELSE 0 END) AS num_successes,
+        SUM(CASE WHEN status_id = 1 THEN 0 ELSE 1 END) AS num_errors
+      FROM scan_sites
+      JOIN scan ON scan.id = scan_id
+      WHERE scan.start_time > DATETIME('now', '-$num_days day')
+      GROUP BY scan_id)
+        AS scan_sites ON scan_sites.scan_id = scan.id
+    JOIN (SELECT scan_id, COUNT(DISTINCT site_id) num
+      FROM tracking
+      JOIN scan ON scan.id = tracking.scan_id
+      WHERE scan.start_time > DATETIME('now', '-$num_days day')
+      GROUP BY scan_id)
+        AS sites_with_trackers ON sites_with_trackers.scan_id = scan.id
+    LEFT JOIN (SELECT scan_id,
+      COUNT(*) num_crashes
+      FROM scan_crashes
+      JOIN scan ON scan.id = scan_id
+      WHERE scan.start_time > DATETIME('now', '-$num_days day')
+      GROUP BY scan_id)
+        AS scan_crashes ON scan_crashes.scan_id = scan.id
+    WHERE start_time > DATETIME('now', '-$num_days day')
       AND browser.name = '$browser'
       AND no_blocking = '$no_blocking'
       AND daily_scan = '$daily_scan'
-    GROUP BY scan_id
+    GROUP BY scan.id
     ORDER BY scan.start_time DESC"
 
   echo
