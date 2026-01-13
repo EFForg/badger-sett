@@ -614,10 +614,10 @@ class Crawler:
     def load_extension_page(self, max_tries=7):
         """Loads Privacy Badger's options page."""
 
-        if self.browser in (CHROME, EDGE):
-            url = f'{CHROME_URL_PREFIX}{CHROME_EXT_ID}/skin/options.html'
-        elif self.browser == FIREFOX:
+        if self.browser == FIREFOX:
             url = f'{FF_URL_PREFIX}{FF_UUID}/skin/options.html'
+        else:
+            url = f'{CHROME_URL_PREFIX}{CHROME_EXT_ID}/skin/options.html'
 
         def _load_ext_page():
             self.driver.get(url)

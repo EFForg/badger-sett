@@ -35,7 +35,7 @@ class TestSitelist:
         ("10", None, set(["example.net"]), ["example.com", "example.org", "google.com"]),
         ("10", ".com", set(["example.net"]), ["example.org"]),
         ("1", ".org", set(["example.com"]), ["example.net"])])
-    def get_sitelist(self, # pylint:disable=too-many-arguments
+    def get_sitelist(self, # pylint:disable=too-many-arguments,too-many-positional-arguments
                              monkeypatch,
                              num_sites, exclude_suffixes, exclude_domains, expected):
         args = ["firefox", num_sites, "--exclude-failures-since=off"]

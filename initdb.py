@@ -56,7 +56,7 @@ def get_browser(log_txt):
         return "edge"
     return None
 
-# pylint: disable-next=too-many-arguments
+# pylint: disable-next=too-many-arguments,too-many-positional-arguments
 def get_scan_id(cur, start_time, end_time, region, num_sites, browser, no_blocking, daily_scan):
     # TODO also record the list we're scanning against
     cur.execute("INSERT INTO scan (start_time, end_time, region, num_sites, "
