@@ -73,6 +73,7 @@ def print_trends(cur):
             print(f"{row[0]} {top_prevalence} ({round((top_prevalence - top_prevalence_prev) / top_prevalence_prev * 100, 2)}%)\n")
 
             print("Notable changes in relative tracker prevalence:")
+            print("NUM_SITES_OLD  NUM_SITES  REL_PREVALENCE  REL_PREV_CHANGE  TRACKER")
 
         rel_prevalence = row[1] / top_prevalence
 
