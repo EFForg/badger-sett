@@ -1,6 +1,6 @@
 ARG BROWSER=firefox
 
-FROM python:3.11
+FROM python:3.13
 FROM selenium/standalone-${BROWSER}
 
 ARG UID

@@ -454,6 +454,8 @@ if __name__ == '__main__':
     if Path(db_filename).is_file():
         rebuild = input(f"Rebuild {db_filename}? (y/N) ") == "y"
 
+    sqlite3.register_adapter(datetime, lambda dt: dt.isoformat(" "))
+
     with sqlite3.connect(db_filename, detect_types=sqlite3.PARSE_DECLTYPES) as db:
         cur = db.cursor()
 
