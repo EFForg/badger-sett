@@ -11,4 +11,4 @@ sqlite3 badger.sqlite3 -batch -header "SELECT
   WHERE scan.start_time > DATETIME('now', '-30 day')
     AND initial_site_id != final_site_id
   GROUP BY initial_site_id, final_site_id
-  ORDER BY count DESC, initial_site_fqdn ASC" | column -s '|' -t
+  ORDER BY count DESC, final_site_fqdn ASC, initial_site_fqdn ASC" | column -s '|' -t
