@@ -14,7 +14,7 @@ fi
 
 print_results() {
   local query_results summary_size \
-    line summary_field field_full field_summary dotdotdot num_results
+    line summary_field field_full field_summary dotdotdot num_results max_rows=31
 
   query_results="$1"
   summary_size="${2:-3}"
@@ -43,12 +43,12 @@ print_results() {
         "${field_summary//,/, }" \
         "$dotdotdot"
 
-    done <<< "$(echo "$query_results" | head -n 30)"
+    done <<< "$(echo "$query_results" | head -n $max_rows)"
   } | column -s '|' -t
 
   num_results=$(echo "$query_results" | wc -l)
-  if [ "$num_results" -gt 30 ]; then
-    printf "...%s more matches...\n" $((num_results - 30))
+  if [ "$num_results" -gt $max_rows ]; then
+    printf "...%s more matches...\n" $((num_results - max_rows))
   fi
 
   echo
@@ -56,17 +56,19 @@ print_results() {
 
 show_trackers_by_site() {
   local query_results
-  query_results=$(sqlite3 badger.sqlite3 -batch -noheader \
+  query_results=$(sqlite3 badger.sqlite3 -batch \
     "SELECT site.fqdn AS site,
-        scan.daily_scan,
-        GROUP_CONCAT(DISTINCT tr.base)
+        browser.name AS browser,
+        (CASE WHEN scan.daily_scan = 1 THEN '' ELSE 'y' END) AS 'adhoc?',
+        GROUP_CONCAT(DISTINCT tr.base) AS trackers
       FROM tracking t
       JOIN site ON site.id = t.site_id
       JOIN tracker tr ON tr.id = t.tracker_id
       JOIN scan ON scan.id = t.scan_id
-      WHERE scan.start_time > DATETIME('now', '-30 day')
+      JOIN browser ON browser.id = scan.browser_id
+      WHERE scan.start_time > DATETIME('now', '-90 day')
         AND site.fqdn LIKE '%$1%'
-      GROUP BY site.fqdn, scan.daily_scan
+      GROUP BY site.fqdn, scan.browser_id, scan.daily_scan
       ORDER BY COUNT(DISTINCT tr.base) DESC")
   if [ -n "$query_results" ]; then
     printf "Recent matching sites:\n\n"
@@ -76,17 +78,17 @@ show_trackers_by_site() {
 
 show_sites_by_tracker() {
   local query_results
-  query_results=$(sqlite3 badger.sqlite3 -batch -noheader \
+  query_results=$(sqlite3 badger.sqlite3 -batch \
     "SELECT tr.base AS tracker,
         browser.name AS browser,
-        scan.daily_scan,
-        GROUP_CONCAT(DISTINCT site.fqdn)
+        (CASE WHEN scan.daily_scan = 1 THEN '' ELSE 'y' END) AS 'adhoc?',
+        GROUP_CONCAT(DISTINCT site.fqdn) AS sites
       FROM tracking t
       JOIN site ON site.id = t.site_id
       JOIN tracker tr ON tr.id = t.tracker_id
       JOIN scan ON scan.id = t.scan_id
       JOIN browser ON browser.id = scan.browser_id
-      WHERE scan.start_time > DATETIME('now', '-30 day')
+      WHERE scan.start_time > DATETIME('now', '-90 day')
         AND tr.base LIKE '%$1%'
       GROUP BY tr.base, scan.browser_id, scan.daily_scan
       ORDER BY COUNT(DISTINCT site.fqdn) DESC")
@@ -98,13 +100,13 @@ show_sites_by_tracker() {
 
 show_most_recent_matches() {
   local query_results
-  query_results=$(sqlite3 badger.sqlite3 -batch -noheader \
+  query_results=$(sqlite3 badger.sqlite3 -batch \
     "SELECT tr.base,
-        scan.daily_scan,
         scan.end_time,
-        b.name,
-        COALESCE(GROUP_CONCAT(DISTINCT tt.name), '-'),
-        GROUP_CONCAT(DISTINCT site.fqdn)
+        b.name AS browser,
+        (CASE WHEN scan.daily_scan = 1 THEN '' ELSE 'y' END) AS 'adhoc?',
+        COALESCE(GROUP_CONCAT(DISTINCT tt.name), '-') AS 'tracking types',
+        GROUP_CONCAT(DISTINCT site.fqdn) AS sites
       FROM tracking t
       JOIN tracker tr ON tr.id = t.tracker_id
       JOIN scan ON scan.id = t.scan_id
