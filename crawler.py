@@ -534,8 +534,12 @@ class Crawler:
             "});")
 
     def start_driver(self):
-        """Start a new Selenium web driver and install the bundled
-        extension."""
+        """Starts a new Selenium browser session."""
+
+        # disable Selenium sending your IP to a third-party company
+        # https://www.selenium.dev/documentation/selenium_manager/#data-collection
+        os.environ['SE_AVOID_STATS'] = "true"
+
         if self.browser in (CHROME, EDGE):
             extension_path = self.fix_chrome_manifest()
 
