@@ -12,8 +12,8 @@ def print_prevalence_summary(cur):
             AND scan.start_time > DATETIME('now', '-365 day')""")
     total_sites = cur.fetchone()[0]
 
-    print("\nThe most prevalent (appearing on the greatest number of distinct"
-        "\nwebsites) third-party tracking domains over the last 365 days:\n")
+    print("\nThe most prevalent (seen tracking on the greatest number of websites)"
+        "\nthird-party tracking domains over the last 365 days:\n")
     cur.execute("""
         SELECT t.base, COUNT(DISTINCT tr.site_id) AS num_sites
         FROM tracking tr

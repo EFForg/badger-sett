@@ -65,12 +65,12 @@ def print_trends(cur):
             # absolute change in total sites
             print("\nSite totals:")
             print(total_sites_prev)
-            print(total_sites, f"({round((total_sites - total_sites_prev) / total_sites_prev * 100, 2)}%)")
+            print(total_sites, f"({round((total_sites - total_sites_prev) / total_sites_prev * 100, 2):+}%)")
 
             # absolute change in most prevalent domain
             print("\nMost prevalent tracker:")
             print(next(iter(prev.keys())), top_prevalence_prev)
-            print(f"{row[0]} {top_prevalence} ({round((top_prevalence - top_prevalence_prev) / top_prevalence_prev * 100, 2)}%)\n")
+            print(f"{row[0]} {top_prevalence} ({round((top_prevalence - top_prevalence_prev) / top_prevalence_prev * 100, 2):+}%)\n")
 
             print("Notable changes in relative tracker prevalence:")
             print("NUM_SITES_OLD  NUM_SITES  REL_PREVALENCE  REL_PREV_CHANGE  TRACKER")
