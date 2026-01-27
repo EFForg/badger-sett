@@ -109,7 +109,7 @@ def create_argument_parser():
                        "comma-separated suffixes; for example: .gov,.gov.?? will "
                        "exclude domains that end with .gov and also exclude "
                        "domains that end with .gov. followed by any two letters")
-    sites.add_argument('--exclude-failures-since', metavar='DATE', default='1 week',
+    sites.add_argument('--exclude-failures-since', metavar='DATE', default='2 week',
                        help="how far back to look in git history for log.txt "
                        "for failed sites to auto-exclude from the site list; "
                        "set to 'off' to disable this feature")
