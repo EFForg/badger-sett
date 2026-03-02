@@ -436,6 +436,9 @@ class Crawler:
         if self.browser_binary:
             opts.binary_location = self.browser_binary
 
+        opts.enable_bidi = True
+        opts.enable_webextensions = True
+
         #opts.log.level = "trace"
 
         opts.set_capability("acceptInsecureCerts", False);
@@ -578,14 +581,8 @@ class Crawler:
                 else:
                     break
 
+            # load Privacy Badger
             self.driver.webextension.install(extension_path)
-
-            # load another extension to run alongside PB
-            if self.load_extension:
-                self.extra_ext_dir = tempfile.TemporaryDirectory() # pylint:disable=consider-using-with
-                with zipfile.ZipFile(self.load_extension, "r") as zf:
-                    zf.extractall(self.extra_ext_dir.name)
-                self.driver.webextension.install(self.extra_ext_dir.name)
 
         elif self.browser == FIREFOX:
             opts = self.get_firefox_options()
@@ -593,15 +590,16 @@ class Crawler:
             self.driver = webdriver.Firefox(options=opts, service=service)
 
             # load Privacy Badger
-            # Firefox requires absolute paths
             unpacked_addon_path = os.path.abspath(
                 os.path.join(self.pb_dir, 'src'))
-            self.driver.install_addon(unpacked_addon_path, temporary=True)
+            self.driver.webextension.install(unpacked_addon_path)
 
-            # load another extension to run alongside PB
-            if self.load_extension:
-                self.driver.install_addon(
-                    os.path.abspath(self.load_extension), temporary=True)
+        # load another extension to run alongside PB
+        if self.load_extension:
+            self.extra_ext_dir = tempfile.TemporaryDirectory() # pylint:disable=consider-using-with
+            with zipfile.ZipFile(self.load_extension, "r") as zf:
+                zf.extractall(self.extra_ext_dir.name)
+            self.driver.webextension.install(self.extra_ext_dir.name)
 
         # apply timeout settings
         self.driver.set_page_load_timeout(self.timeout)
