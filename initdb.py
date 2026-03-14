@@ -215,6 +215,9 @@ def get_error_string(line):
     elif "Timed out loading extension page" in line:
         error = "Extension timeout"
 
+    elif "InvalidSessionIdException loading extension page" in line:
+        error = "Extension InvalidSessionIdException"
+
     elif "Timed out loading skin/options.html" in line:
         error = "Extension timeout"
 
