@@ -143,3 +143,11 @@ repository with its results:
 
 6. If everything has been set up correctly, the script should push a new version
    of `results.json` after each scan.
+
+## Thanks
+<p>This project is supported by:</p>
+<p>
+  <a href="https://www.digitalocean.com/">
+    <img src="https://opensource.nyc3.cdn.digitaloceanspaces.com/attribution/assets/SVG/DO_Logo_horizontal_blue.svg" width="201px">
+  </a>
+</p>
