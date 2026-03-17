@@ -673,7 +673,7 @@ class Crawler:
                 "  storeName: arguments[0]"
                 "}, done);"), store_name)
 
-    def dump_data(self):
+    def _dump_data(self):
         """Extract the objects Privacy Badger learned during its training
         run."""
         data = {}
@@ -705,6 +705,30 @@ class Crawler:
             ), store_name)
 
         return data
+
+    def dump_data(self):
+        for attempt in range(1, 4):
+            try:
+                return self._dump_data()
+            except (MaxRetryError, ProtocolError, ReadTimeoutError) as ex:
+                self.logger.error("Attempt %d dumping data failed: %s: %s", attempt, type(ex).__name__, str(ex))
+                if attempt == 3:
+                    raise
+                self.restart_browser()
+            except TimeoutException as ex:
+                self.logger.warning("Attempt %d dumping data timed out: %s", attempt, str(ex))
+                if attempt == 3:
+                    raise
+                self.restart_browser()
+            except WebDriverException as ex:
+                self.logger.error("Attempt %d dumping data failed: %s: %s", attempt, type(ex).__name__, ex.msg)
+                if attempt == 3:
+                    raise
+                if should_restart(ex):
+                    self.restart_browser()
+                else:
+                    self.logger.warning("Retrying without browser restart...")
+        return self.last_data  # fallback if loop exits somehow
 
     def clear_data(self):
         """Clear the training data Privacy Badger starts with."""
