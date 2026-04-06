@@ -218,6 +218,9 @@ def get_error_string(line):
     elif "InvalidSessionIdException loading extension page" in line:
         error = "Extension InvalidSessionIdException"
 
+    elif "WebDriverException loading extension page:" in line:
+        error = "Extension WebDriverException:" + line[24:].partition(":")[2]
+
     elif "Timed out loading skin/options.html" in line:
         error = "Extension timeout"
 
