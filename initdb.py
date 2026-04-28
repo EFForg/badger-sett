@@ -312,7 +312,8 @@ def ingest_log(cur, scan_id, log_txt):
 
                 break
 
-        prev_line = line
+        if not line.endswith("Connection to remote host was lost. - goodbye"):
+            prev_line = line
 
 def ingest_scan(cur, scan_id, snitch_map, tracking_map):
     for tracker_base, sites in snitch_map.items():
