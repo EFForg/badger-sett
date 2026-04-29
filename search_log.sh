@@ -43,7 +43,7 @@ print_results() {
         "${field_summary//,/, }" \
         "$dotdotdot"
 
-    done <<< "$(echo "$query_results" | head -n $max_rows)"
+    done <<< "$(echo "$query_results" 2>/dev/null | head -n $max_rows)"
   } | column -s '|' -t
 
   num_results=$(echo "$query_results" | wc -l)
