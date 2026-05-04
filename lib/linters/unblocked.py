@@ -1,12 +1,37 @@
 #!/usr/bin/env python3
 
+import subprocess
+import sys
+
 import colorama
 
 from lib.basedomain import extract
+from lib.utils import run
 
 
 C_YELLOW = colorama.Style.BRIGHT + colorama.Fore.YELLOW
 C_RESET = colorama.Style.RESET_ALL
+
+# TODO refactor, don't hardcode
+_pb_dir= "../privacybadger"
+
+
+def load_fp_cdn_domains():
+    export_js = f"""
+// shim just enough for constants.js to load
+globalThis.chrome = {{ runtime: {{ getURL: ()=>{{}} }} }};
+const {{ default: constants }} = await import('{_pb_dir}/src/js/constants.js');
+process.stdout.write(JSON.stringify(Array.from(constants.FP_CDN_DOMAINS)));"""
+
+    try:
+        cmd = ["node", "--experimental-default-type=module", f'--eval={export_js}']
+        fp_cdn_domains = run(cmd)
+    except subprocess.CalledProcessError as ex:
+        print(ex.stderr, file=sys.stderr)
+        raise ex
+
+    return fp_cdn_domains
+
 
 # https://github.com/EFForg/privacybadger/issues/1527
 def print_warnings(new_js):
@@ -15,19 +40,9 @@ def print_warnings(new_js):
 
     print_canvas_header = True
 
+    already_known_hosts = load_fp_cdn_domains()
+
     for domain in sorted(new_js['fp_scripts'], key=lambda d: extract(d).registered_domain or d):
-        already_known_hosts = (
-            'd.alicdn.com',
-            's3.us-west-2.amazonaws.com',
-            'fp-cdn.azureedge.net',
-            'sdtagging.azureedge.net',
-            'cdnjs.cloudflare.com',
-            'd1af033869koo7.cloudfront.net',
-            'd38xvr37kwwhcm.cloudfront.net',
-            'dlthst9q2beh8.cloudfront.net',
-            'cdn.jsdelivr.net',
-            'gadasource.storage.googleapis.com',
-        )
         if domain.endswith(".awswaf.com") or domain in already_known_hosts:
             continue
 
