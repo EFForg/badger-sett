@@ -8,5 +8,6 @@ sqlite3 badger.sqlite3 -batch -header "SELECT STRFTIME('%Y', scan.start_time) AS
   JOIN scan_sites ON error_id = error.id
   JOIN scan ON scan.id = scan_sites.scan_id
   JOIN browser ON browser.id = scan.browser_id
+  WHERE scan.daily_scan = 1
   GROUP BY year, browser.name, error.name
   ORDER BY year DESC, num DESC" | column -s '|' -t

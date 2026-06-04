@@ -11,6 +11,6 @@ sqlite3 badger.sqlite3 -batch -header "SELECT
   JOIN scan ON scan.id = scan_sites.scan_id
   JOIN site_status ON site_status.id = scan_sites.status_id
   JOIN browser ON browser.id = scan.browser_id
-  WHERE scan.start_time > DATETIME('now', '-30 day')
+  WHERE scan.start_time > DATETIME('now', '-2 day')
   GROUP BY browser.id, scan.no_blocking, site_status.name, visit_duration
   ORDER BY visit_duration ASC, num DESC" | column -s '|' -t
