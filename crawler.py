@@ -586,7 +586,9 @@ class Crawler:
 
         elif self.browser == FIREFOX:
             opts = self.get_firefox_options()
-            service = FirefoxService(log_output=os.path.devnull)
+            service = FirefoxService(log_output=os.path.devnull,
+                                     # https://bugzilla.mozilla.org/show_bug.cgi?id=2048451
+                                     service_args=['--allow-system-access'])
             self.driver = webdriver.Firefox(options=opts, service=service)
 
             # load Privacy Badger
