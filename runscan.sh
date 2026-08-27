@@ -71,10 +71,16 @@ docker pull selenium/standalone-"$BROWSER"
 # build the new docker image
 echo "Building Docker container..."
 
+DOCKER_BROWSER="$BROWSER"
+if [ "$BROWSER" = "chrome" ]; then
+    # work around chromedriver/chrome version mismatch
+    DOCKER_BROWSER=chrome:beta
+fi
+
 # pass in the current user's uid and gid so that the scan can be run with the
 # same bits in the container (this prevents permissions issues in the out/ folder)
 if ! docker build \
-    --build-arg BROWSER="$BROWSER" \
+    --build-arg BROWSER="$DOCKER_BROWSER" \
     --build-arg UID="$(id -u "$USER")" \
     --build-arg GID="$(id -g "$USER")" \
     --build-arg UNAME="$USER" \
