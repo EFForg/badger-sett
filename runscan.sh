@@ -76,6 +76,9 @@ if [ "$BROWSER" = "chrome" ]; then
     # work around chromedriver/chrome version mismatch
     DOCKER_BROWSER=chrome:beta
 fi
+if [ "$BROWSER" = "edge" ]; then
+    DOCKER_BROWSER=edge:beta
+fi
 
 # pass in the current user's uid and gid so that the scan can be run with the
 # same bits in the container (this prevents permissions issues in the out/ folder)
