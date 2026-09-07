@@ -19,7 +19,7 @@ _pb_dir= "../privacybadger"
 def load_fp_cdn_domains():
     export_js = f"""
 // shim just enough for constants.js to load
-globalThis.chrome = {{ runtime: {{ getURL: ()=>{{}} }} }};
+globalThis.chrome = {{ declarativeNetRequest: {{}} }};
 const {{ default: constants }} = await import('{_pb_dir}/src/js/constants.js');
 process.stdout.write(JSON.stringify(Array.from(constants.FP_CDN_DOMAINS)));"""
 
