@@ -91,6 +91,8 @@ def create_argument_parser():
 
     feat.add_argument('--no-blocking', action='store_true', default=False,
                         help="disables blocking and snitch_map limits in Privacy Badger")
+    feat.add_argument('--no-gpc', action='store_true', default=False,
+                        help="disables sending Global Privacy Control (and DNT)")
     feat.add_argument('--no-link-clicking', action='store_true', default=False,
                         help="disables finding and clicking internal links on sites")
     feat.add_argument('--take-screenshots', action='store_true', default=False,
@@ -330,6 +332,7 @@ class Crawler:
         self.load_extension = opts.load_extension
         self.logger = logging.getLogger()
         self.no_blocking = opts.no_blocking
+        self.no_gpc = opts.no_gpc
         self.num_sites = opts.num_sites
         self.out_dir = opts.out_dir
         self.pb_dir = opts.pb_dir
@@ -374,6 +377,7 @@ class Crawler:
                 "  Badger branch: %s\n"
                 "  Badger hash: %s\n"
                 "  blocking: %s\n"
+                "  GPC: %s\n"
                 "  timeout: %ss\n"
                 "  wait time: %ss\n"
                 "  site list: %s\n"
@@ -387,6 +391,7 @@ class Crawler:
             git_data['branch'],
             git_data['commit_hash'],
             "off" if self.no_blocking else "standard",
+            "off" if self.no_gpc else "on",
             self.timeout,
             self.wait_time,
             self.site_list if self.site_list else "Tranco " + self.tranco_date,
@@ -1045,6 +1050,9 @@ class Crawler:
             self.driver.find_element(By.ID, 'local-learning-checkbox').click()
         except NoSuchElementException:
             self.logger.warning("Learning checkbox not found, learning NOT enabled!")
+
+        if self.no_gpc:
+            self.driver.find_element(By.ID, 'enable_dnt_checkbox').click()
 
     def restart_browser(self):
         self.logger.info("Restarting browser ...")
