@@ -850,12 +850,13 @@ class Crawler:
         pathlib.Path(self.out_dir + '/cookies').mkdir(exist_ok=True)
 
         filename = os.path.join(self.out_dir, "cookies", "".join((
-            str(int(time.time())),
-            "-",
             re.sub(r'[^a-z0-9]', '-', site_domain.lower()[:100]),
             ".json")))
         with open(filename, 'w', encoding="utf-8") as fh:
-            json.dump(cookies, fh, indent=2, sort_keys=True, separators=(',', ': '))
+            data = {}
+            data["site_domain"] = site_domain
+            data["cookies"] = cookies
+            json.dump(data, fh, indent=2, sort_keys=True, separators=(',', ': '))
 
     def clear_cookies(self):
         self.load_extension_page()
