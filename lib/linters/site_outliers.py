@@ -10,6 +10,8 @@ C_RESET = colorama.Style.RESET_ALL
 
 # TODO this works for normally distributed data, but is our data is normally distributed?
 def outliers(data):
+    if not data:
+        return []
     mean = sum(data) / (1.0 * len(data))
     var = sum((data[i] - mean)**2 for i in range(0, len(data))) / (1.0 * len(data))
     std = var**0.5
