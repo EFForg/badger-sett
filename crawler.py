@@ -97,6 +97,9 @@ def create_argument_parser():
                         help="disables finding and clicking internal links on sites")
     feat.add_argument('--take-screenshots', action='store_true', default=False,
                         help=f"saves screenshots to {os.path.join('OUT_DIR', 'screenshots')}")
+    feat.add_argument('--collect-and-clear-cookies', action='store_true', default=False,
+                        help=f"saves cookies to {os.path.join('OUT_DIR', 'cookies')}, "
+                        "clearing cookies after each site visit")
     feat.add_argument('--load-extension', default=None,
                         help="extension (.crx or .xpi) to install in addition to Privacy Badger")
     feat.add_argument('--get-sitelist-only', action='store_true', default=False,
@@ -338,6 +341,7 @@ class Crawler:
         self.pb_dir = opts.pb_dir
         self.no_link_clicking = opts.no_link_clicking
         self.take_screenshots = opts.take_screenshots
+        self.collect_and_clear_cookies = opts.collect_and_clear_cookies
         self.timeout = opts.timeout
         self.tranco_date = None
         self.version = time.strftime('%Y.%-m.%-d', time.localtime())
@@ -829,6 +833,71 @@ class Crawler:
         if not self.driver.save_screenshot(filename):
             self.logger.warning("Failed to save screenshot for %s", domain)
 
+    def get_cookies(self):
+        self.load_extension_page()
+
+        cookies = self.driver.execute_async_script(
+            "let done = arguments[arguments.length - 1];"
+            "try {"
+            "  chrome.cookies.getAll({ firstPartyDomain: null }, done);"
+            "} catch (ex) {"
+            "  chrome.cookies.getAll({}, done);"
+            "}")
+
+        return cookies
+
+    def save_cookies(self, cookies, site_domain):
+        pathlib.Path(self.out_dir + '/cookies').mkdir(exist_ok=True)
+
+        filename = os.path.join(self.out_dir, "cookies", "".join((
+            str(int(time.time())),
+            "-",
+            re.sub(r'[^a-z0-9]', '-', site_domain.lower()[:100]),
+            ".json")))
+        with open(filename, 'w', encoding="utf-8") as fh:
+            json.dump(cookies, fh, indent=2, sort_keys=True, separators=(',', ': '))
+
+    def clear_cookies(self):
+        self.load_extension_page()
+
+        def _clear_cookies():
+            self.driver.execute_async_script(
+                "let done = arguments[arguments.length - 1];"
+                "chrome.cookies.getAll({}, function (cookies) {"
+                "  for (let cookie of cookies) {"
+                "    chrome.cookies.remove({"
+                "      name: cookie.name,"
+                "      url: `https://${cookie.domain}${cookie.path}`"
+                "    });"
+                "  }"
+                "  done();"
+                "});")
+
+        # verify we don't have any cookies, with retrying
+        for _ in range(2):
+            _clear_cookies()
+
+            for _ in range(15):
+                try:
+                    cookies = self.get_cookies()
+                    assert not cookies
+                except AssertionError:
+                    time.sleep(1)
+                else:
+                    return
+
+        raise AssertionError(f"Failed to clear all cookies:\n{cookies}")
+
+    def collect_cookies(self, site_domain):
+        if not self.collect_and_clear_cookies:
+            return
+
+        cookies = self.get_cookies()
+
+        self.save_cookies(cookies, site_domain)
+
+        self.clear_cookies()
+
     def scroll_page(self):
         # split self.wait_time into INTERVAL_SEC intervals
         INTERVAL_SEC = 0.1
@@ -1135,6 +1204,8 @@ class Crawler:
                         "driver.current_url is still a %s page",
                         domain, CHROME_URL_PREFIX)
                     continue
+
+                self.collect_cookies(domain)
 
                 self.logger.info("Visited %s%s",
                                  domain, (" on " + curl if curl else ""))
