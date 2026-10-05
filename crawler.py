@@ -846,25 +846,27 @@ class Crawler:
 
         return cookies
 
-    def save_cookies(self, cookies, site_domain):
+    def save_cookies(self, cookies, site_domain, curl):
         pathlib.Path(self.out_dir + '/cookies').mkdir(exist_ok=True)
 
         filename = os.path.join(self.out_dir, "cookies", "".join((
             re.sub(r'[^a-z0-9]', '-', site_domain.lower()[:100]),
+            "-",
+            (re.sub(r'[^A-Za-z0-9]', '-', curl[:100]) if curl else ""),
+            "-",
+            str(int(time.time())),
             ".json")))
         with open(filename, 'w', encoding="utf-8") as fh:
-            data = {}
-            data["site_domain"] = site_domain
-            data["cookies"] = cookies
+            data = { "site_domain": site_domain, "cookies": cookies }
             json.dump(data, fh, indent=2, sort_keys=True, separators=(',', ': '))
 
-    def collect_cookies(self, site_domain):
+    def collect_cookies(self, site_domain, curl):
         if not self.collect_and_clear_cookies:
             return
 
         cookies = self.get_cookies()
 
-        self.save_cookies(cookies, site_domain)
+        self.save_cookies(cookies, site_domain, curl)
 
     def clear_cookies(self):
         if not self.collect_and_clear_cookies:
@@ -1209,7 +1211,7 @@ class Crawler:
                         domain, CHROME_URL_PREFIX)
                     continue
 
-                self.collect_cookies(domain)
+                self.collect_cookies(domain, curl)
 
                 self.logger.info("Visited %s%s",
                                  domain, (" on " + curl if curl else ""))
