@@ -137,6 +137,11 @@ if [ -d "$DOCKER_OUT"/screenshots ]; then
   mv "$DOCKER_OUT"/screenshots ./
 fi
 
+# if present, also move the cookies directory
+if [ -d "$DOCKER_OUT"/cookies ]; then
+  mv "$DOCKER_OUT"/cookies ./
+fi
+
 # get the version string from the results file
 VERSION=$(python3 -c "import json; print(json.load(open('results.json'))['version'])")
 echo "Scan successful. Seed data version: $VERSION"
