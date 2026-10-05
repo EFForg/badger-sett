@@ -858,7 +858,18 @@ class Crawler:
             data["cookies"] = cookies
             json.dump(data, fh, indent=2, sort_keys=True, separators=(',', ': '))
 
+    def collect_cookies(self, site_domain):
+        if not self.collect_and_clear_cookies:
+            return
+
+        cookies = self.get_cookies()
+
+        self.save_cookies(cookies, site_domain)
+
     def clear_cookies(self):
+        if not self.collect_and_clear_cookies:
+            return
+
         self.load_extension_page()
 
         def _clear_cookies():
@@ -888,16 +899,6 @@ class Crawler:
                     return
 
         raise AssertionError(f"Failed to clear all cookies:\n{cookies}")
-
-    def collect_cookies(self, site_domain):
-        if not self.collect_and_clear_cookies:
-            return
-
-        cookies = self.get_cookies()
-
-        self.save_cookies(cookies, site_domain)
-
-        self.clear_cookies()
 
     def scroll_page(self):
         # split self.wait_time into INTERVAL_SEC intervals
@@ -1195,6 +1196,8 @@ class Crawler:
                 # try to fix misattribution errors
                 if i > 1:
                     self.cleanup(domains[i - 2], domains[i - 1])
+
+                self.clear_cookies()
 
                 self.logger.info("Visiting %d: %s", i + 1, domain)
                 self.visit_domain(domain)
