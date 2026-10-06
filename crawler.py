@@ -826,9 +826,9 @@ class Crawler:
     def take_screenshot(self, domain):
         pathlib.Path(self.out_dir + '/screenshots').mkdir(exist_ok=True)
         filename = os.path.join(self.out_dir, "screenshots", "".join((
-            str(int(time.time())),
-            "-",
             re.sub(r'[^a-z0-9]', '-', domain.lower()[:100]),
+            "-",
+            str(int(time.time())),
             ".png")))
         if not self.driver.save_screenshot(filename):
             self.logger.warning("Failed to save screenshot for %s", domain)
