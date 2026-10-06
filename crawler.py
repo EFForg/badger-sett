@@ -846,7 +846,7 @@ class Crawler:
 
         return cookies
 
-    def save_cookies(self, cookies, site_domain, curl):
+    def save_cookies(self, cookies, site_domain, curl, timeout):
         pathlib.Path(self.out_dir + '/cookies').mkdir(exist_ok=True)
 
         filename = os.path.join(self.out_dir, "cookies", "".join((
@@ -857,16 +857,17 @@ class Crawler:
             str(int(time.time())),
             ".json")))
         with open(filename, 'w', encoding="utf-8") as fh:
-            data = { "site_domain": site_domain, "cookies": cookies }
+            data = { "site_domain": site_domain, "site_url": curl,
+                "timeout": timeout, "cookies": cookies }
             json.dump(data, fh, indent=2, sort_keys=True, separators=(',', ': '))
 
-    def collect_cookies(self, site_domain, curl):
+    def collect_cookies(self, site_domain, curl, timeout=False):
         if not self.collect_and_clear_cookies:
             return
 
         cookies = self.get_cookies()
 
-        self.save_cookies(cookies, site_domain, curl)
+        self.save_cookies(cookies, site_domain, curl, timeout)
 
     def clear_cookies(self):
         if not self.collect_and_clear_cookies:
@@ -1226,6 +1227,7 @@ class Crawler:
                 curl = self.get_current_url()
                 if curl and curl.startswith((FF_URL_PREFIX, CHROME_URL_PREFIX)):
                     curl = None
+                self.collect_cookies(domain, curl, True)
                 self.logger.warning("Timed out loading %s%s",
                                     domain, (" on " + curl if curl else ""))
 
