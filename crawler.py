@@ -824,6 +824,9 @@ class Crawler:
         raise WebDriverException(msg)
 
     def take_screenshot(self, domain, curl):
+        if not self.take_screenshots:
+            return
+
         pathlib.Path(self.out_dir + '/screenshots').mkdir(exist_ok=True)
         filename = os.path.join(self.out_dir, "screenshots", "".join((
             re.sub(r'[^a-z0-9]', '-', domain.lower()[:100]),
@@ -832,6 +835,7 @@ class Crawler:
             "-",
             str(int(time.time())),
             ".png")))
+
         try:
             if not self.driver.save_screenshot(filename):
                 self.logger.warning("Failed to save screenshot for %s", domain)
@@ -1029,9 +1033,6 @@ class Crawler:
                 self.driver.close()
             self.driver.switch_to.window(handles[0])
 
-        if self.take_screenshots:
-            self.take_screenshot(domain, self.get_current_url())
-
     def get_tranco_domains(self):
         max_tries = 10
         ex_msg = "The daily list for this date is currently unavailable"
@@ -1208,6 +1209,8 @@ class Crawler:
                 self.clear_cookies()
 
                 self.logger.info("Visiting %d: %s", i + 1, domain)
+                # TODO note that if we restart after (partially) loading the site,
+                # TODO we lose visit data as self.last_data doesn't include the visit
                 self.visit_domain(domain)
 
                 curl = self.get_current_url()
@@ -1216,6 +1219,8 @@ class Crawler:
                         "driver.current_url is still a %s page",
                         domain, CHROME_URL_PREFIX)
                     continue
+
+                self.take_screenshot(domain, curl)
 
                 self.collect_cookies(domain, curl)
 
@@ -1232,7 +1237,11 @@ class Crawler:
                 curl = self.get_current_url()
                 if curl and curl.startswith((FF_URL_PREFIX, CHROME_URL_PREFIX)):
                     curl = None
+
+                self.take_screenshot(domain, curl)
+
                 self.collect_cookies(domain, curl, True)
+
                 self.logger.warning("Timed out loading %s%s",
                                     domain, (" on " + curl if curl else ""))
 
