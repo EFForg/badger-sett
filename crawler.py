@@ -823,15 +823,20 @@ class Crawler:
 
         raise WebDriverException(msg)
 
-    def take_screenshot(self, domain):
+    def take_screenshot(self, domain, curl):
         pathlib.Path(self.out_dir + '/screenshots').mkdir(exist_ok=True)
         filename = os.path.join(self.out_dir, "screenshots", "".join((
             re.sub(r'[^a-z0-9]', '-', domain.lower()[:100]),
             "-",
+            (re.sub(r'[^A-Za-z0-9]', '-', curl[:100]) if curl else ""),
+            "-",
             str(int(time.time())),
             ".png")))
-        if not self.driver.save_screenshot(filename):
-            self.logger.warning("Failed to save screenshot for %s", domain)
+        try:
+            if not self.driver.save_screenshot(filename):
+                self.logger.warning("Failed to save screenshot for %s", domain)
+        except WebDriverException as ex:
+            self.logger.warning("Failed to save screenshot for %s: %s", domain, ex.msg)
 
     def get_cookies(self):
         self.load_extension_page()
@@ -1020,12 +1025,12 @@ class Crawler:
             for handle in handles[1:]:
                 self.driver.switch_to.window(handle)
                 if self.take_screenshots:
-                    self.take_screenshot(domain + "-" + self.driver.current_url)
+                    self.take_screenshot(domain, self.get_current_url())
                 self.driver.close()
             self.driver.switch_to.window(handles[0])
 
         if self.take_screenshots:
-            self.take_screenshot(domain + "-" + self.driver.current_url)
+            self.take_screenshot(domain, self.get_current_url())
 
     def get_tranco_domains(self):
         max_tries = 10
