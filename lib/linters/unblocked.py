@@ -24,7 +24,7 @@ const {{ default: constants }} = await import('{_pb_dir}/src/js/constants.js');
 process.stdout.write(JSON.stringify(Array.from(constants.FP_CDN_DOMAINS)));"""
 
     try:
-        cmd = ["node", "--experimental-default-type=module", f'--eval={export_js}']
+        cmd = ["node", "--input-type=module", f'--eval={export_js}']
         fp_cdn_domains = run(cmd)
     except subprocess.CalledProcessError as ex:
         print(ex.stderr, file=sys.stderr)

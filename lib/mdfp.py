@@ -17,7 +17,7 @@ const {{ default: mdfp }} = await import('{_pb_dir}/src/js/multiDomainFirstParti
 process.stdout.write(JSON.stringify(mdfp.multiDomainFirstPartiesArray));"""
 
     try:
-        mdfp_array = run(["node", "--experimental-default-type=module",
+        mdfp_array = run(["node", "--input-type=module",
                           f'--eval={mdfp_export_js}'])
     except subprocess.CalledProcessError as ex:
         print(ex.stderr, file=sys.stderr)
